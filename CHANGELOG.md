@@ -11,6 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Masscan High-Speed Port Scanner** — integrated Masscan as a parallel port scanner alongside Naabu, with NDJSON output parsing, result merging/deduplication, and full multi-layer integration:
+  - **Backend**: `recon/masscan_scan.py` module with `run_masscan_scan()` and thread-safe `run_masscan_scan_isolated()` for parallel execution
+  - **Pipeline**: Masscan and Naabu run concurrently in the same `ThreadPoolExecutor` fan-out group, results merged via `merge_port_scan_results()` into the unified `port_scan` key for downstream consumers (HTTP probe, graph DB, vuln scan)
+  - **Docker**: Masscan built from source in a multi-stage `recon/Dockerfile` build; installed via apt in `kali-sandbox/Dockerfile` for AI agent use
+  - **Frontend**: `MasscanSection.tsx` with header enable/disable toggle (Katana pattern), rate, ports, wait, retries, banners, and exclude targets controls
+  - **Naabu enable/disable toggle**: added `naabuEnabled` setting across all layers (Prisma, project_settings, frontend header toggle) — both scanners enabled by default
+  - **Both-disabled warning**: frontend alert + pipeline log warning when both port scanners are toggled off
+  - **AI agent**: `execute_masscan` MCP tool registered in `network_recon_server.py` and `tool_registry.py`
+  - **Stealth mode**: Masscan disabled, Naabu switches to passive mode
+  - **53 unit tests** covering NDJSON parsing, command construction, result merging, IP/domain mode, mock hostname normalization, and mocked subprocess lifecycle
+
 - **TruffleHog Secret Scanner** — deep credential scanning with 700+ detectors and automatic credential verification via the TruffleHog Docker container (`trufflesecurity/trufflehog`). Scans GitHub repositories for leaked secrets (API keys, passwords, tokens, certificates) and verifies whether discovered credentials are still active. Full multi-layer integration:
   - **Backend**: `trufflehog_scan/` service with SSE streaming progress, Docker-in-Docker execution, and JSON output parsing
   - **Neo4j graph**: new node types `TrufflehogScan`, `TrufflehogRepository`, and `TrufflehogFinding` with relationships `(:TrufflehogScan)-[:SCANNED_REPO]->(:TrufflehogRepository)-[:HAS_FINDING]->(:TrufflehogFinding)`

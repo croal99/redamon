@@ -449,6 +449,10 @@ def run_port_scan(recon_data: dict, output_file: Path = None, settings: dict = N
     if settings is None:
         settings = {}
 
+    if not settings.get('NAABU_ENABLED', True):
+        print("[-][Naabu] Disabled — skipping")
+        return recon_data
+
     # Extract settings from passed dict
     NAABU_DOCKER_IMAGE = settings.get('NAABU_DOCKER_IMAGE', 'projectdiscovery/naabu:latest')
     NAABU_TOP_PORTS = settings.get('NAABU_TOP_PORTS', '1000')

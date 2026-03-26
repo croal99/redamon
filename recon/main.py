@@ -54,7 +54,7 @@ TARGET_IPS = _settings['TARGET_IPS']
 from recon.whois_recon import whois_lookup
 from recon.domain_recon import discover_subdomains, verify_domain_ownership, reverse_dns_lookup
 from recon.port_scan import run_port_scan, run_port_scan_isolated
-from recon.masscan_scan import run_masscan_scan
+from recon.masscan_scan import run_masscan_scan, run_masscan_scan_isolated
 from recon.http_probe import run_http_probe
 from recon.resource_enum import run_resource_enum
 from recon.vuln_scan import run_vuln_scan
@@ -646,20 +646,34 @@ def run_ip_recon(target_ips: list, settings: dict) -> dict:
         settings.get('SHODAN_PASSIVE_CVES'),
     ])
 
+    naabu_enabled = settings.get('NAABU_ENABLED', True)
+    masscan_enabled = settings.get('MASSCAN_ENABLED', True)
+
+    if "port_scan" in SCAN_MODULES and not naabu_enabled and not masscan_enabled:
+        print("\n[!][Pipeline] Both Naabu and Masscan are disabled — skipping port scan phase")
+        print("[!][Pipeline] Downstream modules (HTTP probe, vuln scan) require open ports to work")
+
     if shodan_enabled or "port_scan" in SCAN_MODULES:
         print(f"\n[*][Pipeline] GROUP: Shodan + Port Scan (parallel fan-out)")
         print("-" * 40)
 
-        with ThreadPoolExecutor(max_workers=2, thread_name_prefix="ip-g3") as g3_exec:
+        port_scan_workers = (1 if naabu_enabled else 0) + (1 if masscan_enabled else 0)
+        max_workers = (1 if shodan_enabled else 0) + (port_scan_workers if "port_scan" in SCAN_MODULES else 0)
+        max_workers = max(max_workers, 1)
+        with ThreadPoolExecutor(max_workers=max_workers, thread_name_prefix="ip-g3") as g3_exec:
             g3_futures = {}
             if shodan_enabled:
                 from recon.shodan_enrich import run_shodan_enrichment_isolated
                 g3_futures["shodan"] = g3_exec.submit(
                     run_shodan_enrichment_isolated, combined_result, settings
                 )
-            if "port_scan" in SCAN_MODULES:
+            if naabu_enabled and "port_scan" in SCAN_MODULES:
                 g3_futures["port_scan"] = g3_exec.submit(
                     run_port_scan_isolated, combined_result, settings
+                )
+            if masscan_enabled and "port_scan" in SCAN_MODULES:
+                g3_futures["masscan_scan"] = g3_exec.submit(
+                    run_masscan_scan_isolated, combined_result, settings
                 )
 
             for name, future in g3_futures.items():
@@ -671,19 +685,20 @@ def run_ip_recon(target_ips: list, settings: dict) -> dict:
                     elif name == "port_scan" and data:
                         combined_result["port_scan"] = data
                         combined_result["metadata"]["modules_executed"].append("port_scan")
+                    elif name == "masscan_scan" and data:
+                        combined_result["masscan_scan"] = data
+                        combined_result["metadata"]["modules_executed"].append("masscan_scan")
                 except Exception as e:
                     print(f"[!][{name}] Failed: {e}")
+
+        # Merge masscan results into port_scan for downstream consumers
+        if "masscan_scan" in combined_result:
+            merge_port_scan_results(combined_result)
 
         save_recon_file(combined_result, output_file)
 
         if "shodan" in combined_result:
             _graph_update_bg("update_graph_from_shodan", combined_result, USER_ID, PROJECT_ID)
-
-        # Run Masscan after Naabu port scan completes, then merge results
-        if settings.get('MASSCAN_ENABLED', False) and "port_scan" in combined_result:
-            combined_result = run_masscan_scan(combined_result, output_file=None, settings=settings)
-            merge_port_scan_results(combined_result)
-            save_recon_file(combined_result, output_file)
 
         if "port_scan" in combined_result:
             _graph_update_bg("update_graph_from_port_scan", combined_result, USER_ID, PROJECT_ID)
@@ -960,11 +975,21 @@ def run_domain_recon(target: str, anonymous: bool = False, bruteforce: bool = Fa
         _settings.get('SHODAN_PASSIVE_CVES'),
     ])
 
+    naabu_enabled = _settings.get('NAABU_ENABLED', True)
+    masscan_enabled = _settings.get('MASSCAN_ENABLED', True)
+
+    if "port_scan" in SCAN_MODULES and not naabu_enabled and not masscan_enabled:
+        print("\n[!][Pipeline] Both Naabu and Masscan are disabled — skipping port scan phase")
+        print("[!][Pipeline] Downstream modules (HTTP probe, vuln scan) require open ports to work")
+
     if shodan_enabled or "port_scan" in SCAN_MODULES:
         print(f"\n[*][Pipeline] GROUP 3: Shodan + Port Scan (parallel fan-out)")
         print("-" * 40)
 
-        with ThreadPoolExecutor(max_workers=2, thread_name_prefix="group3") as g3_exec:
+        port_scan_workers = (1 if naabu_enabled else 0) + (1 if masscan_enabled else 0)
+        max_workers = (1 if shodan_enabled else 0) + (port_scan_workers if "port_scan" in SCAN_MODULES else 0)
+        max_workers = max(max_workers, 1)
+        with ThreadPoolExecutor(max_workers=max_workers, thread_name_prefix="group3") as g3_exec:
             g3_futures = {}
 
             if shodan_enabled:
@@ -973,9 +998,14 @@ def run_domain_recon(target: str, anonymous: bool = False, bruteforce: bool = Fa
                     run_shodan_enrichment_isolated, combined_result, _settings
                 )
 
-            if "port_scan" in SCAN_MODULES:
+            if naabu_enabled and "port_scan" in SCAN_MODULES:
                 g3_futures["port_scan"] = g3_exec.submit(
                     run_port_scan_isolated, combined_result, _settings
+                )
+
+            if masscan_enabled and "port_scan" in SCAN_MODULES:
+                g3_futures["masscan_scan"] = g3_exec.submit(
+                    run_masscan_scan_isolated, combined_result, _settings
                 )
 
             # Fan-in: merge results sequentially (safe — each writes different key)
@@ -990,20 +1020,22 @@ def run_domain_recon(target: str, anonymous: bool = False, bruteforce: bool = Fa
                         combined_result["port_scan"] = data
                         combined_result["metadata"]["modules_executed"].append("port_scan")
                         print(f"[+][Naabu] Port scan merged")
+                    elif name == "masscan_scan" and data:
+                        combined_result["masscan_scan"] = data
+                        combined_result["metadata"]["modules_executed"].append("masscan_scan")
+                        print(f"[+][Masscan] Port scan merged")
                 except Exception as e:
                     print(f"[!][{name}] Failed: {e}")
+
+        # Merge masscan results into port_scan for downstream consumers
+        if "masscan_scan" in combined_result:
+            merge_port_scan_results(combined_result)
 
         save_recon_file(combined_result, output_file)
 
         # Background graph updates for Shodan + port scan
         if "shodan" in combined_result:
             _graph_update_bg("update_graph_from_shodan", combined_result, USER_ID, PROJECT_ID)
-
-        # Run Masscan after Naabu port scan completes, then merge results
-        if _settings.get('MASSCAN_ENABLED', False) and "port_scan" in combined_result:
-            combined_result = run_masscan_scan(combined_result, output_file=None, settings=_settings)
-            merge_port_scan_results(combined_result)
-            save_recon_file(combined_result, output_file)
 
         if "port_scan" in combined_result:
             _graph_update_bg("update_graph_from_port_scan", combined_result, USER_ID, PROJECT_ID)
@@ -1293,14 +1325,25 @@ def main():
         
         # Run port_scan if in SCAN_MODULES (when domain_discovery is skipped)
         if "port_scan" in SCAN_MODULES:
-            domain_result = run_port_scan(domain_result, output_file=output_file, settings=_settings)
-            if "metadata" in domain_result and "modules_executed" in domain_result["metadata"]:
-                if "port_scan" not in domain_result["metadata"]["modules_executed"]:
-                    domain_result["metadata"]["modules_executed"].append("port_scan")
+            _naabu_on = _settings.get('NAABU_ENABLED', True)
+            _masscan_on = _settings.get('MASSCAN_ENABLED', True)
 
-            if _settings.get('MASSCAN_ENABLED', False):
-                domain_result = run_masscan_scan(domain_result, output_file=None, settings=_settings)
-                merge_port_scan_results(domain_result)
+            if not _naabu_on and not _masscan_on:
+                print("\n[!][Pipeline] Both Naabu and Masscan are disabled — skipping port scan phase")
+                print("[!][Pipeline] Downstream modules (HTTP probe, vuln scan) require open ports to work")
+            else:
+                if _naabu_on:
+                    domain_result = run_port_scan(domain_result, output_file=output_file, settings=_settings)
+                    if "metadata" in domain_result and "modules_executed" in domain_result["metadata"]:
+                        if "port_scan" not in domain_result["metadata"]["modules_executed"]:
+                            domain_result["metadata"]["modules_executed"].append("port_scan")
+
+                if _masscan_on:
+                    domain_result = run_masscan_scan(domain_result, output_file=None, settings=_settings)
+                    merge_port_scan_results(domain_result)
+                    if "metadata" in domain_result and "modules_executed" in domain_result["metadata"]:
+                        if "masscan_scan" not in domain_result["metadata"]["modules_executed"]:
+                            domain_result["metadata"]["modules_executed"].append("masscan_scan")
 
             with open(output_file, 'w') as f:
                 json.dump(domain_result, f, indent=2)

@@ -327,8 +327,8 @@ def run_masscan_scan(recon_data: dict, output_file: Path = None, settings: dict 
     if settings is None:
         settings = {}
 
-    if not settings.get('MASSCAN_ENABLED', False):
-        print("[*][Masscan] Disabled — skipping")
+    if not settings.get('MASSCAN_ENABLED', True):
+        print("[-][Masscan] Disabled — skipping")
         return recon_data
 
     MASSCAN_RATE = settings.get('MASSCAN_RATE', 1000)

@@ -19,7 +19,7 @@ flowchart TB
     end
 
     subgraph Tools["🔧 MCP Tools Layer"]
-        NetworkRecon[Network Recon Server<br/>Curl + Naabu<br/>:8000]
+        NetworkRecon[Network Recon Server<br/>Curl + Naabu + Masscan<br/>:8000]
         Nuclei[Nuclei Server<br/>:8002]
         Metasploit[Metasploit Server<br/>:8003]
         Nmap[Nmap Server<br/>:8004]

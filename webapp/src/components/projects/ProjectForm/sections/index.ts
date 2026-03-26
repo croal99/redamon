@@ -1,6 +1,7 @@
 export { TargetSection } from './TargetSection'
 export { ScanModulesSection } from './ScanModulesSection'
 export { NaabuSection } from './NaabuSection'
+export { MasscanSection } from './MasscanSection'
 export { HttpxSection } from './HttpxSection'
 export { NucleiSection } from './NucleiSection'
 export { KatanaSection } from './KatanaSection'

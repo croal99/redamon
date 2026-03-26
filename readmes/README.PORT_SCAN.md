@@ -1,9 +1,9 @@
-# RedAmon - Naabu Port Scanner
+# RedAmon - Port Scanning (Masscan + Naabu)
 
 ## Complete Technical Documentation
 
-> **Module:** `recon/naabu_scan.py`  
-> **Purpose:** Fast, lightweight port scanning using ProjectDiscovery's Naabu  
+> **Modules:** `recon/masscan_scan.py`, `recon/port_scan.py`
+> **Purpose:** High-speed port scanning using Masscan and Naabu in parallel
 > **Author:** RedAmon Security Suite
 
 ---
@@ -726,5 +726,91 @@ NAABU_EXCLUDE_CDN = True
 
 ---
 
-*Documentation generated for RedAmon v1.0 - Naabu Port Scanner Module*
+# Masscan Port Scanner
+
+## Overview
+
+The `masscan_scan.py` module integrates Robert David Graham's Masscan — the fastest Internet port scanner — into RedAmon's reconnaissance pipeline. Masscan runs as a native binary built from source inside the recon container (not Docker-in-Docker). Both Masscan and Naabu are enabled by default and run in parallel; results are merged and deduplicated automatically.
+
+### Masscan vs Naabu
+
+| Feature | Masscan | Naabu |
+|---------|---------|-------|
+| **Speed** | Fastest (10M+ pps capable) | Fast (1000s pps) |
+| **Best for** | Large CIDR ranges, bulk IP scanning | Hostname-based scanning, CDN detection |
+| **CDN Detection** | No | Built-in |
+| **Tor Support** | No (raw SYN packets) | Yes (via SOCKS proxy) |
+| **Passive Mode** | No | Yes (Shodan InternetDB) |
+| **Execution** | Native binary | Docker container |
+| **Banner Grabbing** | Optional (`--banners`) | No |
+| **Output Format** | NDJSON (`-oD`) | JSON |
+
+### How It Works
+
+```
+┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
+│  Recon Data      │────▶│  masscan_scan.py  │────▶│  masscan_scan   │
+│  (IPs from DNS,  │     │                  │     │  key in JSON    │
+│   metadata)      │     │  1. Extract IPs  │     └────────┬────────┘
+└─────────────────┘     │  2. Write targets │              │
+                        │  3. Run masscan   │     ┌────────▼────────┐
+                        │  4. Parse NDJSON  │     │ merge into      │
+                        └──────────────────┘     │ port_scan key   │
+                                                  └─────────────────┘
+```
+
+**Pipeline integration:** Masscan runs in the same `ThreadPoolExecutor` as Naabu (GROUP 3 fan-out). After both complete, `merge_port_scan_results()` combines their output into the unified `port_scan` key, deduplicating by host+port. Downstream modules (httpx, Nuclei, graph DB) consume `port_scan` unchanged.
+
+---
+
+## Configuration Parameters
+
+All parameters are configured via the webapp project settings or as defaults in `project_settings.py`:
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `MASSCAN_ENABLED` | `bool` | `True` | Enable/disable Masscan |
+| `MASSCAN_TOP_PORTS` | `str` | `"1000"` | Top N ports ("100", "1000", "full") |
+| `MASSCAN_CUSTOM_PORTS` | `str` | `""` | Custom ports (overrides TOP_PORTS) |
+| `MASSCAN_RATE` | `int` | `1000` | Packets per second |
+| `MASSCAN_BANNERS` | `bool` | `False` | Capture service banners |
+| `MASSCAN_WAIT` | `int` | `10` | Seconds to wait for late responses |
+| `MASSCAN_RETRIES` | `int` | `1` | Retry attempts |
+| `MASSCAN_EXCLUDE_TARGETS` | `str` | `""` | Comma-separated IPs/CIDRs to exclude |
+
+**Port Examples:**
+```python
+MASSCAN_TOP_PORTS = "100"              # Top 100 ports
+MASSCAN_TOP_PORTS = "1000"             # Top 1000 ports (default)
+MASSCAN_TOP_PORTS = "full"             # All 65535 ports
+MASSCAN_CUSTOM_PORTS = "80,443,8080"   # Specific ports
+MASSCAN_CUSTOM_PORTS = "8080-8090"     # Port range
+```
+
+---
+
+## Key Design Decisions
+
+- **NDJSON output (`-oD`)** instead of `-oJ` to avoid Masscan's known trailing-comma JSON bug
+- **Native binary** (built from source in multi-stage Dockerfile) instead of Docker-in-Docker for simplicity
+- **Results merged** into existing `port_scan` key so all downstream modules work unchanged
+- **Mock hostname detection** prevents invalid URLs in IP mode (e.g., `10-0-0-1` replaced with `10.0.0.1`)
+- **Incompatible with Tor** — raw SYN packets bypass the TCP stack and cannot be proxied
+
+---
+
+## Stealth Mode Behavior
+
+In stealth mode, Masscan is **disabled** (active SYN scanning generates significant network traffic). Naabu switches to passive mode (Shodan InternetDB queries).
+
+---
+
+## References
+
+- [Masscan GitHub](https://github.com/robertdavidgraham/masscan)
+- [Masscan Usage Guide](https://github.com/robertdavidgraham/masscan#usage)
+
+---
+
+*Documentation updated for RedAmon v3.1 - Port Scanning Module (Masscan + Naabu)*
 

@@ -46,6 +46,7 @@ DEFAULT_SETTINGS: dict[str, Any] = {
     'DNS_MAX_RETRIES': 3,
 
     # Naabu Port Scanner
+    'NAABU_ENABLED': True,
     'NAABU_DOCKER_IMAGE': 'projectdiscovery/naabu:latest',
     'NAABU_TOP_PORTS': '1000',
     'NAABU_CUSTOM_PORTS': '',
@@ -60,8 +61,8 @@ DEFAULT_SETTINGS: dict[str, Any] = {
     'NAABU_VERIFY_PORTS': True,
     'NAABU_PASSIVE_MODE': False,
 
-    # Masscan Port Scanner (off by default)
-    'MASSCAN_ENABLED': False,
+    # Masscan Port Scanner
+    'MASSCAN_ENABLED': True,
     'MASSCAN_TOP_PORTS': '1000',
     'MASSCAN_CUSTOM_PORTS': '',
     'MASSCAN_RATE': 1000,
@@ -499,6 +500,7 @@ def fetch_project_settings(project_id: str, webapp_url: str) -> dict[str, Any]:
     settings['DNS_MAX_RETRIES'] = project.get('dnsMaxRetries', DEFAULT_SETTINGS['DNS_MAX_RETRIES'])
 
     # Naabu Port Scanner
+    settings['NAABU_ENABLED'] = project.get('naabuEnabled', DEFAULT_SETTINGS['NAABU_ENABLED'])
     settings['NAABU_DOCKER_IMAGE'] = project.get('naabuDockerImage', DEFAULT_SETTINGS['NAABU_DOCKER_IMAGE'])
     settings['NAABU_TOP_PORTS'] = project.get('naabuTopPorts', DEFAULT_SETTINGS['NAABU_TOP_PORTS'])
     settings['NAABU_CUSTOM_PORTS'] = project.get('naabuCustomPorts', DEFAULT_SETTINGS['NAABU_CUSTOM_PORTS'])

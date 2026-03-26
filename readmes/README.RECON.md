@@ -1046,21 +1046,21 @@ flowchart TB
 
 ### Feature Comparison
 
-| Feature | WHOIS | DNS | Shodan | URLScan | Naabu | httpx | Katana | Hakrawler | GAU | Kiterunner | jsluice | Nuclei | GVM |
-|---------|-------|-----|--------|---------|-------|-------|--------|-----------|-----|------------|---------|--------|-----|
-| **Domain Info** | ✅ | ⚠️ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **IP Resolution** | ❌ | ✅ | ⚠️ | ⚠️ | ⚠️ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Subdomain Discovery** | ❌ | ❌ | ⚠️ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Port Scanning** | ❌ | ❌ | ⚠️ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Live URL Check** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Tech Detection** | ❌ | ❌ | ⚠️ | ⚠️ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ⚠️ | ⚠️ |
-| **Endpoint Discovery** | ❌ | ❌ | ❌ | ⚠️ | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ | ⚠️ | ❌ | ❌ |
-| **Historical URLs** | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **API Discovery** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ |
-| **CVE Detection** | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
-| **External Domains** | ❌ | ❌ | ❌ | ✅ | ❌ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ❌ | ⚠️ | ❌ | ❌ |
-| **XSS/SQLi Testing** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ⚠️ |
-| **Secret Detection** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| Feature | WHOIS | DNS | Shodan | URLScan | Masscan | Naabu | httpx | Katana | Hakrawler | GAU | Kiterunner | jsluice | Nuclei | GVM |
+|---------|-------|-----|--------|---------|---------|-------|-------|--------|-----------|-----|------------|---------|--------|-----|
+| **Domain Info** | ✅ | ⚠️ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **IP Resolution** | ❌ | ✅ | ⚠️ | ⚠️ | ❌ | ⚠️ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Subdomain Discovery** | ❌ | ❌ | ⚠️ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Port Scanning** | ❌ | ❌ | ⚠️ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| **Live URL Check** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Tech Detection** | ❌ | ❌ | ⚠️ | ⚠️ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ⚠️ | ⚠️ |
+| **Endpoint Discovery** | ❌ | ❌ | ❌ | ⚠️ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ | ⚠️ | ❌ | ❌ |
+| **Historical URLs** | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **API Discovery** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ |
+| **CVE Detection** | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
+| **External Domains** | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ⚠️ | ⚠️ | ⚠️ | ⚠️ | ❌ | ⚠️ | ❌ | ❌ |
+| **XSS/SQLi Testing** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ⚠️ |
+| **Secret Detection** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 
 **Legend:** ✅ Primary | ⚠️ Limited | ❌ Not supported
 
@@ -1074,6 +1074,7 @@ flowchart TB
 | URLScan | 5-20 seconds | Passive, API rate-limited |
 | Amass | 1-10 minutes | Passive; longer with active/brute |
 | Puredns | 30-90 seconds | Depends on subdomain count |
+| Masscan | 1-30 seconds | Fastest for large CIDR ranges |
 | Naabu | 5-10 seconds | 1000 ports |
 | httpx | 10-30 seconds | All options |
 | Katana | 1-5 minutes | Crawl depth 3 |
@@ -1098,6 +1099,7 @@ All settings are managed through the webapp project form or via environment vari
 | `SCAN_MODULES` | all 5 modules | Modules to run |
 | `NAABU_TOP_PORTS` | `"1000"` | Top-N ports to scan |
 | `NAABU_SCAN_TYPE` | `"s"` | SYN scan |
+| `MASSCAN_RATE` | `1000` | Masscan packets/sec |
 | `NUCLEI_DAST_MODE` | `true` | Active fuzzing |
 | `NUCLEI_SEVERITY` | critical, high, medium, low | Severity filter |
 | `WAPPALYZER_ENABLED` | `true` | Technology detection |
@@ -1127,6 +1129,7 @@ docker-compose run --rm recon python /app/recon/main.py
 
 | Tool | Docker Image | Purpose |
 |------|--------------|---------|
+| Masscan | Built from source (native binary) | High-speed SYN port scanning |
 | Naabu | `projectdiscovery/naabu:latest` | Port scanning |
 | httpx | `projectdiscovery/httpx:latest` | HTTP probing |
 | Nuclei | `projectdiscovery/nuclei:latest` | Vuln scanning |

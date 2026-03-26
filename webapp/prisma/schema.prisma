@@ -147,6 +147,7 @@ model Project {
   trufflehogExcludeDetectors   String   @default("") @map("trufflehog_exclude_detectors")
 
   // ========== NAABU PORT SCANNER ==========
+  naabuEnabled                Boolean  @default(true) @map("naabu_enabled")
   naabuDockerImage            String   @default("projectdiscovery/naabu:latest") @map("naabu_docker_image")
   naabuTopPorts               String   @default("1000") @map("naabu_top_ports")
   naabuCustomPorts            String   @default("") @map("naabu_custom_ports")
@@ -162,7 +163,7 @@ model Project {
   naabuPassiveMode            Boolean  @default(false) @map("naabu_passive_mode")
 
   // ========== MASSCAN PORT SCANNER ==========
-  masscanEnabled              Boolean  @default(false) @map("masscan_enabled")
+  masscanEnabled              Boolean  @default(true) @map("masscan_enabled")
   masscanTopPorts             String   @default("1000") @map("masscan_top_ports")
   masscanCustomPorts          String   @default("") @map("masscan_custom_ports")
   masscanRate                 Int      @default(1000) @map("masscan_rate")

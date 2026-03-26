@@ -1121,6 +1121,32 @@ GVM-specific properties (source="gvm"):
 - retry_possible (boolean), phase (string)
 - created_at (datetime)
 
+### TruffleHog Secret Scanner Nodes (Hierarchy: Domain -> TrufflehogScan -> TrufflehogRepository -> TrufflehogFinding)
+
+**TrufflehogScan** - Scan metadata for a TruffleHog secret scan run
+- target (string): scan target (e.g. GitHub org name)
+- scan_start_time (string), scan_end_time (string): timestamps
+- duration_seconds (float): scan duration
+- status (string): "completed", "failed", "unknown"
+- total_findings (integer), verified_findings (integer), unverified_findings (integer)
+- repositories_scanned (integer)
+
+**TrufflehogRepository** - A repository scanned by TruffleHog
+- name (string): repository name (e.g. "org/repo-name")
+
+**TrufflehogFinding** - A secret found by TruffleHog in a repository
+- detector_name (string): detector type (e.g. "AWS", "GitHub", "PrivateKey", "Slack")
+- detector_description (string): human-readable detector description
+- verified (boolean): whether the secret was verified as active
+- redacted (string): redacted secret value
+- repository (string): repository name where found
+- file (string): file path within the repository
+- commit (string): git commit hash
+- line (integer): line number in file
+- link (string): URL to the finding location
+- timestamp (string): commit timestamp
+- extra_data (string): JSON string with additional detector-specific data
+
 **ExternalDomain** - Foreign domains encountered during recon (out-of-scope, informational only)
 - domain (string): foreign domain name
 - sources (string[]): discovery sources (http_probe_redirect, urlscan, gau, katana, hakrawler, jsluice, cert_discovery)
@@ -1182,6 +1208,11 @@ GVM-specific properties (source="gvm"):
 **CVE → MITRE Chain (from Technology CVE lookup, NOT from Vulnerability nodes):**
 - `(c:CVE)-[:HAS_CWE]->(m:MitreData)` - CVE has CWE weakness
 - `(m:MitreData)-[:HAS_CAPEC]->(cap:Capec)` - CWE has CAPEC attack pattern
+
+### TruffleHog Secret Scanner Relationships
+- `(d:Domain)-[:HAS_TRUFFLEHOG_SCAN]->(ts:TrufflehogScan)` - Domain has TruffleHog scan
+- `(ts:TrufflehogScan)-[:HAS_REPOSITORY]->(tr:TrufflehogRepository)` - Scan scanned repository
+- `(tr:TrufflehogRepository)-[:HAS_FINDING]->(tf:TrufflehogFinding)` - Repository has secret finding
 
 ### Gvm Exploitation Relationships
 - `(e:ExploitGvm)-[:EXPLOITED_CVE]->(c:CVE)` - GVM confirmed exploitation of CVE (only connection)
@@ -1321,6 +1352,41 @@ RETURN b.url, count(s) AS secret_count, collect(s.secret_type) AS types
 ORDER BY secret_count DESC
 ```
 
+### TruffleHog Secrets (Secrets Found in Git Repositories)
+```cypher
+// All TruffleHog findings (verified secrets)
+MATCH (d:Domain)-[:HAS_TRUFFLEHOG_SCAN]->(ts:TrufflehogScan)-[:HAS_REPOSITORY]->(tr:TrufflehogRepository)-[:HAS_FINDING]->(tf:TrufflehogFinding)
+WHERE tf.verified = true
+RETURN tr.name AS repository, tf.detector_name, tf.file, tf.line, tf.redacted
+LIMIT 50
+
+// TruffleHog scan summary
+MATCH (ts:TrufflehogScan)
+RETURN ts.target, ts.status, ts.total_findings, ts.verified_findings, ts.repositories_scanned
+
+// TruffleHog findings grouped by detector type
+MATCH (tf:TrufflehogFinding)
+RETURN tf.detector_name, count(tf) AS finding_count, sum(CASE WHEN tf.verified THEN 1 ELSE 0 END) AS verified_count
+ORDER BY finding_count DESC
+
+// TruffleHog findings in a specific repository
+MATCH (tr:TrufflehogRepository)-[:HAS_FINDING]->(tf:TrufflehogFinding)
+WHERE tr.name CONTAINS "repo-name"
+RETURN tf.detector_name, tf.file, tf.line, tf.verified, tf.redacted
+```
+
+### ALL Secrets (Web + Git Repository)
+When user asks about "secrets" broadly, query BOTH Secret nodes AND TrufflehogFinding nodes:
+```cypher
+// Combined view of all secrets from all sources
+MATCH (b:BaseURL)-[:HAS_SECRET]->(s:Secret)
+RETURN 'Web Resource' as source, s.secret_type as type, s.source_url as location, s.severity as severity
+UNION ALL
+MATCH (tf:TrufflehogFinding)
+RETURN 'Git Repository' as source, tf.detector_name as type, tf.repository + '/' + tf.file as location, CASE WHEN tf.verified THEN 'high' ELSE 'medium' END as severity
+LIMIT 50
+```
+
 ### CISA KEV (Known Weaponized Vulnerabilities)
 ```cypher
 // Find vulnerabilities in the CISA Known Exploited Vulnerabilities catalog
@@ -1423,17 +1489,21 @@ RETURN s.name, collect(t.name) as technologies
    - Vulnerability nodes = scanner findings (nuclei, gvm, security_check)
    - CVE nodes = known CVEs linked to detected technologies
    - Use UNION ALL to combine results from both node types
-2. **Always use LIMIT** to restrict results (default: 20-50)
-3. **Relationship direction matters** - follow the arrows exactly as documented
-4. **Use property filters** in WHERE clauses, not relationship traversals for filtering
-5. **Check vulnerability source** when querying Vulnerability nodes:
+2. **CRITICAL - Query BOTH Secret AND TrufflehogFinding nodes** when user asks about "secrets":
+   - Secret nodes = secrets found in live web resources (JS files, configs) via jsluice
+   - TrufflehogFinding nodes = secrets found in git repositories via TruffleHog
+   - Use UNION ALL to combine results from both node types
+3. **Always use LIMIT** to restrict results (default: 20-50)
+4. **Relationship direction matters** - follow the arrows exactly as documented
+5. **Use property filters** in WHERE clauses, not relationship traversals for filtering
+6. **Check vulnerability source** when querying Vulnerability nodes:
    - source="nuclei" -> web/DAST vulnerabilities (FOUND_AT, AFFECTS_PARAMETER)
    - source="gvm" -> network vulnerabilities (HAS_VULNERABILITY from IP/Subdomain)
    - source="security_check" -> DNS/email security checks (SPF, DMARC)
-6. **Case sensitivity**:
+7. **Case sensitivity**:
    - Vulnerability.severity is lowercase: "critical", "high", "medium", "low"
    - CVE.severity is uppercase: "CRITICAL", "HIGH", "MEDIUM", "LOW"
-7. **Do NOT include user_id/project_id filters** - they are injected automatically
+8. **Do NOT include user_id/project_id filters** - they are injected automatically
 
 ## Output Format
 Generate ONLY valid Cypher queries. No explanations, no markdown formatting.
