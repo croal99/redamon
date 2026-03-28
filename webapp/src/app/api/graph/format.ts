@@ -33,49 +33,84 @@ export interface FormattedGraphData {
 }
 
 /**
- * Format raw Neo4j relationship records into nodes + links for GraphCanvas.
+ * Format raw Neo4j records into nodes + links for GraphCanvas.
  *
- * Records must return `n` (source node), `r` (relationship), `m` (target node).
- * Deduplicates nodes by Neo4j identity; links are kept as-is (duplicates possible
- * when multiple relationship types exist between the same pair).
+ * Supports two result shapes:
+ *   1. Graph patterns — records contain Neo4j Node / Relationship objects
+ *      (e.g. MATCH (n)-[r]->(m) RETURN n, r, m)
+ *   2. Tabular / aggregation — records contain scalar values
+ *      (e.g. RETURN s.name, count(i) AS ip_count)
+ *
+ * For shape 1 we extract nodes and links from every Node and Relationship
+ * found in the record, regardless of the variable names used in the Cypher.
+ * For shape 2 we synthesise a virtual node per row so the graph canvas has
+ * something to render.
  */
 export function formatGraphRecords(records: any[]): FormattedGraphData {
   const nodesMap = new Map<string, FormattedNode>()
   const links: { source: string; target: string; type: string }[] = []
 
-  records.forEach((record) => {
-    const sourceNode = record.get('n') as Neo4jNode | null
-    const targetNode = record.get('m') as Neo4jNode | null
-    const relationship = record.get('r') as Neo4jRelationship | null
+  records.forEach((record, rowIdx) => {
+    const keys = record.keys as string[]
+    const nodes: Neo4jNode[] = []
+    const rels: Neo4jRelationship[] = []
+    let hasGraphObjects = false
 
-    if (!sourceNode || !targetNode || !relationship) return
-
-    const sourceId = `${sourceNode.identity.low}`
-    const targetId = `${targetNode.identity.low}`
-
-    if (!nodesMap.has(sourceId)) {
-      nodesMap.set(sourceId, {
-        id: sourceId,
-        name: getNodeName(sourceNode),
-        type: sourceNode.labels[0] || 'Unknown',
-        properties: serializeProperties(sourceNode.properties),
-      })
+    // Scan every field in the record for Node / Relationship objects
+    for (const key of keys) {
+      const val = record.get(key)
+      if (val && typeof val === 'object' && 'labels' in val && 'identity' in val) {
+        // Neo4j Node
+        nodes.push(val as Neo4jNode)
+        hasGraphObjects = true
+      } else if (val && typeof val === 'object' && 'type' in val && 'start' in val && 'end' in val) {
+        // Neo4j Relationship
+        rels.push(val as Neo4jRelationship)
+        hasGraphObjects = true
+      }
     }
 
-    if (!nodesMap.has(targetId)) {
-      nodesMap.set(targetId, {
-        id: targetId,
-        name: getNodeName(targetNode),
-        type: targetNode.labels[0] || 'Unknown',
-        properties: serializeProperties(targetNode.properties),
+    if (hasGraphObjects) {
+      // Shape 1: graph pattern — register all nodes and relationships
+      for (const node of nodes) {
+        const id = `${node.identity.low}`
+        if (!nodesMap.has(id)) {
+          nodesMap.set(id, {
+            id,
+            name: getNodeName(node),
+            type: node.labels[0] || 'Unknown',
+            properties: serializeProperties(node.properties),
+          })
+        }
+      }
+
+      for (const rel of rels) {
+        links.push({
+          source: `${rel.start.low}`,
+          target: `${rel.end.low}`,
+          type: rel.type,
+        })
+      }
+    } else {
+      // Shape 2: tabular / aggregation — build a virtual node from the row
+      const props: Record<string, unknown> = {}
+      const nameParts: string[] = []
+      for (const key of keys) {
+        const val = record.get(key)
+        const serialized = val && typeof val === 'object' && 'low' in val
+          ? (val as { low: number }).low
+          : val
+        props[key] = serialized
+        nameParts.push(`${serialized}`)
+      }
+      const id = `row-${rowIdx}`
+      nodesMap.set(id, {
+        id,
+        name: nameParts.join(' | '),
+        type: 'QueryResult',
+        properties: props,
       })
     }
-
-    links.push({
-      source: sourceId,
-      target: targetId,
-      type: relationship.type,
-    })
   })
 
   return { nodes: Array.from(nodesMap.values()), links }

@@ -1,7 +1,7 @@
 'use client'
 
-import { memo } from 'react'
-import { Waypoints, Table2, Terminal, Shield, Search, Download, SquareTerminal, Eye } from 'lucide-react'
+import { memo, useState, useRef, useEffect, useCallback } from 'react'
+import { Waypoints, Table2, Terminal, Shield, Search, Download, SquareTerminal, Filter, Trash2, X } from 'lucide-react'
 import styles from './ViewTabs.module.css'
 
 export type ViewMode = 'graph' | 'graphViews' | 'table' | 'sessions' | 'terminal' | 'roe'
@@ -18,6 +18,12 @@ export interface TunnelStatus {
   chisel: TunnelInfo
 }
 
+interface DataFilterView {
+  id: string
+  name: string
+  description?: string
+}
+
 interface ViewTabsProps {
   activeView: ViewMode
   onViewChange: (view: ViewMode) => void
@@ -27,12 +33,15 @@ interface ViewTabsProps {
   onExport?: () => void
   totalRows?: number
   filteredRows?: number
-  // Graph views badge
-  viewCount?: number
   // Sessions badge
   sessionCount?: number
   // Tunnel status
   tunnelStatus?: TunnelStatus
+  // Data filter selector
+  dataFilters?: DataFilterView[]
+  selectedFilterId?: string | null
+  onSelectFilter?: (id: string | null) => void
+  onDeleteFilter?: (id: string) => void
 }
 
 export const ViewTabs = memo(function ViewTabs({
@@ -43,10 +52,51 @@ export const ViewTabs = memo(function ViewTabs({
   onExport,
   totalRows,
   filteredRows,
-  viewCount,
   sessionCount,
   tunnelStatus,
+  dataFilters,
+  selectedFilterId,
+  onSelectFilter,
+  onDeleteFilter,
 }: ViewTabsProps) {
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  const selectedFilter = dataFilters?.find(f => f.id === selectedFilterId)
+  const hasFilters = dataFilters && dataFilters.length > 0
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    if (!dropdownOpen) return
+    const handleClick = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [dropdownOpen])
+
+  const handleSelectFilter = useCallback((id: string) => {
+    if (id === selectedFilterId) {
+      onSelectFilter?.(null)
+    } else {
+      onSelectFilter?.(id)
+    }
+    setDropdownOpen(false)
+  }, [selectedFilterId, onSelectFilter])
+
+  const handleDeleteFilter = useCallback((id: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    onDeleteFilter?.(id)
+  }, [onDeleteFilter])
+
+  const handleClearFilter = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation()
+    onSelectFilter?.(null)
+    setDropdownOpen(false)
+  }, [onSelectFilter])
+
   return (
     <div className={styles.tabBar}>
       <div className={styles.tabs} role="tablist" aria-label="View mode">
@@ -59,17 +109,71 @@ export const ViewTabs = memo(function ViewTabs({
           <Waypoints size={14} />
           <span>Graph Map</span>
         </button>
+
+        {/* Data Filter selector -- only shown when filters exist */}
+        {hasFilters && (
+          <div className={styles.filterSelectorWrap} ref={dropdownRef}>
+            <button
+              className={`${styles.filterPill} ${selectedFilter ? styles.filterPillActive : ''}`}
+              onClick={() => setDropdownOpen(prev => !prev)}
+              title={selectedFilter ? `Active filter: ${selectedFilter.name}` : 'Select a data filter'}
+            >
+              <Filter size={11} />
+              {selectedFilter ? (
+                <>
+                  <span className={styles.filterPillName}>{selectedFilter.name}</span>
+                  <span
+                    className={styles.filterPillClear}
+                    onClick={handleClearFilter}
+                    title="Clear filter"
+                  >
+                    <X size={10} />
+                  </span>
+                </>
+              ) : (
+                <span className={styles.filterPillLabel}>Filters</span>
+              )}
+            </button>
+
+            {dropdownOpen && (
+              <div className={styles.filterDropdown}>
+                <div className={styles.filterDropdownHeader}>Data Filters</div>
+                <div className={styles.filterDropdownList}>
+                  {dataFilters!.map(f => (
+                    <div
+                      key={f.id}
+                      className={`${styles.filterDropdownItem} ${f.id === selectedFilterId ? styles.filterDropdownItemActive : ''}`}
+                      onClick={() => handleSelectFilter(f.id)}
+                    >
+                      <div className={styles.filterDropdownInfo}>
+                        <span className={styles.filterDropdownName}>{f.name}</span>
+                        {f.description && (
+                          <span className={styles.filterDropdownDesc}>{f.description}</span>
+                        )}
+                      </div>
+                      <button
+                        className={styles.filterDropdownDelete}
+                        onClick={(e) => handleDeleteFilter(f.id, e)}
+                        title="Delete filter"
+                      >
+                        <Trash2 size={11} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         <button
           role="tab"
           aria-selected={activeView === 'graphViews'}
           className={`${styles.tab} ${activeView === 'graphViews' ? styles.tabActive : ''}`}
           onClick={() => onViewChange('graphViews')}
         >
-          <Eye size={14} />
-          <span>Graph Views</span>
-          {viewCount != null && viewCount > 0 && (
-            <span className={styles.badge}>{viewCount}</span>
-          )}
+          <Filter size={14} />
+          <span>Create Data Filter</span>
         </button>
         <button
           role="tab"
@@ -95,7 +199,7 @@ export const ViewTabs = memo(function ViewTabs({
         <button
           role="tab"
           aria-selected={activeView === 'terminal'}
-          className={`${styles.tab} ${activeView === 'terminal' ? styles.tabActive : ''} ${activeView === 'terminal' ? styles.tabTerminal : ''}`}
+          className={`${styles.tab} ${activeView === 'terminal' ? styles.tabActive : ''}`}
           onClick={() => onViewChange('terminal')}
         >
           <SquareTerminal size={14} />
@@ -116,7 +220,7 @@ export const ViewTabs = memo(function ViewTabs({
         {(tunnelStatus?.ngrok?.active || tunnelStatus?.chisel?.active) && (
           <div className={styles.tunnelBadges}>
             {tunnelStatus.ngrok?.active && (
-              <span className={styles.tunnelBadge} title={`Tunnel active — used for reverse shells. Target connects to ${tunnelStatus.ngrok.host}:${tunnelStatus.ngrok.port} which forwards to kali-sandbox:4444`}>
+              <span className={styles.tunnelBadge} title={`Tunnel active -- used for reverse shells. Target connects to ${tunnelStatus.ngrok.host}:${tunnelStatus.ngrok.port} which forwards to kali-sandbox:4444`}>
                 <span className={styles.tunnelDot} />
                 <span className={styles.tunnelName}>ngrok</span>
                 <span className={styles.tunnelSep}>|</span>
@@ -124,7 +228,7 @@ export const ViewTabs = memo(function ViewTabs({
               </span>
             )}
             {tunnelStatus.chisel?.active && (
-              <span className={styles.tunnelBadge} title={`Tunnel active — used for reverse shells. Target connects to ${tunnelStatus.chisel.host}:${tunnelStatus.chisel.port} which forwards to kali-sandbox:4444. Web delivery at ${tunnelStatus.chisel.host}:${tunnelStatus.chisel.srvPort} → kali-sandbox:8080`}>
+              <span className={styles.tunnelBadge} title={`Tunnel active -- used for reverse shells. Target connects to ${tunnelStatus.chisel.host}:${tunnelStatus.chisel.port} which forwards to kali-sandbox:4444. Web delivery at ${tunnelStatus.chisel.host}:${tunnelStatus.chisel.srvPort} -> kali-sandbox:8080`}>
                 <span className={styles.tunnelDot} />
                 <span className={styles.tunnelName}>chisel</span>
                 <span className={styles.tunnelSep}>|</span>

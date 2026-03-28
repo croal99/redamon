@@ -78,8 +78,33 @@ export default function GraphPage() {
   const { isDark } = useTheme()
   const { sessionId, resetSession, switchSession } = useSession()
 
-  // Graph views for the Graph Views tab + AI drawer scope selector
-  const { views: graphViews } = useGraphViews(projectId)
+  // Data filters (formerly graph views) -- used in tab selector, Graph Map, Data Table, AI drawer
+  const { views: graphViews, deleteView, executeCypher, fetchViews } = useGraphViews(projectId)
+  const [selectedFilterId, setSelectedFilterId] = useState<string | null>(null)
+  const [filterGraphData, setFilterGraphData] = useState<{ nodes: any[]; links: any[]; projectId: string } | null>(null)
+  const [filterLoading, setFilterLoading] = useState(false)
+
+  // Resolve the Cypher query for the selected filter (stable across graphViews refetches)
+  const selectedFilterCypherQuery = useMemo(() => {
+    if (!selectedFilterId) return null
+    return graphViews.find(v => v.id === selectedFilterId)?.cypherQuery ?? null
+  }, [selectedFilterId, graphViews])
+
+  // Active filter Cypher for the agent
+  const selectedFilterCypher = selectedFilterCypherQuery ?? undefined
+
+  // Clear filter if the selected filter gets deleted
+  const handleDeleteFilter = useCallback(async (id: string) => {
+    const ok = await deleteView(id)
+    if (ok && selectedFilterId === id) {
+      setSelectedFilterId(null)
+    }
+  }, [deleteView, selectedFilterId])
+
+  // Callback for when a new filter is created in the GraphViews tab
+  const handleFilterCreated = useCallback(() => {
+    fetchViews()
+  }, [fetchViews])
 
   // Agent status polling — lightweight fetch every 5s for toolbar indicators
   const [agentSummary, setAgentSummary] = useState<{
@@ -164,6 +189,29 @@ export default function GraphPage() {
     isReconRunning,
     isAgentRunning,
   })
+
+  // Execute filter Cypher when selected filter changes or when graph data refreshes
+  // (so the filtered view stays in sync with live recon/agent data)
+  const filterRefreshKey = data?.nodes.length ?? 0
+  useEffect(() => {
+    if (!selectedFilterCypherQuery || !projectId) {
+      setFilterGraphData(null)
+      return
+    }
+    let cancelled = false
+    setFilterLoading(true)
+    executeCypher(selectedFilterCypherQuery).then(result => {
+      if (cancelled) return
+      setFilterLoading(false)
+      if ('error' in result) {
+        setFilterGraphData(null)
+      } else {
+        setFilterGraphData({ nodes: result.nodes, links: result.links, projectId })
+      }
+    })
+    return () => { cancelled = true }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedFilterCypherQuery, projectId, executeCypher, filterRefreshKey])
 
   // Recon logs SSE hook
   const {
@@ -262,6 +310,7 @@ export default function GraphPage() {
 
   // ── Table view state (lifted from DataTable) ──────────────────────────
   const tableRows = useTableData(data)
+  const filterTableRows = useTableData(filterGraphData ?? undefined)
   const [globalFilter, setGlobalFilter] = useState('')
   const [activeNodeTypes, setActiveNodeTypes] = useState<Set<string>>(new Set())
   const [tableInitialized, setTableInitialized] = useState(false)
@@ -416,14 +465,17 @@ export default function GraphPage() {
     return { ...data, nodes: filteredNodes, links: filteredLinks }
   }, [data, activeNodeTypes, nodeTypes.length, hiddenSessions, CHAIN_NODE_TYPES])
 
+  // Effective table rows: use filter data when a data filter is active
+  const effectiveTableRows = selectedFilterId ? filterTableRows : filteredByType
+
   const textFilteredCount = useMemo(() => {
-    if (!globalFilter) return filteredByType.length
+    if (!globalFilter) return effectiveTableRows.length
     const search = globalFilter.toLowerCase()
-    return filteredByType.filter(r =>
+    return effectiveTableRows.filter(r =>
       r.node.name?.toLowerCase().includes(search) ||
       r.node.type?.toLowerCase().includes(search)
     ).length
-  }, [filteredByType, globalFilter])
+  }, [effectiveTableRows, globalFilter])
 
   const handleToggleNodeType = useCallback((type: string) => {
     setActiveNodeTypes(prev => {
@@ -443,7 +495,7 @@ export default function GraphPage() {
   }, [])
 
   const handleExportExcel = useCallback(() => {
-    let rows = filteredByType
+    let rows = effectiveTableRows
     if (globalFilter) {
       const search = globalFilter.toLowerCase()
       rows = rows.filter(r =>
@@ -452,7 +504,7 @@ export default function GraphPage() {
       )
     }
     exportToExcel(rows)
-  }, [filteredByType, globalFilter])
+  }, [effectiveTableRows, globalFilter])
 
   // ── End table view state ──────────────────────────────────────────────
 
@@ -885,11 +937,14 @@ export default function GraphPage() {
         globalFilter={globalFilter}
         onGlobalFilterChange={setGlobalFilter}
         onExport={handleExportExcel}
-        totalRows={filteredByType.length}
+        totalRows={effectiveTableRows.length}
         filteredRows={textFilteredCount}
-        viewCount={graphViews.length}
         sessionCount={activeSessions.totalCount}
         tunnelStatus={tunnelStatus}
+        dataFilters={graphViews}
+        selectedFilterId={selectedFilterId}
+        onSelectFilter={setSelectedFilterId}
+        onDeleteFilter={handleDeleteFilter}
       />
 
       <div ref={bodyRef} className={styles.body}>
@@ -905,8 +960,8 @@ export default function GraphPage() {
         <div ref={contentRef} className={styles.content}>
           {activeView === 'graph' ? (
             <GraphCanvas
-              data={filteredGraphData}
-              isLoading={isLoading}
+              data={filterGraphData ?? filteredGraphData}
+              isLoading={filterLoading || isLoading}
               error={error}
               projectId={projectId || ''}
               is3D={is3D}
@@ -926,13 +981,14 @@ export default function GraphPage() {
               is3D={is3D}
               showLabels={showLabels}
               isDark={isDark}
+              onFilterCreated={handleFilterCreated}
             />
           ) : activeView === 'table' ? (
             <DataTable
-              data={data}
-              isLoading={isLoading}
+              data={filterGraphData ?? data}
+              isLoading={filterLoading || isLoading}
               error={error}
-              rows={filteredByType}
+              rows={effectiveTableRows}
               globalFilter={globalFilter}
               onGlobalFilterChange={setGlobalFilter}
             />
@@ -1041,7 +1097,7 @@ export default function GraphPage() {
         onToggleOtherChains={handleToggleOtherChains}
         hasOtherChains={sessionChainIds.length > 1 || (sessionChainIds.length === 1 && sessionChainIds[0] !== sessionId)}
         requireToolConfirmation={currentProject?.agentRequireToolConfirmation ?? true}
-        graphViews={graphViews}
+        graphViewCypher={selectedFilterCypher}
       />
 
       <ReconConfirmModal

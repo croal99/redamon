@@ -7,7 +7,7 @@
 
 'use client'
 
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import styles from './AIAssistantDrawer.module.css'
 
 // Hooks
@@ -63,7 +63,7 @@ export function AIAssistantDrawer({
   onToggleOtherChains,
   hasOtherChains = false,
   requireToolConfirmation = true,
-  graphViews,
+  graphViewCypher,
 }: AIAssistantDrawerProps) {
   // ─── State hooks ─────────────────────────────────────────────────────────────
   const statusWord = useLoadingWord()
@@ -127,15 +127,6 @@ export function AIAssistantDrawer({
     handleSelectModel,
     modelSearchRef,
   } = useModelPicker(userId, onModelChange)
-
-  // ─── Graph view scope for agent queries ────────────────────────────────────
-  const [selectedGraphViewId, setSelectedGraphViewId] = useState<string | null>(null)
-
-  const selectedGraphViewCypher = useMemo(() => {
-    if (!selectedGraphViewId || !graphViews) return undefined
-    const view = graphViews.find(v => v.id === selectedGraphViewId)
-    return view?.cypherQuery
-  }, [selectedGraphViewId, graphViews])
 
   const {
     showSettingsDropdown, setShowSettingsDropdown,
@@ -232,7 +223,7 @@ export function AIAssistantDrawer({
     userId,
     projectId,
     sessionId,
-    graphViewCypher: selectedGraphViewCypher,
+    graphViewCypher,
     enabled: isOpen,
     onMessage: handleWebSocketMessage,
   })
@@ -327,9 +318,6 @@ export function AIAssistantDrawer({
         handleSelectConversation={handleSelectConversation}
         handleDeleteConversation={handleDeleteConversation}
         handleHistoryNewChat={handleHistoryNewChat}
-        graphViews={graphViews}
-        selectedGraphViewId={selectedGraphViewId}
-        onSelectGraphView={setSelectedGraphViewId}
       />
 
       <PhaseIndicatorBar
