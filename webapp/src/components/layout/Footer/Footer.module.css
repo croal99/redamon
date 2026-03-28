@@ -37,8 +37,38 @@
   text-decoration: underline;
 }
 
+.versionWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1-5);
+}
+
 .version {
   font-size: var(--text-xs);
   color: var(--text-tertiary);
   font-family: var(--font-mono);
+}
+
+.updateAlert {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--status-warning-text);
+  cursor: pointer;
+  padding: 2px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-all);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.updateAlert:hover {
+  color: var(--text-primary);
+  background: var(--status-warning-bg);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }

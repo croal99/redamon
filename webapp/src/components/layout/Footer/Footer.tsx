@@ -1,11 +1,15 @@
 'use client'
 
-import { Scale } from 'lucide-react'
+import { Scale, AlertCircle } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { DISCLAIMER_GITHUB_URL } from '@/lib/disclaimerVersion'
+import { useVersionCheck } from '@/hooks/useVersionCheck'
 import styles from './Footer.module.css'
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
+  const { currentVersion, updateAvailable } = useVersionCheck()
+  const router = useRouter()
 
   return (
     <footer className={styles.footer}>
@@ -24,7 +28,18 @@ export function Footer() {
             Legal & Terms of Use
           </a>
         </div>
-        <span className={styles.version}>v3.0.0</span>
+        <div className={styles.versionWrapper}>
+          {updateAvailable && (
+            <button
+              className={styles.updateAlert}
+              onClick={() => router.push('/settings?tab=system')}
+              title="Update available — click to view"
+            >
+              <AlertCircle size={14} />
+            </button>
+          )}
+          <span className={styles.version}>v{currentVersion}</span>
+        </div>
       </div>
     </footer>
   )

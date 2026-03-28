@@ -110,13 +110,13 @@ export function UpdateNotification() {
       footer={
         <div className={styles.footer}>
           <a
-            href="https://github.com/samugit83/redamon/releases"
+            href="https://github.com/samugit83/redamon/blob/master/CHANGELOG.md"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.releasesLink}
           >
             <ExternalLink size={14} />
-            GitHub Releases
+            Changelog
           </a>
           <button type="button" className={styles.laterButton} onClick={dismissUpdate}>
             Later

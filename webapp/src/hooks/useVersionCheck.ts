@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from 'react'
 import { isNewerVersion } from '@/lib/semver'
 import type { ChangelogEntry } from '@/lib/parseChangelog'
 
-const SESSION_CACHE_KEY = 'redamon-version-check'
 const DISMISSED_KEY = 'redamon-dismissed-version'
 
 interface VersionCheckResult {
@@ -20,7 +19,6 @@ interface VersionCheckState {
   updateAvailable: boolean
   isDismissed: boolean
   loading: boolean
-  checkForUpdates: () => void
   dismissUpdate: () => void
 }
 
@@ -39,21 +37,7 @@ export function useVersionCheck(): VersionCheckState {
   const updateAvailable = latestVersion !== null && isNewerVersion(currentVersion, latestVersion)
   const isDismissed = latestVersion !== null && dismissedVersion === latestVersion
 
-  const fetchVersion = useCallback(async (useCache: boolean) => {
-    // Check sessionStorage cache
-    if (useCache && typeof window !== 'undefined') {
-      const cached = sessionStorage.getItem(SESSION_CACHE_KEY)
-      if (cached) {
-        try {
-          const data: VersionCheckResult = JSON.parse(cached)
-          setCurrentVersion(data.current_version)
-          setLatestVersion(data.latest_version)
-          setChangelog(data.changelog)
-          return
-        } catch { /* ignore bad cache */ }
-      }
-    }
-
+  const fetchVersion = useCallback(async () => {
     setLoading(true)
     try {
       const res = await fetch('/api/version/check')
@@ -64,10 +48,6 @@ export function useVersionCheck(): VersionCheckState {
         setCurrentVersion(data.current_version)
         setLatestVersion(data.latest_version)
         setChangelog(data.changelog || [])
-
-        if (typeof window !== 'undefined') {
-          sessionStorage.setItem(SESSION_CACHE_KEY, JSON.stringify(data))
-        }
       }
     } catch {
       // Silent failure -- no error UI if GitHub is unreachable
@@ -76,13 +56,6 @@ export function useVersionCheck(): VersionCheckState {
     }
   }, [])
 
-  const checkForUpdates = useCallback(() => {
-    if (typeof window !== 'undefined') {
-      sessionStorage.removeItem(SESSION_CACHE_KEY)
-    }
-    fetchVersion(false)
-  }, [fetchVersion])
-
   const dismissUpdate = useCallback(() => {
     if (latestVersion && typeof window !== 'undefined') {
       localStorage.setItem(DISMISSED_KEY, latestVersion)
@@ -90,9 +63,9 @@ export function useVersionCheck(): VersionCheckState {
     }
   }, [latestVersion])
 
-  // Initial fetch on mount
+  // Fetch fresh on every mount (page load)
   useEffect(() => {
-    fetchVersion(true)
+    fetchVersion()
   }, [fetchVersion])
 
   return {
@@ -102,7 +75,6 @@ export function useVersionCheck(): VersionCheckState {
     updateAvailable,
     isDismissed,
     loading,
-    checkForUpdates,
     dismissUpdate,
   }
 }

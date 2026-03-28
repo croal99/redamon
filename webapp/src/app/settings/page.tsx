@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Plus, Pencil, Trash2, Loader2, Eye, EyeOff, Upload, Download, Swords, RotateCw, RefreshCw, Copy, Check, ExternalLink, ChevronDown, ChevronRight, Info } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
+import { Plus, Pencil, Trash2, Loader2, Eye, EyeOff, Upload, Download, Swords, RotateCw, Copy, Check, ExternalLink, ChevronDown, ChevronRight, Info } from 'lucide-react'
 import { useProject } from '@/providers/ProjectProvider'
 import { useVersionCheck } from '@/hooks/useVersionCheck'
 import { LlmProviderForm } from '@/components/settings/LlmProviderForm'
@@ -444,6 +445,11 @@ export default function SettingsPage() {
     closeRotationModal()
   }, [rotationModal, closeRotationModal])
 
+  const searchParams = useSearchParams()
+  const validTabs = ['providers', 'skills', 'keys', 'system']
+  const initialTab = searchParams.get('tab') || 'providers'
+  const [activeTab, setActiveTab] = useState(validTabs.includes(initialTab) ? initialTab : 'providers')
+
   if (!userId) {
     return (
       <div className={styles.page}>
@@ -456,12 +462,27 @@ export default function SettingsPage() {
   return (
     <div className={styles.page}>
       <h1 className={styles.pageTitle}>Global Settings <span style={{ fontSize: '0.55em', fontWeight: 400, opacity: 0.5 }}>(User-Scoped)</span></h1>
-      <p style={{ color: 'var(--text-secondary)', fontSize: '13px', margin: '-8px 0 16px' }}>
+      <p style={{ color: 'var(--text-secondary)', fontSize: '13px', margin: '0 0 var(--space-4)' }}>
         Personal configuration for the current user. These settings apply across all projects.
       </p>
 
-      {/* Section 1: LLM Providers */}
-      <div className={styles.section}>
+      <div className={styles.tabBar}>
+        <button className={`${styles.tab} ${activeTab === 'providers' ? styles.tabActive : ''}`} onClick={() => setActiveTab('providers')}>
+          LLM Providers
+        </button>
+        <button className={`${styles.tab} ${activeTab === 'skills' ? styles.tabActive : ''}`} onClick={() => setActiveTab('skills')}>
+          <Swords size={14} /> Agent Skills
+        </button>
+        <button className={`${styles.tab} ${activeTab === 'keys' ? styles.tabActive : ''}`} onClick={() => setActiveTab('keys')}>
+          API Keys & Tunneling
+        </button>
+        <button className={`${styles.tab} ${activeTab === 'system' ? styles.tabActive : ''}`} onClick={() => setActiveTab('system')}>
+          <Info size={14} /> System
+        </button>
+      </div>
+
+      {/* Tab: LLM Providers */}
+      {activeTab === 'providers' && <div className={styles.section}>
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>LLM Providers</h2>
           {!showProviderForm && !editingProvider && (
@@ -522,10 +543,10 @@ export default function SettingsPage() {
             </div>
           )
         )}
-      </div>
+      </div>}
 
-      {/* Section 2: Agent Skills */}
-      <div className={styles.section}>
+      {/* Tab: Agent Skills */}
+      {activeTab === 'skills' && <div className={styles.section}>
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}><Swords size={16} /> Agent Skills</h2>
           <label className="primaryButton" style={{ cursor: 'pointer' }}>
@@ -576,10 +597,10 @@ export default function SettingsPage() {
             ))}
           </div>
         )}
-      </div>
+      </div>}
 
-      {/* Section 3: API Keys (User-Scoped) */}
-      <div className={styles.section}>
+      {/* Tab: API Keys & Tunneling */}
+      {activeTab === 'keys' && <><div className={styles.section}>
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>API Keys</h2>
         </div>
@@ -763,16 +784,9 @@ export default function SettingsPage() {
             />
           </div>
         )}
-        {settingsDirty && !settingsSaving && (
-          <div className={styles.formActions} style={{ justifyContent: 'flex-end', marginTop: '12px' }}>
-            <button className="primaryButton" onClick={saveSettings} disabled={settingsSaving}>
-              Save Settings
-            </button>
-          </div>
-        )}
       </div>
 
-      {/* Section 4: Tunneling */}
+      {/* Tunneling sub-section */}
       <div className={styles.section}>
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>Tunneling</h2>
@@ -823,7 +837,10 @@ export default function SettingsPage() {
             </button>
           </div>
         )}
-      </div>
+      </div></>}
+
+      {/* Tab: System */}
+      {activeTab === 'system' && <SystemSection />}
 
       {/* Skill upload modal */}
       <Modal
@@ -1006,8 +1023,6 @@ export default function SettingsPage() {
         </div>
       </Modal>
 
-      {/* Section 5: System (not user-scoped) */}
-      <SystemSection />
     </div>
   )
 }
@@ -1017,7 +1032,7 @@ export default function SettingsPage() {
 // ---------------------------------------------------------------------------
 
 function SystemSection() {
-  const { currentVersion, latestVersion, changelog, updateAvailable, loading, checkForUpdates } = useVersionCheck()
+  const { currentVersion, latestVersion, changelog, updateAvailable, loading } = useVersionCheck()
 
   const [copied, setCopied] = useState(false)
   const [expandedVersions, setExpandedVersions] = useState<Set<string>>(new Set())
@@ -1071,15 +1086,9 @@ function SystemSection() {
             </span>
           )}
 
-          <button
-            className="secondaryButton"
-            onClick={checkForUpdates}
-            disabled={loading}
-            style={{ marginLeft: 'auto', fontSize: '12px', padding: '4px 10px' }}
-          >
-            {loading ? <Loader2 size={12} className={styles.spin} /> : <RefreshCw size={12} />}
-            Check for Updates
-          </button>
+          {loading && (
+            <Loader2 size={12} className={styles.spin} style={{ marginLeft: 'auto' }} />
+          )}
         </div>
 
         {/* Update available: show command + changelog */}
@@ -1163,14 +1172,6 @@ function SystemSection() {
 
         {/* Links */}
         <div style={{ display: 'flex', gap: '12px', fontSize: '11px' }}>
-          <a
-            href="https://github.com/samugit83/redamon/releases"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-tertiary)', textDecoration: 'none' }}
-          >
-            <ExternalLink size={11} /> Releases
-          </a>
           <a
             href="https://github.com/samugit83/redamon/blob/master/CHANGELOG.md"
             target="_blank"

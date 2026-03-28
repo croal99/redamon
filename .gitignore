@@ -151,7 +151,7 @@ LAUNCH.md
 TODO.INTERNAL.md
 
 # RedAmon local config (created by redamon.sh)
-.redamon
+.gvm-enabled
 
 # Claude Code config
 .claude/

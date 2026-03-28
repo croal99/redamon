@@ -24,7 +24,7 @@ async function fetchGitHub(path: string): Promise<string | null> {
     const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT)
     const res = await fetch(`${GITHUB_RAW_BASE}/${path}`, {
       signal: controller.signal,
-      next: { revalidate: 600 }, // Cache for 10 minutes
+      cache: 'no-store',
     })
     clearTimeout(timer)
     if (!res.ok) return null
@@ -57,7 +57,7 @@ export async function GET() {
       changelog,
     },
     {
-      headers: { 'Cache-Control': latestVersion ? 'public, max-age=600' : 'public, max-age=60' },
+      headers: { 'Cache-Control': 'no-store' },
     }
   )
 }

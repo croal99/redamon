@@ -5,8 +5,8 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CONFIG_FILE="$SCRIPT_DIR/.redamon"
 VERSION_FILE="$SCRIPT_DIR/VERSION"
+GVM_FLAG_FILE="$SCRIPT_DIR/.gvm-enabled"
 
 # Service lists
 CORE_SERVICES="postgres neo4j recon-orchestrator kali-sandbox agent webapp"
@@ -47,22 +47,8 @@ get_version() {
     fi
 }
 
-read_config() {
-    if [[ ! -f "$CONFIG_FILE" ]]; then
-        return 1
-    fi
-    # shellcheck source=/dev/null
-    source "$CONFIG_FILE"
-}
-
-write_config() {
-    local gvm_mode="$1"
-    local version
-    version="$(get_version)"
-    cat > "$CONFIG_FILE" <<EOF
-GVM_MODE=$gvm_mode
-INSTALLED_VERSION=$version
-EOF
+is_gvm_enabled() {
+    [[ -f "$GVM_FLAG_FILE" ]]
 }
 
 check_prerequisites() {
@@ -141,13 +127,12 @@ cmd_install() {
     info "Installing RedAmon v${version}..."
     if [[ "$gvm_mode" == "true" ]]; then
         info "Mode: Full stack (with GVM/OpenVAS)"
+        touch "$GVM_FLAG_FILE"
     else
         info "Mode: Core services (without GVM/OpenVAS)"
+        rm -f "$GVM_FLAG_FILE"
     fi
     echo ""
-
-    # Write config
-    write_config "$gvm_mode"
 
     # Export version for docker build arg
     export_version
@@ -178,15 +163,11 @@ cmd_install() {
 }
 
 cmd_update() {
-    if ! read_config; then
-        error "No installation found. Run './redamon.sh install' first."
-        exit 1
-    fi
-
     print_banner
     check_prerequisites
 
-    local old_version="${INSTALLED_VERSION:-unknown}"
+    local old_version
+    old_version="$(get_version)"
     info "Current version: v${old_version}"
     info "Checking for updates..."
     echo ""
@@ -315,9 +296,6 @@ cmd_update() {
         docker compose restart "${restart_only[@]}"
     fi
 
-    # Update config
-    write_config "$GVM_MODE"
-
     echo ""
     success "Updated to v${new_version}!"
     if [[ ${#rebuild_core[@]} -gt 0 || ${#rebuild_tools[@]} -gt 0 ]]; then
@@ -334,14 +312,14 @@ cmd_update() {
 }
 
 cmd_up() {
-    if ! read_config; then
-        error "No installation found. Run './redamon.sh install' first."
-        exit 1
+    local gvm_mode="false"
+    if is_gvm_enabled; then
+        gvm_mode="true"
     fi
 
-    info "Starting RedAmon (GVM: ${GVM_MODE})..."
+    info "Starting RedAmon (GVM: ${gvm_mode})..."
 
-    if [[ "$GVM_MODE" == "true" ]]; then
+    if [[ "$gvm_mode" == "true" ]]; then
         docker compose up -d
     else
         # shellcheck disable=SC2086
@@ -400,7 +378,7 @@ cmd_purge() {
     remove_redamon_images
     docker image prune -f >/dev/null 2>&1 || true
 
-    rm -f "$CONFIG_FILE"
+    rm -f "$GVM_FLAG_FILE"
     success "Full cleanup complete. All RedAmon data and images have been removed."
     echo ""
     info "To reinstall: ./redamon.sh install"
@@ -413,11 +391,10 @@ cmd_status() {
     print_banner
     echo -e "  ${CYAN}Version:${NC}  v${version}"
 
-    if read_config; then
-        echo -e "  ${CYAN}GVM:${NC}      ${GVM_MODE}"
-        echo -e "  ${CYAN}Installed:${NC} v${INSTALLED_VERSION:-unknown}"
+    if is_gvm_enabled; then
+        echo -e "  ${CYAN}GVM:${NC}      true"
     else
-        echo -e "  ${YELLOW}Not installed via redamon.sh${NC}"
+        echo -e "  ${CYAN}GVM:${NC}      false"
     fi
     echo ""
 
