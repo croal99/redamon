@@ -396,12 +396,16 @@ class GVMScanner:
             report = task.find('.//report')
             report_id = report.get('id') if report is not None else None
             
-            print(f"        Status: {status_text} | Progress: {progress_text}% | "
-                  f"Elapsed: {int(elapsed)}s")
+            if progress_text in ("0", "-1"):
+                print(f"        Status: {status_text} | Scanning... | "
+                      f"Elapsed: {int(elapsed)}s")
+            else:
+                print(f"        Status: {status_text} | Progress: {progress_text}% | "
+                      f"Elapsed: {int(elapsed)}s")
 
             if not progress_note_shown and status_text == "Running" and progress_text in ("0", "-1") and elapsed > 60:
-                print("        [i] Progress may stay at 0% for a while. "
-                      "This is normal -- GVM runs thousands of checks before reporting progress.")
+                print("        [i] GVM is running thousands of vulnerability checks. "
+                      "This may take 15-45 minutes per target.")
                 progress_note_shown = True
             
             if status_text == "Done":
