@@ -506,7 +506,7 @@ class WebSearchToolManager:
                     max_results=manager.max_results,
                     topic="general",
                     search_depth="advanced",
-                    api_key=api_key,
+                    tavily_api_key=api_key,
                 )
 
                 results = await tavily_tool.ainvoke({"query": query})
