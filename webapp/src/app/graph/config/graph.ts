@@ -21,9 +21,9 @@ export function getAdaptiveForceConfig(nodeCount: number) {
 export type PerformanceTier = 'full' | 'reduced' | 'minimal' | 'ultra-minimal'
 
 export function getPerformanceTier(nodeCount: number): PerformanceTier {
-  if (nodeCount <= 500) return 'full'
+  if (nodeCount <= 1000) return 'full'
   if (nodeCount <= 2000) return 'reduced'
-  if (nodeCount <= 10000) return 'minimal'
+  if (nodeCount <= 5000) return 'minimal'
   return 'ultra-minimal'
 }
 

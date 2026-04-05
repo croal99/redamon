@@ -56,6 +56,7 @@ interface ViewTabsProps {
   showLabels?: boolean
   onToggle3D?: (value: boolean) => void
   onToggleLabels?: (value: boolean) => void
+  nodeCount?: number
 }
 
 export const ViewTabs = memo(function ViewTabs({
@@ -82,6 +83,7 @@ export const ViewTabs = memo(function ViewTabs({
   showLabels,
   onToggle3D,
   onToggleLabels,
+  nodeCount = 0,
 }: ViewTabsProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [tableMenuOpen, setTableMenuOpen] = useState(false)
@@ -283,13 +285,16 @@ export const ViewTabs = memo(function ViewTabs({
       <div className={styles.rightSection}>
       {activeView === 'graph' && onToggle3D && onToggleLabels && (
         <div className={styles.viewToggles}>
-          <Toggle
-            checked={is3D ?? false}
-            onChange={onToggle3D}
-            labelOff="2D"
-            labelOn="3D"
-            aria-label="Toggle 2D/3D view"
-          />
+          <div title={nodeCount > 1000 ? `3D disabled: graph has ${nodeCount.toLocaleString()} nodes (max 1,000 for 3D)` : undefined}>
+            <Toggle
+              checked={nodeCount > 1000 ? false : (is3D ?? false)}
+              onChange={onToggle3D}
+              labelOff="2D"
+              labelOn="3D"
+              disabled={nodeCount > 1000}
+              aria-label="Toggle 2D/3D view"
+            />
+          </div>
           <Toggle
             checked={showLabels ?? false}
             onChange={onToggleLabels}

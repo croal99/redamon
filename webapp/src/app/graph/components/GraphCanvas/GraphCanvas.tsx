@@ -2,11 +2,12 @@
 
 import { memo, useRef } from 'react'
 import { GraphData, GraphNode } from '../../types'
-import { getPerformanceTier } from '../../config/graph'
 import { GraphCanvas2D } from './GraphCanvas2D'
 import { GraphCanvas3D } from './GraphCanvas3D'
 import { GraphNavControls } from './GraphNavControls'
 import styles from './GraphCanvas.module.css'
+
+export const AUTO_2D_THRESHOLD = 1000
 
 interface GraphCanvasProps {
   data: GraphData | undefined
@@ -51,6 +52,10 @@ export const GraphCanvas = memo(function GraphCanvas({
 
   const themeVersion = themeVersionRef.current
 
+  // Auto-switch to 2D for large graphs
+  const nodeCount = data?.nodes.length ?? 0
+  const effective3D = is3D && nodeCount <= AUTO_2D_THRESHOLD
+
   if (isLoading) {
     return <div className={styles.loading}>Loading graph data...</div>
   }
@@ -70,10 +75,6 @@ export const GraphCanvas = memo(function GraphCanvas({
       </div>
     )
   }
-
-  // Auto-switch to 2D for ultra-minimal tier (10k+ nodes)
-  const tier = getPerformanceTier(data.nodes.length)
-  const effective3D = is3D && tier !== 'ultra-minimal'
 
   if (effective3D) {
     return (

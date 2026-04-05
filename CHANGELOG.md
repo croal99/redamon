@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.5.1] - 2026-04-05
+
+### Fixed
+
+- **Graph 3D rendering** -- removed LOD (Level-of-Detail) system that was causing disconnected edges and low-quality nodes during live recon. 3D now always renders at full quality (16-segment spheres, glow, wireframes, labels, particles)
+- **Graph 3D labels** -- labels now hide/show based on camera distance (300 unit threshold), improving readability when zoomed out
+
+### Changed
+
+- **Auto-switch to 2D** -- graphs with more than 1,000 nodes automatically switch to 2D rendering. The 3D toggle is disabled with a tooltip explaining the reason
+- **2D progressive quality reduction** -- 2D canvas progressively disables glow and particles above 1,000 nodes to maintain performance
+- **2D force layout** -- increased link distance (80) and capped charge repulsion range (250) so clusters are more spread internally and closer to each other
+- **Polling auto-stop** -- graph polling (5s interval during recon/agent) stops when graph exceeds 2,000 nodes to prevent performance degradation
+- **2D performance tiers** -- adjusted thresholds: full (0-1000), reduced (1001-2000), minimal (2001-5000), ultra-minimal (5000+)
+
+---
+
 ## [3.5.0] - 2026-04-04
 
 ### Added

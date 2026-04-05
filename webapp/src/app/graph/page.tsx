@@ -1019,6 +1019,7 @@ export default function GraphPage() {
         showLabels={showLabels}
         onToggle3D={setIs3D}
         onToggleLabels={setShowLabels}
+        nodeCount={data?.nodes.length ?? 0}
       />
 
       <div ref={bodyRef} className={styles.body}>

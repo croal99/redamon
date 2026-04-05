@@ -63,22 +63,8 @@ export function GraphCanvas2D({
   const tierConfig = useMemo(() => TIER_CONFIG[tier], [tier])
   const forceConfig = useMemo(() => getAdaptiveForceConfig(data.nodes.length), [data.nodes.length])
 
-  // Set up collision force and reheat on structural changes
-  // IMPORTANT: always reheat when nodes change, even small additions (e.g. 1-2 ChainStep nodes
-  // during agent attacks). Without reheat, new nodes stay at (0,0,0) and links draw to nowhere.
-  // The adaptive cooldownTicks from forceConfig ensures the simulation stops quickly.
+  // Configure forces (runs on mount and when data changes)
   useEffect(() => {
-    const prevCount = prevNodeCountRef.current
-    const newCount = data.nodes.length
-    const isFirstRender = prevCount === 0
-    const structureChanged = newCount !== prevCount
-    prevNodeCountRef.current = newCount
-
-    if (!isFirstRender && !structureChanged) {
-      // Same node count -- data prop changed but no structural change (e.g. property update)
-      return
-    }
-
     const timer = setTimeout(() => {
       const fg = graphRef.current
       if (!fg) return
@@ -92,11 +78,32 @@ export function GraphCanvas2D({
           .strength(FORCE_CONFIG.collisionStrength)
           .iterations(forceConfig.collisionIterations)
       )
-      fg.d3ReheatSimulation()
+      // Spread connected nodes further apart within clusters
+      const linkForce = fg.d3Force('link')
+      if (linkForce) linkForce.distance(80)
+      // Reduce repulsion so distant clusters don't fly apart
+      const chargeForce = fg.d3Force('charge')
+      if (chargeForce) chargeForce.strength(-40).distanceMax(250)
     }, ANIMATION_CONFIG.initDelay)
 
     return () => clearTimeout(timer)
-  }, [data, forceConfig.collisionIterations])
+  }, [forceConfig.collisionIterations])
+
+  // Reheat on structural changes (new/removed nodes)
+  useEffect(() => {
+    const prevCount = prevNodeCountRef.current
+    const newCount = data.nodes.length
+    const isFirstRender = prevCount === 0
+    const structureChanged = newCount !== prevCount
+    prevNodeCountRef.current = newCount
+
+    if (!isFirstRender && structureChanged) {
+      const timer = setTimeout(() => {
+        graphRef.current?.d3ReheatSimulation()
+      }, ANIMATION_CONFIG.initDelay)
+      return () => clearTimeout(timer)
+    }
+  }, [data])
 
   // Slow down zoom speed for smoother navigation
   useEffect(() => {

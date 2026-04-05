@@ -15,7 +15,7 @@ import {
   ANIMATION_CONFIG,
   THREE_CONFIG,
 } from '../../config'
-import { getPerformanceTier, TIER_CONFIG, getAdaptiveForceConfig } from '../../config/graph'
+import { TIER_CONFIG, getAdaptiveForceConfig } from '../../config/graph'
 import { hasHighSeverityNodes, isGoalFinding } from '../../utils/nodeHelpers'
 import { useAnimationFrame } from '../../hooks'
 
@@ -37,20 +37,10 @@ interface GraphCanvas3DProps {
   externalGraphRef?: React.MutableRefObject<any>
 }
 
-// ── Shared geometry for dot-level LOD (created once, never disposed) ──
-let SHARED_DOT_GEO: any = null
-function getSharedDotGeo() {
-  if (!SHARED_DOT_GEO) {
-    const THREE = require('three')
-    SHARED_DOT_GEO = new THREE.SphereGeometry(1, 4, 4)
-  }
-  return SHARED_DOT_GEO
-}
-
 // ── Dispose all geometries + materials in a group ──
 function disposeGroup(group: any) {
   group.traverse((child: any) => {
-    if (child.geometry && child.geometry !== SHARED_DOT_GEO) {
+    if (child.geometry) {
       child.geometry.dispose()
     }
     if (child.material) {
@@ -255,44 +245,6 @@ function buildFullDetail(
   return group
 }
 
-// ── Build a medium-detail group (simple sphere + label, colored) ──
-function buildMediumDetail(graphNode: GraphNode, sphereSegments: number, enableLabels: boolean, labelColor: string): any {
-  const THREE = require('three')
-  const SpriteText = require('three-spritetext').default
-  const group = new THREE.Group()
-  const sphereSize = BASE_SIZES.node3D * getNodeSize(graphNode)
-  const nodeColor = getNodeColor(graphNode)
-  const geometry = new THREE.SphereGeometry(sphereSize, Math.max(sphereSegments - 2, 4), Math.max(sphereSegments - 2, 4))
-  const material = new THREE.MeshLambertMaterial({ color: nodeColor, transparent: true, opacity: THREE_CONFIG.nodeOpacity })
-  const mesh = new THREE.Mesh(geometry, material)
-  group.add(mesh)
-
-  // Label on medium LOD too so it's visible when zoomed out
-  if (enableLabels) {
-    const sprite = new SpriteText(graphNode.name)
-    sprite.color = labelColor
-    sprite.textHeight = BASE_SIZES.label3D
-    sprite.position.y = sphereSize + BASE_SIZES.label3D
-    sprite.name = 'label'
-    group.add(sprite)
-  }
-
-  return group
-}
-
-// ── Build a dot-level group (shared geometry) ──
-function buildDot(graphNode: GraphNode): any {
-  const THREE = require('three')
-  const group = new THREE.Group()
-  const sphereSize = BASE_SIZES.node3D * getNodeSize(graphNode) * 0.5
-  const nodeColor = getNodeColor(graphNode)
-  const material = new THREE.MeshBasicMaterial({ color: nodeColor })
-  const mesh = new THREE.Mesh(getSharedDotGeo(), material)
-  mesh.scale.set(sphereSize, sphereSize, sphereSize)
-  group.add(mesh)
-  return group
-}
-
 export function GraphCanvas3D({
   data,
   width,
@@ -316,9 +268,7 @@ export function GraphCanvas3D({
   const nodeCache = useRef<Map<string, any>>(new Map())
   const prevThemeVersion = useRef(themeVersion)
 
-  // Performance tier based on node count
-  const tier = useMemo(() => getPerformanceTier(data.nodes.length), [data.nodes.length])
-  const tierConfig = useMemo(() => TIER_CONFIG[tier], [tier])
+  // Always use full quality -- no LOD, no tier degradation
   const forceConfig = useMemo(() => getAdaptiveForceConfig(data.nodes.length), [data.nodes.length])
   // Use ref for labelColor so nodeThreeObject callback doesn't change ref on theme toggle
   // (theme change is handled by the themeVersion effect which disposes + refresh())
@@ -360,55 +310,38 @@ export function GraphCanvas3D({
     graphRef.current?.refresh()
   }, [themeVersion])
 
-  // ── Memoized nodeThreeObject -- ONLY rebuilds when tier or labelColor changes ──
+  // ── Memoized nodeThreeObject -- always full quality, no LOD ──
+  const fullTier = TIER_CONFIG['full']
   const nodeThreeObject = useCallback((node: object) => {
     const graphNode = node as GraphNode
 
-    const THREE = require('three')
-    const lod = new THREE.LOD()
-
-    // Full detail (closest)
-    const fullGroup = buildFullDetail(
+    const group = buildFullDetail(
       graphNode,
-      tierConfig.sphereSegments,
-      tierConfig.ringSegments,
-      tierConfig.enableGlow,
-      tierConfig.enableWireframe,
-      tierConfig.enableLabels,
+      fullTier.sphereSegments,
+      fullTier.ringSegments,
+      fullTier.enableGlow,
+      fullTier.enableWireframe,
+      fullTier.enableLabels,
       labelColorRef.current,
     )
-    lod.addLevel(fullGroup, 0)
 
-    // Medium detail
-    const medGroup = buildMediumDetail(graphNode, tierConfig.sphereSegments, tierConfig.enableLabels, labelColorRef.current)
-    lod.addLevel(medGroup, tierConfig.lodDistances[0])
-
-    // Dot (farthest)
-    const dotGroup = buildDot(graphNode)
-    lod.addLevel(dotGroup, tierConfig.lodDistances[1])
-
-    // Store node metadata on LOD for mutation lookups
-    lod.userData = { ...fullGroup.userData }
-    nodeCache.current.set(graphNode.id, lod)
-
-    return lod
+    nodeCache.current.set(graphNode.id, group)
+    return group
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tierConfig])
+  }, [fullTier])
 
 
   // ── Selection + active chain: direct Three.js mutation (NO nodeThreeObject rebuild) ──
   const selectedNodeId = selectedNode?.id
   useEffect(() => {
-    nodeCache.current.forEach((lod, nodeId) => {
-      const ud = lod.userData
+    nodeCache.current.forEach((group, nodeId) => {
+      const ud = group.userData
       const isSelected = nodeId === selectedNodeId
-      const fullGroup = lod.levels?.[0]?.object
-      if (!fullGroup) return
 
-      const selRing = fullGroup.getObjectByName('selectionRing')
+      const selRing = group.getObjectByName('selectionRing')
       if (selRing) selRing.visible = isSelected
 
-      const chainRing = fullGroup.getObjectByName('chainRing')
+      const chainRing = group.getObjectByName('chainRing')
       if (chainRing) {
         chainRing.visible = !!(activeChainId && ud.chainId === activeChainId)
       }
@@ -427,7 +360,7 @@ export function GraphCanvas3D({
         } else {
           newColor = ud.nodeColor
         }
-        const mainMesh = fullGroup.getObjectByName('mainMesh')
+        const mainMesh = group.getObjectByName('mainMesh')
         if (mainMesh?.material) {
           mainMesh.material.color.set(newColor)
           if (mainMesh.material.emissive) mainMesh.material.emissive.set(newColor)
@@ -436,28 +369,36 @@ export function GraphCanvas3D({
     })
   }, [selectedNodeId, activeChainId])
 
-  // ── Labels: toggle visibility via mutation on ALL LOD levels ──
-  useEffect(() => {
-    nodeCache.current.forEach((lod) => {
-      if (!lod.levels) return
-      for (const level of lod.levels) {
-        const label = level.object?.getObjectByName('label')
-        if (label) label.visible = showLabels
-      }
-    })
-  }, [showLabels])
+  // Labels are toggled per-frame based on camera distance (see useAnimationFrame below).
+  // The showLabels flag is read there via ref so the callback identity stays stable.
+  const showLabelsRef = useRef(showLabels)
+  showLabelsRef.current = showLabels
 
   // ── Glow animation: iterate nodeCache, find rings by name ──
   const hasHighSeverity = hasHighSeverityNodes(data.nodes)
 
+  // Distance threshold for label visibility in 3D (world units from camera)
+  const LABEL_DISTANCE_THRESHOLD = 300
+
   useAnimationFrame(
     (time) => {
-      nodeCache.current.forEach((lod) => {
-        const fullGroup = lod.levels?.[0]?.object
-        if (!fullGroup) return
+      const camera = graphRef.current?.camera()
+      const cameraPos = camera?.position
+
+      nodeCache.current.forEach((group) => {
+        // Zoom-based label visibility: hide labels when camera is far away
+        const label = group.getObjectByName('label')
+        if (label) {
+          if (!showLabelsRef.current) {
+            label.visible = false
+          } else if (cameraPos && group.position) {
+            const dist = cameraPos.distanceTo(group.position)
+            label.visible = dist < LABEL_DISTANCE_THRESHOLD
+          }
+        }
 
         // Glow ring animation
-        const glowRing = fullGroup.getObjectByName('glowRing')
+        const glowRing = group.getObjectByName('glowRing')
         if (glowRing) {
           const level = glowRing.userData.glowLevel || 'high'
           const speed = level === 'critical' ? ANIMATION_CONFIG.criticalSpeed : ANIMATION_CONFIG.highSpeed
@@ -468,7 +409,7 @@ export function GraphCanvas3D({
         }
 
         // Chain ring animation (if visible)
-        const chainRing = fullGroup.getObjectByName('chainRing')
+        const chainRing = group.getObjectByName('chainRing')
         if (chainRing?.visible) {
           const speed = ANIMATION_CONFIG.highSpeed
           const pulse = Math.sin(time * speed) * 0.15 + 1
@@ -478,7 +419,7 @@ export function GraphCanvas3D({
         }
       })
     },
-    hasHighSeverity && tierConfig.enableGlow
+    true // always run: handles label visibility + glow animations
   )
 
   // ── Reheat simulation + clean cache when data changes ──
@@ -497,9 +438,6 @@ export function GraphCanvas3D({
         nodeCache.current.delete(id)
       }
     })
-    // Reheat simulation so new nodes get positioned by forces
-    // Without this, new nodes (e.g. ChainStep during agent attack) stay at (0,0,0)
-    // and links draw to the wrong position
     if (structureChanged && !isFirstRender) {
       const timer = setTimeout(() => {
         graphRef.current?.d3ReheatSimulation()
@@ -519,22 +457,10 @@ export function GraphCanvas3D({
       linkLabel={(link) => (link as GraphLink).type}
       linkColor={(link) => getLinkColor(link as GraphLink, selectedNodeId)}
       linkWidth={(link) => getLinkWidth3D(link as GraphLink, selectedNodeId)}
-      linkDirectionalParticles={tierConfig.enableParticles
-        ? (link) => getParticleCount(link as GraphLink, selectedNodeId)
-        : 0
-      }
-      linkDirectionalParticleWidth={tierConfig.enableParticles
-        ? (link) => getParticleWidth(link as GraphLink, selectedNodeId)
-        : undefined
-      }
-      linkDirectionalParticleColor={tierConfig.enableParticles
-        ? (link) => getParticleColor(link as GraphLink, activeChainId)
-        : undefined
-      }
-      linkDirectionalParticleSpeed={tierConfig.enableParticles
-        ? (link) => getParticleSpeed(link as GraphLink)
-        : undefined
-      }
+      linkDirectionalParticles={(link) => getParticleCount(link as GraphLink, selectedNodeId)}
+      linkDirectionalParticleWidth={(link) => getParticleWidth(link as GraphLink, selectedNodeId)}
+      linkDirectionalParticleColor={(link) => getParticleColor(link as GraphLink, activeChainId)}
+      linkDirectionalParticleSpeed={(link) => getParticleSpeed(link as GraphLink)}
       linkDirectionalArrowLength={LINK_SIZES.arrowLength3D}
       linkDirectionalArrowRelPos={1}
       backgroundColor={isDark ? BACKGROUND_COLORS.dark.graph : BACKGROUND_COLORS.light.graph}

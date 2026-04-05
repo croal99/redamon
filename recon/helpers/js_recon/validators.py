@@ -363,14 +363,17 @@ def validate_shopify(matched_text: str, timeout: int = 5) -> dict:
 
 def validate_cloudflare(matched_text: str, timeout: int = 5) -> dict:
     """Validate Cloudflare API token via GET /client/v4/user/tokens/verify."""
-    # Try to extract a 40-char token
-    token = re.search(r'[A-Za-z0-9_-]{40}', matched_text)
-    if not token:
+    # Extract token from between quotes (patterns include surrounding context),
+    # then fall back to a bare 37-40 char alphanumeric string
+    quoted = re.search(r"['\"]([A-Za-z0-9_-]{37,40})['\"]", matched_text)
+    bare = re.search(r'[A-Za-z0-9_-]{37,40}', matched_text) if not quoted else None
+    if not quoted and not bare:
         return {'valid': False, 'scope': '', 'info': '', 'error': 'no_token_found'}
+    token_str = quoted.group(1) if quoted else bare.group(0)
 
     def do_request(t):
         resp = requests.get('https://api.cloudflare.com/client/v4/user/tokens/verify',
-                          headers={'Authorization': f'Bearer {token.group(0)}'},
+                          headers={'Authorization': f'Bearer {token_str}'},
                           timeout=t)
         if resp.status_code == 200:
             data = resp.json()
