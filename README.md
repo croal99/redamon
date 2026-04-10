@@ -13,7 +13,7 @@
 
 <p align="center">
   <a href="https://github.com/samugit83/redamon/stargazers"><img height="24" src="https://img.shields.io/github/stars/samugit83/redamon?style=flat&color=2E8B57&label=Stars" alt="GitHub Stars"/></a>
-  <img height="24" src="https://img.shields.io/badge/v3.6.0-release-2E8B57?style=flat" alt="Version 3.8.0"/>
+  <img height="24" src="https://img.shields.io/badge/v3.8.0-release-2E8B57?style=flat" alt="Version 3.8.0"/>
   <img height="24" src="https://img.shields.io/badge/WARNING-SECURITY%20TOOL-B22222?style=flat" alt="Security Tool Warning"/>
   <img height="24" src="https://img.shields.io/badge/LICENSE-MIT-4169A1?style=flat" alt="MIT License"/>
   <img height="24" src="https://img.shields.io/badge/END--TO--END-PIPELINE-A01025?style=flat" alt="End-to-End Pipeline"/>
@@ -22,7 +22,7 @@
   <img height="24" src="https://img.shields.io/badge/Kali-Powered-466A7A?style=flat&logo=kalilinux&logoColor=white" alt="Kali Powered"/>
   <img height="24" src="https://img.shields.io/badge/Docker-Compose-1A7EC2?style=flat&logo=docker&logoColor=white" alt="Docker"/>
   <img height="24" src="https://img.shields.io/badge/IP%2FCIDR-TARGETING-0D7377?style=flat" alt="IP/CIDR Targeting"/>
-  <img height="24" src="https://img.shields.io/badge/38+-SECURITY%20TOOLS-CC8F00?style=flat&logo=hack-the-box&logoColor=white" alt="38+ Security Tools"/>
+  <img height="24" src="https://img.shields.io/badge/70+-SECURITY%20TOOLS-CC8F00?style=flat&logo=hack-the-box&logoColor=white" alt="70+ Security Tools"/>
   <img height="24" src="https://img.shields.io/badge/185,000+-DETECTION%20RULES-8B1142?style=flat" alt="185,000+ Detection Rules"/>
   <img height="24" src="https://img.shields.io/badge/196+-PROJECT%20SETTINGS-00899B?style=flat" alt="196+ Settings"/>
   <img height="24" src="https://img.shields.io/badge/400+-AI%20MODELS-04A878?style=flat&logo=huggingface&logoColor=white" alt="400+ AI Models"/>
@@ -40,8 +40,6 @@
 </p>
 
 > **LEGAL DISCLAIMER**: This tool is intended for **authorized security testing**, **educational purposes**, and **research only**. Never use this system to scan, probe, or attack any system you do not own or have explicit written permission to test. Unauthorized access is **illegal** and punishable by law. By using this tool, you accept **full responsibility** for your actions. **[Read Full Disclaimer](DISCLAIMER.md)**
-
-> **LOCAL USE ONLY**: RedAmon is designed to run on a **local machine** and has **not** been hardened for server or cloud deployment. It lacks the security controls required for a production environment exposed to the internet (e.g. authentication hardening, rate limiting, TLS enforcement, input sanitization across all surfaces). **Do not deploy RedAmon on a public-facing server.** Running it outside a trusted local network is entirely at your own risk.
 
 <p align="center">
   <img src="assets/agent.gif" alt="RedAmon Agent Demo" width="100%"/>
@@ -746,6 +744,8 @@ For questions, feedback, or collaboration inquiries: **devergo.sam@gmail.com**
 ---
 
 ## Legal
+
+> **LOCAL USE ONLY**: RedAmon is designed to run on a **local machine** and has **not** been hardened for server or cloud deployment. It lacks the security controls required for a production environment exposed to the internet (e.g. authentication hardening, rate limiting, TLS enforcement, input sanitization across all surfaces). **Do not deploy RedAmon on a public-facing server.** Running it outside a trusted local network is entirely at your own risk.
 
 This project is released under the [MIT License](LICENSE).
 
