@@ -7,7 +7,7 @@ import { useAuth, type AuthTokenResponse } from '@/providers/AuthProvider'
 import styles from './page.module.css'
 
 async function loginRequest(username: string, password: string): Promise<AuthTokenResponse> {
-  const res = await fetch('/api/auth/login', {
+  const res = await fetch('/api/user/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password }),
@@ -17,7 +17,7 @@ async function loginRequest(username: string, password: string): Promise<AuthTok
     let message = '认证失败'
     try {
       const data = await res.json()
-      message = data?.detail || data?.message || message
+      message = data?.detail || data?.message || data?.error || message
     } catch {}
     throw new Error(message)
   }
@@ -66,6 +66,7 @@ export default function LoginPage() {
       <div className={styles.scan} aria-hidden>
         <div className={styles.scanLine} />
       </div>
+      <div className={styles.noise} aria-hidden />
 
       <div className={styles.content}>
         <header className={styles.header}>

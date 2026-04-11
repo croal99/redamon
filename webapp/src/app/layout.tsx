@@ -8,7 +8,7 @@ import { ToastProvider, AlertProvider } from '@/components/ui'
 import { AppLayout } from '@/components/layout'
 
 export const metadata: Metadata = {
-  title: 'RedAmon',
+  title: '合盛智核',
   description: 'Security reconnaissance and vulnerability assessment dashboard',
   icons: {
     icon: '/favicon.ico',
