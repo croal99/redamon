@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Eye, EyeOff, Lock, User } from 'lucide-react'
+import { Crosshair, Eye, EyeOff, FileText, Lock, Shield, TrendingUp, User } from 'lucide-react'
 import { useAuth, type AuthTokenResponse } from '@/providers/AuthProvider'
 import styles from './page.module.css'
 
@@ -61,64 +61,117 @@ export default function LoginPage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.card}>
-        <div className={styles.brandRow}>
-          <h1 className={styles.brandTitle}>RedAmon</h1>
-        </div>
-        <p className={styles.subtitle}>请输入账号密码以访问平台</p>
+      <div className={styles.bg} aria-hidden />
 
-        {error && <div className={styles.error}>{error}</div>}
-
-        <form onSubmit={onSubmit} className={styles.form}>
-          <div className={styles.field}>
-            <label className={styles.label}>用户名</label>
-            <div className="inputWithIcon">
-              <User size={14} className="inputIcon" />
-              <input
-                className="textInput"
-                autoComplete="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="请输入用户名"
-                required
-              />
+      <div className={styles.content}>
+        <section className={styles.hero}>
+          <div className={styles.brand}>
+            <div className={styles.brandMark} aria-hidden />
+            <div className={styles.brandText}>
+              <div className={styles.brandName}>合盛智核</div>
+              <div className={styles.brandSub}>RedAmon 安全态势平台</div>
             </div>
           </div>
 
-          <div className={styles.field}>
-            <label className={styles.label}>密码</label>
-            <div className="inputWithIcon">
-              <Lock size={14} className="inputIcon" />
-              <input
-                className="textInput"
-                type={showPassword ? 'text' : 'password'}
-                autoComplete="current-password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="请输入密码"
-                required
-              />
-              <button
-                type="button"
-                className="iconButton"
-                style={{ position: 'absolute', right: 8 }}
-                onClick={() => setShowPassword(v => !v)}
-                aria-label={showPassword ? '隐藏密码' : '显示密码'}
-              >
-                {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+          <h1 className={styles.title}>登录</h1>
+          <p className={styles.subtitle}>使用账号密码完成认证，进入图谱、洞察与报告工作台。</p>
+
+          <div className={styles.featureGrid}>
+            <div className={styles.feature}>
+              <Crosshair size={16} className={styles.featureIcon} />
+              <div className={styles.featureText}>
+                <div className={styles.featureTitle}>图谱与行动</div>
+                <div className={styles.featureDesc}>以图为中心的态势与任务入口</div>
+              </div>
+            </div>
+            <div className={styles.feature}>
+              <TrendingUp size={16} className={styles.featureIcon} />
+              <div className={styles.featureText}>
+                <div className={styles.featureTitle}>趋势与指标</div>
+                <div className={styles.featureDesc}>从项目数据中提炼关键洞察</div>
+              </div>
+            </div>
+            <div className={styles.feature}>
+              <FileText size={16} className={styles.featureIcon} />
+              <div className={styles.featureText}>
+                <div className={styles.featureTitle}>报告沉淀</div>
+                <div className={styles.featureDesc}>结构化导出，便于交付复盘</div>
+              </div>
+            </div>
+            <div className={styles.feature}>
+              <Shield size={16} className={styles.featureIcon} />
+              <div className={styles.featureText}>
+                <div className={styles.featureTitle}>安全认证</div>
+                <div className={styles.featureDesc}>统一登录与会话管理能力</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className={styles.card}>
+          <div className={styles.cardHeader}>
+            <div>
+              <div className={styles.cardTitle}>欢迎回来</div>
+              <div className={styles.cardSubtitle}>请输入账号密码以访问平台</div>
+            </div>
+          </div>
+
+          {error && (
+            <div className={styles.error} role="alert" aria-live="polite">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={onSubmit} className={styles.form}>
+            <div className={styles.field}>
+              <label className={styles.label}>用户名</label>
+              <div className="inputWithIcon">
+                <User size={14} className="inputIcon" />
+                <input
+                  className="textInput"
+                  autoComplete="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="请输入用户名"
+                  autoFocus
+                  required
+                />
+              </div>
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.label}>密码</label>
+              <div className="inputWithIcon">
+                <Lock size={14} className="inputIcon" />
+                <input
+                  className={`textInput ${styles.passwordInput}`}
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="请输入密码"
+                  required
+                />
+                <button
+                  type="button"
+                  className={`iconButton ${styles.passwordToggle}`}
+                  onClick={() => setShowPassword((v) => !v)}
+                  aria-label={showPassword ? '隐藏密码' : '显示密码'}
+                >
+                  {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                </button>
+              </div>
+            </div>
+
+            <div className={styles.actions}>
+              <div className={styles.hint}>登录成功后将自动跳转到 {next}</div>
+              <button className="primaryButton" type="submit" disabled={submitting}>
+                {submitting ? '正在认证…' : '登录'}
               </button>
             </div>
-          </div>
-
-          <div className={styles.actions}>
-            <div className={styles.hint}>登录成功后将自动跳转</div>
-            <button className="primaryButton" type="submit" disabled={submitting}>
-              {submitting ? '正在认证…' : '登录'}
-            </button>
-          </div>
-        </form>
+          </form>
+        </section>
       </div>
     </div>
   )
 }
-
