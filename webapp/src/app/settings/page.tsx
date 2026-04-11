@@ -813,15 +813,15 @@ export default function SettingsPage() {
       {/* Tab: LLM Providers */}
       {activeTab === 'providers' && <div className={styles.section}>
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>LLM Providers</h2>
+          <h2 className={styles.sectionTitle}>LLM 提供方</h2>
           {!showProviderForm && !editingProvider && (
             <button className="primaryButton" onClick={() => setShowProviderForm(true)}>
-              <Plus size={14} /> Add Provider
+              <Plus size={14} /> 添加提供方
             </button>
           )}
         </div>
         <p className={styles.sectionHint}>
-          Models from all providers appear in every project&apos;s LLM selector. Key-based providers auto-discover available models.
+          所有提供方的模型都会出现在每个项目的 LLM 选择器中。基于 API Key 的提供方会自动发现可用模型。
         </p>
 
         {/* Provider form */}
@@ -844,9 +844,9 @@ export default function SettingsPage() {
         {/* Provider list */}
         {!showProviderForm && !editingProvider && (
           providersLoading ? (
-            <div className={styles.emptyState}><Loader2 size={16} className={styles.spin} /> Loading...</div>
+            <div className={styles.emptyState}><Loader2 size={16} className={styles.spin} /> 加载中...</div>
           ) : providers.length === 0 ? (
-            <div className={styles.emptyState}>No providers configured. Add one to get started.</div>
+            <div className={styles.emptyState}>尚未配置任何提供方。请先添加一个以开始使用。</div>
           ) : (
             <div className={styles.providerList}>
               {providers.map((p: ProviderData) => (
@@ -860,10 +860,10 @@ export default function SettingsPage() {
                     </div>
                   </div>
                   <div className={styles.providerActions}>
-                    <button className="iconButton" title="Edit" onClick={() => setEditingProvider(p)}>
+                    <button className="iconButton" title="编辑" onClick={() => setEditingProvider(p)}>
                       <Pencil size={14} />
                     </button>
-                    <button className="iconButton" title="Delete" onClick={() => deleteProvider(p.id!)}>
+                    <button className="iconButton" title="删除" onClick={() => deleteProvider(p.id!)}>
                       <Trash2 size={14} />
                     </button>
                   </div>
@@ -877,7 +877,7 @@ export default function SettingsPage() {
       {/* Tab: Agent Skills */}
       {activeTab === 'skills' && <div className={styles.section}>
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}><Swords size={16} /> Agent Skills</h2>
+          <h2 className={styles.sectionTitle}><Swords size={16} /> 代理技能</h2>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             <button
               className="secondaryButton"
@@ -885,10 +885,10 @@ export default function SettingsPage() {
               disabled={importingAgentSkills}
             >
               {importingAgentSkills ? <Loader2 size={14} className={styles.spin} /> : <Download size={14} />}
-              Import from Community
+              从社区导入
             </button>
             <label className="primaryButton" style={{ cursor: 'pointer' }}>
-              <Upload size={14} /> Upload Skill
+              <Upload size={14} /> 上传技能
               <input
                 type="file"
                 accept=".md"
@@ -899,14 +899,14 @@ export default function SettingsPage() {
           </div>
         </div>
         <p className={styles.sectionHint}>
-          Upload .md files defining custom attack skill workflows. Skills become available as toggles in all project settings.
-          {' '}Browse <a href="https://github.com/samugit83/redamon/wiki/Agent-Skills#community-skills" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'underline' }}>community skills</a> for ready-to-use templates.
+          上传用于定义自定义攻击工作流的 .md 文件。技能会在所有项目设置中以开关形式提供。
+          {' '}你也可以浏览 <a href="https://github.com/samugit83/redamon/wiki/Agent-Skills#community-skills" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'underline' }}>社区技能</a> 获取可直接使用的模板。
         </p>
 
         {skillsLoading ? (
-          <div className={styles.emptyState}><Loader2 size={16} className={styles.spin} /> Loading...</div>
+          <div className={styles.emptyState}><Loader2 size={16} className={styles.spin} /> 加载中...</div>
         ) : attackSkills.length === 0 ? (
-          <div className={styles.emptyState}>No custom skills uploaded yet. Upload a .md file to get started.</div>
+          <div className={styles.emptyState}>暂无自定义技能。上传一个 .md 文件即可开始。</div>
         ) : (
           <div className={styles.providerList}>
             {attackSkills.map(skill => (
@@ -915,20 +915,20 @@ export default function SettingsPage() {
                 <div className={styles.providerInfo}>
                   <div className={styles.providerName}>{skill.name}</div>
                   <div className={styles.providerMeta}>
-                    {skill.description || <span style={{ opacity: 0.5, fontStyle: 'italic' }}>No description</span>}
+                    {skill.description || <span style={{ opacity: 0.5, fontStyle: 'italic' }}>暂无描述</span>}
                   </div>
                   <div className={styles.providerMeta}>
-                    Uploaded {new Date(skill.createdAt).toLocaleDateString()}
+                    上传于 {new Date(skill.createdAt).toLocaleDateString()}
                   </div>
                 </div>
                 <div className={styles.providerActions}>
-                  <button className="iconButton" title="Edit description" onClick={() => openEditDescription(skill.id)}>
+                  <button className="iconButton" title="编辑描述" onClick={() => openEditDescription(skill.id)}>
                     <Pencil size={14} />
                   </button>
-                  <button className="iconButton" title="Download" onClick={() => downloadSkill(skill.id, skill.name)}>
+                  <button className="iconButton" title="下载" onClick={() => downloadSkill(skill.id, skill.name)}>
                     <Download size={14} />
                   </button>
-                  <button className="iconButton" title="Delete" onClick={() => deleteSkill(skill.id)}>
+                  <button className="iconButton" title="删除" onClick={() => deleteSkill(skill.id)}>
                     <Trash2 size={14} />
                   </button>
                 </div>
@@ -941,7 +941,7 @@ export default function SettingsPage() {
       {/* Tab: Chat Skills */}
       {activeTab === 'chat-skills' && <div className={styles.section}>
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}><BookOpen size={16} /> Chat Skills</h2>
+          <h2 className={styles.sectionTitle}><BookOpen size={16} /> 聊天技能</h2>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             <button
               className="secondaryButton"
@@ -949,10 +949,10 @@ export default function SettingsPage() {
               disabled={importingChatSkills}
             >
               {importingChatSkills ? <Loader2 size={14} className={styles.spin} /> : <Download size={14} />}
-              Import from Community
+              从社区导入
             </button>
             <label className="primaryButton" style={{ cursor: 'pointer' }}>
-              <Upload size={14} /> Upload Skill (.md)
+              <Upload size={14} /> 上传技能（.md）
               <input
                 type="file"
                 accept=".md"
@@ -963,13 +963,13 @@ export default function SettingsPage() {
           </div>
         </div>
         <p className={styles.sectionHint}>
-          Upload and manage on-demand reference skills for the AI agent chat. Unlike Agent Skills (which drive attack classification and phase-aware workflows), Chat Skills are tactical reference docs that you inject into the agent&apos;s context on the fly using <code>/skill &lt;name&gt;</code> in the chat.
+          上传并管理可按需注入到 AI 聊天中的参考技能。不同于“代理技能”（用于驱动攻击分类与分阶段工作流），聊天技能更像战术参考文档，可在聊天中通过 <code>/skill &lt;name&gt;</code> 动态注入到代理上下文。
         </p>
 
         {chatSkillsLoading ? (
-          <div className={styles.emptyState}><Loader2 size={16} className={styles.spin} /> Loading...</div>
+          <div className={styles.emptyState}><Loader2 size={16} className={styles.spin} /> 加载中...</div>
         ) : chatSkills.length === 0 ? (
-          <div className={styles.emptyState}>No Chat Skills yet. Click Import from Community to add ready-to-use reference skills, or upload your own .md files.</div>
+          <div className={styles.emptyState}>暂无聊天技能。你可以从社区导入现成的参考技能，或上传自己的 .md 文件。</div>
         ) : (
           <div className={styles.providerList}>
             {chatSkills.map(skill => (
@@ -995,20 +995,20 @@ export default function SettingsPage() {
                     )}
                   </div>
                   <div className={styles.providerMeta}>
-                    {skill.description || <span style={{ opacity: 0.5, fontStyle: 'italic' }}>No description</span>}
+                    {skill.description || <span style={{ opacity: 0.5, fontStyle: 'italic' }}>暂无描述</span>}
                   </div>
                   <div className={styles.providerMeta}>
-                    Uploaded {new Date(skill.createdAt).toLocaleDateString()}
+                    上传于 {new Date(skill.createdAt).toLocaleDateString()}
                   </div>
                 </div>
                 <div className={styles.providerActions}>
-                  <button className="iconButton" title="Edit description" onClick={() => openEditChatDescription(skill.id)}>
+                  <button className="iconButton" title="编辑描述" onClick={() => openEditChatDescription(skill.id)}>
                     <Pencil size={14} />
                   </button>
-                  <button className="iconButton" title="Download" onClick={() => downloadChatSkill(skill.id, skill.name)}>
+                  <button className="iconButton" title="下载" onClick={() => downloadChatSkill(skill.id, skill.name)}>
                     <Download size={14} />
                   </button>
-                  <button className="iconButton" title="Delete" onClick={() => deleteChatSkill(skill.id)}>
+                  <button className="iconButton" title="删除" onClick={() => deleteChatSkill(skill.id)}>
                     <Trash2 size={14} />
                   </button>
                 </div>
@@ -1021,13 +1021,13 @@ export default function SettingsPage() {
       {/* Tab: API Keys & Tunneling */}
       {activeTab === 'keys' && <><div className={styles.section}>
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>API Keys</h2>
+          <h2 className={styles.sectionTitle}>API 密钥</h2>
           <div className={styles.sectionHeaderActions}>
-            <button className={styles.sectionHeaderBtn} onClick={downloadKeysTemplate} title="Download a JSON template to fill in your API keys offline">
-              <Download size={13} /> Download Template
+            <button className={styles.sectionHeaderBtn} onClick={downloadKeysTemplate} title="下载 JSON 模板，在本地离线填写 API 密钥">
+              <Download size={13} /> 下载模板
             </button>
-            <button className={styles.sectionHeaderBtn} onClick={() => importFileRef.current?.click()} title="Import API keys from a JSON template file">
-              <Upload size={13} /> Import Keys
+            <button className={styles.sectionHeaderBtn} onClick={() => importFileRef.current?.click()} title="从 JSON 模板文件导入 API 密钥">
+              <Upload size={13} /> 导入密钥
             </button>
             <input
               ref={importFileRef}
@@ -1039,12 +1039,12 @@ export default function SettingsPage() {
           </div>
         </div>
         {settingsLoading ? (
-          <div className={styles.emptyState}><Loader2 size={16} className={styles.spin} /> Loading...</div>
+          <div className={styles.emptyState}><Loader2 size={16} className={styles.spin} /> 加载中...</div>
         ) : (
           <div className={styles.settingsGrid}>
             <SecretField
               label="GitHub Access Token"
-              hint="Required for GitHub Secret Hunt and TruffleHog scanners. Use repo scope for private repos, or a fine-grained token for specific repos only"
+              hint="GitHub Secret Hunt 与 TruffleHog 扫描需要该 Token。私有仓库请使用 repo 权限；或使用细粒度 Token 仅授权特定仓库"
               signupUrl="https://github.com/settings/tokens"
               badges={['GitHub Secret Hunt', 'TruffleHog']}
               value={settings.githubAccessToken}
@@ -1054,7 +1054,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="Tavily API Key"
-              hint="Enables web_search tool for CVE research and exploit lookups"
+              hint="启用 web_search 工具，用于 CVE 研究与漏洞利用检索"
               signupUrl="https://app.tavily.com/home"
               badges={['AI Agent']}
               value={settings.tavilyApiKey}
@@ -1066,7 +1066,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="Shodan API Key"
-              hint="Enables the shodan tool for internet-wide OSINT (search, host info, DNS, count)"
+              hint="启用 shodan 工具，用于全网 OSINT（搜索、主机信息、DNS、统计）"
               signupUrl="https://account.shodan.io/"
               badges={['AI Agent', 'Recon Pipeline', 'Standalone + Uncover']}
               value={settings.shodanApiKey}
@@ -1078,7 +1078,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="SerpAPI Key"
-              hint="Enables google_dork tool for Google dorking OSINT (site:, inurl:, filetype:). Free: 250 searches/month"
+              hint="启用 google_dork 工具，用于 Google dork OSINT（site: / inurl: / filetype:）。免费：250 次搜索/月"
               signupUrl="https://serpapi.com/manage-api-key"
               badges={['AI Agent']}
               value={settings.serpApiKey}
@@ -1090,7 +1090,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="WPScan API Token"
-              hint="Enriches execute_wpscan results with vulnerability data from the WPScan database. Free: 25 requests/day"
+              hint="使用 WPScan 数据库漏洞数据增强 execute_wpscan 结果。免费：25 次/天"
               signupUrl="https://wpscan.com/register"
               badges={['AI Agent']}
               value={settings.wpscanApiToken}
@@ -1102,7 +1102,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="NVD API Key"
-              hint="NIST NVD API key — increases CVE lookup rate limit from 5 to 120 requests/30s"
+              hint="NIST NVD API Key：将 CVE 查询限速从 5 次/30 秒提升到 120 次/30 秒"
               signupUrl="https://nvd.nist.gov/developers/request-an-api-key"
               badges={['Recon Pipeline']}
               value={settings.nvdApiKey}
@@ -1114,7 +1114,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="Vulners API Key"
-              hint="Vulners CVE database — alternative to NVD for vulnerability lookups with richer exploit data"
+              hint="Vulners CVE 数据库：NVD 的替代方案，包含更丰富的漏洞利用数据"
               signupUrl="https://vulners.com/#register"
               badges={['Recon Pipeline']}
               value={settings.vulnersApiKey}
@@ -1126,7 +1126,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="URLScan API Key"
-              hint="Optional — used by URLScan.io OSINT enrichment for higher rate limits. Works without key (public results only)"
+              hint="可选：用于 URLScan.io OSINT 增强以获得更高限速；不填也可用（仅公共结果）"
               signupUrl="https://urlscan.io/user/signup"
               badges={['Recon Pipeline']}
               value={settings.urlscanApiKey}
@@ -1139,7 +1139,7 @@ export default function SettingsPage() {
 
             <SecretField
               label="Censys API Token"
-              hint="Censys Platform personal access token — used by Recon Pipeline and Uncover engine"
+              hint="Censys Platform 的 Personal Access Token：供侦察流水线与 Uncover 引擎使用"
               signupUrl="https://accounts.censys.io/settings/personal-access-tokens"
               badges={['Recon Pipeline', 'Standalone + Uncover']}
               value={settings.censysApiToken}
@@ -1149,7 +1149,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="Censys Organization ID"
-              hint="Censys Organization ID — paired with API Token above. Found on your Censys account page"
+              hint="Censys Organization ID：与上述 API Token 配套使用，可在 Censys 账号页面找到"
               signupUrl="https://accounts.censys.io/settings/personal-access-tokens"
               badges={['Recon Pipeline', 'Standalone + Uncover']}
               value={settings.censysOrgId}
@@ -1159,7 +1159,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="Censys Personal API Token"
-              hint="Personal Access Token from your Censys account — alternative to API ID + Secret. Takes precedence when both are set."
+              hint="来自 Censys 账号的 Personal Access Token：替代 API ID + Secret；当两者同时设置时优先生效"
               signupUrl="https://accounts.censys.io/settings/personal-access-tokens"
               badges={['Recon Pipeline']}
               value={settings.censysApiToken}
@@ -1169,7 +1169,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="FOFA API Key"
-              hint="FOFA cyberspace search — asset discovery by banner, certificate, domain. Key format: email:key"
+              hint="FOFA 空间测绘：按 banner/证书/域名发现资产。Key 格式：email:key"
               signupUrl="https://en.fofa.info/"
               badges={['Recon Pipeline', 'Standalone + Uncover']}
               value={settings.fofaApiKey}
@@ -1181,7 +1181,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="AlienVault OTX Key"
-              hint="Open Threat Exchange — threat intelligence pulses, malware indicators, passive DNS, reputation scoring"
+              hint="Open Threat Exchange：威胁情报 pulses、恶意指标、被动 DNS、信誉评分"
               signupUrl="https://otx.alienvault.com/settings"
               badges={['Recon Pipeline']}
               value={settings.otxApiKey}
@@ -1193,7 +1193,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="Netlas API Key"
-              hint="Netlas.io — internet-wide scan data with banners, certificates, and WHOIS info"
+              hint="Netlas.io：全网扫描数据（banner/证书/WHOIS 等）"
               signupUrl="https://app.netlas.io/profile/"
               badges={['Recon Pipeline', 'Standalone + Uncover']}
               value={settings.netlasApiKey}
@@ -1205,7 +1205,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="VirusTotal API Key"
-              hint="Multi-engine reputation for IPs and domains. Free tier: 4 lookups/min, 500/day"
+              hint="多引擎信誉查询（IP/域名）。免费：4 次/分钟，500 次/天"
               signupUrl="https://www.virustotal.com/gui/my-apikey"
               badges={['Recon Pipeline']}
               value={settings.virusTotalApiKey}
@@ -1217,7 +1217,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="ZoomEye API Key"
-              hint="ZoomEye cyberspace search — host/device discovery with port, banner, and geo data"
+              hint="ZoomEye 空间测绘：按端口/banner/地理信息发现主机与设备"
               signupUrl="https://www.zoomeye.ai/profile"
               badges={['Recon Pipeline', 'Standalone + Uncover']}
               value={settings.zoomEyeApiKey}
@@ -1229,7 +1229,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="Criminal IP API Key"
-              hint="AI-powered threat intelligence — IP/domain risk scoring, vulnerability detection, proxy/VPN/Tor identification"
+              hint="AI 威胁情报：IP/域名风险评分、漏洞检测、代理/VPN/Tor 识别"
               signupUrl="https://search.criminalip.io/mypage/information"
               badges={['Recon Pipeline', 'Standalone + Uncover']}
               value={settings.criminalIpApiKey}
@@ -1243,12 +1243,12 @@ export default function SettingsPage() {
             {/* Uncover group */}
             <div style={{ borderTop: '1px solid var(--border-secondary)', marginTop: '0.75rem', paddingTop: '0.75rem' }}>
               <p style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>
-                Uncover (Multi-Engine Search)
+                Uncover（多引擎搜索）
               </p>
             </div>
             <SecretField
               label="Quake API Key"
-              hint="360 Quake cyberspace search — asset discovery by service, certificate, and banner"
+              hint="360 Quake 空间测绘：按服务/证书/banner 发现资产"
               signupUrl="https://quake.360.net/quake/#/index"
               badges={['Uncover', 'Recon Pipeline']}
               value={settings.quakeApiKey}
@@ -1260,7 +1260,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="Hunter API Key"
-              hint="Qianxin Hunter cyberspace search — Chinese threat intelligence platform"
+              hint="奇安信 Hunter 空间测绘：中文威胁情报平台"
               signupUrl="https://hunter.qianxin.com/"
               badges={['Uncover', 'Recon Pipeline']}
               value={settings.hunterApiKey}
@@ -1272,7 +1272,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="PublicWWW API Key"
-              hint="Search engine for source code — find websites using specific technologies, scripts, or snippets"
+              hint="源码搜索引擎：查找使用特定技术/脚本/代码片段的网站"
               signupUrl="https://publicwww.com/profile/signup.html"
               badges={['Uncover', 'Recon Pipeline']}
               value={settings.publicWwwApiKey}
@@ -1284,7 +1284,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="HunterHow API Key"
-              hint="hunter.how internet search — asset discovery and reconnaissance"
+              hint="hunter.how 互联网搜索：资产发现与侦察"
               signupUrl="https://hunter.how/"
               badges={['Uncover', 'Recon Pipeline']}
               value={settings.hunterHowApiKey}
@@ -1296,7 +1296,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="Google Custom Search API Key"
-              hint="Google Custom Search JSON API — for Uncover Google search engine (different from SerpAPI)"
+              hint="Google Custom Search JSON API：供 Uncover 的 Google 引擎使用（不同于 SerpAPI）"
               signupUrl="https://developers.google.com/custom-search/v1/introduction"
               badges={['Uncover', 'Recon Pipeline']}
               value={settings.googleApiKey}
@@ -1306,7 +1306,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="Google Custom Search CX"
-              hint="Programmable Search Engine ID — paired with Google API Key above"
+              hint="Programmable Search Engine ID：与上方 Google API Key 配套使用"
               signupUrl="https://programmablesearchengine.google.com/controlpanel/create"
               badges={['Uncover', 'Recon Pipeline']}
               value={settings.googleApiCx}
@@ -1316,7 +1316,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="Onyphe API Key"
-              hint="Onyphe — cyber defense search engine for exposed assets, threat detection, and attack surface management"
+              hint="Onyphe：网络防御搜索引擎，用于暴露资产、威胁检测与攻击面管理"
               signupUrl="https://search.onyphe.io/signup"
               badges={['Uncover', 'Recon Pipeline']}
               value={settings.onypheApiKey}
@@ -1328,7 +1328,7 @@ export default function SettingsPage() {
             />
             <SecretField
               label="Driftnet API Key"
-              hint="Driftnet — fast internet-wide port and service discovery"
+              hint="Driftnet：高速全网端口与服务发现"
               signupUrl="https://driftnet.io/auth?state=signup"
               badges={['Uncover', 'Recon Pipeline']}
               value={settings.driftnetApiKey}
@@ -1345,18 +1345,18 @@ export default function SettingsPage() {
       {/* Tunneling sub-section */}
       <div className={styles.section}>
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Tunneling</h2>
+          <h2 className={styles.sectionTitle}>隧道</h2>
         </div>
         <p className={styles.sectionHint}>
-          Configure reverse shell tunneling. Choose ngrok (free, single port) or chisel (multi-port, requires VPS). Changes apply immediately.
+          配置反弹 shell 隧道。可选 ngrok（免费、单端口）或 chisel（多端口、需要 VPS）。修改会立即生效。
         </p>
         {settingsLoading ? (
-          <div className={styles.emptyState}><Loader2 size={16} className={styles.spin} /> Loading...</div>
+          <div className={styles.emptyState}><Loader2 size={16} className={styles.spin} /> 加载中...</div>
         ) : (
           <div className={styles.settingsGrid}>
             <SecretField
               label="ngrok Auth Token"
-              hint="Enables ngrok TCP tunnel for reverse shells on port 4444. Stageless payloads only."
+              hint="启用 ngrok TCP 隧道用于 4444 端口反弹 shell。仅支持 stageless payload。"
               signupUrl="https://dashboard.ngrok.com/get-started/your-authtoken"
               value={settings.ngrokAuthtoken}
               visible={!!visibleFields.ngrokAuthtoken}
@@ -1364,21 +1364,21 @@ export default function SettingsPage() {
               onChange={v => updateSetting('ngrokAuthtoken', v)}
             />
             <div className="formGroup">
-              <label className="formLabel">Chisel Server URL</label>
+              <label className="formLabel">Chisel 服务器 URL</label>
               <input
                 className="textInput"
                 type="text"
                 value={settings.chiselServerUrl}
                 onChange={e => updateSetting('chiselServerUrl', e.target.value)}
-                placeholder="e.g. http://your-vps.com:9090"
+                placeholder="例如：http://your-vps.com:9090"
               />
               <span className="formHint">
-                Your VPS chisel server URL. Run on VPS: <code>chisel server -p 9090 --reverse</code>. Tunnels ports 4444 (handler) + 8080 (web delivery).
+                你的 VPS 上运行的 chisel server 地址。在 VPS 上执行：<code>chisel server -p 9090 --reverse</code>。会转发 4444（handler）+ 8080（web delivery）。
               </span>
             </div>
             <SecretField
               label="Chisel Auth"
-              hint="user:pass for chisel server authentication (optional — only if your chisel server requires auth)"
+              hint="chisel server 的鉴权信息 user:pass（可选，仅当你的 chisel server 启用鉴权时需要）"
               value={settings.chiselAuth}
               visible={!!visibleFields.chiselAuth}
               onToggle={() => toggleFieldVisibility('chiselAuth')}
@@ -1389,7 +1389,7 @@ export default function SettingsPage() {
         {settingsDirty && !settingsSaving && (
           <div className={styles.formActions} style={{ justifyContent: 'flex-end', marginTop: '12px' }}>
             <button className="primaryButton" onClick={saveSettings} disabled={settingsSaving}>
-              Save Settings
+              保存设置
             </button>
           </div>
         )}
@@ -1402,7 +1402,7 @@ export default function SettingsPage() {
       <Modal
         isOpen={skillNameModal}
         onClose={() => { setSkillNameModal(false); setPendingSkillContent(''); setPendingSkillName(''); setPendingSkillDescription('') }}
-        title="Upload Attack Skill"
+        title="上传代理技能"
         size="small"
         footer={
           <>
@@ -1410,7 +1410,7 @@ export default function SettingsPage() {
               className="secondaryButton"
               onClick={() => { setSkillNameModal(false); setPendingSkillContent(''); setPendingSkillName(''); setPendingSkillDescription('') }}
             >
-              Cancel
+              取消
             </button>
             <button
               className="primaryButton"
@@ -1418,37 +1418,37 @@ export default function SettingsPage() {
               onClick={confirmSkillUpload}
             >
               {skillUploading ? <Loader2 size={14} className={styles.spin} /> : <Upload size={14} />}
-              Upload
+              上传
             </button>
           </>
         }
       >
         <div className="formGroup">
-          <label className="formLabel">Skill Name</label>
+          <label className="formLabel">技能名称</label>
           <input
             className="textInput"
             type="text"
             value={pendingSkillName}
             onChange={(e) => setPendingSkillName(e.target.value)}
-            placeholder="e.g. SQL Injection Workflow"
+            placeholder="例如：SQL 注入工作流"
             autoFocus
           />
           <span className="formHint">
-            This name appears in project settings and classification badges.
+            该名称会显示在项目设置与分类标签中。
           </span>
         </div>
         <div className="formGroup" style={{ marginTop: '12px' }}>
-          <label className="formLabel">Description</label>
+          <label className="formLabel">描述</label>
           <textarea
             className="textInput"
             rows={3}
             value={pendingSkillDescription}
             onChange={(e) => setPendingSkillDescription(e.target.value)}
-            placeholder="e.g. SQL injection testing against web app parameters using sqlmap"
+            placeholder="例如：使用 sqlmap 对 Web 应用参数进行 SQL 注入测试"
             maxLength={500}
           />
           <span className="formHint">
-            Helps the agent understand when to use this skill. Without a description, the first 500 characters of the markdown are used instead &mdash; a good description improves classification accuracy.
+            用于帮助代理判断何时使用该技能。若不填写，会改用 markdown 前 500 个字符；更好的描述可提升分类准确性。
           </span>
         </div>
       </Modal>
@@ -1457,7 +1457,7 @@ export default function SettingsPage() {
       <Modal
         isOpen={editDescModal}
         onClose={() => { setEditDescModal(false); setEditingSkillId(''); setEditingSkillDescription('') }}
-        title="Edit Skill Description"
+        title="编辑技能描述"
         size="small"
         footer={
           <>
@@ -1465,7 +1465,7 @@ export default function SettingsPage() {
               className="secondaryButton"
               onClick={() => { setEditDescModal(false); setEditingSkillId(''); setEditingSkillDescription('') }}
             >
-              Cancel
+              取消
             </button>
             <button
               className="primaryButton"
@@ -1473,24 +1473,24 @@ export default function SettingsPage() {
               onClick={saveEditDescription}
             >
               {editDescSaving ? <Loader2 size={14} className={styles.spin} /> : <Pencil size={14} />}
-              Save
+              保存
             </button>
           </>
         }
       >
         <div className="formGroup">
-          <label className="formLabel">Description</label>
+          <label className="formLabel">描述</label>
           <textarea
             className="textInput"
             rows={3}
             value={editingSkillDescription}
             onChange={(e) => setEditingSkillDescription(e.target.value)}
-            placeholder="e.g. SQL injection testing against web app parameters using sqlmap"
+            placeholder="例如：使用 sqlmap 对 Web 应用参数进行 SQL 注入测试"
             maxLength={500}
             autoFocus
           />
           <span className="formHint">
-            Helps the agent understand when to use this skill. Without a description, the first 500 characters of the markdown are used instead &mdash; a good description improves classification accuracy.
+            用于帮助代理判断何时使用该技能。若不填写，会改用 markdown 前 500 个字符；更好的描述可提升分类准确性。
           </span>
         </div>
       </Modal>
@@ -1499,7 +1499,7 @@ export default function SettingsPage() {
       <Modal
         isOpen={chatSkillNameModal}
         onClose={() => { setChatSkillNameModal(false); setPendingChatSkillContent(''); setPendingChatSkillName(''); setPendingChatSkillDescription(''); setPendingChatSkillCategory('general') }}
-        title="Upload Chat Skill"
+        title="上传聊天技能"
         size="small"
         footer={
           <>
@@ -1507,7 +1507,7 @@ export default function SettingsPage() {
               className="secondaryButton"
               onClick={() => { setChatSkillNameModal(false); setPendingChatSkillContent(''); setPendingChatSkillName(''); setPendingChatSkillDescription(''); setPendingChatSkillCategory('general') }}
             >
-              Cancel
+              取消
             </button>
             <button
               className="primaryButton"
@@ -1515,62 +1515,62 @@ export default function SettingsPage() {
               onClick={confirmChatSkillUpload}
             >
               {chatSkillUploading ? <Loader2 size={14} className={styles.spin} /> : <Upload size={14} />}
-              Upload
+              上传
             </button>
           </>
         }
       >
         <div className="formGroup">
-          <label className="formLabel">Skill Name</label>
+          <label className="formLabel">技能名称</label>
           <input
             className="textInput"
             type="text"
             value={pendingChatSkillName}
             onChange={(e) => setPendingChatSkillName(e.target.value)}
-            placeholder="e.g. OWASP Top 10 Reference"
+            placeholder="例如：OWASP Top 10 速查"
             autoFocus
           />
         </div>
         <div className="formGroup" style={{ marginTop: '12px' }}>
-          <label className="formLabel">Description</label>
+          <label className="formLabel">描述</label>
           <textarea
             className="textInput"
             rows={3}
             value={pendingChatSkillDescription}
             onChange={(e) => setPendingChatSkillDescription(e.target.value)}
-            placeholder="e.g. Quick reference for OWASP Top 10 vulnerability categories"
+            placeholder="例如：OWASP Top 10 漏洞分类速查"
             maxLength={500}
           />
           <span className="formHint">
-            Optional. Helps you remember what this skill covers.
+            可选：用于帮助你记住该技能包含哪些内容。
           </span>
         </div>
         <div className="formGroup" style={{ marginTop: '12px' }}>
-          <label className="formLabel">Category</label>
+          <label className="formLabel">分类</label>
           <select
             className="textInput"
             value={pendingChatSkillCategory}
             onChange={(e) => setPendingChatSkillCategory(e.target.value)}
           >
-            <option value="general">general</option>
-            <option value="vulnerabilities">vulnerabilities</option>
-            <option value="tooling">tooling</option>
-            <option value="scan_modes">scan_modes</option>
-            <option value="frameworks">frameworks</option>
-            <option value="technologies">technologies</option>
-            <option value="protocols">protocols</option>
-            <option value="coordination">coordination</option>
-            <option value="cloud">cloud</option>
-            <option value="mobile">mobile</option>
-            <option value="api_security">api_security</option>
-            <option value="wireless">wireless</option>
-            <option value="network">network</option>
-            <option value="active_directory">active_directory</option>
-            <option value="social_engineering">social_engineering</option>
-            <option value="reporting">reporting</option>
+            <option value="general">通用（general）</option>
+            <option value="vulnerabilities">漏洞（vulnerabilities）</option>
+            <option value="tooling">工具（tooling）</option>
+            <option value="scan_modes">扫描模式（scan_modes）</option>
+            <option value="frameworks">框架（frameworks）</option>
+            <option value="technologies">技术栈（technologies）</option>
+            <option value="protocols">协议（protocols）</option>
+            <option value="coordination">协作（coordination）</option>
+            <option value="cloud">云（cloud）</option>
+            <option value="mobile">移动端（mobile）</option>
+            <option value="api_security">API 安全（api_security）</option>
+            <option value="wireless">无线（wireless）</option>
+            <option value="network">网络（network）</option>
+            <option value="active_directory">AD（active_directory）</option>
+            <option value="social_engineering">社会工程（social_engineering）</option>
+            <option value="reporting">报告（reporting）</option>
           </select>
           <span className="formHint">
-            Categorize this skill for easier browsing.
+            为该技能设置分类，便于浏览与管理。
           </span>
         </div>
       </Modal>
@@ -1579,7 +1579,7 @@ export default function SettingsPage() {
       <Modal
         isOpen={editChatDescModal}
         onClose={() => { setEditChatDescModal(false); setEditingChatSkillId(''); setEditingChatSkillDescription('') }}
-        title="Edit Chat Skill Description"
+        title="编辑聊天技能描述"
         size="small"
         footer={
           <>
@@ -1587,7 +1587,7 @@ export default function SettingsPage() {
               className="secondaryButton"
               onClick={() => { setEditChatDescModal(false); setEditingChatSkillId(''); setEditingChatSkillDescription('') }}
             >
-              Cancel
+              取消
             </button>
             <button
               className="primaryButton"
@@ -1595,24 +1595,24 @@ export default function SettingsPage() {
               onClick={saveEditChatDescription}
             >
               {editChatDescSaving ? <Loader2 size={14} className={styles.spin} /> : <Pencil size={14} />}
-              Save
+              保存
             </button>
           </>
         }
       >
         <div className="formGroup">
-          <label className="formLabel">Description</label>
+          <label className="formLabel">描述</label>
           <textarea
             className="textInput"
             rows={3}
             value={editingChatSkillDescription}
             onChange={(e) => setEditingChatSkillDescription(e.target.value)}
-            placeholder="e.g. Quick reference for OWASP Top 10 vulnerability categories"
+            placeholder="例如：OWASP Top 10 漏洞分类速查"
             maxLength={500}
             autoFocus
           />
           <span className="formHint">
-            Optional description to help you remember what this skill covers.
+            可选：用于帮助你记住该技能包含哪些内容。
           </span>
         </div>
       </Modal>
@@ -1621,28 +1621,28 @@ export default function SettingsPage() {
       <Modal
         isOpen={!!rotationModal}
         onClose={closeRotationModal}
-        title={`Key Rotation — ${rotationModal || ''}`}
+        title={`密钥轮换 — ${rotationModal || ''}`}
         size="small"
         footer={
           <>
             {rotationConfigs[rotationModal || '']?.extraKeyCount > 0 && !rotationDraftDirty && (
               <button className="secondaryButton" onClick={clearRotationConfig} style={{ marginRight: 'auto' }}>
-                Clear All Extra Keys
+                清空额外密钥
               </button>
             )}
-            <button className="secondaryButton" onClick={closeRotationModal}>Cancel</button>
+            <button className="secondaryButton" onClick={closeRotationModal}>取消</button>
             <button
               className="primaryButton"
               onClick={saveRotationDraft}
               disabled={!rotationDraftDirty && rotationDraft.rotateEveryN === (rotationConfigs[rotationModal || '']?.rotateEveryN ?? 10)}
             >
-              Save
+              保存
             </button>
           </>
         }
       >
         <div className="formGroup">
-          <label className="formLabel">Extra API Keys</label>
+          <label className="formLabel">额外 API Key</label>
           {rotationConfigs[rotationModal || '']?.extraKeyCount > 0 && !rotationDraftDirty ? (
             <>
               <div style={{
@@ -1653,7 +1653,7 @@ export default function SettingsPage() {
                 color: 'var(--accent-secondary)',
                 marginBottom: '8px',
               }}>
-                {rotationConfigs[rotationModal || '']?.extraKeyCount} extra key(s) configured. Paste new keys below to replace them.
+                已配置 {rotationConfigs[rotationModal || '']?.extraKeyCount} 个额外密钥。可在下方粘贴新密钥以替换。
               </div>
               <textarea
                 className="textInput"
@@ -1663,7 +1663,7 @@ export default function SettingsPage() {
                   setRotationDraft(prev => ({ ...prev, extraKeys: e.target.value }))
                   setRotationDraftDirty(true)
                 }}
-                placeholder="Paste API keys here, one per line..."
+                placeholder="在此粘贴 API Key，每行一个..."
                 style={{ fontFamily: 'monospace', fontSize: '12px' }}
               />
             </>
@@ -1676,17 +1676,17 @@ export default function SettingsPage() {
                 setRotationDraft(prev => ({ ...prev, extraKeys: e.target.value }))
                 setRotationDraftDirty(true)
               }}
-              placeholder="Paste API keys here, one per line..."
+              placeholder="在此粘贴 API Key，每行一个..."
               style={{ fontFamily: 'monospace', fontSize: '12px' }}
               autoFocus
             />
           )}
           <span className="formHint">
-            These keys plus the main key above form the rotation pool. All keys are treated equally.
+            这些密钥与主密钥共同组成轮换池，所有密钥权重相同。
           </span>
         </div>
         <div className="formGroup" style={{ marginTop: '12px' }}>
-          <label className="formLabel">Rotate Every N Calls</label>
+          <label className="formLabel">每 N 次调用轮换</label>
           <input
             className="textInput"
             type="number"
@@ -1696,7 +1696,7 @@ export default function SettingsPage() {
             style={{ width: '120px' }}
           />
           <span className="formHint">
-            After this many API calls, switch to the next key in the pool (default: 10).
+            每调用这么多次 API 后切换到池中的下一把密钥（默认：10）。
           </span>
         </div>
       </Modal>
@@ -1705,27 +1705,27 @@ export default function SettingsPage() {
       <Modal
         isOpen={!!pendingImport}
         onClose={() => setPendingImport(null)}
-        title="Import API Keys"
+        title="导入 API 密钥"
         size="small"
         footer={
           <>
-            <button className="secondaryButton" onClick={() => setPendingImport(null)}>Cancel</button>
+            <button className="secondaryButton" onClick={() => setPendingImport(null)}>取消</button>
             <button className="primaryButton" onClick={confirmImport}>
-              <Upload size={14} /> Import
+              <Upload size={14} /> 导入
             </button>
           </>
         }
       >
         {pendingImport && (
           <div style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-            <p style={{ marginBottom: '12px' }}>The following will be loaded into the form:</p>
+            <p style={{ marginBottom: '12px' }}>以下内容将被导入到表单中：</p>
             <ul style={{ margin: 0, paddingLeft: '18px' }}>
-              {pendingImport.keyCount > 0 && <li><strong>{pendingImport.keyCount}</strong> API key{pendingImport.keyCount > 1 ? 's' : ''}</li>}
-              {pendingImport.rotationCount > 0 && <li><strong>{pendingImport.rotationCount}</strong> rotation config{pendingImport.rotationCount > 1 ? 's' : ''}</li>}
-              {pendingImport.tunnelingCount > 0 && <li><strong>{pendingImport.tunnelingCount}</strong> tunneling field{pendingImport.tunnelingCount > 1 ? 's' : ''}</li>}
+              {pendingImport.keyCount > 0 && <li><strong>{pendingImport.keyCount}</strong> 个 API Key</li>}
+              {pendingImport.rotationCount > 0 && <li><strong>{pendingImport.rotationCount}</strong> 个轮换配置</li>}
+              {pendingImport.tunnelingCount > 0 && <li><strong>{pendingImport.tunnelingCount}</strong> 个隧道字段</li>}
             </ul>
             <p style={{ marginTop: '12px', fontSize: '12px', color: 'var(--text-tertiary)' }}>
-              Empty values and masked values are skipped. You must click <strong>Save Settings</strong> after import to persist.
+              空值与已掩码的值会被跳过。导入后需要点击 <strong>保存设置</strong> 才会持久化。
             </p>
           </div>
         )}
@@ -1764,14 +1764,14 @@ function SystemSection() {
   return (
     <div className={styles.section}>
       <div className={styles.sectionHeader}>
-        <h2 className={styles.sectionTitle}><Info size={16} /> System</h2>
+        <h2 className={styles.sectionTitle}><Info size={16} /> 系统</h2>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {/* Version info */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
           <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-            Current version: <strong style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>v{currentVersion}</strong>
+            当前版本：<strong style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>v{currentVersion}</strong>
           </span>
 
           {latestVersion && !updateAvailable && (
@@ -1780,7 +1780,7 @@ function SystemSection() {
               fontSize: '11px', fontWeight: 600, padding: '2px 8px', borderRadius: '4px',
               background: 'var(--status-success-bg)', color: 'var(--status-success-text)',
             }}>
-              Up to date
+              已是最新
             </span>
           )}
 
@@ -1790,7 +1790,7 @@ function SystemSection() {
               fontSize: '11px', fontWeight: 600, padding: '2px 8px', borderRadius: '4px',
               background: 'var(--status-warning-bg)', color: 'var(--status-warning-text)',
             }}>
-              v{latestVersion} available
+              可更新至 v{latestVersion}
             </span>
           )}
 
@@ -1813,7 +1813,7 @@ function SystemSection() {
               </code>
               <button
                 onClick={handleCopy}
-                title="Copy command"
+                title="复制命令"
                 style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   padding: '4px', background: 'none', border: '1px solid var(--border-default)',
@@ -1828,7 +1828,7 @@ function SystemSection() {
             {changelog && changelog.length > 0 && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)' }}>
-                  Changes since v{currentVersion}:
+                  v{currentVersion} 以来的更新：
                 </span>
                 <div style={{
                   maxHeight: '250px', overflowY: 'auto',
@@ -1886,7 +1886,7 @@ function SystemSection() {
             rel="noopener noreferrer"
             style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-tertiary)', textDecoration: 'none' }}
           >
-            <ExternalLink size={11} /> Changelog
+            <ExternalLink size={11} /> 更新日志
           </a>
         </div>
       </div>
@@ -1946,6 +1946,15 @@ const BADGE_STYLES: Record<string, React.CSSProperties> = {
   },
 }
 
+const BADGE_LABELS: Record<string, string> = {
+  'AI Agent': 'AI 代理',
+  'Recon Pipeline': '侦察流水线',
+  'Standalone + Uncover': '独立 + Uncover',
+  'Uncover': 'Uncover',
+  'GitHub Secret Hunt': 'GitHub 密钥搜寻',
+  'TruffleHog': 'TruffleHog',
+}
+
 // Reusable secret field component
 function SecretField({
   label,
@@ -1979,7 +1988,7 @@ function SecretField({
         {label}
         {badges?.map(badge => (
           <span key={badge} style={BADGE_STYLES[badge] || BADGE_STYLES['AI Agent']}>
-            {badge}
+            {BADGE_LABELS[badge] ?? badge}
           </span>
         ))}
       </label>
@@ -1990,7 +1999,7 @@ function SecretField({
             type={visible ? 'text' : 'password'}
             value={value ?? ''}
             onChange={e => onChange(e.target.value)}
-            placeholder={`Enter ${label.toLowerCase()}`}
+            placeholder={`输入 ${label}`}
           />
           <button className={styles.secretToggle} onClick={onToggle} type="button">
             {visible ? <EyeOff size={14} /> : <Eye size={14} />}
@@ -2000,7 +2009,7 @@ function SecretField({
           <button
             onClick={onConfigureRotation}
             type="button"
-            title="Configure key rotation"
+            title="配置密钥轮换"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -2018,7 +2027,7 @@ function SecretField({
             }}
           >
             <RotateCw size={12} />
-            Key Rotation
+            密钥轮换
           </button>
         )}
       </div>
@@ -2028,7 +2037,7 @@ function SecretField({
           <>
             {' — '}
             <a href={signupUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)' }}>
-              Get API key
+              获取 API Key
             </a>
           </>
         )}
@@ -2045,7 +2054,7 @@ function SecretField({
           marginTop: '4px',
           letterSpacing: '0.02em',
         }}>
-          {totalKeys} keys total, rotate every {rotationInfo.rotateEveryN} calls
+          共 {totalKeys} 把密钥，每 {rotationInfo.rotateEveryN} 次调用轮换
         </span>
       )}
     </div>

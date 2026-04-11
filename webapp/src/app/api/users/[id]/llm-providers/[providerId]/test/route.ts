@@ -29,6 +29,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       }
       config = provider as unknown as Record<string, unknown>
     }
+    console.log('Testing config:', config)
 
     // Proxy to agent test endpoint
     const agentResp = await fetch(`${AGENT_API_URL}/llm-provider/test`, {

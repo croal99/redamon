@@ -58,6 +58,7 @@ def setup_llm(
     For built-in providers, the relevant API key must be supplied.
     """
     logger.info(f"Setting up LLM: {model_name}")
+    logger.info(f"Custom config: {custom_llm_config}")
 
     provider, api_model = parse_model_provider(model_name)
 
@@ -135,7 +136,7 @@ def setup_llm(
         llm = ChatOpenAI(
             model=api_model,
             api_key=openrouter_api_key,
-            base_url="https://openrouter.ai/api/v1",
+            base_url=custom_llm_config.get("baseUrl") or None,
             temperature=0,
             default_headers={
                 "HTTP-Referer": "https://redamon.dev",
@@ -162,9 +163,11 @@ def setup_llm(
             raise ValueError(
                 f"Anthropic API key is required for model '{model_name}'"
             )
+        
         llm = ChatAnthropic(
             model=api_model,
             api_key=anthropic_api_key,
+            base_url=custom_llm_config.get("baseUrl") or None,
             temperature=0,
             max_tokens=16384,
         )
@@ -177,6 +180,7 @@ def setup_llm(
         llm = ChatOpenAI(
             model=api_model,
             api_key=openai_api_key,
+            base_url=custom_llm_config.get("baseUrl") or None,
             temperature=0,
         )
 

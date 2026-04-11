@@ -604,11 +604,14 @@ async def test_llm_provider(body: LlmProviderTestRequest):
         ptype = body.providerType
 
         if ptype == "openai":
-            llm = setup_llm("gpt-4o-mini", openai_api_key=body.apiKey)
+            baseURL = body.baseUrl or "https://api.openai.com/v1"
+            llm = setup_llm("gpt-4o-mini", openai_api_key=body.apiKey, custom_llm_config={"baseUrl": baseURL})
         elif ptype == "anthropic":
-            llm = setup_llm("claude-sonnet-4-20250514", anthropic_api_key=body.apiKey)
+            baseURL = body.baseUrl or "https://api.anthropic.com/v1"
+            llm = setup_llm("claude-sonnet-4-20250514", anthropic_api_key=body.apiKey, custom_llm_config={"baseUrl": baseURL})
         elif ptype == "openrouter":
-            llm = setup_llm("openrouter/openai/gpt-4o-mini", openrouter_api_key=body.apiKey)
+            baseURL = body.baseUrl or "https://api.openrouter.ai/v1"
+            llm = setup_llm("openrouter/openai/gpt-4o-mini", openrouter_api_key=body.apiKey, custom_llm_config={"baseUrl": baseURL})
         elif ptype == "bedrock":
             llm = setup_llm(
                 "bedrock/anthropic.claude-3-haiku-20240307-v1:0",

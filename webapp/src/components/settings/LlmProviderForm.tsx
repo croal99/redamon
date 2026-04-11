@@ -134,14 +134,14 @@ export function LlmProviderForm({ userId, provider, onSave, onCancel }: LlmProvi
 
       if (!resp.ok) {
         const err = await resp.json()
-        throw new Error(err.error || 'Failed to save')
+        throw new Error(err.error || '保存失败')
       }
 
-      toast.success(isEditing ? 'Provider updated' : 'Provider added')
+      toast.success(isEditing ? '提供方已更新' : '提供方已添加')
       onSave()
     } catch (err) {
       console.error('Failed to save provider:', err)
-      toast.error('Failed to save provider')
+      toast.error('保存提供方失败')
     } finally {
       setSaving(false)
     }
@@ -151,7 +151,7 @@ export function LlmProviderForm({ userId, provider, onSave, onCancel }: LlmProvi
   if (step === 'type') {
     return (
       <div className={styles.formSection}>
-        <h3 className={styles.formTitle}>Choose Provider Type</h3>
+        <h3 className={styles.formTitle}>选择提供方类型</h3>
         <div className={styles.providerTypeGrid}>
           {PROVIDER_TYPES.map(pt => (
             <button
@@ -166,7 +166,7 @@ export function LlmProviderForm({ userId, provider, onSave, onCancel }: LlmProvi
           ))}
         </div>
         <div className={styles.formActions}>
-          <button className="secondaryButton" onClick={onCancel}>Cancel</button>
+          <button className="secondaryButton" onClick={onCancel}>取消</button>
         </div>
       </div>
     )
@@ -175,32 +175,38 @@ export function LlmProviderForm({ userId, provider, onSave, onCancel }: LlmProvi
   // Step 2: Configure
   const ptype = form.providerType as ProviderType
   const isKeyBased = ['openai', 'anthropic', 'openrouter'].includes(ptype)
+  const defaultBaseURL = {
+    openai: 'https://api.openai.com/v1',
+    anthropic: 'https://api.anthropic.com/v1',
+    openrouter: 'https://api.openrouter.ai/v1',
+  }[ptype as string] || ''
   const isBedrock = ptype === 'bedrock'
   const isCompat = ptype === 'openai_compatible'
   return (
     <div className={styles.formSection}>
       <div className={styles.formHeader}>
         <h3 className={styles.formTitle}>
-          {isEditing ? 'Edit' : 'Add'} {PROVIDER_TYPES.find(p => p.id === ptype)?.name || ptype} Provider
+          {isEditing ? '编辑' : '添加'} {PROVIDER_TYPES.find(p => p.id === ptype)?.name || ptype} 提供方
         </h3>
         {!isEditing && (
-          <button className="textButton" onClick={() => setStep('type')}>Change type</button>
+          <button className="textButton" onClick={() => setStep('type')}>更换类型</button>
         )}
       </div>
 
       {/* Name */}
       <div className="formGroup">
-        <label className="formLabel formLabelRequired">Display Name</label>
+        <label className="formLabel formLabelRequired">显示名称</label>
         <input
           className="textInput"
           value={form.name}
           onChange={e => updateForm('name', e.target.value)}
-          placeholder="e.g., My OpenAI Key"
+          placeholder="例如：我的 OpenAI Key"
         />
       </div>
 
       {/* Key-based providers: just API key */}
       {isKeyBased && (
+        <>
         <div className="formGroup">
           <label className="formLabel formLabelRequired">API Key</label>
           <div className={styles.secretInputWrapper}>
@@ -220,13 +226,26 @@ export function LlmProviderForm({ userId, provider, onSave, onCancel }: LlmProvi
             </button>
           </div>
         </div>
+
+
+          <div className="formGroup">
+            <label className="formLabel formLabelRequired">Base URL</label>
+            <input
+              className="textInput"
+              value={form.baseUrl}
+              onChange={e => updateForm('baseUrl', e.target.value)}
+              placeholder={defaultBaseURL}
+            />
+          </div>
+
+        </>
       )}
 
       {/* Bedrock */}
       {isBedrock && (
         <>
           <div className="formGroup">
-            <label className="formLabel formLabelRequired">AWS Region</label>
+            <label className="formLabel formLabelRequired">AWS 区域</label>
             <input
               className="textInput"
               value={form.awsRegion}
@@ -259,10 +278,10 @@ export function LlmProviderForm({ userId, provider, onSave, onCancel }: LlmProvi
       {isCompat && (
         <>
           <div className="formGroup">
-            <label className="formLabel">Base URL Preset</label>
+            <label className="formLabel">Base URL 预设</label>
             <select
               className="select"
-              value={OPENAI_COMPAT_PRESETS.find(p => p.baseUrl === form.baseUrl)?.name || 'Custom'}
+              value={OPENAI_COMPAT_PRESETS.find(p => p.baseUrl === form.baseUrl)?.name || '自定义'}
               onChange={e => {
                 const preset = OPENAI_COMPAT_PRESETS.find(p => p.name === e.target.value)
                 if (preset && preset.baseUrl) {
@@ -287,12 +306,12 @@ export function LlmProviderForm({ userId, provider, onSave, onCancel }: LlmProvi
           </div>
 
           <div className="formGroup">
-            <label className="formLabel formLabelRequired">Model Identifier</label>
+            <label className="formLabel formLabelRequired">模型标识（Model Identifier）</label>
             <input
               className="textInput"
               value={form.modelIdentifier}
               onChange={e => updateForm('modelIdentifier', e.target.value)}
-              placeholder="e.g., llama3.1:8b"
+              placeholder="例如：llama3.1:8b"
             />
           </div>
 
@@ -303,14 +322,14 @@ export function LlmProviderForm({ userId, provider, onSave, onCancel }: LlmProvi
               type="password"
               value={form.apiKey}
               onChange={e => updateForm('apiKey', e.target.value)}
-              placeholder="Optional (leave empty for Ollama)"
+              placeholder="可选（Ollama 可留空）"
             />
-            <span className="formHint">Leave empty for local servers that don&apos;t require auth</span>
+            <span className="formHint">本地服务若不需要鉴权可留空</span>
           </div>
 
           {/* Extra headers */}
           <div className="formGroup">
-            <label className="formLabel">Extra Headers</label>
+            <label className="formLabel">额外请求头</label>
             {Object.entries(form.defaultHeaders).map(([k, v]) => (
               <div key={k} className={styles.headerRow}>
                 <code className={styles.headerKey}>{k}</code>
@@ -325,14 +344,14 @@ export function LlmProviderForm({ userId, provider, onSave, onCancel }: LlmProvi
                 className="textInput"
                 value={headerKey}
                 onChange={e => setHeaderKey(e.target.value)}
-                placeholder="Header name"
+                placeholder="Header 名称"
                 style={{ flex: 1 }}
               />
               <input
                 className="textInput"
                 value={headerValue}
                 onChange={e => setHeaderValue(e.target.value)}
-                placeholder="Value"
+                placeholder="值"
                 style={{ flex: 1 }}
               />
               <button className="secondaryButton" onClick={addHeader} disabled={!headerKey.trim()}>
@@ -344,7 +363,7 @@ export function LlmProviderForm({ userId, provider, onSave, onCancel }: LlmProvi
           {/* Advanced params */}
           <div className={styles.advancedGrid}>
             <div className="formGroup">
-              <label className="formLabel">Timeout (s)</label>
+              <label className="formLabel">超时（秒）</label>
               <input
                 className="textInput"
                 type="number"
@@ -353,7 +372,7 @@ export function LlmProviderForm({ userId, provider, onSave, onCancel }: LlmProvi
               />
             </div>
             <div className="formGroup">
-              <label className="formLabel">Temperature</label>
+              <label className="formLabel">温度（Temperature）</label>
               <input
                 className="textInput"
                 type="number"
@@ -365,7 +384,7 @@ export function LlmProviderForm({ userId, provider, onSave, onCancel }: LlmProvi
               />
             </div>
             <div className="formGroup">
-              <label className="formLabel">Max Tokens</label>
+              <label className="formLabel">最大 Tokens</label>
               <input
                 className="textInput"
                 type="number"
@@ -383,9 +402,9 @@ export function LlmProviderForm({ userId, provider, onSave, onCancel }: LlmProvi
                 checked={!form.sslVerify}
                 onChange={e => updateForm('sslVerify', !e.target.checked)}
               />
-              <span>Skip SSL certificate verification</span>
+              <span>跳过 SSL 证书校验</span>
             </label>
-            <span className="formHint">Enable for internal endpoints with self-signed certificates</span>
+            <span className="formHint">适用于内网端点或自签名证书场景</span>
           </div>
         </>
       )}
@@ -398,7 +417,7 @@ export function LlmProviderForm({ userId, provider, onSave, onCancel }: LlmProvi
           disabled={testing}
         >
           {testing ? <Loader2 size={14} className={styles.spin} /> : null}
-          {testing ? 'Testing...' : 'Test Connection'}
+          {testing ? '测试中...' : '测试连接'}
         </button>
         {testResult && (
           <div className={`${styles.testResult} ${testResult.success ? styles.testSuccess : styles.testError}`}>
@@ -410,14 +429,14 @@ export function LlmProviderForm({ userId, provider, onSave, onCancel }: LlmProvi
 
       {/* Actions */}
       <div className={styles.formActions}>
-        <button className="secondaryButton" onClick={onCancel}>Cancel</button>
+        <button className="secondaryButton" onClick={onCancel}>取消</button>
         <button
           className="primaryButton"
           onClick={handleSave}
           disabled={saving || !form.name || (!isCompat && !form.apiKey && !isBedrock) || (isBedrock && (!form.awsAccessKeyId || !form.awsSecretKey)) || (isCompat && (!form.baseUrl || !form.modelIdentifier))}
         >
           {saving ? <Loader2 size={14} className={styles.spin} /> : null}
-          {isEditing ? 'Update' : 'Save'} Provider
+          {isEditing ? '更新' : '保存'} 提供方
         </button>
       </div>
     </div>

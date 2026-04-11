@@ -399,11 +399,11 @@ services:
       - cypherfix-repos:/tmp/cypherfix-repos
       - ./knowledge_base/kb_config.yaml:/app/knowledge_base/kb_config.yaml:ro
       - ./knowledge_base/data:/app/knowledge_base/data
-    depends_on:
-      neo4j:
-        condition: service_healthy
-      kali-sandbox:
-        condition: service_healthy
+    # depends_on:
+    #   neo4j:
+    #     condition: service_healthy
+    #   kali-sandbox:
+    #     condition: service_healthy
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
