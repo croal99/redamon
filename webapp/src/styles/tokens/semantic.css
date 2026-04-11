@@ -8,68 +8,68 @@
   /* ═══════════════════════════════════════════════════════════════════════════
      BACKGROUNDS
      ═══════════════════════════════════════════════════════════════════════════ */
-  --bg-primary: var(--color-gray-950);      /* Main app background */
-  --bg-secondary: var(--color-gray-900);    /* Cards, panels */
-  --bg-tertiary: var(--color-gray-850);     /* Nested elements */
-  --bg-quaternary: var(--color-gray-700);   /* Deep nested elements */
-  --bg-elevated: var(--color-gray-800);     /* Modals, dropdowns */
-  --bg-hover: var(--color-gray-800);        /* Hover states */
-  --bg-active: var(--color-gray-700);       /* Active/pressed states */
-  --bg-input: var(--color-gray-900);        /* Input fields */
-  --bg-overlay: rgba(0, 0, 0, 0.5);         /* Modal overlays */
+  --bg-primary: var(--color-cyber-bg);      /* Main app background */
+  --bg-secondary: var(--color-cyber-bg2);    /* Cards, panels */
+  --bg-tertiary: var(--color-cyber-bg3);     /* Nested elements */
+  --bg-quaternary: var(--color-cyber-bg4);   /* Deep nested elements */
+  --bg-elevated: var(--color-cyber-bg3);     /* Modals, dropdowns */
+  --bg-hover: var(--color-cyber-bg4);        /* Hover states */
+  --bg-active: var(--color-cyber-bg4);       /* Active/pressed states */
+  --bg-input: var(--color-cyber-bg2);        /* Input fields */
+  --bg-overlay: rgba(0, 0, 0, 0.6);         /* Modal overlays */
 
   /* ═══════════════════════════════════════════════════════════════════════════
      TEXT
      ═══════════════════════════════════════════════════════════════════════════ */
-  --text-primary: var(--color-gray-50);     /* Main text */
-  --text-secondary: var(--color-gray-400);  /* Secondary/muted text */
-  --text-tertiary: var(--color-gray-500);   /* Disabled, placeholders */
-  --text-inverse: var(--color-gray-950);    /* Text on light backgrounds */
+  --text-primary: var(--color-cyber-text);     /* Main text */
+  --text-secondary: #94a3b8;  /* Secondary/muted text */
+  --text-tertiary: var(--color-cyber-muted);   /* Disabled, placeholders */
+  --text-inverse: var(--color-cyber-bg);    /* Text on light backgrounds */
   --text-on-accent: var(--color-white);     /* Text on colored backgrounds */
 
   /* ═══════════════════════════════════════════════════════════════════════════
      BORDERS
      ═══════════════════════════════════════════════════════════════════════════ */
-  --border-default: var(--color-gray-800);  /* Default borders */
-  --border-subtle: var(--color-gray-850);   /* Subtle dividers */
-  --border-strong: var(--color-gray-700);   /* Emphasized borders */
-  --border-focus: var(--color-blue-500);    /* Focus rings */
+  --border-default: var(--color-cyber-border);  /* Default borders */
+  --border-subtle: rgba(0, 212, 255, 0.12);   /* Subtle dividers */
+  --border-strong: rgba(0, 212, 255, 0.35);   /* Emphasized borders */
+  --border-focus: var(--color-cyber-cyan);    /* Focus rings */
 
   /* ═══════════════════════════════════════════════════════════════════════════
      ACCENT / BRAND (Crimson Red - Primary, Blue - Secondary)
      ═══════════════════════════════════════════════════════════════════════════ */
-  --accent-primary: var(--color-crimson-500);
-  --accent-primary-hover: var(--color-crimson-600);
-  --accent-primary-active: var(--color-crimson-700);
-  --accent-primary-subtle: var(--color-crimson-900);
+  --accent-primary: var(--color-cyber-cyan);
+  --accent-primary-hover: #33ddff;
+  --accent-primary-active: #00bfe6;
+  --accent-primary-subtle: rgba(0, 212, 255, 0.12);
 
-  --accent-secondary: var(--color-blue-500);
-  --accent-secondary-hover: var(--color-blue-600);
-  --accent-secondary-active: var(--color-blue-700);
-  --accent-secondary-subtle: var(--color-blue-900);
+  --accent-secondary: var(--color-cyber-blue);
+  --accent-secondary-hover: #2b95ff;
+  --accent-secondary-active: #0070e6;
+  --accent-secondary-subtle: rgba(10, 132, 255, 0.12);
 
   /* ═══════════════════════════════════════════════════════════════════════════
      STATUS COLORS
      ═══════════════════════════════════════════════════════════════════════════ */
   /* Success */
-  --status-success: var(--color-green-500);
-  --status-success-bg: var(--color-green-900);
-  --status-success-text: var(--color-green-400);
+  --status-success: var(--color-cyber-green);
+  --status-success-bg: rgba(0, 255, 136, 0.12);
+  --status-success-text: var(--color-cyber-green);
 
   /* Warning */
-  --status-warning: var(--color-amber-500);
-  --status-warning-bg: var(--color-amber-900);
-  --status-warning-text: var(--color-amber-400);
+  --status-warning: var(--color-cyber-orange);
+  --status-warning-bg: rgba(255, 107, 53, 0.12);
+  --status-warning-text: var(--color-cyber-orange);
 
   /* Error */
-  --status-error: var(--color-red-500);
-  --status-error-bg: var(--color-red-900);
-  --status-error-text: var(--color-red-400);
+  --status-error: var(--color-cyber-red);
+  --status-error-bg: rgba(255, 71, 87, 0.12);
+  --status-error-text: var(--color-cyber-red);
 
   /* Info */
-  --status-info: var(--color-blue-500);
-  --status-info-bg: var(--color-blue-900);
-  --status-info-text: var(--color-blue-400);
+  --status-info: var(--color-cyber-blue);
+  --status-info-bg: rgba(10, 132, 255, 0.12);
+  --status-info-text: var(--color-cyber-blue);
 
   /* ═══════════════════════════════════════════════════════════════════════════
      GRAPH NODE COLORS (Security-focused hierarchy)
@@ -77,32 +77,32 @@
      ═══════════════════════════════════════════════════════════════════════════ */
 
   /* Critical Security (Red family) */
-  --node-vulnerability: var(--color-red-500);
-  --node-cve: var(--color-red-600);
+  --node-vulnerability: var(--color-cyber-red);
+  --node-cve: var(--color-cyber-red);
 
   /* Threat Intelligence (Orange family) */
-  --node-mitre: var(--color-orange-500);
-  --node-capec: var(--color-yellow-500);
+  --node-mitre: var(--color-cyber-orange);
+  --node-capec: var(--color-cyber-yellow);
 
   /* Domain Hierarchy (Blue family) */
-  --node-domain: var(--color-blue-900);
-  --node-subdomain: var(--color-blue-600);
+  --node-domain: var(--color-cyber-blue-dark);
+  --node-subdomain: var(--color-cyber-blue);
 
   /* Network Layer (Cyan/Teal family) */
-  --node-ip: var(--color-teal-600);
-  --node-port: var(--color-cyan-700);
-  --node-service: var(--color-cyan-500);
+  --node-ip: var(--color-cyber-cyan);
+  --node-port: var(--color-cyber-cyan);
+  --node-service: var(--color-cyber-cyan);
 
   /* Web Application Layer (Purple family) */
-  --node-baseurl: var(--color-indigo-500);
-  --node-endpoint: var(--color-violet-500);
-  --node-parameter: var(--color-purple-500);
+  --node-baseurl: var(--color-cyber-purple);
+  --node-endpoint: var(--color-cyber-blue);
+  --node-parameter: var(--color-cyber-purple);
 
   /* Context & Metadata */
-  --node-technology: var(--color-green-500);
-  --node-certificate: var(--color-amber-600);
-  --node-header: var(--color-gray-500);
-  --node-default: var(--color-gray-500);
+  --node-technology: var(--color-cyber-green);
+  --node-certificate: var(--color-cyber-yellow);
+  --node-header: var(--color-cyber-muted);
+  --node-default: var(--color-cyber-muted);
 
   /* ═══════════════════════════════════════════════════════════════════════════
      SEVERITY COLORS
@@ -127,18 +127,18 @@
   /* ═══════════════════════════════════════════════════════════════════════════
      GRAPH SPECIFIC
      ═══════════════════════════════════════════════════════════════════════════ */
-  --graph-bg: var(--color-gray-950);
-  --graph-label-color: var(--color-white);
-  --graph-link-default: var(--color-gray-400);
-  --graph-link-highlight: var(--color-blue-400);
-  --graph-selection-ring: var(--color-green-500);
+  --graph-bg: var(--color-cyber-bg);
+  --graph-label-color: var(--color-cyber-text);
+  --graph-link-default: var(--color-cyber-muted);
+  --graph-link-highlight: var(--color-cyber-cyan);
+  --graph-selection-ring: var(--color-cyber-green);
 
   /* ═══════════════════════════════════════════════════════════════════════════
      INTERACTIVE ELEMENTS
      ═══════════════════════════════════════════════════════════════════════════ */
-  --toggle-bg: var(--color-gray-700);
+  --toggle-bg: var(--color-cyber-bg4);
   --toggle-bg-active: var(--accent-secondary);
-  --toggle-knob: var(--color-gray-500);
+  --toggle-knob: var(--color-cyber-muted);
   --toggle-knob-active: var(--color-white);
 
   /* ═══════════════════════════════════════════════════════════════════════════
@@ -146,6 +146,6 @@
      ═══════════════════════════════════════════════════════════════════════════ */
   --drawer-bg: var(--bg-secondary);
   --drawer-header-bg: var(--bg-primary);
-  --drawer-section-info: var(--color-blue-500);
-  --drawer-section-properties: var(--color-violet-500);
+  --drawer-section-info: var(--color-cyber-blue);
+  --drawer-section-properties: var(--color-cyber-purple);
 }

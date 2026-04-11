@@ -185,7 +185,7 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
         type="button"
         className={styles.closeButton}
         onClick={handleClose}
-        aria-label="Dismiss"
+        aria-label="关闭"
       >
         <X size={14} />
       </button>

@@ -509,8 +509,8 @@ services:
       args:
         REDAMON_VERSION: "${REDAMON_VERSION:-0.0.0}"
     container_name: redamon-webapp
-    ports:
-      - "${WEBAPP_PORT:-3000}:3000"
+    # ports:
+    #   - "${WEBAPP_PORT:-3000}:3000"
     environment:
       # PostgreSQL (Prisma)
       DATABASE_URL: "postgresql://${POSTGRES_USER:-redamon}:${POSTGRES_PASSWORD:-redamon_secret}@postgres:5432/${POSTGRES_DB:-redamon}"
@@ -597,8 +597,8 @@ services:
     container_name: bluenet-nginx
     ports:
       - "80:80"
-    # depends_on:
-    #   - frontend
+    depends_on:
+      - webapp
     networks:
       - redamon
     restart: unless-stopped

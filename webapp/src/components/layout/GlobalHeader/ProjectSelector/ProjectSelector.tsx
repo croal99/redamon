@@ -68,11 +68,11 @@ export function ProjectSelector() {
         <button
           className={styles.trigger}
           onClick={() => setIsOpen(!isOpen)}
-          title="Select Project"
+          title="选择项目"
         >
           <FolderOpen size={14} />
           <span className={styles.projectName}>
-            {currentProject?.name || 'No Project'}
+            {currentProject?.name || '未选择项目'}
           </span>
           <ChevronDown size={12} className={isOpen ? styles.iconOpen : ''} />
         </button>
@@ -80,7 +80,7 @@ export function ProjectSelector() {
           <button
             className={styles.settingsIconButton}
             onClick={handleSettings}
-            title="Project Settings"
+            title="项目设置"
           >
             <Settings size={13} />
           </button>
@@ -90,12 +90,12 @@ export function ProjectSelector() {
       {isOpen && (
         <div className={styles.dropdown}>
           <div className={styles.header}>
-            <span className={styles.headerTitle}>Projects</span>
+            <span className={styles.headerTitle}>项目</span>
             {currentProject && (
               <button
                 className={styles.settingsButton}
                 onClick={handleSettings}
-                title="Project Settings"
+                title="项目设置"
               >
                 <Settings size={12} />
               </button>
@@ -105,7 +105,7 @@ export function ProjectSelector() {
           <div className={styles.list}>
             {!userId ? (
               <div className={styles.empty}>
-                Select a user to view projects
+                请选择用户以查看项目
               </div>
             ) : projects && projects.length > 0 ? (
               projects.map((project) => (
@@ -122,7 +122,7 @@ export function ProjectSelector() {
               ))
             ) : (
               <div className={styles.empty}>
-                No projects yet
+                暂无项目
               </div>
             )}
           </div>
@@ -130,10 +130,10 @@ export function ProjectSelector() {
           <div className={styles.footer}>
             <button className={styles.footerButton} onClick={handleNewProject} disabled={!userId}>
               <Plus size={12} />
-              New Project
+              新建项目
             </button>
             <button className={styles.footerButton} onClick={handleViewAll}>
-              Manage Projects
+              管理项目
             </button>
           </div>
         </div>

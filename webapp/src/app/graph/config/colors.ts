@@ -1,107 +1,107 @@
 // Node colors by type - semantic color mapping
 export const NODE_COLORS: Record<string, string> = {
   // CRITICAL SECURITY (Red family) - Immediate attention needed
-  Vulnerability: '#ef4444',  // Bright red - DANGER, highest priority
-  CVE: '#dc2626',            // Deep red - Known vulnerabilities
+  Vulnerability: '#ff4757',
+  CVE: '#ff4757',
 
   // THREAT INTELLIGENCE (Orange family) - Attack context
-  MitreData: '#f97316',      // Orange - CWE/MITRE techniques
-  Capec: '#eab308',          // Yellow - Attack patterns
-  ThreatPulse: '#dc4a22',    // Red-orange - OTX threat intel pulses (adversary/campaign)
-  Malware: '#991b1b',        // Deep red-800 - Malware file samples (confirmed indicators)
+  MitreData: '#ff6b35',
+  Capec: '#ffd700',
+  ThreatPulse: '#ff6b35',
+  Malware: '#ff4757',
 
   // DOMAIN HIERARCHY (Blue family) - Recon foundation
-  Domain: '#1e3a8a',         // Deep navy - Root/foundation (most important)
-  Subdomain: '#2563eb',      // Royal blue - Children of domain
+  Domain: '#0040aa',
+  Subdomain: '#0a84ff',
 
   // NETWORK LAYER (Cyan/Teal family) - Infrastructure
-  IP: '#0d9488',             // Teal - Network addresses
-  Port: '#0e7490',           // Dark cyan - Network ports
-  Service: '#06b6d4',        // Cyan - Running services
-  Traceroute: '#164e63',     // Dark cyan-900 - Network path/route data
+  IP: '#00d4ff',
+  Port: '#00d4ff',
+  Service: '#00d4ff',
+  Traceroute: '#0040aa',
 
   // WEB APPLICATION LAYER (Purple family) - Web-specific assets
-  BaseURL: '#6366f1',        // Indigo - Web entry points
-  Endpoint: '#8b5cf6',       // Purple - Paths/routes
-  Parameter: '#a855f7',      // Light purple - Inputs (attack surface)
-  Secret: '#e11d48',          // Rose-600 - Leaked secrets (danger, attention-grabbing)
+  BaseURL: '#7c3aed',
+  Endpoint: '#0a84ff',
+  Parameter: '#7c3aed',
+  Secret: '#ff4757',
 
   // EXPLOITATION RESULTS - Confirmed compromises
-  ExploitGvm: '#ea580c',     // Orange-600 - GVM confirmed exploitation (active check)
+  ExploitGvm: '#ff6b35',
 
   // CONTEXT & METADATA (Neutral family) - Supporting information
-  Technology: '#22c55e',     // Green - Tech stack (good to know)
-  Certificate: '#d97706',    // Amber - TLS/security context
-  Header: '#78716c',         // Stone gray - HTTP metadata
+  Technology: '#00ff88',
+  Certificate: '#ffd700',
+  Header: '#64748b',
 
   // GITHUB INTELLIGENCE (Gray family for hierarchy, distinct muted colors for leaf nodes)
-  GithubHunt: '#4b5563',           // Gray-600 - scan container node
-  GithubRepository: '#6b7280',     // Gray-500 - repository node
-  GithubPath: '#9ca3af',           // Gray-400 - file path node
-  GithubSecret: '#7c6f9b',        // Muted dusty purple - leaked secret (API key, credential)
-  GithubSensitiveFile: '#5b8a72',  // Muted sage green - sensitive file (.env, config)
+  GithubHunt: '#64748b',
+  GithubRepository: '#64748b',
+  GithubPath: '#94a3b8',
+  GithubSecret: '#7c3aed',
+  GithubSensitiveFile: '#00ff88',
 
   // TRUFFLEHOG INTELLIGENCE (Teal-gray family - distinct from GitHub Hunt)
-  TrufflehogScan: '#334155',       // Slate-700 - scan container node
-  TrufflehogRepository: '#475569', // Slate-600 - repository node
-  TrufflehogFinding: '#8b5e3c',    // Muted bronze - secret finding (warm, distinct from GithubSecret purple)
+  TrufflehogScan: '#1a2235',
+  TrufflehogRepository: '#64748b',
+  TrufflehogFinding: '#ff6b35',
 
   // JS RECON SCANNER (Fuchsia - distinct from all other node families)
-  JsReconFinding: '#c026d3',       // Fuchsia-600 - JS analysis finding
+  JsReconFinding: '#7c3aed',
 
   // EXTERNAL / OUT-OF-SCOPE (informational, not a target)
-  ExternalDomain: '#8b8178',       // Warm stone gray
+  ExternalDomain: '#64748b',
 
   // ATTACK CHAIN (Amber family) — Agent execution history
-  AttackChain: '#f59e0b',     // Amber - Chain root
-  ChainStep: '#f59e0b',       // Amber - Execution steps
-  ChainFinding: '#f59e0b',    // Amber - Findings
-  ChainDecision: '#f59e0b',   // Amber - Decision points
-  ChainFailure: '#f59e0b',    // Amber - Failed attempts
+  AttackChain: '#ff6b35',
+  ChainStep: '#ff6b35',
+  ChainFinding: '#ff6b35',
+  ChainDecision: '#ff6b35',
+  ChainFailure: '#ff6b35',
 
-  Default: '#6b7280',        // Gray - Fallback
+  Default: '#64748b',
 }
 
 // Severity-based colors for Vulnerability nodes (pure red tonality)
 export const SEVERITY_COLORS_VULN: Record<string, string> = {
-  critical: '#ff3333',  // Brilliant red - brightest, vivid
-  high: '#b91c1c',      // Medium red (red-700)
-  medium: '#b91c1c',    // Medium red (red-700)
-  low: '#7f1d1d',       // Dark red (red-900)
-  info: '#7f1d1d',      // Dark red (red-900)
-  unknown: '#6b7280',   // Grey for unknown
+  critical: '#ff4757',
+  high: '#ff4757',
+  medium: '#ff4757',
+  low: '#ff4757',
+  info: '#ff4757',
+  unknown: '#64748b',
 }
 
 // Severity-based colors for CVE nodes (red-purple/magenta tonality)
 export const SEVERITY_COLORS_CVE: Record<string, string> = {
-  critical: '#ff3377',  // Brilliant magenta-red - brightest
-  high: '#be185d',      // Medium pink-red (pink-700)
-  medium: '#be185d',    // Medium pink-red (pink-700)
-  low: '#831843',       // Dark pink-red (pink-900)
-  info: '#831843',      // Dark pink-red (pink-900)
-  unknown: '#831843',   // Dark pink-red - CVEs are always threats, even without severity data
+  critical: '#ff4757',
+  high: '#ff4757',
+  medium: '#ff4757',
+  low: '#ff4757',
+  info: '#ff4757',
+  unknown: '#ff4757',
 }
 
 // Link colors
 export const LINK_COLORS = {
-  default: '#9ca3af',
-  highlighted: '#60a5fa',
-  particle: '#60a5fa',
-  chainParticle: '#f59e0b',   // Amber - animated flow on attack chain edges
-  chainLink: '#2d3748',       // Gray-750 - attack chain edges (unselected, dark)
+  default: '#64748b',
+  highlighted: '#00d4ff',
+  particle: '#0a84ff',
+  chainParticle: '#ff6b35',
+  chainLink: '#1a2235',
 } as const
 
 // Selection colors
 export const SELECTION_COLORS = {
-  ring: '#22c55e',
+  ring: '#00ff88',
 } as const
 
 // Attack chain session colors
 export const CHAIN_SESSION_COLORS = {
-  inactive: '#6b7280',          // Grey-500 — chains not in active session
-  inactiveSelected: '#f59e0b',  // Amber — inactive chain node when clicked/selected
-  inactiveFinding: '#3d3107',   // Dark yellow — inactive non-goal ChainFinding diamonds
-  activeRing: '#facc15',        // Yellow-400 — pulsing ring on active AttackChain node
+  inactive: '#64748b',
+  inactiveSelected: '#ff6b35',
+  inactiveFinding: '#1a2235',
+  activeRing: '#ffd700',
 } as const
 
 // Goal/outcome finding types — these represent achieved attack objectives
@@ -121,15 +121,15 @@ export const GOAL_FINDING_TYPES = new Set([
 
 // Colors for goal ChainFinding diamonds
 export const GOAL_FINDING_COLORS = {
-  active: '#4ade80',       // Green-400 — goal achieved (active chain)
-  inactive: '#276d43',     // Dark green — goal achieved (inactive chain)
+  active: '#00ff88',
+  inactive: '#00b36a',
 } as const
 
 // Background colors by theme
 export const BACKGROUND_COLORS = {
   dark: {
-    graph: '#0a0a0a',
-    label: '#ffffff',
+    graph: '#0a0e1a',
+    label: '#e2e8f0',
   },
   light: {
     graph: '#ffffff',

@@ -48,13 +48,13 @@ export function UserSelector() {
       <button
         className={styles.trigger}
         onClick={() => setIsOpen(!isOpen)}
-        title="Select User"
+        title="选择用户"
       >
         <div className={styles.avatar}>
           <span>{initials}</span>
         </div>
         <span className={styles.userName}>
-          {currentUser?.name || 'No User'}
+          {currentUser?.name || '未选择用户'}
         </span>
         <ChevronDown size={14} className={isOpen ? styles.iconOpen : ''} />
       </button>
@@ -62,7 +62,7 @@ export function UserSelector() {
       {isOpen && (
         <div className={styles.dropdown}>
           <div className={styles.header}>
-            <span className={styles.headerTitle}>Users</span>
+            <span className={styles.headerTitle}>用户</span>
           </div>
 
           <div className={styles.list}>
@@ -84,7 +84,7 @@ export function UserSelector() {
               ))
             ) : (
               <div className={styles.empty}>
-                No users yet
+                暂无用户
               </div>
             )}
           </div>
@@ -92,7 +92,7 @@ export function UserSelector() {
           <div className={styles.footer}>
             <button className={styles.footerButton} onClick={handleManageUsers}>
               <Users size={12} />
-              Manage Users
+              管理用户
             </button>
           </div>
         </div>

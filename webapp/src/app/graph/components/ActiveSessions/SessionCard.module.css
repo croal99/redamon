@@ -17,7 +17,7 @@
 
 .cardSelected {
   border-color: var(--accent-primary);
-  background: rgba(139, 92, 246, 0.05);
+  background: rgba(0, 212, 255, 0.05);
 }
 
 .cardHeader {
@@ -47,18 +47,18 @@
 }
 
 .meterpreter {
-  background: rgba(139, 92, 246, 0.15);
-  color: #a78bfa;
+  background: rgba(124, 58, 237, 0.15);
+  color: var(--color-cyber-purple);
 }
 
 .shell {
-  background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
+  background: rgba(0, 255, 136, 0.15);
+  color: var(--status-success);
 }
 
 .listener {
-  background: rgba(245, 158, 11, 0.15);
-  color: #fbbf24;
+  background: rgba(255, 107, 53, 0.15);
+  color: var(--status-warning);
 }
 
 .meta {

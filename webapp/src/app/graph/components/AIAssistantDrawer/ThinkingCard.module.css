@@ -1,6 +1,6 @@
 .card {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%);
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, rgba(10, 132, 255, 0.05) 100%);
+  border: 1px solid rgba(0, 212, 255, 0.2);
   border-radius: 8px;
   overflow: hidden;
   transition: all 0.2s ease;
@@ -20,8 +20,8 @@
 }
 
 .card:hover {
-  border-color: rgba(139, 92, 246, 0.4);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.1);
+  border-color: rgba(0, 212, 255, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.1);
 }
 
 .cardHeaderWrapper {
@@ -35,7 +35,7 @@
 }
 
 .cardHeaderWrapper:hover {
-  background: rgba(139, 92, 246, 0.05);
+  background: rgba(0, 212, 255, 0.05);
 }
 
 .cardHeaderTop {
@@ -52,7 +52,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
   border-radius: 4px;
 }
 
@@ -77,8 +77,8 @@
   display: inline-flex;
   align-items: center;
   padding: 0.125rem 0.5rem;
-  background: rgba(139, 92, 246, 0.1);
-  border: 1px solid rgba(139, 92, 246, 0.3);
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.3);
   border-radius: 10px;
   font-size: 0.625rem;
   font-weight: 500;
@@ -140,7 +140,7 @@
 
 .copyButton:hover,
 .expandButton:hover {
-  background: rgba(139, 92, 246, 0.1);
+  background: rgba(0, 212, 255, 0.1);
   color: var(--accent-primary);
 }
 
@@ -194,8 +194,8 @@
   display: inline-flex;
   align-items: center;
   padding: 0.25rem 0.625rem;
-  background: rgba(139, 92, 246, 0.1);
-  border: 1px solid rgba(139, 92, 246, 0.3);
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.3);
   border-radius: 12px;
   font-size: 0.688rem;
   font-weight: 500;

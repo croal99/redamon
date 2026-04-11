@@ -25,7 +25,7 @@ export function ProjectCard({
   onSelect,
   onDelete
 }: ProjectCardProps) {
-  const formattedDate = new Date(createdAt).toLocaleDateString('en-US', {
+  const formattedDate = new Date(createdAt).toLocaleDateString('zh-CN', {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
@@ -46,7 +46,7 @@ export function ProjectCard({
             href={`/projects/${id}/settings`}
             className="iconButton"
             onClick={(e) => e.stopPropagation()}
-            title="Project Settings"
+            title="项目设置"
           >
             <Settings size={14} />
           </Link>
@@ -57,7 +57,7 @@ export function ProjectCard({
                 e.stopPropagation()
                 onDelete()
               }}
-              title="Delete Project"
+              title="删除项目"
             >
               <Trash2 size={14} />
             </button>
@@ -68,7 +68,7 @@ export function ProjectCard({
         <div className={styles.meta}>
           <div className={styles.metaItem}>
             <Globe size={12} />
-            <span>{targetDomain || 'No target set'}</span>
+            <span>{targetDomain || '未设置目标'}</span>
           </div>
           <div className={styles.metaItem}>
             <Calendar size={12} />

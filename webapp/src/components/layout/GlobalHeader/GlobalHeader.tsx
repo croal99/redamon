@@ -11,10 +11,10 @@ import { UserSelector } from './UserSelector'
 import styles from './GlobalHeader.module.css'
 
 const coreNav = [
-  { label: 'Red Zone', href: '/graph', icon: <Crosshair size={14} /> },
+  { label: '红区', href: '/graph', icon: <Crosshair size={14} /> },
   { label: 'CypherFix', href: '/cypherfix', icon: <Shield size={14} /> },
-  { label: 'Insights', href: '/insights', icon: <TrendingUp size={14} /> },
-  { label: 'Reports', href: '/reports', icon: <FileText size={14} /> },
+  { label: '洞察', href: '/insights', icon: <TrendingUp size={14} /> },
+  { label: '报告', href: '/reports', icon: <FileText size={14} /> },
 ]
 
 export function GlobalHeader() {
@@ -54,7 +54,7 @@ export function GlobalHeader() {
           className={`${styles.navItem} ${pathname === '/projects' || pathname.startsWith('/projects/') ? styles.navItemActive : ''}`}
         >
           <FolderOpen size={14} />
-          <span>Projects</span>
+          <span>项目</span>
         </Link>
 
         <div className={styles.divider} />
@@ -84,7 +84,7 @@ export function GlobalHeader() {
           target="_blank"
           rel="noopener noreferrer"
           className={styles.helpLink}
-          title="Wiki Documentation"
+          title="Wiki 文档"
         >
           <CircleHelp size={16} />
         </a>
@@ -98,7 +98,7 @@ export function GlobalHeader() {
         <Link
           href="/settings"
           className={`${styles.helpLink} ${pathname === '/settings' ? styles.navItemActive : ''}`}
-          title="Global Settings"
+          title="全局设置"
         >
           <Settings size={17} />
         </Link>

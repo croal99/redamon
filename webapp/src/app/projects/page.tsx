@@ -53,9 +53,9 @@ export default function ProjectsPage() {
   }
 
   const handleDeleteProject = async (projectId: string) => {
-    if (await dangerConfirm('Are you sure you want to delete this project? This action cannot be undone.')) {
+    if (await dangerConfirm('确定要删除该项目吗？此操作不可撤销。')) {
       await deleteProjectMutation.mutateAsync(projectId)
-      toast.success('Project deleted')
+      toast.success('项目已删除')
     }
   }
 
@@ -70,9 +70,9 @@ export default function ProjectsPage() {
       setShowUserModal(false)
       setNewUserName('')
       setNewUserEmail('')
-      toast.success('User created')
+      toast.success('用户已创建')
     } catch (error) {
-      alertError(error instanceof Error ? error.message : 'Failed to create user')
+      alertError(error instanceof Error ? error.message : '创建用户失败')
     }
   }
 
@@ -81,16 +81,16 @@ export default function ProjectsPage() {
     const selectedUser = users?.find(u => u.id === userId)
     const projectCount = selectedUser?._count?.projects ?? 0
     const warning = projectCount > 0
-      ? `This will permanently delete user "${selectedUser?.name}" and their ${projectCount} project(s). This action cannot be undone.`
-      : `Are you sure you want to delete user "${selectedUser?.name}"? This action cannot be undone.`
+      ? `将永久删除用户“${selectedUser?.name}”及其 ${projectCount} 个项目。此操作不可撤销。`
+      : `确定要删除用户“${selectedUser?.name}”吗？此操作不可撤销。`
     if (await dangerConfirm(warning)) {
       try {
         await deleteUserMutation.mutateAsync(userId)
         setUserId(null)
         setCurrentProject(null)
-        toast.success('User deleted')
+        toast.success('用户已删除')
       } catch (error) {
-        alertError(error instanceof Error ? error.message : 'Failed to delete user')
+        alertError(error instanceof Error ? error.message : '删除用户失败')
       }
     }
   }
@@ -102,13 +102,13 @@ export default function ProjectsPage() {
       <div className={styles.header}>
         <div className={styles.headerLeft}>
           <FolderOpen size={20} />
-          <h1 className={styles.title}>Projects</h1>
+          <h1 className={styles.title}>项目</h1>
         </div>
         <div className={styles.headerActions}>
           <button
             className="iconButton"
             onClick={() => refetch()}
-            title="Refresh"
+            title="刷新"
           >
             <RefreshCw size={14} />
           </button>
@@ -116,21 +116,21 @@ export default function ProjectsPage() {
             <button
               className="secondaryButton"
               onClick={() => setShowImportModal(true)}
-              title="Import project from backup"
+              title="从备份导入项目"
             >
               <Upload size={14} />
-              Import Project
+              导入项目
             </button>
           )}
           {userId ? (
             <Link href="/projects/new" className="primaryButton">
               <Plus size={14} />
-              New Project
+              新建项目
             </Link>
           ) : (
             <button className="primaryButton" disabled>
               <Plus size={14} />
-              New Project
+              新建项目
             </button>
           )}
         </div>
@@ -139,14 +139,14 @@ export default function ProjectsPage() {
       <div className={styles.userSelector}>
         <div className={styles.userSelectorLabel}>
           <Users size={14} />
-          <span>User:</span>
+          <span>用户：</span>
         </div>
         <select
           className="select"
           value={userId || ''}
           onChange={(e) => setUserId(e.target.value || null)}
         >
-          <option value="">Select a user</option>
+          <option value="">选择用户</option>
           {users?.map((user) => (
             <option key={user.id} value={user.id}>
               {user.name} ({user.email})
@@ -158,14 +158,14 @@ export default function ProjectsPage() {
           onClick={() => setShowUserModal(true)}
         >
           <Plus size={12} />
-          New User
+          新建用户
         </button>
         {userId && (
           <button
             className="iconButton"
             onClick={handleDeleteUser}
             disabled={deleteUserMutation.isPending}
-            title="Delete selected user"
+            title="删除所选用户"
           >
             <Trash2 size={14} />
           </button>
@@ -173,7 +173,7 @@ export default function ProjectsPage() {
       </div>
 
       {isLoading ? (
-        <div className={styles.loading}>Loading...</div>
+        <div className={styles.loading}>加载中…</div>
       ) : projects && projects.length > 0 ? (
         <div className={styles.grid}>
           {projects.map((project) => (
@@ -192,17 +192,17 @@ export default function ProjectsPage() {
       ) : (
         <div className={styles.empty}>
           <FolderOpen size={48} />
-          <h2>No Projects Yet</h2>
-          <p>Create your first project to get started with reconnaissance.</p>
+          <h2>暂无项目</h2>
+          <p>创建你的第一个项目以开始侦察。</p>
           {userId ? (
             <Link href="/projects/new" className="primaryButton">
               <Plus size={14} />
-              Create Project
+              创建项目
             </Link>
           ) : (
             <button className="primaryButton" disabled>
               <Plus size={14} />
-              Create Project
+              创建项目
             </button>
           )}
         </div>
@@ -220,27 +220,27 @@ export default function ProjectsPage() {
       {showUserModal && (
         <div className={styles.modalOverlay} onClick={() => setShowUserModal(false)}>
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <h2 className={styles.modalTitle}>Create New User</h2>
+            <h2 className={styles.modalTitle}>新建用户</h2>
             <form onSubmit={handleCreateUser}>
               <div className="formGroup">
-                <label className="formLabel formLabelRequired">Name</label>
+                <label className="formLabel formLabelRequired">名称</label>
                 <input
                   type="text"
                   className="textInput"
                   value={newUserName}
                   onChange={(e) => setNewUserName(e.target.value)}
-                  placeholder="Enter user name"
+                  placeholder="请输入用户名"
                   required
                 />
               </div>
               <div className="formGroup">
-                <label className="formLabel formLabelRequired">Email</label>
+                <label className="formLabel formLabelRequired">邮箱</label>
                 <input
                   type="email"
                   className="textInput"
                   value={newUserEmail}
                   onChange={(e) => setNewUserEmail(e.target.value)}
-                  placeholder="Enter email address"
+                  placeholder="请输入邮箱地址"
                   required
                 />
               </div>
@@ -250,14 +250,14 @@ export default function ProjectsPage() {
                   className="secondaryButton"
                   onClick={() => setShowUserModal(false)}
                 >
-                  Cancel
+                  取消
                 </button>
                 <button
                   type="submit"
                   className="primaryButton"
                   disabled={createUserMutation.isPending}
                 >
-                  {createUserMutation.isPending ? 'Creating...' : 'Create User'}
+                  {createUserMutation.isPending ? '创建中…' : '创建用户'}
                 </button>
               </div>
             </form>

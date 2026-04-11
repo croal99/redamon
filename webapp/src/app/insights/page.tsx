@@ -87,12 +87,12 @@ export default function InsightsPage() {
     const a = activity.data
     const ac = attackChains.data
     return [
-      { label: 'Total Nodes', value: go?.totalNodes || 0 },
-      { label: 'Vulns & CVEs', value: (v?.severityDistribution?.reduce((s, d) => s + d.count, 0) || 0) + (v?.cveSeverity?.reduce((s, d) => s + d.count, 0) || 0), accent: 'var(--status-error)' },
-      { label: 'Attack Chains', value: ac?.chains?.length || 0, accent: 'var(--accent-primary)' },
-      { label: 'Exploit Successes', value: ac?.exploitSuccesses?.length || 0, accent: 'var(--status-error)' },
-      { label: 'Chain Findings', value: ac?.findingsByType?.reduce((s, d) => s + d.count, 0) || 0, accent: 'var(--status-warning)' },
-      { label: 'Agent Sessions', value: a?.conversations.total || 0, accent: 'var(--accent-secondary)' },
+      { label: '节点总数', value: go?.totalNodes || 0 },
+      { label: '漏洞与 CVE', value: (v?.severityDistribution?.reduce((s, d) => s + d.count, 0) || 0) + (v?.cveSeverity?.reduce((s, d) => s + d.count, 0) || 0), accent: 'var(--status-error)' },
+      { label: '攻击链', value: ac?.chains?.length || 0, accent: 'var(--accent-primary)' },
+      { label: '利用成功', value: ac?.exploitSuccesses?.length || 0, accent: 'var(--status-error)' },
+      { label: '链路发现', value: ac?.findingsByType?.reduce((s, d) => s + d.count, 0) || 0, accent: 'var(--status-warning)' },
+      { label: '代理会话', value: a?.conversations.total || 0, accent: 'var(--accent-secondary)' },
     ]
   }, [graphOverview.data, vulns.data, activity.data, attackChains.data])
 
@@ -102,12 +102,12 @@ export default function InsightsPage() {
       <div className={styles.page}>
         <div className={styles.noProject}>
           <TrendingUp size={48} strokeWidth={1.5} />
-          <div className={styles.noProjectTitle}>No Project Selected</div>
+          <div className={styles.noProjectTitle}>未选择项目</div>
           <div className={styles.noProjectText}>
-            Select a project from the header to view insights and analytics.
+            请在顶部选择项目以查看洞察与分析。
           </div>
           <button className="primaryButton" onClick={() => router.push('/projects')}>
-            Go to Projects
+            前往项目
           </button>
         </div>
       </div>
@@ -130,7 +130,7 @@ export default function InsightsPage() {
 
       {/* Executive Summary */}
       <div className={styles.section}>
-        <div className={styles.sectionTitle}>Executive Summary</div>
+        <div className={styles.sectionTitle}>管理层摘要</div>
         <div className={styles.grid3}>
           <SecurityPostureRadar graphData={graphOverview.data} vulnData={vulns.data} surfaceData={surface.data} exploitSuccessCount={attackChains.data?.exploitSuccesses?.length || 0} chainFindingsCount={attackChains.data?.findingsByType?.reduce((s: number, d: { count: number }) => s + d.count, 0) || 0} isLoading={graphOverview.isLoading || vulns.isLoading || surface.isLoading || attackChains.isLoading} />
           <RiskScoreGauge vulnData={vulns.data} surfaceData={surface.data} graphData={graphOverview.data} exploitSuccessCount={attackChains.data?.exploitSuccesses?.length || 0} chainFindingsBySeverity={attackChains.data?.findingsBySeverity} isLoading={vulns.isLoading || surface.isLoading || graphOverview.isLoading || attackChains.isLoading} />
@@ -140,7 +140,7 @@ export default function InsightsPage() {
 
       {/* Attack Chains & Exploits */}
       <div className={styles.section}>
-        <div className={styles.sectionTitle}>Attack Chains & Exploits</div>
+        <div className={styles.sectionTitle}>攻击链与利用</div>
         <div className={styles.grid4}>
           <ChainSuccessRatePie data={attackChains.data?.chainSuccessRate} isLoading={attackChains.isLoading} />
           <FindingTypesBar data={attackChains.data?.findingsByType} isLoading={attackChains.isLoading} />
@@ -151,7 +151,7 @@ export default function InsightsPage() {
           <div style={{ gridColumn: 'span 2' }}>
             <ExploitSuccessesCard data={attackChains.data?.exploitSuccesses} isLoading={attackChains.isLoading} />
           </div>
-          <SeverityDonut data={attackChains.data?.findingsBySeverity} isLoading={attackChains.isLoading} title="Finding Severity" />
+          <SeverityDonut data={attackChains.data?.findingsBySeverity} isLoading={attackChains.isLoading} title="发现严重性" />
           <ChainDecisionsPie data={attackChains.data?.decisions} isLoading={attackChains.isLoading} />
         </div>
         {(attackChains.data?.gvmExploits?.length ?? 0) > 0 && (
@@ -178,42 +178,42 @@ export default function InsightsPage() {
 
       {/* Attack Surface */}
       <div className={styles.section}>
-        <div className={styles.sectionTitle}>Attack Surface</div>
+        <div className={styles.sectionTitle}>攻击面</div>
         {/* All 6 stat cards in one row */}
         <div className={styles.surfaceStats}>
           <div className="statCard">
-            <div className="statLabel">Subdomains</div>
+            <div className="statLabel">子域名</div>
             <div className="statValue">{formatNumber(graphOverview.data?.subdomainStats.total || 0)}</div>
-            <div className={styles.statDetail}>{graphOverview.data?.subdomainStats.resolved || 0} resolved · {graphOverview.data?.subdomainStats.uniqueIps || 0} unique IPs</div>
+            <div className={styles.statDetail}>{graphOverview.data?.subdomainStats.resolved || 0} 已解析 · {graphOverview.data?.subdomainStats.uniqueIps || 0} 唯一 IP</div>
           </div>
           <div className="statCard">
-            <div className="statLabel">Endpoints</div>
+            <div className="statLabel">端点</div>
             <div className="statValue">{formatNumber(graphOverview.data?.endpointCoverage.endpoints || 0)}</div>
-            <div className={styles.statDetail}>{graphOverview.data?.endpointCoverage.baseUrls || 0} base URLs · {graphOverview.data?.endpointCoverage.parameters || 0} params</div>
+            <div className={styles.statDetail}>{graphOverview.data?.endpointCoverage.baseUrls || 0} 基础 URL · {graphOverview.data?.endpointCoverage.parameters || 0} 参数</div>
           </div>
           <div className="statCard">
-            <div className="statLabel">Certificates</div>
+            <div className="statLabel">证书</div>
             <div className="statValue">{formatNumber(graphOverview.data?.certificateHealth.total || 0)}</div>
             <div className={styles.statDetail}>
-              {graphOverview.data?.certificateHealth.expired ? <span style={{ color: 'var(--status-error)' }}>{graphOverview.data.certificateHealth.expired} expired</span> : '0 expired'}
+              {graphOverview.data?.certificateHealth.expired ? <span style={{ color: 'var(--status-error)' }}>{graphOverview.data.certificateHealth.expired} 已过期</span> : '0 已过期'}
               {' · '}
-              {graphOverview.data?.certificateHealth.expiringSoon ? <span style={{ color: 'var(--status-warning)' }}>{graphOverview.data.certificateHealth.expiringSoon} expiring</span> : '0 expiring'}
+              {graphOverview.data?.certificateHealth.expiringSoon ? <span style={{ color: 'var(--status-warning)' }}>{graphOverview.data.certificateHealth.expiringSoon} 即将过期</span> : '0 即将过期'}
             </div>
           </div>
           <div className="statCard">
-            <div className="statLabel">IPs</div>
+            <div className="statLabel">IP</div>
             <div className="statValue">{formatNumber(graphOverview.data?.infrastructureStats?.totalIps || 0)}</div>
             <div className={styles.statDetail}>{graphOverview.data?.infrastructureStats?.ipv4 || 0} IPv4 · {graphOverview.data?.infrastructureStats?.ipv6 || 0} IPv6</div>
           </div>
           <div className="statCard">
-            <div className="statLabel">CDN Coverage</div>
+            <div className="statLabel">CDN 覆盖</div>
             <div className="statValue">{formatNumber(graphOverview.data?.infrastructureStats?.cdnCount || 0)}</div>
-            <div className={styles.statDetail}>{(graphOverview.data?.infrastructureStats?.totalIps || 0) - (graphOverview.data?.infrastructureStats?.cdnCount || 0)} direct · {graphOverview.data?.infrastructureStats?.uniqueCdns || 0} providers</div>
+            <div className={styles.statDetail}>{(graphOverview.data?.infrastructureStats?.totalIps || 0) - (graphOverview.data?.infrastructureStats?.cdnCount || 0)} 直连 · {graphOverview.data?.infrastructureStats?.uniqueCdns || 0} 提供商</div>
           </div>
           <div className="statCard">
-            <div className="statLabel">ASN Diversity</div>
+            <div className="statLabel">ASN 多样性</div>
             <div className="statValue">{formatNumber(graphOverview.data?.infrastructureStats?.uniqueAsns || 0)}</div>
-            <div className={styles.statDetail}>unique autonomous systems</div>
+            <div className={styles.statDetail}>不同自治系统数量</div>
           </div>
         </div>
         {/* Charts: 4 per row */}

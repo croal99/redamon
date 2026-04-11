@@ -1,6 +1,6 @@
 .card {
-  background: rgba(245, 158, 11, 0.05);
-  border: 1px solid rgba(245, 158, 11, 0.2);
+  background: rgba(255, 107, 53, 0.05);
+  border: 1px solid rgba(255, 107, 53, 0.2);
   border-radius: 8px;
   overflow: hidden;
   transition: all 0.2s ease;
@@ -20,58 +20,58 @@
 }
 
 .card:hover {
-  border-color: rgba(245, 158, 11, 0.4);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
+  border-color: rgba(255, 107, 53, 0.4);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.1);
 }
 
 .statusRunning {
-  background: rgba(245, 158, 11, 0.05);
-  border-color: rgba(245, 158, 11, 0.2);
+  background: rgba(255, 107, 53, 0.05);
+  border-color: rgba(255, 107, 53, 0.2);
 }
 
 .statusSuccess {
-  background: rgba(34, 197, 94, 0.05);
-  border-color: rgba(34, 197, 94, 0.2);
+  background: rgba(0, 255, 136, 0.05);
+  border-color: rgba(0, 255, 136, 0.2);
 }
 
 .statusSuccess:hover {
-  border-color: rgba(34, 197, 94, 0.4);
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.1);
+  border-color: rgba(0, 255, 136, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.1);
 }
 
 .statusPartial {
-  background: rgba(245, 158, 11, 0.05);
-  border-color: rgba(245, 158, 11, 0.2);
+  background: rgba(255, 107, 53, 0.05);
+  border-color: rgba(255, 107, 53, 0.2);
 }
 
 .statusPartial:hover {
-  border-color: rgba(245, 158, 11, 0.4);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
+  border-color: rgba(255, 107, 53, 0.4);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.1);
 }
 
 .statusError {
-  background: rgba(239, 68, 68, 0.05);
-  border-color: rgba(239, 68, 68, 0.2);
+  background: rgba(255, 71, 87, 0.05);
+  border-color: rgba(255, 71, 87, 0.2);
 }
 
 .statusError:hover {
-  border-color: rgba(239, 68, 68, 0.4);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.1);
+  border-color: rgba(255, 71, 87, 0.4);
+  box-shadow: 0 4px 12px rgba(255, 71, 87, 0.1);
 }
 
 /* Pending approval state */
 .statusPendingApproval {
-  background: rgba(139, 92, 246, 0.05);
-  border-color: rgba(139, 92, 246, 0.2);
+  background: rgba(124, 58, 237, 0.05);
+  border-color: rgba(124, 58, 237, 0.2);
 }
 
 .statusPendingApproval:hover {
-  border-color: rgba(139, 92, 246, 0.4);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.1);
+  border-color: rgba(124, 58, 237, 0.4);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.1);
 }
 
 .statusPendingApproval .waveIcon {
-  background: rgba(139, 92, 246, 0.8);
+  background: rgba(124, 58, 237, 0.8);
 }
 
 .cardHeaderWrapper {
@@ -85,19 +85,19 @@
 }
 
 .cardHeaderWrapper:hover {
-  background: rgba(245, 158, 11, 0.05);
+  background: rgba(255, 107, 53, 0.05);
 }
 
 .statusSuccess .cardHeaderWrapper:hover {
-  background: rgba(34, 197, 94, 0.05);
+  background: rgba(0, 255, 136, 0.05);
 }
 
 .statusPartial .cardHeaderWrapper:hover {
-  background: rgba(245, 158, 11, 0.05);
+  background: rgba(255, 107, 53, 0.05);
 }
 
 .statusError .cardHeaderWrapper:hover {
-  background: rgba(239, 68, 68, 0.05);
+  background: rgba(255, 71, 87, 0.05);
 }
 
 .cardHeaderTop {

@@ -67,18 +67,18 @@ export function ImportModal({ isOpen, userId, onClose, onSuccess }: ImportModalP
         const data: ImportResult = await res.json()
         setResult(data)
         setStatus('success')
-        toast.success('Project imported')
+        toast.success('项目已导入')
         onSuccess()
       } else {
         const err = await res.json()
-        setErrorMessage(err.error || 'Import failed')
+        setErrorMessage(err.error || '导入失败')
         setStatus('error')
-        toast.error('Import failed')
+        toast.error('导入失败')
       }
     } catch (err) {
-      setErrorMessage(err instanceof Error ? err.message : 'Import failed')
+      setErrorMessage(err instanceof Error ? err.message : '导入失败')
       setStatus('error')
-      toast.error('Import failed')
+      toast.error('导入失败')
     }
   }
 
@@ -93,12 +93,12 @@ export function ImportModal({ isOpen, userId, onClose, onSuccess }: ImportModalP
   return (
     <div className={styles.modalOverlay} onClick={handleClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <h2 className={styles.modalTitle}>Import Project</h2>
+        <h2 className={styles.modalTitle}>导入项目</h2>
 
         {status === 'idle' && (
           <form onSubmit={handleSubmit}>
             <div className="formGroup">
-              <label className="formLabel">Project Backup File</label>
+              <label className="formLabel">项目备份文件</label>
               <div
                 style={{
                   border: '2px dashed var(--border-default)',
@@ -118,7 +118,7 @@ export function ImportModal({ isOpen, userId, onClose, onSuccess }: ImportModalP
                 ) : (
                   <div style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)' }}>
                     <Upload size={24} style={{ margin: '0 auto var(--space-2)', display: 'block' }} />
-                    Click to select a RedAmon export ZIP file
+                    点击选择 RedAmon 导出 ZIP 文件
                   </div>
                 )}
                 <input
@@ -130,7 +130,7 @@ export function ImportModal({ isOpen, userId, onClose, onSuccess }: ImportModalP
                 />
               </div>
               <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: 'var(--space-1)' }}>
-                The project will be created under the currently selected user.
+                项目将创建在当前选中的用户下。
               </p>
             </div>
             <div className={styles.modalActions}>
@@ -139,7 +139,7 @@ export function ImportModal({ isOpen, userId, onClose, onSuccess }: ImportModalP
                 className="secondaryButton"
                 onClick={handleClose}
               >
-                Cancel
+                取消
               </button>
               <button
                 type="submit"
@@ -147,7 +147,7 @@ export function ImportModal({ isOpen, userId, onClose, onSuccess }: ImportModalP
                 disabled={!file}
               >
                 <Upload size={14} />
-                Import
+                导入
               </button>
             </div>
           </form>
@@ -157,10 +157,10 @@ export function ImportModal({ isOpen, userId, onClose, onSuccess }: ImportModalP
           <div style={{ textAlign: 'center', padding: 'var(--space-4)' }}>
             <Loader2 size={32} style={{ animation: 'spin 1s linear infinite', margin: '0 auto var(--space-3)', display: 'block' }} />
             <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
-              Importing project data...
+              正在导入项目数据…
             </p>
             <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
-              This may take a moment for large projects.
+              大项目可能需要一些时间。
             </p>
           </div>
         )}
@@ -169,10 +169,10 @@ export function ImportModal({ isOpen, userId, onClose, onSuccess }: ImportModalP
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', color: 'var(--success)' }}>
               <CheckCircle size={20} />
-              <span style={{ fontWeight: 'var(--font-semibold)' }}>Import Successful</span>
+              <span style={{ fontWeight: 'var(--font-semibold)' }}>导入成功</span>
             </div>
             <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', margin: 0 }}>
-              Project &quot;{result.projectName}&quot; has been restored.
+              项目 &quot;{result.projectName}&quot; 已恢复。
             </p>
             <div style={{
               fontSize: 'var(--text-xs)',
@@ -184,17 +184,17 @@ export function ImportModal({ isOpen, userId, onClose, onSuccess }: ImportModalP
               gridTemplateColumns: '1fr 1fr',
               gap: 'var(--space-1)',
             }}>
-              <span>Conversations: {result.stats.conversations}</span>
-              <span>Messages: {result.stats.messages}</span>
-              <span>Remediations: {result.stats.remediations}</span>
-              <span>Reports: {result.stats.reports}</span>
-              <span>Graph Nodes: {result.stats.neo4jNodes}</span>
-              <span>Relationships: {result.stats.neo4jRelationships}</span>
-              <span>Artifacts: {result.stats.artifacts}</span>
+              <span>会话：{result.stats.conversations}</span>
+              <span>消息：{result.stats.messages}</span>
+              <span>修复项：{result.stats.remediations}</span>
+              <span>报告：{result.stats.reports}</span>
+              <span>图谱节点：{result.stats.neo4jNodes}</span>
+              <span>关系：{result.stats.neo4jRelationships}</span>
+              <span>产物：{result.stats.artifacts}</span>
             </div>
             <div className={styles.modalActions}>
               <button className="primaryButton" onClick={handleClose}>
-                Done
+                完成
               </button>
             </div>
           </div>
@@ -204,17 +204,17 @@ export function ImportModal({ isOpen, userId, onClose, onSuccess }: ImportModalP
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', color: 'var(--danger)' }}>
               <AlertCircle size={20} />
-              <span style={{ fontWeight: 'var(--font-semibold)' }}>Import Failed</span>
+              <span style={{ fontWeight: 'var(--font-semibold)' }}>导入失败</span>
             </div>
             <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', margin: 0 }}>
               {errorMessage}
             </p>
             <div className={styles.modalActions}>
               <button className="secondaryButton" onClick={handleClose}>
-                Close
+                关闭
               </button>
               <button className="primaryButton" onClick={() => { setStatus('idle'); setErrorMessage('') }}>
-                Try Again
+                重试
               </button>
             </div>
           </div>

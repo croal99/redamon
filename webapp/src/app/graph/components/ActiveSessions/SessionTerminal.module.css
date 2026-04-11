@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: #0d1117;
+  background: var(--color-cyber-terminal);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-default);
   overflow: hidden;
@@ -13,8 +13,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 8px 14px;
-  background: #161b22;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-subtle);
   flex-shrink: 0;
 }
 
@@ -24,7 +24,7 @@
   gap: 8px;
   font-size: 12px;
   font-weight: var(--font-semibold);
-  color: #c9d1d9;
+  color: var(--text-primary);
   font-family: var(--font-mono);
 }
 
@@ -32,7 +32,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #3fb950;
+  background: var(--status-success);
 }
 
 .busyBanner {
@@ -40,10 +40,10 @@
   align-items: center;
   gap: 6px;
   padding: 6px 14px;
-  background: rgba(245, 158, 11, 0.1);
-  border-bottom: 1px solid rgba(245, 158, 11, 0.2);
+  background: var(--status-warning-bg);
+  border-bottom: 1px solid rgba(255, 107, 53, 0.25);
   font-size: 11px;
-  color: #fbbf24;
+  color: var(--status-warning-text);
   flex-shrink: 0;
 }
 
@@ -54,7 +54,7 @@
   font-family: var(--font-mono);
   font-size: 12px;
   line-height: 1.6;
-  color: #c9d1d9;
+  color: var(--text-primary);
   white-space: pre-wrap;
   word-break: break-word;
 }
@@ -78,11 +78,11 @@
 }
 
 .commandLine {
-  color: #58a6ff;
+  color: var(--accent-secondary);
 }
 
 .errorLine {
-  color: #f85149;
+  color: var(--status-error);
 }
 
 .inputArea {
@@ -90,15 +90,15 @@
   align-items: center;
   gap: 8px;
   padding: 8px 14px;
-  background: #161b22;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-subtle);
   flex-shrink: 0;
 }
 
 .prompt {
   font-family: var(--font-mono);
   font-size: 12px;
-  color: #3fb950;
+  color: var(--color-cyber-terminal-green);
   flex-shrink: 0;
   user-select: none;
 }
@@ -108,14 +108,14 @@
   background: transparent;
   border: none;
   outline: none;
-  color: #c9d1d9;
+  color: var(--text-primary);
   font-family: var(--font-mono);
   font-size: 12px;
-  caret-color: #58a6ff;
+  caret-color: var(--accent-secondary);
 }
 
 .input::placeholder {
-  color: rgba(201, 209, 217, 0.3);
+  color: rgba(226, 232, 240, 0.3);
 }
 
 .sendBtn {
@@ -126,15 +126,15 @@
   height: 28px;
   border-radius: var(--radius-md);
   border: none;
-  background: rgba(88, 166, 255, 0.15);
-  color: #58a6ff;
+  background: rgba(0, 212, 255, 0.15);
+  color: var(--accent-primary);
   cursor: pointer;
   flex-shrink: 0;
   transition: background 0.15s;
 }
 
 .sendBtn:hover:not(:disabled) {
-  background: rgba(88, 166, 255, 0.3);
+  background: rgba(0, 212, 255, 0.3);
 }
 
 .sendBtn:disabled {
@@ -157,15 +157,15 @@
   align-items: center;
   gap: 8px;
   padding: 6px 14px;
-  background: #161b22;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  border-bottom: 1px solid rgba(139, 92, 246, 0.15);
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid rgba(124, 58, 237, 0.25);
   flex-shrink: 0;
   position: relative;
 }
 
 .nlpIcon {
-  color: #a78bfa;
+  color: var(--color-cyber-purple);
   flex-shrink: 0;
   opacity: 0.8;
 }
@@ -175,14 +175,14 @@
   background: transparent;
   border: none;
   outline: none;
-  color: #c9d1d9;
+  color: var(--text-primary);
   font-family: var(--font-mono);
   font-size: 11px;
-  caret-color: #a78bfa;
+  caret-color: var(--color-cyber-purple);
 }
 
 .nlpInput::placeholder {
-  color: rgba(167, 139, 250, 0.35);
+  color: rgba(124, 58, 237, 0.35);
   font-style: italic;
 }
 
@@ -194,15 +194,15 @@
   height: 24px;
   border-radius: var(--radius-md);
   border: none;
-  background: rgba(139, 92, 246, 0.15);
-  color: #a78bfa;
+  background: rgba(124, 58, 237, 0.15);
+  color: var(--color-cyber-purple);
   cursor: pointer;
   flex-shrink: 0;
   transition: background 0.15s;
 }
 
 .nlpBtn:hover:not(:disabled) {
-  background: rgba(139, 92, 246, 0.3);
+  background: rgba(124, 58, 237, 0.3);
 }
 
 .nlpBtn:disabled {
@@ -211,7 +211,7 @@
 }
 
 .nlpSpinner {
-  color: #a78bfa;
+  color: var(--color-cyber-purple);
   flex-shrink: 0;
   animation: spin 1s linear infinite;
 }
@@ -226,11 +226,11 @@
   right: 14px;
   top: -20px;
   font-size: 10px;
-  color: #f85149;
-  background: #161b22;
+  color: var(--status-error);
+  background: var(--bg-secondary);
   padding: 2px 6px;
   border-radius: 3px;
-  border: 1px solid rgba(248, 81, 73, 0.2);
+  border: 1px solid rgba(255, 71, 87, 0.25);
   white-space: nowrap;
 }
 

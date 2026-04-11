@@ -13,7 +13,7 @@ type Entry = {
 
 const entries: Entry[] = [
   {
-    title: 'Red Zone',
+    title: '红区',
     subtitle: '图谱与行动面板',
     description: '以图为中心的态势与行动入口：图谱视图、会话、隧道与智能助手。',
     href: '/graph',
@@ -27,14 +27,14 @@ const entries: Entry[] = [
     icon: <Shield size={16} />,
   },
   {
-    title: 'Insights',
+    title: '洞察',
     subtitle: '趋势与指标',
     description: '从项目数据中提炼趋势、指标与风险视角，快速定位重点。',
     href: '/insights',
     icon: <TrendingUp size={16} />,
   },
   {
-    title: 'Reports',
+    title: '报告',
     subtitle: '报告中心',
     description: '查看与导出项目报告，沉淀关键发现与交付物。',
     href: '/reports',

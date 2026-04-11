@@ -81,25 +81,25 @@ export function AlertProvider({ children }: AlertProviderProps) {
 
   const alertError = useCallback(
     (message: string, title?: string) =>
-      enqueue('error', message, title ?? 'Error').then(() => {}),
+      enqueue('error', message, title ?? '错误').then(() => {}),
     [enqueue]
   )
 
   const alertWarning = useCallback(
     (message: string, title?: string) =>
-      enqueue('warning', message, title ?? 'Warning').then(() => {}),
+      enqueue('warning', message, title ?? '警告').then(() => {}),
     [enqueue]
   )
 
   const confirmFn = useCallback(
     (message: string, title?: string) =>
-      enqueue('confirm', message, title ?? 'Confirm'),
+      enqueue('confirm', message, title ?? '确认'),
     [enqueue]
   )
 
   const dangerConfirm = useCallback(
     (message: string, title?: string) =>
-      enqueue('danger-confirm', message, title ?? 'Confirm'),
+      enqueue('danger-confirm', message, title ?? '确认'),
     [enqueue]
   )
 
@@ -135,7 +135,7 @@ export function AlertProvider({ children }: AlertProviderProps) {
                     className={styles.btnSecondary}
                     onClick={() => handleResolve(false)}
                   >
-                    Cancel
+                    取消
                   </button>
                   <button
                     type="button"
@@ -146,7 +146,7 @@ export function AlertProvider({ children }: AlertProviderProps) {
                     }
                     onClick={() => handleResolve(true)}
                   >
-                    Confirm
+                    确认
                   </button>
                 </>
               ) : (
@@ -155,7 +155,7 @@ export function AlertProvider({ children }: AlertProviderProps) {
                   className={styles.btnPrimary}
                   onClick={() => handleResolve(true)}
                 >
-                  OK
+                  确定
                 </button>
               )}
             </div>

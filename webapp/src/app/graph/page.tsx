@@ -742,7 +742,7 @@ export default function GraphPage() {
     if (result) {
       setIsReconModalOpen(false)
       setActiveLogsDrawer('recon')
-      toast.info('Recon scan started')
+      toast.info('已开始侦察扫描')
     }
   }, [startRecon, clearLogs, toast])
 
@@ -758,10 +758,10 @@ export default function GraphPage() {
     })
     if (!res.ok) {
       const data = await res.json()
-      alertError(data.error || 'Failed to delete node')
+      alertError(data.error || '删除节点失败')
       return
     }
-    toast.success('Node deleted')
+    toast.success('节点已删除')
     refetchGraph()
   }, [projectId, refetchGraph, toast])
 
@@ -779,7 +779,7 @@ export default function GraphPage() {
     if (result) {
       setIsGvmModalOpen(false)
       setActiveLogsDrawer('gvm')
-      toast.info('GVM scan started')
+      toast.info('已开始 GVM 扫描')
     }
   }, [startGvm, clearGvmLogs, toast])
 
@@ -798,11 +798,11 @@ export default function GraphPage() {
       const result = await startGithubHunt()
       if (result) {
         setActiveLogsDrawer('githubHunt')
-        toast.info('GitHub Hunt started')
+        toast.info('已开始 GitHub Hunt')
       }
     } catch (err) {
       console.error('Failed to start GitHub Hunt:', err)
-      toast.error('Failed to start GitHub Hunt')
+      toast.error('启动 GitHub Hunt 失败')
     }
   }, [startGithubHunt, clearGithubHuntLogs, toast])
 
@@ -821,11 +821,11 @@ export default function GraphPage() {
       const result = await startTrufflehog()
       if (result) {
         setActiveLogsDrawer('trufflehog')
-        toast.info('Trufflehog scan started')
+        toast.info('已开始 TruffleHog 扫描')
       }
     } catch (err) {
       console.error('Failed to start Trufflehog:', err)
-      toast.error('Failed to start Trufflehog')
+      toast.error('启动 TruffleHog 失败')
     }
   }, [startTrufflehog, clearTrufflehogLogs, toast])
 
@@ -842,9 +842,9 @@ export default function GraphPage() {
   const handlePauseRecon = useCallback(async () => { await pauseRecon() }, [pauseRecon])
   const handleResumeRecon = useCallback(async () => { await resumeRecon() }, [resumeRecon])
   const handleStopRecon = useCallback(async () => { await stopRecon() }, [stopRecon])
-  const handlePauseGvm = useCallback(async () => { await pauseGvm(); toast.info('GVM scan paused') }, [pauseGvm, toast])
-  const handleResumeGvm = useCallback(async () => { await resumeGvm(); toast.info('GVM scan resumed') }, [resumeGvm, toast])
-  const handleStopGvm = useCallback(async () => { await stopGvm(); toast.info('GVM scan stopped') }, [stopGvm, toast])
+  const handlePauseGvm = useCallback(async () => { await pauseGvm(); toast.info('GVM 扫描已暂停') }, [pauseGvm, toast])
+  const handleResumeGvm = useCallback(async () => { await resumeGvm(); toast.info('GVM 扫描已恢复') }, [resumeGvm, toast])
+  const handleStopGvm = useCallback(async () => { await stopGvm(); toast.info('GVM 扫描已停止') }, [stopGvm, toast])
   const handlePauseGithubHunt = useCallback(async () => { await pauseGithubHunt() }, [pauseGithubHunt])
   const handleResumeGithubHunt = useCallback(async () => { await resumeGithubHunt() }, [resumeGithubHunt])
   const handleStopGithubHunt = useCallback(async () => { await stopGithubHunt() }, [stopGithubHunt])
@@ -888,10 +888,10 @@ export default function GraphPage() {
     return (
       <div className={styles.page}>
         <div className={styles.noProject}>
-          <h2>No Project Selected</h2>
-          <p>Select a project from the dropdown in the header or create a new one.</p>
+          <h2>未选择项目</h2>
+          <p>请在顶部下拉框选择项目，或先创建一个新项目。</p>
           <button className="primaryButton" onClick={() => router.push('/projects')}>
-            Go to Projects
+            前往项目
           </button>
         </div>
       </div>

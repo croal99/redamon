@@ -31,20 +31,20 @@ export const PHASE_CONFIG = {
   informational: {
     label: 'Informational',
     icon: Shield,
-    color: '#059669',
-    bgColor: 'rgba(5, 150, 105, 0.1)',
+    color: 'var(--status-success)',
+    bgColor: 'rgba(0, 255, 136, 0.1)',
   },
   exploitation: {
     label: 'Exploitation',
     icon: Target,
     color: 'var(--status-warning)',
-    bgColor: 'rgba(245, 158, 11, 0.1)',
+    bgColor: 'rgba(255, 107, 53, 0.1)',
   },
   post_exploitation: {
     label: 'Post-Exploitation',
     icon: Zap,
     color: 'var(--status-error)',
-    bgColor: 'rgba(239, 68, 68, 0.1)',
+    bgColor: 'rgba(255, 71, 87, 0.1)',
   },
 }
 
@@ -53,31 +53,31 @@ export const KNOWN_ATTACK_PATH_CONFIG: Record<string, { label: string; shortLabe
     label: 'CVE (MSF)',
     shortLabel: 'CVE/MSF',
     color: 'var(--status-warning)',
-    bgColor: 'rgba(245, 158, 11, 0.15)',
+    bgColor: 'rgba(255, 107, 53, 0.15)',
   },
   brute_force_credential_guess: {
     label: 'Credential Testing',
     shortLabel: 'CRED',
-    color: 'var(--accent-secondary, #8b5cf6)',
-    bgColor: 'rgba(139, 92, 246, 0.15)',
+    color: 'var(--accent-secondary)',
+    bgColor: 'rgba(10, 132, 255, 0.15)',
   },
   phishing_social_engineering: {
     label: 'Social Engineering Simulation',
     shortLabel: 'SE',
-    color: 'var(--accent-tertiary, #ec4899)',
-    bgColor: 'rgba(236, 72, 153, 0.15)',
+    color: 'var(--color-cyber-purple)',
+    bgColor: 'rgba(124, 58, 237, 0.15)',
   },
   denial_of_service: {
     label: 'Availability Testing',
     shortLabel: 'AVAIL',
-    color: 'var(--status-error, #ef4444)',
-    bgColor: 'rgba(239, 68, 68, 0.15)',
+    color: 'var(--status-error)',
+    bgColor: 'rgba(255, 71, 87, 0.15)',
   },
   sql_injection: {
     label: 'SQL Injection',
     shortLabel: 'SQLi',
-    color: 'var(--accent-info, #06b6d4)',
-    bgColor: 'rgba(6, 182, 212, 0.15)',
+    color: 'var(--accent-primary)',
+    bgColor: 'rgba(0, 212, 255, 0.15)',
   },
 }
 
@@ -90,8 +90,8 @@ export function getAttackPathConfig(type: string): { label: string; shortLabel: 
     return {
       label: 'User Skill',
       shortLabel: 'SKILL',
-      color: 'var(--accent-primary, #3b82f6)',
-      bgColor: 'rgba(59, 130, 246, 0.15)',
+      color: 'var(--accent-primary)',
+      bgColor: 'rgba(0, 212, 255, 0.15)',
     }
   }
   const cleanName = type.replace(/-unclassified$/, '').replace(/_/g, ' ')

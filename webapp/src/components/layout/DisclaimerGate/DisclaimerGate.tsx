@@ -29,32 +29,32 @@ const CHECKBOXES = [
   {
     id: 'authorization',
     label:
-      'I confirm I have explicit written authorization to test target systems and understand unauthorized access is illegal under CFAA, Computer Misuse Act, and equivalent laws.',
+      '我确认已获得对目标系统进行测试的明确书面授权，并理解未经授权的访问在相关法律（CFAA、《计算机滥用法》等）下属于违法行为。',
   },
   {
     id: 'liability',
     label:
-      'I acknowledge this software is provided "AS IS" with no warranty. Authors and contributors bear no liability for any damages, data loss, or legal consequences.',
+      '我知悉本软件按“现状”提供且不附带任何担保。作者与贡献者对任何损害、数据丢失或法律后果不承担责任。',
   },
   {
     id: 'data-privacy',
     label:
-      'I understand that reconnaissance data, credentials, and vulnerability details are transmitted to external LLM providers (OpenAI, Anthropic, etc.) and third-party services with no privacy guarantee.',
+      '我理解侦察数据、凭据与漏洞细节可能会发送给外部 LLM 提供商（OpenAI、Anthropic 等）及第三方服务，且不保证隐私。',
   },
   {
     id: 'data-persistence',
     label:
-      'I understand all data is stored indefinitely in Neo4j/PostgreSQL with no automatic deletion. I am responsible for cleanup after engagements.',
+      '我理解所有数据将长期存储在 Neo4j/PostgreSQL 中且不会自动删除。活动结束后的清理由我负责。',
   },
   {
     id: 'ai-agent',
     label:
-      'I understand the AI agent operates autonomously and may take unexpected actions including scope drift, service degradation, or unintended exploitation. Approval gates are best-effort safeguards.',
+      '我理解 AI 代理可自主运行，可能出现不可预期行为，包括范围漂移、服务降级或非预期利用。审批闸门仅为尽力而为的防护措施。',
   },
   {
     id: 'third-party',
     label:
-      'I understand I must comply with licenses of all bundled tools (AGPL-3.0, GPL, MIT, etc.) and applicable regulations including export controls.',
+      '我理解我必须遵守随附工具的各项许可证（AGPL-3.0、GPL、MIT 等）以及适用法规（包括出口管制）。',
   },
 ] as const
 
@@ -120,34 +120,28 @@ export function DisclaimerGate({ children }: DisclaimerGateProps) {
           <div className={styles.welcomeHeader}>
             <Image src="/logo.png" alt="RedAmon" width={36} height={36} style={{ objectFit: 'contain' }} />
             <h1 className={styles.welcomeTitle}>
-              Welcome to <span className={styles.logoAccent}>Red</span>Amon
+              欢迎使用 <span className={styles.logoAccent}>Red</span>Amon
             </h1>
           </div>
 
           <div className={styles.body}>
             <p className={styles.welcomeThank}>
-              Thank you for downloading and installing <strong>RedAmon</strong>!
+              感谢你下载并安装 <strong>RedAmon</strong>！
             </p>
 
             <p className={styles.welcomeDesc}>
-              <strong>RedAmon</strong> is an open-source, AI-powered
-              penetration testing platform that combines autonomous
-              reconnaissance, graph-based attack surface mapping, and an
-              intelligent agent to help security professionals work faster and
-              smarter, from initial footprinting to full engagement reporting.
+              <strong>RedAmon</strong> 是一款开源的 AI 渗透测试平台，融合了自动化侦察、基于图谱的攻击面映射与智能代理能力，帮助安全人员从资产摸排到最终交付报告更快、更高效地完成工作。
             </p>
 
             <div className={styles.missionBox}>
               <p className={styles.missionText}>
-                Our commitment is to keep RedAmon always up-to-date and make it
-                the <strong>#1 open-source pentesting platform</strong> in the
-                world. To get there, we need the community&apos;s help.
+                我们致力于保持 RedAmon 持续更新，并把它打造为全球<strong>第一的开源渗透测试平台</strong>。要实现这一目标，需要社区的支持。
               </p>
               <p className={styles.missionText}>
-                We&apos;re not asking for money, just a ⭐ GitHub star to help us grow, gain visibility, and attract contributors. If you&apos;d like to go further, feel free to open a pull request or reach out to our maintainers directly.<br />Every contribution matters.
+                我们不向你索取金钱，只希望你能在 GitHub 上点一个 ⭐，帮助我们成长、提升可见度并吸引贡献者。如果你愿意进一步参与，欢迎提交 PR 或直接联系维护者。<br />每一份贡献都很重要。
               </p>
               <p className={styles.footerSignature}>
-                Happy hunting!<br />Samuele &amp; Ritesh
+                祝狩猎顺利！<br />Samuele &amp; Ritesh
               </p>
             </div>
 
@@ -159,20 +153,20 @@ export function DisclaimerGate({ children }: DisclaimerGateProps) {
             >
               <Github size={20} />
               <Star size={18} className={styles.starIcon} />
-              <span>Star RedAmon on GitHub</span>
+              <span>在 GitHub 上为 RedAmon 点赞（Star）</span>
               <ExternalLink size={13} className={styles.starExternal} />
             </a>
           </div>
 
           <div className={styles.footer}>
             <p className={styles.footerQuote}>
-              &ldquo;Open source is humanity&apos;s greatest collaborative experiment.&rdquo;
+              &ldquo;开源是人类最伟大的协作实验。&rdquo;
             </p>
             <button
               className={styles.acceptButton}
               onClick={() => setStep('disclaimer')}
             >
-              OK, continue
+              好的，继续
             </button>
           </div>
         </div>
@@ -187,7 +181,7 @@ export function DisclaimerGate({ children }: DisclaimerGateProps) {
           <div className={styles.header}>
             <div className={styles.headerLeft}>
               <Rocket size={20} className={styles.headerIcon} />
-              <h1 className={styles.title}>Getting Started — Your First Steps</h1>
+              <h1 className={styles.title}>快速开始 — 第一步</h1>
             </div>
           </div>
 
@@ -195,7 +189,7 @@ export function DisclaimerGate({ children }: DisclaimerGateProps) {
             <div className={styles.guideGroups}>
               {/* Setup group */}
               <div className={styles.guideGroup}>
-                <p className={styles.guideGroupLabel}>Setup</p>
+                <p className={styles.guideGroupLabel}>设置</p>
                 <div className={styles.guideSteps}>
                   <div className={styles.guideStep}>
                     <div className={styles.guideStepLeft}>
@@ -203,8 +197,8 @@ export function DisclaimerGate({ children }: DisclaimerGateProps) {
                       <UserPlus size={18} className={styles.guideStepIcon} />
                     </div>
                     <div>
-                      <p className={styles.guideStepTitle}>Create a User</p>
-                      <p className={styles.guideStepDesc}>Go to the Users panel and create your profile. Each user can manage multiple independent projects.</p>
+                      <p className={styles.guideStepTitle}>创建用户</p>
+                      <p className={styles.guideStepDesc}>在项目页的用户区域创建你的档案。每个用户可以管理多个相互独立的项目。</p>
                     </div>
                   </div>
                   <div className={styles.guideStep}>
@@ -213,8 +207,8 @@ export function DisclaimerGate({ children }: DisclaimerGateProps) {
                       <FolderPlus size={18} className={styles.guideStepIcon} />
                     </div>
                     <div>
-                      <p className={styles.guideStepTitle}>Create a Project</p>
-                      <p className={styles.guideStepDesc}>Set up a project to group all recon data, settings, and agent sessions for a single engagement.</p>
+                      <p className={styles.guideStepTitle}>创建项目</p>
+                      <p className={styles.guideStepDesc}>创建项目用于聚合一次任务的侦察数据、配置与代理会话，便于统一管理与复盘。</p>
                     </div>
                   </div>
 
@@ -223,7 +217,7 @@ export function DisclaimerGate({ children }: DisclaimerGateProps) {
 
               {/* Run group */}
               <div className={styles.guideGroup}>
-                <p className={styles.guideGroupLabel}>Run</p>
+                <p className={styles.guideGroupLabel}>运行</p>
                 <div className={styles.guideSteps}>
                   <div className={styles.guideStep}>
                     <div className={styles.guideStepLeft}>
@@ -231,8 +225,8 @@ export function DisclaimerGate({ children }: DisclaimerGateProps) {
                       <Play size={18} className={styles.guideStepIcon} />
                     </div>
                     <div>
-                      <p className={styles.guideStepTitle}>Launch the Recon Pipeline</p>
-                      <p className={styles.guideStepDesc}>From the <strong>Red Zone</strong> press <strong>Start Recon</strong>. Wait for the pipeline to fully complete before starting the AI agent.</p>
+                      <p className={styles.guideStepTitle}>启动侦察流水线</p>
+                      <p className={styles.guideStepDesc}>在<strong>红区</strong>点击<strong>开始侦察</strong>。在启动 AI 代理前，请等待流水线完整执行结束。</p>
                     </div>
                   </div>
                   <div className={styles.guideStep}>
@@ -241,8 +235,8 @@ export function DisclaimerGate({ children }: DisclaimerGateProps) {
                       <Bot size={18} className={styles.guideStepIcon} />
                     </div>
                     <div>
-                      <p className={styles.guideStepTitle}>Start the AI Agent</p>
-                      <p className={styles.guideStepDesc}>Once recon is done, switch to <strong>Agent AI</strong> to interrogate findings, plan attack paths, and generate reports.</p>
+                      <p className={styles.guideStepTitle}>启动 AI 代理</p>
+                      <p className={styles.guideStepDesc}>侦察完成后，切换到<strong>Agent AI</strong>以分析发现、规划攻击路径并生成报告。</p>
                     </div>
                   </div>
                 </div>
@@ -258,11 +252,11 @@ export function DisclaimerGate({ children }: DisclaimerGateProps) {
               className={styles.fullDisclaimerLink}
             >
               <BookOpen size={14} />
-              Read the complete manual on the Wiki
+              在 Wiki 阅读完整使用手册
               <ExternalLink size={12} />
             </a>
             <button className={styles.acceptButton} onClick={handleAccept}>
-              Let&apos;s Go →
+              开始使用 →
             </button>
           </div>
         </div>
@@ -276,18 +270,13 @@ export function DisclaimerGate({ children }: DisclaimerGateProps) {
         <div className={styles.header}>
           <div className={styles.headerLeft}>
             <ShieldAlert size={22} className={styles.headerIcon} />
-            <h1 className={styles.title}>Legal Disclaimer & Terms of Use</h1>
+            <h1 className={styles.title}>法律免责声明与使用条款</h1>
           </div>
         </div>
 
         <div className={styles.body}>
           <p className={styles.intro}>
-            <strong>RedAmon</strong> is an AI-powered penetration testing
-            platform intended exclusively for{' '}
-            <strong>authorized security testing</strong>,{' '}
-            <strong>educational purposes</strong>, and{' '}
-            <strong>research</strong>. Before using this tool, you must read and
-            accept the following terms.
+            <strong>RedAmon</strong> 是一款 AI 驱动的渗透测试平台，仅用于<strong>经授权的安全测试</strong>、<strong>教学用途</strong>与<strong>研究</strong>。在使用本工具前，你必须阅读并接受以下条款。
           </p>
 
           <div className={styles.linkWrapper}>
@@ -297,7 +286,7 @@ export function DisclaimerGate({ children }: DisclaimerGateProps) {
               rel="noopener noreferrer"
               className={styles.fullDisclaimerLink}
             >
-              Read the full legal disclaimer
+              阅读完整法律免责声明
               <ExternalLink size={13} />
             </a>
           </div>
@@ -323,7 +312,7 @@ export function DisclaimerGate({ children }: DisclaimerGateProps) {
             disabled={!allChecked}
             onClick={() => setStep('guide')}
           >
-            I Accept All Terms
+            我已阅读并接受全部条款
           </button>
         </div>
       </div>

@@ -144,7 +144,7 @@ export const ViewTabs = memo(function ViewTabs({
 
   return (
     <div className={styles.tabBar}>
-      <div className={styles.tabs} role="tablist" aria-label="View mode">
+      <div className={styles.tabs} role="tablist" aria-label="视图模式">
         {/* Filter group -- create + select as a unified element */}
         <div className={styles.filterGroup}>
           <button
@@ -152,7 +152,7 @@ export const ViewTabs = memo(function ViewTabs({
             aria-selected={activeView === 'graphViews'}
             className={`${styles.filterGroupCreate} ${activeView === 'graphViews' ? styles.filterGroupCreateActive : ''}`}
             onClick={() => onViewChange('graphViews')}
-            title="Surface Shaper"
+            title="攻击面过滤器"
           >
             <Filter size={13} />
             <Plus size={10} className={styles.createFilterPlus} />
@@ -163,7 +163,7 @@ export const ViewTabs = memo(function ViewTabs({
               <button
                 className={`${styles.filterGroupPill} ${selectedFilter ? styles.filterGroupPillActive : ''}`}
                 onClick={() => setDropdownOpen(prev => !prev)}
-                title={selectedFilter ? `Active surface: ${selectedFilter.name}` : 'Select a surface'}
+                title={selectedFilter ? `当前攻击面：${selectedFilter.name}` : '选择攻击面'}
               >
                 {selectedFilter ? (
                   <>
@@ -171,19 +171,19 @@ export const ViewTabs = memo(function ViewTabs({
                     <span
                       className={styles.filterPillClear}
                       onClick={handleClearFilter}
-                      title="Clear surface"
+                      title="清除攻击面"
                     >
                       <X size={10} />
                     </span>
                   </>
                 ) : (
-                  <span className={styles.filterPillLabel}>Surfaces</span>
+                  <span className={styles.filterPillLabel}>攻击面</span>
                 )}
               </button>
 
               {dropdownOpen && (
                 <div className={styles.filterDropdown}>
-                  <div className={styles.filterDropdownHeader}>Surface Shapers</div>
+                  <div className={styles.filterDropdownHeader}>攻击面过滤器</div>
                   <div className={styles.filterDropdownList}>
                     {dataFilters!.map(f => (
                       <div
@@ -200,7 +200,7 @@ export const ViewTabs = memo(function ViewTabs({
                         <button
                           className={styles.filterDropdownDelete}
                           onClick={(e) => handleDeleteFilter(f.id, e)}
-                          title="Delete surface"
+                          title="删除攻击面"
                         >
                           <Trash2 size={11} />
                         </button>
@@ -220,7 +220,7 @@ export const ViewTabs = memo(function ViewTabs({
           onClick={() => onViewChange('graph')}
         >
           <Waypoints size={14} />
-          <span>Graph Map</span>
+          <span>图谱</span>
         </button>
         <div ref={tableMenuRef} className={styles.tableMenuContainer}>
           <button
@@ -230,7 +230,7 @@ export const ViewTabs = memo(function ViewTabs({
             onClick={() => onViewChange('table')}
           >
             {tableViewMode === 'jsRecon' ? <Code size={14} /> : <Table2 size={14} />}
-            <span>{tableViewMode === 'jsRecon' ? 'JS Recon' : 'All Nodes'}</span>
+            <span>{tableViewMode === 'jsRecon' ? 'JS 侦察' : '全部节点'}</span>
             <ChevronDown
               size={18}
               strokeWidth={3}
@@ -244,7 +244,7 @@ export const ViewTabs = memo(function ViewTabs({
                 className={`${styles.tableDropdownItem} ${tableViewMode === 'all' ? styles.tableDropdownItemActive : ''}`}
                 onClick={() => { onTableViewModeChange?.('all'); setTableMenuOpen(false); onViewChange('table') }}
               >
-                <Table2 size={12} /> All Nodes
+                <Table2 size={12} /> 全部节点
               </button>
               <button
                 className={`${styles.tableDropdownItem} ${tableViewMode === 'jsRecon' ? styles.tableDropdownItemActive : ''}`}
@@ -263,7 +263,7 @@ export const ViewTabs = memo(function ViewTabs({
             onClick={() => router.push(`/projects/${projectId}/settings`)}
           >
             <GitBranch size={14} />
-            <span>Recon Pipeline</span>
+            <span>侦察流水线</span>
           </button>
         )}
         <button
@@ -273,7 +273,7 @@ export const ViewTabs = memo(function ViewTabs({
           onClick={() => onViewChange('sessions')}
         >
           <Terminal size={14} />
-          <span>Reverse Shell</span>
+          <span>反弹 Shell</span>
           {sessionCount != null && sessionCount > 0 && (
             <span className={styles.badge}>{sessionCount}</span>
           )}
@@ -285,7 +285,7 @@ export const ViewTabs = memo(function ViewTabs({
           onClick={() => onViewChange('terminal')}
         >
           <SquareTerminal size={14} />
-          <span>RedAmon Terminal</span>
+          <span>终端</span>
         </button>
         <button
           role="tab"
@@ -301,21 +301,21 @@ export const ViewTabs = memo(function ViewTabs({
       <div className={styles.rightSection}>
       {activeView === 'graph' && onToggle3D && onToggleLabels && (
         <div className={styles.viewToggles}>
-          <div title={nodeCount > 1000 ? `3D disabled: graph has ${nodeCount.toLocaleString()} nodes (max 1,000 for 3D)` : undefined}>
+          <div title={nodeCount > 1000 ? `已禁用 3D：图谱包含 ${nodeCount.toLocaleString()} 个节点（3D 最多支持 1,000 个）` : undefined}>
             <Toggle
               checked={nodeCount > 1000 ? false : (is3D ?? false)}
               onChange={onToggle3D}
               labelOff="2D"
               labelOn="3D"
               disabled={nodeCount > 1000}
-              aria-label="Toggle 2D/3D view"
+              aria-label="切换 2D/3D"
             />
           </div>
           <Toggle
             checked={showLabels ?? false}
             onChange={onToggleLabels}
-            labelOn="Labels"
-            aria-label="Toggle labels"
+            labelOn="标签"
+            aria-label="切换标签"
           />
         </div>
       )}
@@ -327,10 +327,10 @@ export const ViewTabs = memo(function ViewTabs({
             <input
               type="text"
               className={styles.searchInput}
-              placeholder="Search..."
+              placeholder="搜索…"
               value={globalFilter || ''}
               onChange={e => onGlobalFilterChange(e.target.value)}
-              aria-label="Search nodes"
+              aria-label="搜索节点"
             />
           </div>
           <span className={styles.rowCount}>
@@ -338,7 +338,7 @@ export const ViewTabs = memo(function ViewTabs({
               ? `${totalRows}`
               : `${filteredRows}/${totalRows}`}
           </span>
-          <button className={styles.exportBtn} onClick={onExport} aria-label="Export to Excel">
+          <button className={styles.exportBtn} onClick={onExport} aria-label="导出为 Excel">
             <Download size={12} />
             <span>XLSX</span>
           </button>
@@ -353,14 +353,14 @@ export const ViewTabs = memo(function ViewTabs({
             <input
               type="text"
               className={styles.searchInput}
-              placeholder="Search JS Recon..."
+              placeholder="搜索 JS 侦察…"
               value={jsReconSearch || ''}
               onChange={e => onJsReconSearchChange(e.target.value)}
-              aria-label="Search JS Recon findings"
+              aria-label="搜索 JS 侦察发现"
             />
           </div>
           {onJsReconExportXlsx && (
-            <button className={styles.exportBtn} onClick={onJsReconExportXlsx} aria-label="Export to Excel">
+            <button className={styles.exportBtn} onClick={onJsReconExportXlsx} aria-label="导出为 Excel">
               <Download size={12} />
               <span>XLSX</span>
             </button>

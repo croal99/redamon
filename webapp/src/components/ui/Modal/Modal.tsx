@@ -123,7 +123,7 @@ export function Modal({
                 type="button"
                 className={styles.closeButton}
                 onClick={onClose}
-                aria-label="Close modal"
+                aria-label="关闭弹窗"
               >
                 <X size={14} />
               </button>

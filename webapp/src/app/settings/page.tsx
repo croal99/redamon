@@ -214,14 +214,14 @@ export default function SettingsPage() {
         setPendingSkillContent('')
         setPendingSkillName('')
         setPendingSkillDescription('')
-        toast.success('Attack skill uploaded')
+        toast.success('攻击技能已上传')
       } else {
         const err = await resp.json()
-        alertError(err.error || 'Failed to upload skill')
+        alertError(err.error || '上传技能失败')
       }
     } catch (err) {
       console.error('Failed to upload skill:', err)
-      toast.error('Failed to upload skill')
+      toast.error('上传技能失败')
     } finally {
       setSkillUploading(false)
     }
@@ -249,14 +249,14 @@ export default function SettingsPage() {
 
   // Delete skill
   const deleteSkill = useCallback(async (skillId: string) => {
-    if (!userId || !(await showConfirm('Delete this skill? It will be removed from all projects.'))) return
+    if (!userId || !(await showConfirm('确定要删除该技能吗？它将从所有项目中移除。'))) return
     try {
       await fetch(`/api/users/${userId}/attack-skills/${skillId}`, { method: 'DELETE' })
       fetchSkills()
-      toast.success('Attack skill deleted')
+      toast.success('攻击技能已删除')
     } catch (err) {
       console.error('Failed to delete skill:', err)
-      toast.error('Failed to delete skill')
+      toast.error('删除技能失败')
     }
   }, [userId, fetchSkills])
 
@@ -291,14 +291,14 @@ export default function SettingsPage() {
         setEditDescModal(false)
         setEditingSkillId('')
         setEditingSkillDescription('')
-        toast.success('Skill description updated')
+        toast.success('技能描述已更新')
       } else {
         const err = await resp.json()
-        alertError(err.error || 'Failed to update description')
+        alertError(err.error || '更新描述失败')
       }
     } catch (err) {
       console.error('Failed to update skill description:', err)
-      toast.error('Failed to update description')
+      toast.error('更新描述失败')
     } finally {
       setEditDescSaving(false)
     }
@@ -313,9 +313,9 @@ export default function SettingsPage() {
       const data = await resp.json()
       if (resp.ok) {
         fetchSkills()
-        showAlert(data.message || `Imported ${data.imported ?? 0} community skill(s).`)
+        showAlert(data.message || `已导入 ${data.imported ?? 0} 个社区技能。`)
       } else {
-        alertError(data.error || 'Failed to import community skills')
+        alertError(data.error || '导入社区技能失败')
       }
     } catch (err) {
       console.error('Failed to import community skills:', err)
@@ -374,14 +374,14 @@ export default function SettingsPage() {
         setPendingChatSkillName('')
         setPendingChatSkillDescription('')
         setPendingChatSkillCategory('general')
-        toast.success('Chat skill uploaded')
+        toast.success('聊天技能已上传')
       } else {
         const err = await resp.json()
-        alertError(err.error || 'Failed to upload chat skill')
+        alertError(err.error || '上传聊天技能失败')
       }
     } catch (err) {
       console.error('Failed to upload chat skill:', err)
-      toast.error('Failed to upload chat skill')
+      toast.error('上传聊天技能失败')
     } finally {
       setChatSkillUploading(false)
     }
@@ -409,14 +409,14 @@ export default function SettingsPage() {
 
   // Delete chat skill
   const deleteChatSkill = useCallback(async (skillId: string) => {
-    if (!userId || !(await showConfirm('Delete this chat skill?'))) return
+    if (!userId || !(await showConfirm('确定要删除该聊天技能吗？'))) return
     try {
       await fetch(`/api/users/${userId}/chat-skills/${skillId}`, { method: 'DELETE' })
       fetchChatSkills()
-      toast.success('Chat skill deleted')
+      toast.success('聊天技能已删除')
     } catch (err) {
       console.error('Failed to delete chat skill:', err)
-      toast.error('Failed to delete chat skill')
+      toast.error('删除聊天技能失败')
     }
   }, [userId, fetchChatSkills])
 
@@ -451,14 +451,14 @@ export default function SettingsPage() {
         setEditChatDescModal(false)
         setEditingChatSkillId('')
         setEditingChatSkillDescription('')
-        toast.success('Chat skill description updated')
+        toast.success('聊天技能描述已更新')
       } else {
         const err = await resp.json()
-        alertError(err.error || 'Failed to update description')
+        alertError(err.error || '更新描述失败')
       }
     } catch (err) {
       console.error('Failed to update chat skill description:', err)
-      toast.error('Failed to update description')
+      toast.error('更新描述失败')
     } finally {
       setEditChatDescSaving(false)
     }
@@ -473,9 +473,9 @@ export default function SettingsPage() {
       const data = await resp.json()
       if (resp.ok) {
         fetchChatSkills()
-        showAlert(data.message || `Imported ${data.imported ?? 0} community chat skill(s).`)
+        showAlert(data.message || `已导入 ${data.imported ?? 0} 个社区聊天技能。`)
       } else {
-        alertError(data.error || 'Failed to import community chat skills')
+        alertError(data.error || '导入社区聊天技能失败')
       }
     } catch (err) {
       console.error('Failed to import community chat skills:', err)
@@ -553,14 +553,14 @@ export default function SettingsPage() {
 
   // Delete provider
   const deleteProvider = useCallback(async (providerId: string) => {
-    if (!userId || !(await showConfirm('Delete this provider? Models from it will no longer be available.'))) return
+    if (!userId || !(await showConfirm('确定要删除该提供商吗？其模型将不可再用。'))) return
     try {
       await fetch(`/api/users/${userId}/llm-providers/${providerId}`, { method: 'DELETE' })
       fetchProviders()
-      toast.success('Provider deleted')
+      toast.success('提供商已删除')
     } catch (err) {
       console.error('Failed to delete provider:', err)
-      toast.error('Failed to delete provider')
+      toast.error('删除提供商失败')
     }
   }, [userId, fetchProviders])
 
@@ -628,11 +628,11 @@ export default function SettingsPage() {
           setRotationConfigs(data.rotationConfigs)
         }
         setSettingsDirty(false)
-        toast.success('Settings saved')
+        toast.success('设置已保存')
       }
     } catch (err) {
       console.error('Failed to save settings:', err)
-      toast.error('Failed to save settings')
+      toast.error('保存设置失败')
     } finally {
       setSettingsSaving(false)
     }
@@ -728,7 +728,7 @@ export default function SettingsPage() {
     a.download = 'redamon-api-keys-template.json'
     a.click()
     URL.revokeObjectURL(url)
-    toast.success('Template downloaded')
+    toast.success('模板已下载')
   }, [settings])
 
   const handleKeysFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -744,12 +744,12 @@ export default function SettingsPage() {
         return
       }
       if (result.keyCount === 0 && result.rotationCount === 0 && result.tunnelingCount === 0) {
-        toast.error('No keys to import — all values are empty or masked.')
+        toast.error('无可导入的密钥——所有值为空或已被掩码。')
         return
       }
       setPendingImport(result)
     }
-    reader.onerror = () => toast.error('Failed to read file.')
+    reader.onerror = () => toast.error('读取文件失败。')
     reader.readAsText(file)
   }, [])
 
@@ -768,7 +768,7 @@ export default function SettingsPage() {
     }
     setSettingsDirty(true)
     setPendingImport(null)
-    toast.success('Keys imported — click "Save Settings" to persist.')
+    toast.success('密钥已导入——点击“保存设置”以持久化。')
   }, [pendingImport])
 
   const searchParams = useSearchParams()
@@ -779,34 +779,34 @@ export default function SettingsPage() {
   if (!userId) {
     return (
       <div className={styles.page}>
-        <h1 className={styles.pageTitle}>Global Settings <span style={{ fontSize: '0.55em', fontWeight: 400, opacity: 0.5 }}>(User-Scoped)</span></h1>
-        <div className={styles.emptyState}>Select a user to configure settings.</div>
+        <h1 className={styles.pageTitle}>全局设置 <span style={{ fontSize: '0.55em', fontWeight: 400, opacity: 0.5 }}>(按用户)</span></h1>
+        <div className={styles.emptyState}>请选择用户后再配置设置。</div>
       </div>
     )
   }
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.pageTitle}>Global Settings <span style={{ fontSize: '0.55em', fontWeight: 400, opacity: 0.5 }}>(User-Scoped)</span></h1>
+      <h1 className={styles.pageTitle}>全局设置 <span style={{ fontSize: '0.55em', fontWeight: 400, opacity: 0.5 }}>(按用户)</span></h1>
       <p style={{ color: 'var(--text-secondary)', fontSize: '13px', margin: '0 0 var(--space-4)' }}>
-        Personal configuration for the current user. These settings apply across all projects.
+        当前用户的个性化配置。这些设置会应用到该用户的所有项目。
       </p>
 
       <div className={styles.tabBar}>
         <button className={`${styles.tab} ${activeTab === 'providers' ? styles.tabActive : ''}`} onClick={() => setActiveTab('providers')}>
-          LLM Providers
+          LLM 提供商
         </button>
         <button className={`${styles.tab} ${activeTab === 'skills' ? styles.tabActive : ''}`} onClick={() => setActiveTab('skills')}>
-          <Swords size={14} /> Agent Skills
+          <Swords size={14} /> 代理技能
         </button>
         <button className={`${styles.tab} ${activeTab === 'chat-skills' ? styles.tabActive : ''}`} onClick={() => setActiveTab('chat-skills')}>
-          <BookOpen size={14} /> Chat Skills
+          <BookOpen size={14} /> 聊天技能
         </button>
         <button className={`${styles.tab} ${activeTab === 'keys' ? styles.tabActive : ''}`} onClick={() => setActiveTab('keys')}>
-          API Keys & Tunneling
+          API 密钥与隧道
         </button>
         <button className={`${styles.tab} ${activeTab === 'system' ? styles.tabActive : ''}`} onClick={() => setActiveTab('system')}>
-          <Info size={14} /> System
+          <Info size={14} /> 系统
         </button>
       </div>
 

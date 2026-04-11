@@ -16,7 +16,7 @@ function formatBytes(bytes: number): string {
 
 function formatDate(iso: string): string {
   try {
-    return new Date(iso).toLocaleString('en-US', {
+    return new Date(iso).toLocaleString('zh-CN', {
       year: 'numeric', month: 'short', day: 'numeric',
       hour: '2-digit', minute: '2-digit',
     })
@@ -30,6 +30,17 @@ function riskClass(label?: string): string {
     case 'medium': return styles.riskMedium
     case 'low': return styles.riskLow
     default: return ''
+  }
+}
+
+function formatRiskLabel(label?: string): string {
+  const normalized = label?.toLowerCase()
+  switch (normalized) {
+    case 'critical': return '严重'
+    case 'high': return '高危'
+    case 'medium': return '中危'
+    case 'low': return '低危'
+    default: return label || ''
   }
 }
 
@@ -49,9 +60,9 @@ export default function ReportsPage() {
     if (!selectedProjectId) return
     try {
       await generate(selectedProjectId)
-      toast.info('Report generation started')
+      toast.info('已开始生成报告')
     } catch {
-      toast.error('Failed to generate report')
+      toast.error('生成报告失败')
       // error available via generateError
     }
   }, [generate, selectedProjectId])
@@ -59,9 +70,9 @@ export default function ReportsPage() {
   const handleDelete = useCallback(async (projectId: string, reportId: string) => {
     try {
       await deleteReport({ projectId, reportId })
-      toast.success('Report deleted')
+      toast.success('报告已删除')
     } catch {
-      toast.error('Failed to delete report')
+      toast.error('删除报告失败')
     }
     setDeleteConfirm(null)
   }, [deleteReport, toast])
@@ -74,12 +85,12 @@ export default function ReportsPage() {
       const blob = await res.blob()
       const a = document.createElement('a')
       a.href = URL.createObjectURL(blob)
-      a.download = `${report.title || 'report'}.html`
+      a.download = `${report.title || '报告'}.html`
       a.click()
       URL.revokeObjectURL(a.href)
-      toast.success('Report downloaded')
+      toast.success('报告已下载')
     } catch {
-      toast.error('Failed to download report')
+      toast.error('下载报告失败')
     }
   }, [toast])
 
@@ -92,7 +103,7 @@ export default function ReportsPage() {
       <div className={styles.header}>
         <div className={styles.headerLeft}>
           <FileText size={18} />
-          <h2 className={styles.title}>Pentest Reports</h2>
+          <h2 className={styles.title}>渗透测试报告</h2>
           <span className={styles.count}>{reports.length}</span>
         </div>
 
@@ -104,7 +115,7 @@ export default function ReportsPage() {
               onChange={(e) => setSelectedProjectId(e.target.value)}
               disabled={isGenerating}
             >
-              <option value="">Select project...</option>
+              <option value="">选择项目…</option>
               {projects?.map(p => (
                 <option key={p.id} value={p.id}>
                   {p.name}{p.targetDomain ? ` (${p.targetDomain})` : ''}
@@ -121,12 +132,12 @@ export default function ReportsPage() {
             {isGenerating ? (
               <>
                 <Loader2 size={13} className={styles.spin} />
-                <span>Generating...</span>
+                <span>生成中…</span>
               </>
             ) : (
               <>
                 <FileText size={13} />
-                <span>Generate Report</span>
+                <span>生成报告</span>
               </>
             )}
           </button>
@@ -143,14 +154,14 @@ export default function ReportsPage() {
       {isLoading ? (
         <div className={styles.empty}>
           <Loader2 size={20} className={styles.spin} />
-          <span>Loading reports...</span>
+          <span>正在加载报告…</span>
         </div>
       ) : reports.length === 0 ? (
         <div className={styles.empty}>
           <FileText size={32} className={styles.emptyIcon} />
-          <p className={styles.emptyTitle}>No reports generated yet</p>
+          <p className={styles.emptyTitle}>暂无报告</p>
           <p className={styles.emptyHint}>
-            Select a project above and generate a professional pentest report from your graph data, vulnerability findings, and remediations.
+            选择上方项目，即可基于图谱数据、漏洞发现与修复建议生成专业渗透测试报告。
           </p>
         </div>
       ) : (
@@ -161,7 +172,7 @@ export default function ReportsPage() {
                 <div className={styles.rowTitle}>
                   <span className={styles.reportTitle}>{report.title}</span>
                   {report.hasNarratives && (
-                    <span className={styles.narrativeBadge} title="Includes LLM-generated narratives">
+                    <span className={styles.narrativeBadge} title="包含 LLM 生成的叙述">
                       <Sparkles size={10} />
                       AI
                     </span>
@@ -184,36 +195,36 @@ export default function ReportsPage() {
                     <>
                       <span className={styles.sep}>|</span>
                       <span className={`${styles.riskBadge} ${riskClass(report.metrics.riskLabel)}`}>
-                        {report.metrics.riskScore}/100 {report.metrics.riskLabel}
+                        {report.metrics.riskScore}/100 {formatRiskLabel(report.metrics.riskLabel)}
                       </span>
                     </>
                   )}
                   {report.metrics.totalVulnerabilities != null && (
                     <>
                       <span className={styles.sep}>|</span>
-                      <span>{report.metrics.totalVulnerabilities} vulns</span>
+                      <span>{report.metrics.totalVulnerabilities} 个漏洞</span>
                     </>
                   )}
                   {(report.metrics.criticalCount ?? 0) > 0 && (
                     <span className={styles.criticalCount}>
-                      {report.metrics.criticalCount} critical
+                      {report.metrics.criticalCount} 严重
                     </span>
                   )}
                   {(report.metrics.highCount ?? 0) > 0 && (
                     <span className={styles.highCount}>
-                      {report.metrics.highCount} high
+                      {report.metrics.highCount} 高危
                     </span>
                   )}
                   {report.metrics.totalRemediations != null && report.metrics.totalRemediations > 0 && (
                     <>
                       <span className={styles.sep}>|</span>
-                      <span>{report.metrics.totalRemediations} remediations</span>
+                      <span>{report.metrics.totalRemediations} 个修复项</span>
                     </>
                   )}
                   {(report.metrics.exploitableCount ?? 0) > 0 && (
                     <>
                       <span className={styles.sep}>|</span>
-                      <span className={styles.exploitCount}>{report.metrics.exploitableCount} exploitable</span>
+                      <span className={styles.exploitCount}>{report.metrics.exploitableCount} 可利用</span>
                     </>
                   )}
                 </div>
@@ -222,14 +233,14 @@ export default function ReportsPage() {
                 <button
                   className={styles.actionBtn}
                   onClick={() => handleDownload(report)}
-                  title="Download report"
+                  title="下载报告"
                 >
                   <Download size={14} />
                 </button>
                 <button
                   className={styles.actionBtn}
                   onClick={() => handleOpen(report)}
-                  title="Open in new tab"
+                  title="在新标签页打开"
                 >
                   <ExternalLink size={14} />
                 </button>
@@ -240,20 +251,20 @@ export default function ReportsPage() {
                       onClick={() => handleDelete(report.projectId, report.id)}
                       disabled={isDeleting}
                     >
-                      Delete
+                      删除
                     </button>
                     <button
                       className={styles.confirmNo}
                       onClick={() => setDeleteConfirm(null)}
                     >
-                      Cancel
+                      取消
                     </button>
                   </div>
                 ) : (
                   <button
                     className={`${styles.actionBtn} ${styles.deleteBtn}`}
                     onClick={() => setDeleteConfirm(report.id)}
-                    title="Delete report"
+                    title="删除报告"
                   >
                     <Trash2 size={14} />
                   </button>

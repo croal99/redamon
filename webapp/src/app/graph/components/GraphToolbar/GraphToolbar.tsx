@@ -204,9 +204,9 @@ export function GraphToolbar({
       {stealthMode && (
         <>
           <div className={styles.divider} />
-          <div className={styles.stealthBadge} title="Stealth Mode is active — passive/low-noise techniques only">
+          <div className={styles.stealthBadge} title="隐身模式已启用 — 仅使用被动/低噪声手段">
             <StealthIcon size={12} />
-            <span>Stealth</span>
+            <span>隐身</span>
           </div>
         </>
       )}
@@ -214,7 +214,7 @@ export function GraphToolbar({
       {roeEnabled && (
         <>
           <div className={styles.divider} />
-          <div className={styles.roeBadge} title="Rules of Engagement are active — guardrails enforced on recon and agent">
+          <div className={styles.roeBadge} title="交战规则已启用 — 侦察与代理将遵循护栏限制">
             <Shield size={12} />
             <span>RoE</span>
           </div>
@@ -226,14 +226,14 @@ export function GraphToolbar({
         className={`${styles.emergencyPauseButton} ${isEmergencyPausing ? styles.emergencyPauseButtonActive : ''}`}
         onClick={onEmergencyPauseAll}
         disabled={!isAnyPipelineRunning && !isEmergencyPausing}
-        title="EMERGENCY PAUSE — Freeze all running containers immediately. Use if scanning or exploiting unwanted targets."
+        title="紧急暂停 — 立即冻结所有运行中的容器。如正在扫描/利用到非预期目标，请使用。"
       >
         {isEmergencyPausing ? (
           <Loader2 size={14} className={styles.spinner} />
         ) : (
           <ShieldAlert size={14} />
         )}
-        <span>{isEmergencyPausing ? 'PAUSING...' : 'PAUSE ALL'}</span>
+        <span>{isEmergencyPausing ? '暂停中…' : '全部暂停'}</span>
       </button>
 
       {(tunnelStatus?.ngrok?.active || tunnelStatus?.chisel?.active) && (
@@ -264,21 +264,21 @@ export function GraphToolbar({
                 className={`${styles.reconButton} ${isReconActive ? styles.reconButtonActive : ''}`}
                 onClick={isReconPaused ? onResumeRecon : onStartRecon}
                 disabled={isReconRunning}
-                title={isReconStopping ? 'Stopping...' : isReconRunning ? 'Recon in progress...' : isReconPaused ? 'Resume Recon' : 'Start Reconnaissance'}
+                title={isReconStopping ? '正在停止…' : isReconRunning ? '侦察进行中…' : isReconPaused ? '继续侦察' : '启动侦察'}
               >
                 {isReconRunning ? (
                   <Loader2 size={14} className={styles.spinner} />
                 ) : (
                   <Play size={14} />
                 )}
-                <span>{isReconStopping ? 'Stopping...' : isReconBusy ? 'Running...' : isReconPaused ? 'Resume' : 'Start Recon Pipeline'}</span>
+                <span>{isReconStopping ? '正在停止…' : isReconBusy ? '运行中…' : isReconPaused ? '继续' : '开始侦察'}</span>
               </button>
 
               {isReconBusy && (
                 <button
                   className={styles.pauseButton}
                   onClick={onPauseRecon}
-                  title="Pause Recon"
+                  title="暂停侦察"
                 >
                   <Pause size={14} />
                 </button>
@@ -289,7 +289,7 @@ export function GraphToolbar({
                   className={styles.stopButton}
                   onClick={onStopRecon}
                   disabled={isReconStopping}
-                  title="Stop Recon"
+                  title="停止侦察"
                 >
                   <Square size={14} />
                 </button>
@@ -299,7 +299,7 @@ export function GraphToolbar({
                 <button
                   className={`${styles.logsButton} ${isLogsOpen ? styles.logsButtonActive : ''}`}
                   onClick={onToggleLogs}
-                  title="View Logs"
+                  title="查看日志"
                 >
                   <Terminal size={14} />
                 </button>
@@ -309,7 +309,7 @@ export function GraphToolbar({
                 className={styles.downloadButton}
                 onClick={onDownloadJSON}
                 disabled={!hasReconData || isReconActive}
-                title={hasReconData ? 'Download Recon JSON' : 'No data available'}
+                title={hasReconData ? '下载侦察 JSON' : '暂无数据'}
               >
                 <Download size={14} />
               </button>
@@ -323,18 +323,18 @@ export function GraphToolbar({
                 disabled={!gvmAvailable || isGvmRunning || (!hasReconData && !isGvmPaused) || (stealthMode && !isGvmPaused)}
                 title={
                   !gvmAvailable
-                    ? 'GVM is not installed. Run ./redamon.sh install --gvm to enable vulnerability scanning'
+                    ? '未安装 GVM。运行 ./redamon.sh install --gvm 以启用漏洞扫描'
                     : stealthMode && !isGvmPaused
-                    ? 'GVM scanning is disabled in Stealth Mode (generates ~50,000 active probes per target)'
+                    ? '隐身模式下已禁用 GVM 扫描（每个目标约产生 50,000 次主动探测）'
                     : !hasReconData && !isGvmPaused
-                    ? 'Run recon first'
+                    ? '请先运行侦察'
                     : isGvmStopping
-                    ? 'Stopping...'
+                    ? '正在停止…'
                     : isGvmRunning
-                    ? 'GVM scan in progress...'
+                    ? 'GVM 扫描进行中…'
                     : isGvmPaused
-                    ? 'Resume GVM Scan'
-                    : 'Start GVM Vulnerability Scan'
+                    ? '继续 GVM 扫描'
+                    : '启动 GVM 漏洞扫描'
                 }
               >
                 {isGvmRunning ? (
@@ -342,14 +342,14 @@ export function GraphToolbar({
                 ) : (
                   <Shield size={14} />
                 )}
-                <span>{isGvmStopping ? 'Stopping...' : isGvmBusy ? 'Scanning...' : isGvmPaused ? 'Resume' : 'GVM Scan'}</span>
+                <span>{isGvmStopping ? '正在停止…' : isGvmBusy ? '扫描中…' : isGvmPaused ? '继续' : 'GVM 扫描'}</span>
               </button>
 
               {isGvmBusy && (
                 <button
                   className={styles.pauseButton}
                   onClick={onPauseGvm}
-                  title="Pause GVM Scan"
+                  title="暂停 GVM 扫描"
                 >
                   <Pause size={14} />
                 </button>
@@ -360,7 +360,7 @@ export function GraphToolbar({
                   className={styles.stopButton}
                   onClick={onStopGvm}
                   disabled={isGvmStopping}
-                  title="Stop GVM Scan"
+                  title="停止 GVM 扫描"
                 >
                   <Square size={14} />
                 </button>
@@ -370,7 +370,7 @@ export function GraphToolbar({
                 <button
                   className={`${styles.logsButton} ${isGvmLogsOpen ? styles.logsButtonActive : ''}`}
                   onClick={onToggleGvmLogs}
-                  title="View GVM Logs"
+                  title="查看 GVM 日志"
                 >
                   <Terminal size={14} />
                 </button>
@@ -380,7 +380,7 @@ export function GraphToolbar({
                 className={styles.downloadButton}
                 onClick={onDownloadGvmJSON}
                 disabled={!hasGvmData || isGvmActive}
-                title={hasGvmData ? 'Download GVM JSON' : 'No GVM data available'}
+                title={hasGvmData ? '下载 GVM JSON' : '暂无 GVM 数据'}
               >
                 <Download size={14} />
               </button>
@@ -391,14 +391,14 @@ export function GraphToolbar({
               <button
                 className={`${styles.githubHuntButton} ${(isGithubHuntActive || isTrufflehogActive) ? styles.githubHuntButtonActive : ''}`}
                 onClick={onToggleOtherScansModal}
-                title="Other Scans (GitHub Hunt, TruffleHog)"
+                title="其他扫描（GitHub Hunt、TruffleHog）"
               >
                 {(isGithubHuntRunning || isTrufflehogRunning) ? (
                   <Loader2 size={14} className={styles.spinner} />
                 ) : (
                   <Github size={14} />
                 )}
-                <span>{(isGithubHuntBusy || isTrufflehogBusy) ? 'Scanning...' : 'Other Scans'}</span>
+                <span>{(isGithubHuntBusy || isTrufflehogBusy) ? '扫描中…' : '其他扫描'}</span>
               </button>
             </div>
           </>
@@ -410,12 +410,12 @@ export function GraphToolbar({
             {agentActiveCount > 0 ? (
               <div className={styles.agentActiveBadge}>
                 <span className={styles.agentDot} />
-                <span>{agentActiveCount} active</span>
+                <span>{agentActiveCount} 个运行中</span>
               </div>
             ) : (
               <div className={styles.agentIdleBadge}>
                 <MessageSquare size={10} />
-                <span>{totalConversations} chat{totalConversations !== 1 ? 's' : ''}</span>
+                <span>{totalConversations} 个会话</span>
               </div>
             )}
             {runningAgent && (() => {
@@ -429,7 +429,7 @@ export function GraphToolbar({
                   <PhaseIcon size={10} />
                   <span>{runningAgent.currentPhase.replace('_', ' ')}</span>
                   {runningAgent.iterationCount > 0 && (
-                    <span className={styles.agentStep}>Step {runningAgent.iterationCount}</span>
+                    <span className={styles.agentStep}>步骤 {runningAgent.iterationCount}</span>
                   )}
                 </div>
               )
@@ -440,12 +440,12 @@ export function GraphToolbar({
         <button
           className={`${styles.aiButton} ${isAIOpen ? styles.aiButtonActive : ''}`}
           onClick={onToggleAI}
-          aria-label="Toggle AI Agent"
+          aria-label="切换 AI 代理"
           aria-expanded={isAIOpen}
-          title="AI Agent"
+          title="AI 代理"
         >
           <Bot size={14} />
-          <span>AI Agent</span>
+          <span>AI 代理</span>
         </button>
       </div>
     </div>

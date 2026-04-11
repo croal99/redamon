@@ -3,8 +3,8 @@
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  background: rgba(139, 92, 246, 0.05);
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  background: rgba(0, 212, 255, 0.04);
+  border: 1px solid rgba(0, 212, 255, 0.2);
   border-radius: 8px;
   margin: 0;
   transition: all 0.2s ease;
@@ -23,8 +23,8 @@
 }
 
 .card:hover {
-  border-color: rgba(139, 92, 246, 0.4);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.1);
+  border-color: rgba(0, 212, 255, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.1);
 }
 
 .iconContainer {
@@ -35,15 +35,15 @@
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  background: rgba(139, 92, 246, 0.1);
+  background: rgba(0, 212, 255, 0.1);
 }
 
 .iconNormal {
-  color: #8b5cf6;
+  color: var(--accent-primary);
 }
 
 .iconDanger {
-  color: #ef4444;
+  color: var(--status-error);
 }
 
 .info {
@@ -76,7 +76,7 @@
 
 .source {
   padding: 1px 6px;
-  background: rgba(139, 92, 246, 0.1);
+  background: rgba(0, 212, 255, 0.1);
   border-radius: 4px;
 }
 
@@ -93,17 +93,17 @@
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  border: 1px solid rgba(139, 92, 246, 0.3);
+  border: 1px solid rgba(0, 212, 255, 0.3);
   background: transparent;
-  color: #8b5cf6;
+  color: var(--accent-primary);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .downloadButton:hover:not(:disabled) {
-  background: #8b5cf6;
+  background: var(--accent-primary);
   color: white;
-  border-color: #8b5cf6;
+  border-color: var(--accent-primary);
 }
 
 .downloadButton:disabled {
@@ -112,14 +112,14 @@
 }
 
 .downloaded {
-  color: #10b981;
-  border-color: rgba(16, 185, 129, 0.3);
+  color: var(--status-success);
+  border-color: rgba(0, 255, 136, 0.3);
 }
 
 .downloaded:hover:not(:disabled) {
-  background: #10b981;
+  background: var(--status-success);
   color: white;
-  border-color: #10b981;
+  border-color: var(--status-success);
 }
 
 .spinner {
@@ -141,5 +141,5 @@
   align-items: center;
   gap: 4px;
   font-size: 10px;
-  color: #ef4444;
+  color: var(--status-error);
 }
