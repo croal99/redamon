@@ -62,57 +62,28 @@ export default function LoginPage() {
   return (
     <div className={styles.page}>
       <div className={styles.bg} aria-hidden />
+      <div className={styles.grid} aria-hidden />
+      <div className={styles.scan} aria-hidden>
+        <div className={styles.scanLine} />
+      </div>
 
       <div className={styles.content}>
-        <section className={styles.hero}>
+        <header className={styles.header}>
           <div className={styles.brand}>
-            <div className={styles.brandMark} aria-hidden />
+            <div className={styles.brandMark} aria-hidden>
+              <Shield size={24} className={styles.brandMarkIcon} />
+            </div>
             <div className={styles.brandText}>
               <div className={styles.brandName}>合盛智核</div>
-              <div className={styles.brandSub}>RedAmon 安全态势平台</div>
+              <div className={styles.brandSub}>高级渗透平台</div>
             </div>
           </div>
-
-          <h1 className={styles.title}>登录</h1>
-          <p className={styles.subtitle}>使用账号密码完成认证，进入图谱、洞察与报告工作台。</p>
-
-          <div className={styles.featureGrid}>
-            <div className={styles.feature}>
-              <Crosshair size={16} className={styles.featureIcon} />
-              <div className={styles.featureText}>
-                <div className={styles.featureTitle}>图谱与行动</div>
-                <div className={styles.featureDesc}>以图为中心的态势与任务入口</div>
-              </div>
-            </div>
-            <div className={styles.feature}>
-              <TrendingUp size={16} className={styles.featureIcon} />
-              <div className={styles.featureText}>
-                <div className={styles.featureTitle}>趋势与指标</div>
-                <div className={styles.featureDesc}>从项目数据中提炼关键洞察</div>
-              </div>
-            </div>
-            <div className={styles.feature}>
-              <FileText size={16} className={styles.featureIcon} />
-              <div className={styles.featureText}>
-                <div className={styles.featureTitle}>报告沉淀</div>
-                <div className={styles.featureDesc}>结构化导出，便于交付复盘</div>
-              </div>
-            </div>
-            <div className={styles.feature}>
-              <Shield size={16} className={styles.featureIcon} />
-              <div className={styles.featureText}>
-                <div className={styles.featureTitle}>安全认证</div>
-                <div className={styles.featureDesc}>统一登录与会话管理能力</div>
-              </div>
-            </div>
-          </div>
-        </section>
+        </header>
 
         <section className={styles.card}>
           <div className={styles.cardHeader}>
             <div>
               <div className={styles.cardTitle}>欢迎回来</div>
-              <div className={styles.cardSubtitle}>请输入账号密码以访问平台</div>
             </div>
           </div>
 
@@ -164,12 +135,45 @@ export default function LoginPage() {
             </div>
 
             <div className={styles.actions}>
-              <div className={styles.hint}>登录成功后将自动跳转到 {next}</div>
+              <div className={styles.hint}>使用账号密码完成认证，进入合盛智核</div>
               <button className="primaryButton" type="submit" disabled={submitting}>
                 {submitting ? '正在认证…' : '登录'}
               </button>
             </div>
           </form>
+        </section>
+
+        <section className={styles.features} aria-hidden>
+          <div className={styles.featureGrid}>
+            <div className={styles.feature}>
+              <Crosshair size={16} className={styles.featureIcon} />
+              <div className={styles.featureText}>
+                <div className={styles.featureTitle}>图谱与行动</div>
+                <div className={styles.featureDesc}>以图为中心的态势与任务入口</div>
+              </div>
+            </div>
+            <div className={styles.feature}>
+              <TrendingUp size={16} className={styles.featureIcon} />
+              <div className={styles.featureText}>
+                <div className={styles.featureTitle}>趋势与指标</div>
+                <div className={styles.featureDesc}>从项目数据中提炼关键洞察</div>
+              </div>
+            </div>
+            <div className={styles.feature}>
+              <FileText size={16} className={styles.featureIcon} />
+              <div className={styles.featureText}>
+                <div className={styles.featureTitle}>报告沉淀</div>
+                <div className={styles.featureDesc}>结构化导出，便于交付复盘</div>
+              </div>
+            </div>
+            <div className={styles.feature}>
+              <Shield size={16} className={styles.featureIcon} />
+              <div className={styles.featureText}>
+                <div className={styles.featureTitle}>安全认证</div>
+                <div className={styles.featureDesc}>统一登录与会话管理能力</div>
+              </div>
+            </div>
+          </div>
         </section>
       </div>
     </div>

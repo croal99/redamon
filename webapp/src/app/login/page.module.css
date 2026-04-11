@@ -15,45 +15,176 @@
     radial-gradient(circle at 88% 76%, rgba(59, 130, 246, 0.18), transparent 56%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 32%);
   pointer-events: none;
+  animation: bgFloat 10s ease-in-out infinite;
+}
+
+.grid {
+  position: absolute;
+  inset: -40px;
+  pointer-events: none;
+  opacity: 0.42;
+  background-image: linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px);
+  background-size: 46px 46px;
+  animation: gridDrift 10s linear infinite;
+  mask-image: radial-gradient(circle at 50% 35%, rgba(0, 0, 0, 0.95), transparent 72%);
+}
+
+.scan {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.scanLine {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  height: 2px;
+  top: 0;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.45), transparent);
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.35), 0 0 42px rgba(10, 132, 255, 0.22);
+  animation: scanSweep 4.8s ease-in-out infinite;
+}
+
+@keyframes bgFloat {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: saturate(1) brightness(1);
+  }
+  50% {
+    transform: scale(1.03);
+    filter: saturate(1.15) brightness(1.06);
+  }
+}
+
+@keyframes gridDrift {
+  from {
+    background-position: 0 0, 0 0;
+  }
+  to {
+    background-position: 0 260px, 260px 0;
+  }
+}
+
+@keyframes scanSweep {
+  0% {
+    transform: translateY(-20%);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(120vh);
+    opacity: 0;
+  }
+}
+
+.scan::before,
+.scan::after {
+  content: '';
+  position: absolute;
+  left: -12%;
+  right: -12%;
+  height: 1px;
+  top: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.16), 0 0 32px rgba(0, 212, 255, 0.14);
+  animation: scanSweepAlt 7.2s ease-in-out infinite;
+  opacity: 0.9;
+}
+
+.scan::after {
+  background: linear-gradient(90deg, transparent, rgba(10, 132, 255, 0.3), transparent);
+  box-shadow: 0 0 18px rgba(10, 132, 255, 0.22), 0 0 44px rgba(0, 212, 255, 0.16);
+  animation-duration: 5.6s;
+  animation-delay: 1.2s;
+}
+
+@keyframes scanSweepAlt {
+  0% {
+    transform: translateY(-30%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(120vh);
+    opacity: 0;
+  }
 }
 
 .content {
   position: relative;
   width: 100%;
-  max-width: 980px;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-6);
-  align-items: start;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  align-items: stretch;
 }
 
 @media (min-width: 900px) {
   .content {
-    grid-template-columns: minmax(0, 1fr) 420px;
-    align-items: stretch;
+    max-width: 520px;
   }
 }
 
-.hero {
+.header {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-2);
+  align-items: center;
+  gap: var(--space-2);
+  text-align: center;
+  padding: var(--space-2) var(--space-2) 0;
 }
 
 .brand {
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  justify-content: center;
 }
 
 .brandMark {
-  width: 36px;
-  height: 36px;
+  width: 48px;
+  height: 48px;
   border-radius: var(--radius-lg);
-  border: 1px solid var(--border-default);
-  box-shadow: var(--shadow-md);
-  background: radial-gradient(circle at 35% 30%, rgba(220, 38, 38, 0.95), rgba(59, 130, 246, 0.6));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #00d4ff, #0a84ff);
+  animation: brandPulseCyan 1.8s ease-in-out infinite;
+}
+
+.brandMarkIcon {
+  color: var(--bg-primary);
+}
+
+@keyframes brandPulseCyan {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.04);
+    filter: brightness(1.08);
+  }
 }
 
 .brandText {
@@ -88,6 +219,10 @@
   color: var(--text-secondary);
   font-size: var(--text-sm);
   line-height: 1.6;
+}
+
+.features {
+  margin-top: var(--space-2);
 }
 
 .featureGrid {
@@ -222,4 +357,3 @@
   top: 50%;
   transform: translateY(-50%);
 }
-
