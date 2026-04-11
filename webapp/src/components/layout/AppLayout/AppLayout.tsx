@@ -14,10 +14,11 @@ interface AppLayoutProps {
 export function AppLayout({ children }: AppLayoutProps) {
   const pathname = usePathname()
   const isAuthPage = pathname === '/login' || pathname === '/logout'
+  const hideHeader = isAuthPage || pathname === '/' || pathname === '/home'
 
   return (
     <div className={styles.layout}>
-      {!isAuthPage && <GlobalHeader />}
+      {!hideHeader && <GlobalHeader />}
       <main className={styles.main}>
         {isAuthPage ? children : <DisclaimerGate>{children}</DisclaimerGate>}
       </main>

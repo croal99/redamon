@@ -19,6 +19,8 @@ type WebappLoginResponse = AuthTokenResponse & {
   webapp_user_id: string
 }
 
+const AUTH_API_URL = process.env.AUTH_API_URL || process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://localhost:8100'
+
 function normalizeEmail(email: string) {
   return email.trim().toLowerCase()
 }
@@ -54,8 +56,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '用户名和密码不能为空' }, { status: 400 })
     }
 
-    const authUrl = new URL('/api/auth/login', request.url)
-    const authRes = await fetch(authUrl, {
+    const authRes = await fetch(`${AUTH_API_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),

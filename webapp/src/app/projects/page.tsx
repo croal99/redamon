@@ -136,42 +136,6 @@ export default function ProjectsPage() {
         </div>
       </div>
 
-      <div className={styles.userSelector}>
-        <div className={styles.userSelectorLabel}>
-          <Users size={14} />
-          <span>用户：</span>
-        </div>
-        <select
-          className="select"
-          value={userId || ''}
-          onChange={(e) => setUserId(e.target.value || null)}
-        >
-          <option value="">选择用户</option>
-          {users?.map((user) => (
-            <option key={user.id} value={user.id}>
-              {user.name} ({user.email})
-            </option>
-          ))}
-        </select>
-        <button
-          className="secondaryButton"
-          onClick={() => setShowUserModal(true)}
-        >
-          <Plus size={12} />
-          新建用户
-        </button>
-        {userId && (
-          <button
-            className="iconButton"
-            onClick={handleDeleteUser}
-            disabled={deleteUserMutation.isPending}
-            title="删除所选用户"
-          >
-            <Trash2 size={14} />
-          </button>
-        )}
-      </div>
-
       {isLoading ? (
         <div className={styles.loading}>加载中…</div>
       ) : projects && projects.length > 0 ? (
@@ -217,53 +181,6 @@ export default function ProjectsPage() {
         />
       )}
 
-      {showUserModal && (
-        <div className={styles.modalOverlay} onClick={() => setShowUserModal(false)}>
-          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <h2 className={styles.modalTitle}>新建用户</h2>
-            <form onSubmit={handleCreateUser}>
-              <div className="formGroup">
-                <label className="formLabel formLabelRequired">名称</label>
-                <input
-                  type="text"
-                  className="textInput"
-                  value={newUserName}
-                  onChange={(e) => setNewUserName(e.target.value)}
-                  placeholder="请输入用户名"
-                  required
-                />
-              </div>
-              <div className="formGroup">
-                <label className="formLabel formLabelRequired">邮箱</label>
-                <input
-                  type="email"
-                  className="textInput"
-                  value={newUserEmail}
-                  onChange={(e) => setNewUserEmail(e.target.value)}
-                  placeholder="请输入邮箱地址"
-                  required
-                />
-              </div>
-              <div className={styles.modalActions}>
-                <button
-                  type="button"
-                  className="secondaryButton"
-                  onClick={() => setShowUserModal(false)}
-                >
-                  取消
-                </button>
-                <button
-                  type="submit"
-                  className="primaryButton"
-                  disabled={createUserMutation.isPending}
-                >
-                  {createUserMutation.isPending ? '创建中…' : '创建用户'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

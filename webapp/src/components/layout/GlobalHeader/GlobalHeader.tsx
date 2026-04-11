@@ -9,12 +9,13 @@ import { useAuth } from '@/providers/AuthProvider'
 import { ProjectSelector } from './ProjectSelector'
 import { UserSelector } from './UserSelector'
 import styles from './GlobalHeader.module.css'
+import { UserInfo } from './UserInfo'
 
 const coreNav = [
-  { label: '红区', href: '/graph', icon: <Crosshair size={14} /> },
-  { label: 'CypherFix', href: '/cypherfix', icon: <Shield size={14} /> },
-  { label: '洞察', href: '/insights', icon: <TrendingUp size={14} /> },
-  { label: '报告', href: '/reports', icon: <FileText size={14} /> },
+  { label: '渗透分析', href: '/graph', icon: <Crosshair size={14} /> },
+  { label: '漏洞利用', href: '/cypherfix', icon: <Shield size={14} /> },
+  { label: '安全洞察', href: '/insights', icon: <TrendingUp size={14} /> },
+  { label: '报告中心', href: '/reports', icon: <FileText size={14} /> },
 ]
 
 export function GlobalHeader() {
@@ -24,9 +25,9 @@ export function GlobalHeader() {
   return (
     <header className={styles.header}>
       <Link href="/home" className={styles.logo}>
-        <Image src="/logo.png" alt="RedAmon" width={28} height={28} className={styles.logoImg} />
+        <Image src="/logo.png" alt="合盛智核" width={28} height={28} className={styles.logoImg} />
         <span className={styles.logoText}>
-          <span className={styles.logoAccent}>Red</span>Amon
+          <span className={styles.logoAccent}>智核·</span>星图
         </span>
       </Link>
 
@@ -91,7 +92,7 @@ export function GlobalHeader() {
 
         <div className={styles.divider} />
 
-        <UserSelector />
+        <UserInfo />
 
         <div className={styles.divider} />
 

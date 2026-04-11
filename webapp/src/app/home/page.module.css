@@ -2,6 +2,10 @@
   flex: 1;
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-7) var(--space-4);
 }
 
 .bg {
@@ -11,6 +15,7 @@
     radial-gradient(circle at 85% 80%, rgba(99, 102, 241, 0.18), transparent 52%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 30%);
   pointer-events: none;
+  animation: homeBgFloat 12s ease-in-out infinite;
 }
 
 .content {
@@ -19,13 +24,70 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
+  width: 100%;
+  max-width: 1120px;
+  margin: 0;
 }
 
 .hero {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
   gap: var(--space-6);
+  text-align: center;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  justify-content: center;
+}
+
+.brandMark {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #00d4ff, #0a84ff);
+  animation: brandPulseCyan 1.8s ease-in-out infinite;
+}
+
+.brandMarkIcon {
+  color: var(--bg-primary);
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.brandName {
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.brandSub {
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
+}
+
+@keyframes brandPulseCyan {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.04);
+    filter: brightness(1.08);
+  }
 }
 
 .title {
@@ -41,6 +103,17 @@
   color: var(--text-secondary);
   font-size: var(--text-sm);
   line-height: 1.6;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.actions {
+  margin-top: var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
 }
 
 .grid {
@@ -125,3 +198,111 @@
   font-family: var(--font-mono);
 }
 
+/* Dynamic overlays */
+.bg::before,
+.bg::after {
+  content: '';
+  position: absolute;
+  inset: -30%;
+  pointer-events: none;
+  filter: blur(36px);
+  opacity: 0.7;
+}
+
+.bg::before {
+  background:
+    radial-gradient(circle at 18% 28%, rgba(0, 212, 255, 0.32), transparent 56%),
+    radial-gradient(circle at 78% 22%, rgba(10, 132, 255, 0.28), transparent 56%),
+    radial-gradient(circle at 58% 78%, rgba(220, 38, 38, 0.22), transparent 58%);
+  animation: homeAuroraShift 16s ease-in-out infinite;
+}
+
+.bg::after {
+  background: conic-gradient(
+    from 180deg at 50% 45%,
+    rgba(0, 212, 255, 0.16),
+    rgba(10, 132, 255, 0.12),
+    rgba(255, 255, 255, 0.06),
+    rgba(220, 38, 38, 0.1),
+    rgba(0, 212, 255, 0.16)
+  );
+  mix-blend-mode: screen;
+  opacity: 0.45;
+  animation: homeAuroraSpin 22s linear infinite;
+}
+
+.gridOverlay {
+  position: absolute;
+  inset: -40px;
+  pointer-events: none;
+  opacity: 0.35;
+  background-image: linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px);
+  background-size: 52px 52px;
+  animation: homeGridDrift 18s linear infinite;
+  mask-image: radial-gradient(circle at 55% 35%, rgba(0, 0, 0, 0.9), transparent 74%);
+}
+
+.scan {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.scanLine {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  height: 2px;
+  top: 0;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.42), transparent);
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.3), 0 0 42px rgba(10, 132, 255, 0.2);
+  animation: homeScanSweep 6.2s ease-in-out infinite;
+}
+
+.noise {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.09;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+  mix-blend-mode: overlay;
+  animation: homeNoiseShift 3.6s steps(2, end) infinite;
+}
+
+@keyframes homeBgFloat {
+  0%, 100% { transform: scale(1); filter: saturate(1) brightness(1); }
+  50% { transform: scale(1.02); filter: saturate(1.1) brightness(1.05); }
+}
+
+@keyframes homeAuroraShift {
+  0% { transform: translate3d(-2%, -1%, 0) scale(1); }
+  50% { transform: translate3d(2%, 1.6%, 0) scale(1.06); }
+  100% { transform: translate3d(-2%, -1%, 0) scale(1); }
+}
+
+@keyframes homeAuroraSpin {
+  from { transform: rotate(0deg) scale(1.02); }
+  to { transform: rotate(360deg) scale(1.02); }
+}
+
+@keyframes homeGridDrift {
+  from { background-position: 0 0, 0 0; }
+  to { background-position: 0 300px, 300px 0; }
+}
+
+@keyframes homeScanSweep {
+  0% { transform: translateY(-20%); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translateY(120vh); opacity: 0; }
+}
+
+@keyframes homeNoiseShift {
+  0% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(-1%, 1%, 0); }
+  100% { transform: translate3d(1%, -1%, 0); }
+}
