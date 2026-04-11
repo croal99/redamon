@@ -22,9 +22,9 @@ export function HakrawlerSection({ data, updateField }: HakrawlerSectionProps) {
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Bug size={16} />
-          Hakrawler Web Crawler
+          Hakrawler Web 爬虫
           <NodeInfoTooltip section="Hakrawler" />
-          <span className={styles.badgeActive}>Active</span>
+          <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           <div onClick={(e) => e.stopPropagation()}>
@@ -43,14 +43,14 @@ export function HakrawlerSection({ data, updateField }: HakrawlerSectionProps) {
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Fast Go-based web crawler for discovering URLs and JavaScript file locations. Complements Katana with a different crawl engine that may find additional endpoints. Uses stdin-based Docker execution.
+            基于 Go 的高速 Web 爬虫，用于发现 URL 与 JavaScript 文件位置。与 Katana 互补（不同爬取引擎可能发现更多端点）。通过 stdin 方式在 Docker 中执行。
           </p>
 
           {data.hakrawlerEnabled && (
             <>
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Crawl Depth</label>
+                  <label className={styles.fieldLabel}>爬取深度</label>
                   <input
                     type="number"
                     className="textInput"
@@ -59,10 +59,10 @@ export function HakrawlerSection({ data, updateField }: HakrawlerSectionProps) {
                     min={1}
                     max={10}
                   />
-                  <span className={styles.fieldHint}>How many links deep to follow</span>
+                  <span className={styles.fieldHint}>跟随链接的层级深度</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Max URLs</label>
+                  <label className={styles.fieldLabel}>最大 URL 数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -70,13 +70,13 @@ export function HakrawlerSection({ data, updateField }: HakrawlerSectionProps) {
                     onChange={(e) => updateField('hakrawlerMaxUrls', parseInt(e.target.value) || 500)}
                     min={1}
                   />
-                  <span className={styles.fieldHint}>Maximum URLs to collect (process killed at limit)</span>
+                  <span className={styles.fieldHint}>最多收集的 URL 数量（达到上限后会终止进程）</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Threads</label>
+                  <label className={styles.fieldLabel}>线程数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -85,10 +85,10 @@ export function HakrawlerSection({ data, updateField }: HakrawlerSectionProps) {
                     min={1}
                     max={20}
                   />
-                  <span className={styles.fieldHint}>Concurrent crawl threads</span>
+                  <span className={styles.fieldHint}>并发爬取线程数</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Timeout (seconds)</label>
+                  <label className={styles.fieldLabel}>超时（秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -96,16 +96,16 @@ export function HakrawlerSection({ data, updateField }: HakrawlerSectionProps) {
                     onChange={(e) => updateField('hakrawlerTimeout', parseInt(e.target.value) || 30)}
                     min={5}
                   />
-                  <span className={styles.fieldHint}>Per-URL crawl timeout</span>
+                  <span className={styles.fieldHint}>单个 URL 的爬取超时</span>
                 </div>
               </div>
 
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Options</h3>
+                <h3 className={styles.subSectionTitle}>选项</h3>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Include Subdomains</span>
-                    <p className={styles.toggleDescription}>Allow crawler to follow links to subdomains of the target. Results are still scope-filtered</p>
+                    <span className={styles.toggleLabel}>包含子域名</span>
+                    <p className={styles.toggleDescription}>允许跟随到目标子域名的链接（结果仍会按范围过滤）</p>
                   </div>
                   <Toggle
                     checked={data.hakrawlerIncludeSubs}
@@ -114,8 +114,8 @@ export function HakrawlerSection({ data, updateField }: HakrawlerSectionProps) {
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Insecure TLS</span>
-                    <p className={styles.toggleDescription}>Skip TLS certificate verification (useful for self-signed certs)</p>
+                    <span className={styles.toggleLabel}>忽略 TLS 校验</span>
+                    <p className={styles.toggleDescription}>跳过 TLS 证书验证（适用于自签名证书）</p>
                   </div>
                   <Toggle
                     checked={data.hakrawlerInsecure}
@@ -125,9 +125,9 @@ export function HakrawlerSection({ data, updateField }: HakrawlerSectionProps) {
               </div>
 
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Custom Headers</h3>
+                <h3 className={styles.subSectionTitle}>自定义请求头</h3>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Request Headers</label>
+                  <label className={styles.fieldLabel}>请求头</label>
                   <textarea
                     className="textarea"
                     value={(data.hakrawlerCustomHeaders ?? []).join('\n')}
@@ -135,12 +135,12 @@ export function HakrawlerSection({ data, updateField }: HakrawlerSectionProps) {
                     placeholder="Cookie: session=abc123&#10;Authorization: Bearer token..."
                     rows={3}
                   />
-                  <span className={styles.fieldHint}>One header per line (e.g., Cookie: value). Sent with every request</span>
+                  <span className={styles.fieldHint}>每行一个请求头（例如：Cookie: value），会随每个请求发送</span>
                 </div>
               </div>
 
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Docker Image</label>
+                <label className={styles.fieldLabel}>Docker 镜像</label>
                 <input
                   type="text"
                   className="textInput"

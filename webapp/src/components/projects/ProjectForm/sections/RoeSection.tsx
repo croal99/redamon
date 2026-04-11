@@ -18,33 +18,42 @@ interface RoeSectionProps {
 }
 
 const ENGAGEMENT_TYPES = [
-  { value: 'external', label: 'External Penetration Test' },
-  { value: 'internal', label: 'Internal Penetration Test' },
-  { value: 'web_app', label: 'Web Application Test' },
-  { value: 'api', label: 'API Security Test' },
-  { value: 'mobile', label: 'Mobile Application Test' },
-  { value: 'physical', label: 'Physical Security Test' },
-  { value: 'social_engineering', label: 'Social Engineering' },
-  { value: 'red_team', label: 'Red Team Engagement' },
+  { value: 'external', label: '外部渗透测试' },
+  { value: 'internal', label: '内部渗透测试' },
+  { value: 'web_app', label: 'Web 应用测试' },
+  { value: 'api', label: 'API 安全测试' },
+  { value: 'mobile', label: '移动应用测试' },
+  { value: 'physical', label: '物理安全测试' },
+  { value: 'social_engineering', label: '社会工程' },
+  { value: 'red_team', label: '红队演练' },
 ]
 
 const FORBIDDEN_CATEGORIES = [
-  { value: 'brute_force', label: 'Credential Testing' },
-  { value: 'dos', label: 'Availability Testing' },
-  { value: 'social_engineering', label: 'Social Engineering' },
-  { value: 'physical', label: 'Physical Access' },
+  { value: 'brute_force', label: '凭据测试' },
+  { value: 'dos', label: '可用性测试' },
+  { value: 'social_engineering', label: '社会工程' },
+  { value: 'physical', label: '物理访问' },
 ]
 
 const DATA_HANDLING_OPTIONS = [
-  { value: 'no_access', label: 'No access to sensitive data' },
-  { value: 'prove_access_only', label: 'Prove access only (no collection)' },
-  { value: 'limited_collection', label: 'Limited collection' },
-  { value: 'full_access', label: 'Full access' },
+  { value: 'no_access', label: '不访问敏感数据' },
+  { value: 'prove_access_only', label: '仅证明可访问（不采集）' },
+  { value: 'limited_collection', label: '有限采集' },
+  { value: 'full_access', label: '完全访问' },
 ]
 
 const COMPLIANCE_OPTIONS = ['PCI-DSS', 'HIPAA', 'SOC2', 'GDPR', 'ISO27001']
 
 const WEEKDAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+const WEEKDAY_LABELS: Record<string, string> = {
+  monday: '周一',
+  tuesday: '周二',
+  wednesday: '周三',
+  thursday: '周四',
+  friday: '周五',
+  saturday: '周六',
+  sunday: '周日',
+}
 
 export function RoeSection({ data, updateField, updateMultipleFields, mode, onFileSelected }: RoeSectionProps) {
   const [isOpen, setIsOpen] = useState(true)
@@ -75,7 +84,7 @@ export function RoeSection({ data, updateField, updateMultipleFields, mode, onFi
 
       if (!response.ok) {
         const err = await response.json().catch(() => ({}))
-        throw new Error(err.error || `Parse failed (${response.status})`)
+        throw new Error(err.error || `解析失败（${response.status}）`)
       }
 
       const parsed = await response.json()
@@ -163,7 +172,7 @@ export function RoeSection({ data, updateField, updateMultipleFields, mode, onFi
       updateMultipleFields(updates)
       setShowParseSuccess(true)
     } catch (err) {
-      setParseError(err instanceof Error ? err.message : 'Failed to parse document')
+      setParseError(err instanceof Error ? err.message : '文档解析失败')
     } finally {
       setIsParsing(false)
     }
@@ -228,7 +237,7 @@ export function RoeSection({ data, updateField, updateMultipleFields, mode, onFi
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Shield size={16} />
-          Rules of Engagement
+          交战规则（RoE）
         </h2>
         <ChevronDown
           size={16}
@@ -241,10 +250,10 @@ export function RoeSection({ data, updateField, updateMultipleFields, mode, onFi
           {/* Document Upload (create mode only) */}
           {mode === 'create' && (
             <div className={styles.subSection}>
-              <h3 className={styles.subSectionTitle}>Upload RoE Document</h3>
+              <h3 className={styles.subSectionTitle}>上传 RoE 文档</h3>
               <p className={styles.sectionDescription}>
-                Upload a Rules of Engagement document (.pdf, .txt, .md, .docx) to auto-populate project settings.
-                The parsed rules will enforce guardrails on both the <strong>recon pipeline</strong> (excluded hosts, rate limits, time windows) and <strong>agentic AI activities</strong> (tool restrictions, severity phase cap, prompt-level instructions).
+                上传交战规则（Rules of Engagement）文档（.pdf/.txt/.md/.docx）以自动填充项目设置。
+                解析后的规则会同时对 <strong>侦察流水线</strong>（排除主机、限速、时间窗口）与 <strong>AI 代理活动</strong>（工具限制、阶段上限、提示词级约束）施加防护规则。
               </p>
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
@@ -268,12 +277,12 @@ export function RoeSection({ data, updateField, updateMultipleFields, mode, onFi
                     {isParsing ? (
                       <>
                         <Loader2 size={14} className={styles.spinner} />
-                        Parsing RoE document...
+                        正在解析 RoE 文档...
                       </>
                     ) : (
                       <>
                         <Upload size={14} />
-                        Upload & Parse Document
+                        上传并解析文档
                       </>
                     )}
                   </button>
@@ -291,13 +300,13 @@ export function RoeSection({ data, updateField, updateMultipleFields, mode, onFi
           <div className={styles.subSection}>
             <div className={styles.fieldRow}>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Enable Rules of Engagement</label>
+                <label className={styles.fieldLabel}>启用交战规则（RoE）</label>
                 <Toggle
                   checked={data.roeEnabled}
                   onChange={(v) => updateField('roeEnabled', v)}
                   disabled={readOnly}
                 />
-                <span className={styles.fieldHint}>When enabled, RoE constraints are enforced on both the agent and recon pipeline.</span>
+                <span className={styles.fieldHint}>启用后，RoE 约束会同时作用于 AI 代理与侦察流水线。</span>
               </div>
             </div>
           </div>
@@ -306,15 +315,15 @@ export function RoeSection({ data, updateField, updateMultipleFields, mode, onFi
             <>
               {/* Client & Engagement */}
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Client & Engagement</h3>
+                <h3 className={styles.subSectionTitle}>客户与任务信息</h3>
                 <div className={styles.fieldRow}>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Client Name</label>
+                    <label className={styles.fieldLabel}>客户名称</label>
                     <input className="textInput" value={data.roeClientName} readOnly={readOnly}
                       onChange={(e) => updateField('roeClientName', e.target.value)} />
                   </div>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Engagement Type</label>
+                    <label className={styles.fieldLabel}>任务类型</label>
                     <select className="select" value={data.roeEngagementType} disabled={readOnly}
                       onChange={(e) => updateField('roeEngagementType', e.target.value)}>
                       {ENGAGEMENT_TYPES.map(t => (
@@ -325,36 +334,36 @@ export function RoeSection({ data, updateField, updateMultipleFields, mode, onFi
                 </div>
                 <div className={styles.fieldRow}>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Contact Name</label>
+                    <label className={styles.fieldLabel}>联系人姓名</label>
                     <input className="textInput" value={data.roeClientContactName} readOnly={readOnly}
                       onChange={(e) => updateField('roeClientContactName', e.target.value)} />
                   </div>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Contact Email</label>
+                    <label className={styles.fieldLabel}>联系人邮箱</label>
                     <input className="textInput" type="email" value={data.roeClientContactEmail} readOnly={readOnly}
                       onChange={(e) => updateField('roeClientContactEmail', e.target.value)} />
                   </div>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Contact Phone</label>
+                    <label className={styles.fieldLabel}>联系电话</label>
                     <input className="textInput" value={data.roeClientContactPhone} readOnly={readOnly}
                       onChange={(e) => updateField('roeClientContactPhone', e.target.value)} />
                   </div>
                 </div>
                 <div className={styles.fieldRow}>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Emergency Contact</label>
+                    <label className={styles.fieldLabel}>紧急联系人</label>
                     <input className="textInput" value={data.roeEmergencyContact} readOnly={readOnly}
                       onChange={(e) => updateField('roeEmergencyContact', e.target.value)} />
                   </div>
                 </div>
                 <div className={styles.fieldRow}>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Start Date</label>
+                    <label className={styles.fieldLabel}>开始日期</label>
                     <input className="textInput" type="date" value={data.roeEngagementStartDate} readOnly={readOnly}
                       onChange={(e) => updateField('roeEngagementStartDate', e.target.value)} />
                   </div>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>End Date</label>
+                    <label className={styles.fieldLabel}>结束日期</label>
                     <input className="textInput" type="date" value={data.roeEngagementEndDate} readOnly={readOnly}
                       onChange={(e) => updateField('roeEngagementEndDate', e.target.value)} />
                   </div>
@@ -363,19 +372,19 @@ export function RoeSection({ data, updateField, updateMultipleFields, mode, onFi
 
               {/* Excluded Hosts */}
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Excluded Hosts</h3>
-                <p className={styles.sectionDescription}>IPs or domains that must NEVER be scanned or tested.</p>
+                <h3 className={styles.subSectionTitle}>排除主机</h3>
+                <p className={styles.sectionDescription}>绝对禁止扫描/测试的 IP 或域名。</p>
                 {(data.roeExcludedHosts || []).map((host, i) => (
                   <div key={i} className={styles.fieldRow} style={{ alignItems: 'flex-end' }}>
                     <div className={styles.fieldGroup} style={{ flex: 1 }}>
-                      <label className={styles.fieldLabel}>Host</label>
+                      <label className={styles.fieldLabel}>主机</label>
                       <input className="textInput" value={host} readOnly={readOnly}
-                        onChange={(e) => updateExcludedHost(i, e.target.value)} placeholder="IP or domain" />
+                        onChange={(e) => updateExcludedHost(i, e.target.value)} placeholder="IP 或域名" />
                     </div>
                     <div className={styles.fieldGroup} style={{ flex: 1 }}>
-                      <label className={styles.fieldLabel}>Reason</label>
+                      <label className={styles.fieldLabel}>原因</label>
                       <input className="textInput" value={(data.roeExcludedHostReasons || [])[i] || ''} readOnly={readOnly}
-                        onChange={(e) => updateExcludedReason(i, e.target.value)} placeholder="Why excluded" />
+                        onChange={(e) => updateExcludedReason(i, e.target.value)} placeholder="排除原因" />
                     </div>
                     {!readOnly && (
                       <button type="button" className="secondaryButton" onClick={() => removeExcludedHost(i)}
@@ -388,17 +397,17 @@ export function RoeSection({ data, updateField, updateMultipleFields, mode, onFi
                 {!readOnly && (
                   <button type="button" className="secondaryButton" onClick={addExcludedHost}
                     style={{ width: 'fit-content', marginTop: 4 }}>
-                    <Plus size={14} /> Add Excluded Host
+                    <Plus size={14} /> 添加排除主机
                   </button>
                 )}
               </div>
 
               {/* Time Window */}
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Time Window</h3>
+                <h3 className={styles.subSectionTitle}>时间窗口</h3>
                 <div className={styles.fieldRow}>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Restrict testing to specific time window</label>
+                    <label className={styles.fieldLabel}>仅允许在特定时间窗口内测试</label>
                     <Toggle
                       checked={data.roeTimeWindowEnabled}
                       onChange={(v) => updateField('roeTimeWindowEnabled', v)}
@@ -410,31 +419,31 @@ export function RoeSection({ data, updateField, updateMultipleFields, mode, onFi
                   <>
                     <div className={styles.fieldRow}>
                       <div className={styles.fieldGroup}>
-                        <label className={styles.fieldLabel}>Timezone</label>
+                        <label className={styles.fieldLabel}>时区</label>
                         <input className="textInput" value={data.roeTimeWindowTimezone} readOnly={readOnly}
                           onChange={(e) => updateField('roeTimeWindowTimezone', e.target.value)}
-                          placeholder="e.g. Europe/Rome, America/New_York" />
+                          placeholder="例如：Asia/Shanghai、Europe/Rome、America/New_York" />
                       </div>
                       <div className={styles.fieldGroup}>
-                        <label className={styles.fieldLabel}>Start Time</label>
+                        <label className={styles.fieldLabel}>开始时间</label>
                         <input className="textInput" type="time" value={data.roeTimeWindowStartTime} readOnly={readOnly}
                           onChange={(e) => updateField('roeTimeWindowStartTime', e.target.value)} />
                       </div>
                       <div className={styles.fieldGroup}>
-                        <label className={styles.fieldLabel}>End Time</label>
+                        <label className={styles.fieldLabel}>结束时间</label>
                         <input className="textInput" type="time" value={data.roeTimeWindowEndTime} readOnly={readOnly}
                           onChange={(e) => updateField('roeTimeWindowEndTime', e.target.value)} />
                       </div>
                     </div>
                     <div className={styles.fieldRow}>
                       <div className={styles.fieldGroup}>
-                        <label className={styles.fieldLabel}>Allowed Days</label>
+                        <label className={styles.fieldLabel}>允许日期</label>
                         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                           {WEEKDAYS.map(day => (
                             <label key={day} style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: readOnly ? 'default' : 'pointer' }}>
                               <input type="checkbox" checked={(data.roeTimeWindowDays || []).includes(day)}
                                 disabled={readOnly} onChange={() => toggleDay(day)} />
-                              {day.charAt(0).toUpperCase() + day.slice(1, 3)}
+                              {(WEEKDAY_LABELS[day] ?? day)}
                             </label>
                           ))}
                         </div>
@@ -446,30 +455,30 @@ export function RoeSection({ data, updateField, updateMultipleFields, mode, onFi
 
               {/* Testing Permissions */}
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Testing Permissions</h3>
+                <h3 className={styles.subSectionTitle}>测试许可</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Allow Availability Testing</label>
+                    <label className={styles.fieldLabel}>允许可用性测试</label>
                     <Toggle checked={data.roeAllowDos} onChange={(v) => updateField('roeAllowDos', v)} disabled={readOnly} />
                   </div>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Allow Social Engineering</label>
+                    <label className={styles.fieldLabel}>允许社会工程</label>
                     <Toggle checked={data.roeAllowSocialEngineering} onChange={(v) => updateField('roeAllowSocialEngineering', v)} disabled={readOnly} />
                   </div>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Allow Physical Access</label>
+                    <label className={styles.fieldLabel}>允许物理访问</label>
                     <Toggle checked={data.roeAllowPhysicalAccess} onChange={(v) => updateField('roeAllowPhysicalAccess', v)} disabled={readOnly} />
                   </div>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Allow Data Exfiltration</label>
+                    <label className={styles.fieldLabel}>允许数据外传</label>
                     <Toggle checked={data.roeAllowDataExfiltration} onChange={(v) => updateField('roeAllowDataExfiltration', v)} disabled={readOnly} />
                   </div>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Allow Account Lockout</label>
+                    <label className={styles.fieldLabel}>允许账号锁定</label>
                     <Toggle checked={data.roeAllowAccountLockout} onChange={(v) => updateField('roeAllowAccountLockout', v)} disabled={readOnly} />
                   </div>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Allow Production Testing</label>
+                    <label className={styles.fieldLabel}>允许对生产环境测试</label>
                     <Toggle checked={data.roeAllowProductionTesting} onChange={(v) => updateField('roeAllowProductionTesting', v)} disabled={readOnly} />
                   </div>
                 </div>
@@ -477,13 +486,13 @@ export function RoeSection({ data, updateField, updateMultipleFields, mode, onFi
 
               {/* Forbidden Categories */}
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Forbidden Techniques</h3>
+                <h3 className={styles.subSectionTitle}>禁止技术</h3>
                 <p style={{ fontSize: '0.8rem', color: '#888', margin: '0 0 8px 0' }}>
-                  Tool-level restrictions are applied via Tool Phase Restrictions in the Tool Matrix tab.
+                  工具级限制请在“工具矩阵（Tool Matrix）”的“工具阶段限制”中配置。
                 </p>
                 <div className={styles.fieldRow}>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Forbidden Categories</label>
+                    <label className={styles.fieldLabel}>禁止类别</label>
                     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                       {FORBIDDEN_CATEGORIES.map(cat => (
                         <label key={cat.value} style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: readOnly ? 'default' : 'pointer' }}>
@@ -499,32 +508,32 @@ export function RoeSection({ data, updateField, updateMultipleFields, mode, onFi
 
               {/* Severity Cap & Rate Limit */}
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Constraints</h3>
+                <h3 className={styles.subSectionTitle}>约束</h3>
                 <div className={styles.fieldRow}>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Max Allowed Phase</label>
+                    <label className={styles.fieldLabel}>允许的最高阶段</label>
                     <select className="select" value={data.roeMaxSeverityPhase} disabled={readOnly}
                       onChange={(e) => updateField('roeMaxSeverityPhase', e.target.value)}>
-                      <option value="informational">Informational only (recon/scanning)</option>
-                      <option value="exploitation">Up to exploitation</option>
-                      <option value="post_exploitation">All phases (no restriction)</option>
+                      <option value="informational">仅信息收集（侦察/扫描）</option>
+                      <option value="exploitation">最多到利用阶段</option>
+                      <option value="post_exploitation">所有阶段（不限制）</option>
                     </select>
                   </div>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Global Max Requests/sec</label>
+                    <label className={styles.fieldLabel}>全局最大请求/秒</label>
                     <input className="textInput" type="number" min={0} value={data.roeGlobalMaxRps} readOnly={readOnly}
                       onChange={(e) => updateField('roeGlobalMaxRps', parseInt(e.target.value) || 0)} />
-                    <span className={styles.fieldHint}>0 = no cap. Caps all tool rate limits.</span>
+                    <span className={styles.fieldHint}>0=不限速。会对所有工具的限速参数生效。</span>
                   </div>
                 </div>
               </div>
 
               {/* Data Handling */}
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Data Handling</h3>
+                <h3 className={styles.subSectionTitle}>数据处理</h3>
                 <div className={styles.fieldRow}>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Sensitive Data Policy</label>
+                    <label className={styles.fieldLabel}>敏感数据策略</label>
                     <select className="select" value={data.roeSensitiveDataHandling} disabled={readOnly}
                       onChange={(e) => updateField('roeSensitiveDataHandling', e.target.value)}>
                       {DATA_HANDLING_OPTIONS.map(opt => (
@@ -533,14 +542,14 @@ export function RoeSection({ data, updateField, updateMultipleFields, mode, onFi
                     </select>
                   </div>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Data Retention (days)</label>
+                    <label className={styles.fieldLabel}>数据保留（天）</label>
                     <input className="textInput" type="number" min={1} value={data.roeDataRetentionDays} readOnly={readOnly}
                       onChange={(e) => updateField('roeDataRetentionDays', parseInt(e.target.value) || 90)} />
                   </div>
                 </div>
                 <div className={styles.fieldRow}>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Require data encryption</label>
+                    <label className={styles.fieldLabel}>必须加密数据</label>
                     <Toggle checked={data.roeRequireDataEncryption}
                       onChange={(v) => updateField('roeRequireDataEncryption', v)} disabled={readOnly} />
                   </div>
@@ -549,40 +558,40 @@ export function RoeSection({ data, updateField, updateMultipleFields, mode, onFi
 
               {/* Communication */}
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Communication</h3>
+                <h3 className={styles.subSectionTitle}>沟通</h3>
                 <div className={styles.fieldRow}>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Status Update Frequency</label>
+                    <label className={styles.fieldLabel}>状态更新频率</label>
                     <select className="select" value={data.roeStatusUpdateFrequency} disabled={readOnly}
                       onChange={(e) => updateField('roeStatusUpdateFrequency', e.target.value)}>
-                      <option value="daily">Daily</option>
-                      <option value="weekly">Weekly</option>
-                      <option value="on_finding">On each finding</option>
-                      <option value="none">None</option>
+                      <option value="daily">每日</option>
+                      <option value="weekly">每周</option>
+                      <option value="on_finding">每次发现</option>
+                      <option value="none">不通知</option>
                     </select>
                   </div>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Notify client on critical findings</label>
+                    <label className={styles.fieldLabel}>重大发现通知客户</label>
                     <Toggle checked={data.roeCriticalFindingNotify}
                       onChange={(v) => updateField('roeCriticalFindingNotify', v)} disabled={readOnly} />
                   </div>
                 </div>
                 <div className={styles.fieldRow}>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Incident Procedure</label>
+                    <label className={styles.fieldLabel}>事件处置流程</label>
                     <textarea className="textInput" rows={3} value={data.roeIncidentProcedure} readOnly={readOnly}
                       onChange={(e) => updateField('roeIncidentProcedure', e.target.value)}
-                      placeholder="What to do if testing causes an incident..." />
+                      placeholder="若测试引发事件，应如何处理……" />
                   </div>
                 </div>
               </div>
 
               {/* Compliance */}
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Compliance & Authorization</h3>
+                <h3 className={styles.subSectionTitle}>合规与授权</h3>
                 <div className={styles.fieldRow}>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Compliance Frameworks</label>
+                    <label className={styles.fieldLabel}>合规框架</label>
                     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                       {COMPLIANCE_OPTIONS.map(fw => (
                         <label key={fw} style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: readOnly ? 'default' : 'pointer' }}>
@@ -598,26 +607,26 @@ export function RoeSection({ data, updateField, updateMultipleFields, mode, onFi
 
               {/* Third-Party Providers */}
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Third-Party Providers</h3>
+                <h3 className={styles.subSectionTitle}>第三方服务商</h3>
                 <div className={styles.fieldRow}>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Cloud/hosting providers with separate authorization</label>
+                    <label className={styles.fieldLabel}>需要单独授权的云/托管服务商</label>
                     <input className="textInput" type="text" readOnly={readOnly}
                       value={(data.roeThirdPartyProviders || []).join(', ')}
                       onChange={(e) => updateField('roeThirdPartyProviders', e.target.value.split(',').map((s: string) => s.trim()).filter(Boolean))}
-                      placeholder="e.g. AWS, Hetzner, Cloudflare" />
+                      placeholder="例如：AWS, Hetzner, Cloudflare" />
                   </div>
                 </div>
               </div>
 
               {/* Notes */}
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Notes</h3>
+                <h3 className={styles.subSectionTitle}>备注</h3>
                 <div className={styles.fieldRow}>
                   <div className={styles.fieldGroup}>
                     <textarea className="textInput" rows={4} value={data.roeNotes} readOnly={readOnly}
                       onChange={(e) => updateField('roeNotes', e.target.value)}
-                      placeholder="Additional rules not captured by fields above..." />
+                      placeholder="未被以上字段覆盖的补充规则……" />
                   </div>
                 </div>
               </div>
@@ -625,7 +634,7 @@ export function RoeSection({ data, updateField, updateMultipleFields, mode, onFi
               {/* Raw RoE Text (always read-only) */}
               {data.roeRawText && (
                 <div className={styles.subSection}>
-                  <h3 className={styles.subSectionTitle}>Extracted Document Text</h3>
+                  <h3 className={styles.subSectionTitle}>提取的文档文本</h3>
                   <div className={styles.fieldRow}>
                     <div className={styles.fieldGroup}>
                       <textarea className="textInput" rows={8} value={data.roeRawText} readOnly
@@ -643,7 +652,7 @@ export function RoeSection({ data, updateField, updateMultipleFields, mode, onFi
     <Modal
       isOpen={showParseSuccess}
       onClose={() => setShowParseSuccess(false)}
-      title="RoE Document Parsed Successfully"
+      title="RoE 文档解析成功"
       size="default"
       footer={
         <button
@@ -660,28 +669,28 @@ export function RoeSection({ data, updateField, updateMultipleFields, mode, onFi
             fontWeight: 500,
           }}
         >
-          OK
+          确定
         </button>
       }
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', fontSize: '0.9rem', lineHeight: 1.6 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-success, #22c55e)' }}>
           <CheckCircle size={20} />
-          <strong>Project settings have been updated from your RoE document.</strong>
+          <strong>已根据 RoE 文档更新项目设置。</strong>
         </div>
 
         <p style={{ margin: 0 }}>
-          The following tabs may have been modified based on the parsed rules. Please review them before saving:
+          以下标签页可能已根据解析结果发生变更。请在保存前检查确认：
         </p>
 
         <ul style={{ margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          <li><strong>Target &amp; Modules</strong> — target domain, IP addresses, scan modules, rate limits</li>
-          <li><strong>Tool Matrix</strong> — Tool Phase Restrictions (forbidden tools are disabled in the matrix)</li>
-          <li><strong>Rules of Engagement</strong> — excluded hosts, time windows, testing permissions, compliance</li>
+          <li><strong>目标与模块</strong> — 目标域名、IP 地址、扫描模块、限速</li>
+          <li><strong>工具矩阵</strong> — 工具阶段限制（被禁止的工具会在矩阵中被禁用）</li>
+          <li><strong>交战规则（RoE）</strong> — 排除主机、时间窗口、测试许可、合规</li>
         </ul>
 
         <p style={{ margin: 0, padding: '10px 12px', background: 'var(--color-surface-alt, rgba(59,130,246,0.08))', borderRadius: '6px', borderLeft: '3px solid var(--color-accent, #3b82f6)' }}>
-          The Rules of Engagement will be enforced on both the <strong>recon pipeline</strong> (host exclusions, rate limits, time windows) and the <strong>agentic AI</strong> (tool restrictions, severity phase cap, prompt instructions).
+          交战规则（RoE）会同时对 <strong>侦察流水线</strong>（主机排除、限速、时间窗口）与 <strong>AI 代理</strong>（工具限制、阶段上限、提示词指令）生效。
         </p>
       </div>
     </Modal>

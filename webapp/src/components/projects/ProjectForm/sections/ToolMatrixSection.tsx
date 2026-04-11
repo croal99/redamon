@@ -14,31 +14,31 @@ const TOOL_KEY_INFO: Record<string, { field: string; label: string; hint: string
   web_search: {
     field: 'tavilyApiKey',
     label: 'Tavily',
-    hint: 'Enables web_search tool for CVE research and exploit lookups',
+    hint: '启用 web_search 工具，用于 CVE 研究与漏洞利用检索',
     url: 'https://app.tavily.com/home',
   },
   shodan: {
     field: 'shodanApiKey',
     label: 'Shodan',
-    hint: 'Enables the shodan tool for internet-wide OSINT (search, host info, DNS, count)',
+    hint: '启用 shodan 工具，用于全网 OSINT（搜索、主机信息、DNS、统计）',
     url: 'https://account.shodan.io/',
   },
   google_dork: {
     field: 'serpApiKey',
     label: 'SerpAPI',
-    hint: 'Enables google_dork tool for Google dorking OSINT (site:, inurl:, filetype:)',
+    hint: '启用 google_dork 工具，用于 Google dork OSINT（site: / inurl: / filetype:）',
     url: 'https://serpapi.com/manage-api-key',
   },
   execute_wpscan: {
     field: 'wpscanApiToken',
     label: 'WPScan',
-    hint: 'Enriches execute_wpscan results with vulnerability data from the WPScan database (free: 25 req/day)',
+    hint: '使用 WPScan 数据库的漏洞数据增强 execute_wpscan 结果（免费：25 次/天）',
     url: 'https://wpscan.com/register',
   },
   execute_gau: {
     field: 'urlscanApiKey',
     label: 'URLScan',
-    hint: 'Enriches execute_gau results with URLScan archived data (free tier available)',
+    hint: '使用 URLScan 归档数据增强 execute_gau 结果（有免费套餐）',
     url: 'https://urlscan.io/user/signup',
   },
 }
@@ -120,7 +120,7 @@ export function ToolMatrixSection({ data, updateField }: ToolMatrixSectionProps)
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Grid3X3 size={16} />
-          Tool Phase Restrictions
+          工具阶段限制
         </h2>
         <ChevronDown
           size={16}
@@ -131,14 +131,14 @@ export function ToolMatrixSection({ data, updateField }: ToolMatrixSectionProps)
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Controls which tools the agent can use in each phase. Check the phases where each tool should be available.
+            控制代理在各阶段可使用的工具。勾选每个工具允许使用的阶段。
           </p>
           <div className={styles.toolPhaseGrid}>
             <div className={styles.toolPhaseHeader}>
-              <span className={styles.toolPhaseHeaderLabel}>Tool</span>
-              <span className={styles.toolPhaseHeaderLabel}>Informational</span>
-              <span className={styles.toolPhaseHeaderLabel}>Exploitation</span>
-              <span className={styles.toolPhaseHeaderLabel}>Post-Exploitation</span>
+              <span className={styles.toolPhaseHeaderLabel}>工具</span>
+              <span className={styles.toolPhaseHeaderLabel}>信息收集</span>
+              <span className={styles.toolPhaseHeaderLabel}>利用</span>
+              <span className={styles.toolPhaseHeaderLabel}>后渗透</span>
             </div>
             {[
               { id: 'query_graph', label: 'query_graph' },
@@ -191,13 +191,13 @@ export function ToolMatrixSection({ data, updateField }: ToolMatrixSectionProps)
                     {needsKey && keyInfo && (
                       <span
                         className={styles.apiKeyMissing}
-                        title={`Set ${keyInfo.label} API key`}
+                        title={`设置 ${keyInfo.label} API Key`}
                         onClick={(e) => { e.stopPropagation(); openKeyModal(tool.id) }}
                         role="button"
                         tabIndex={0}
                       >
                         <AlertTriangle size={12} />
-                        No {keyInfo.label} key — Add
+                        缺少 {keyInfo.label} Key — 添加
                       </span>
                     )}
                   </span>
@@ -225,14 +225,14 @@ export function ToolMatrixSection({ data, updateField }: ToolMatrixSectionProps)
         size="small"
         footer={
           <>
-            <button className="secondaryButton" onClick={closeKeyModal}>Cancel</button>
+            <button className="secondaryButton" onClick={closeKeyModal}>取消</button>
             <button
               className="primaryButton"
               disabled={!keyValue.trim() || keySaving}
               onClick={saveApiKey}
             >
               {keySaving ? <Loader2 size={14} className={styles.spinner} /> : null}
-              Save
+              保存
             </button>
           </>
         }
@@ -246,7 +246,7 @@ export function ToolMatrixSection({ data, updateField }: ToolMatrixSectionProps)
                 type={keyVisible ? 'text' : 'password'}
                 value={keyValue}
                 onChange={e => setKeyValue(e.target.value)}
-                placeholder={`Enter ${modalInfo.label.toLowerCase()} API key`}
+                placeholder={`输入 ${modalInfo.label} API Key`}
                 autoFocus
               />
               <button
@@ -261,7 +261,7 @@ export function ToolMatrixSection({ data, updateField }: ToolMatrixSectionProps)
               {modalInfo.hint}
               {' — '}
               <a href={modalInfo.url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)' }}>
-                Get API key
+                获取 API Key
               </a>
             </span>
           </div>

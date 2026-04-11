@@ -14,11 +14,11 @@ interface ScanModulesSectionProps {
 }
 
 const SCAN_MODULE_OPTIONS = [
-  { id: 'domain_discovery', label: 'Discovery & OSINT', description: 'Subdomain enumeration, Shodan, URLScan', indent: 0 },
-  { id: 'port_scan', label: 'Port Scanning', description: 'Naabu + Masscan port scanners', indent: 1 },
-  { id: 'http_probe', label: 'HTTP Probing', description: 'httpx HTTP analysis', indent: 2 },
-  { id: 'resource_enum', label: 'Resource Enumeration', description: 'Katana, GAU, Kiterunner', indent: 3 },
-  { id: 'vuln_scan', label: 'Vulnerability Scanning', description: 'Nuclei vulnerability scanner', indent: 3 },
+  { id: 'domain_discovery', label: '发现与情报', description: '子域名枚举、Shodan、URLScan', indent: 0 },
+  { id: 'port_scan', label: '端口扫描', description: 'Naabu + Masscan 端口扫描器', indent: 1 },
+  { id: 'http_probe', label: 'HTTP 探测', description: 'httpx HTTP 分析', indent: 2 },
+  { id: 'resource_enum', label: '资源枚举', description: 'Katana、GAU、Kiterunner', indent: 3 },
+  { id: 'vuln_scan', label: '漏洞扫描', description: 'Nuclei 漏洞扫描器', indent: 3 },
 ]
 
 // Module dependency tree: child → parent
@@ -78,7 +78,7 @@ export function ScanModulesSection({ data, updateField }: ScanModulesSectionProp
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Layers size={16} />
-          Scan Modules
+          扫描模块
         </h2>
         <ChevronDown
           size={16}
@@ -89,12 +89,12 @@ export function ScanModulesSection({ data, updateField }: ScanModulesSectionProp
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Control the reconnaissance pipeline by enabling or disabling specific modules. Each module builds upon the results of its parent, creating a comprehensive attack surface map from domain discovery through vulnerability detection.
+            通过启用或禁用模块来控制侦察流程。每个模块都依赖上游模块的输出，从域名发现到漏洞检测逐层构建完整的攻击面视图。
           </p>
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Enabled Modules</h3>
+            <h3 className={styles.subSectionTitle}>已启用模块</h3>
             <p className={styles.fieldHint} style={{ marginBottom: '0.75rem' }}>
-              Modules have dependencies: disabling a parent disables all children
+              模块存在依赖关系：禁用父模块会同时禁用所有子模块
             </p>
             {SCAN_MODULE_OPTIONS.map(module => {
               const isEnabled = data.scanModules.includes(module.id)
@@ -117,7 +117,7 @@ export function ScanModulesSection({ data, updateField }: ScanModulesSectionProp
                     </span>
                     <p className={styles.toggleDescription}>
                       {module.description}
-                      {isDisabledByParent && ' (requires parent module)'}
+                      {isDisabledByParent && '（需要启用父模块）'}
                     </p>
                   </div>
                   <Toggle
@@ -130,12 +130,12 @@ export function ScanModulesSection({ data, updateField }: ScanModulesSectionProp
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>General Options</h3>
+            <h3 className={styles.subSectionTitle}>通用选项</h3>
             <div className={styles.toggleRow} style={{ opacity: 0.7 }}>
               <div>
-                <span className={styles.toggleLabel}>Update Graph Database</span>
+                <span className={styles.toggleLabel}>更新图数据库</span>
                 <p className={styles.toggleDescription}>
-                  Store scan results in Neo4j graph database (always enabled)
+                  将扫描结果写入 Neo4j 图数据库（始终开启）
                 </p>
               </div>
               <Toggle
@@ -146,9 +146,9 @@ export function ScanModulesSection({ data, updateField }: ScanModulesSectionProp
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Use Tor for Recon</span>
+                <span className={styles.toggleLabel}>侦察流量走 Tor</span>
                 <p className={styles.toggleDescription}>
-                  Route reconnaissance traffic through Tor network
+                  将侦察请求通过 Tor 网络进行转发
                 </p>
               </div>
               <Toggle

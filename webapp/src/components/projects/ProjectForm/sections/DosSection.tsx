@@ -15,14 +15,13 @@ export function DosSection({ data, updateField }: DosSectionProps) {
   return (
     <div style={{ padding: 'var(--space-3) var(--space-4)' }}>
       <p className={styles.sectionDescription}>
-        Configure availability testing settings. These control test intensity,
-        duration limits, and whether to perform assessment-only (non-destructive) checks.
+        配置可用性测试参数：控制测试强度、时长上限，以及是否仅进行评估（非破坏性）检查。
       </p>
 
       {/* Max Duration + Max Attempts */}
       <div className={styles.fieldRow}>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>Max Duration (seconds)</label>
+          <label className={styles.fieldLabel}>最长时长（秒）</label>
           <input
             type="number"
             className="textInput"
@@ -32,11 +31,11 @@ export function DosSection({ data, updateField }: DosSectionProps) {
             max={300}
           />
           <span className={styles.fieldHint}>
-            Max seconds per individual availability test. Caps hping3, MSF modules, slowhttptest.
+            单次可用性测试的最长秒数。用于限制 hping3、MSF 模块与 slowhttptest 等工具。
           </span>
         </div>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>Max Attempts</label>
+          <label className={styles.fieldLabel}>最大尝试次数</label>
           <input
             type="number"
             className="textInput"
@@ -46,7 +45,7 @@ export function DosSection({ data, updateField }: DosSectionProps) {
             max={10}
           />
           <span className={styles.fieldHint}>
-            Max different vectors to try before reporting service is resilient.
+            在判定服务具备抗压能力之前，最多尝试多少种不同攻击向量。
           </span>
         </div>
       </div>
@@ -54,7 +53,7 @@ export function DosSection({ data, updateField }: DosSectionProps) {
       {/* Concurrent Connections */}
       <div className={styles.fieldRow}>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>Concurrent Connections</label>
+          <label className={styles.fieldLabel}>并发连接数</label>
           <input
             type="number"
             className="textInput"
@@ -64,7 +63,7 @@ export function DosSection({ data, updateField }: DosSectionProps) {
             max={10000}
           />
           <span className={styles.fieldHint}>
-            Connections for app-layer testing (slowloris sockets, slowhttptest -c). Controls intensity.
+            用于应用层测试的连接数（slowloris socket、slowhttptest -c），用于控制强度。
           </span>
         </div>
       </div>
@@ -79,10 +78,10 @@ export function DosSection({ data, updateField }: DosSectionProps) {
               onChange={(e) => updateField('dosAssessmentOnly', e.target.checked)}
               style={{ marginRight: '8px' }}
             />
-            Assessment Only
+            仅评估（不主动施压）
           </label>
           <span className={styles.fieldHint}>
-            Only check for availability vulnerabilities (nmap scripts, nuclei) without active testing.
+            仅检查可用性相关风险（如 nmap 脚本、nuclei），不进行主动压力测试。
           </span>
         </div>
       </div>

@@ -59,9 +59,9 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <ShieldCheck size={16} />
-          OSINT &amp; Threat Intelligence Enrichment
+          OSINT 与威胁情报增强
           <NodeInfoTooltip section="OsintEnrichment" />
-          <span className={styles.badgePassive}>Passive</span>
+          <span className={styles.badgePassive}>被动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           <div onClick={(e) => e.stopPropagation()}>
@@ -80,10 +80,8 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Passive OSINT enrichment using external threat intelligence APIs. All tools run in
-            parallel after domain discovery, without sending any traffic to your targets. Each tool
-            requires an API key configured in Global Settings. Enable or disable each source
-            independently per project.
+            使用外部威胁情报 API 进行被动 OSINT 增强。所有工具会在域名发现后并行运行，
+            不会向目标发送任何流量。各数据源通常需要在全局设置中配置 API Key，可在项目内独立启用或禁用。
           </p>
 
           {data.osintEnrichmentEnabled && (
@@ -94,13 +92,13 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
               <div>
                 <span className={styles.toggleLabel}>Censys</span>
                 <p className={styles.toggleDescription}>
-                  Query Censys Search API v2 for host records: services, geolocation, ASN, and OS
-                  metadata for discovered IPs. Requires API ID + Secret pair.
+                  调用 Censys Search API v2 获取主机记录：服务、地理位置、ASN 与操作系统等元数据（针对已发现 IP）。
+                  需要配置 API Token 与 Organization ID。
                 </p>
                 {noKey('censys') && (
                   <div className={styles.shodanWarning}>
                     <Info size={13} />
-                    No Censys API credentials — add API Token &amp; Organization ID in Global Settings to enable.
+                    未配置 Censys 凭据——请在全局设置中填写 API Token 与 Organization ID 后启用。
                   </div>
                 )}
               </div>
@@ -118,13 +116,12 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
               <div>
                 <span className={styles.toggleLabel}>FOFA</span>
                 <p className={styles.toggleDescription}>
-                  Query FOFA (Chinese internet intelligence) for hosts matching the target domain
-                  or discovered IPs. Returns banners, ports, technologies, and TLS certificates.
+                  查询 FOFA（互联网空间测绘）以匹配目标域名或已发现 IP，返回 Banner、端口、技术栈与 TLS 证书等信息。
                 </p>
                 {noKey('fofa') && (
                   <div className={styles.shodanWarning}>
                     <Info size={13} />
-                    No FOFA API key — add it in Global Settings to enable.
+                    未配置 FOFA API Key——请在全局设置中填写后启用。
                   </div>
                 )}
               </div>
@@ -137,7 +134,7 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
             {data.fofaEnabled && !noKey('fofa') && (
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Max Results</label>
+                  <label className={styles.fieldLabel}>最大结果数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -146,7 +143,7 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
                     min={1}
                     max={10000}
                   />
-                  <span className={styles.fieldHint}>Maximum results to fetch from FOFA API (1–10 000)</span>
+                  <span className={styles.fieldHint}>从 FOFA API 拉取的最大结果数（1–10,000）</span>
                 </div>
               </div>
             )}
@@ -158,9 +155,8 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
               <div>
                 <span className={styles.toggleLabel}>AlienVault OTX</span>
                 <p className={styles.toggleDescription}>
-                  Retrieve threat intelligence pulses, passive DNS records, and reputation data for
-                  discovered IPs and the target domain from AlienVault OTX.
-                  {noKey('otx') && <em> Works with limited public data without a key; add one in Global Settings for full pulse data.</em>}
+                  从 AlienVault OTX 获取威胁情报脉冲（pulses）、被动 DNS 记录与信誉数据（针对目标域名与已发现 IP）。
+                  {noKey('otx') && <em> 无 API Key 时仅能使用有限的公共数据；如需完整 pulses 数据请在全局设置中配置 API Key。</em>}
                 </p>
               </div>
               <Toggle
@@ -176,13 +172,12 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
               <div>
                 <span className={styles.toggleLabel}>Netlas</span>
                 <p className={styles.toggleDescription}>
-                  Query Netlas internet intelligence platform for host data, open ports, and
-                  service banners on discovered IPs and the target domain.
+                  查询 Netlas 获取主机数据、开放端口与服务 Banner（针对目标域名与已发现 IP）。
                 </p>
                 {noKey('netlas') && (
                   <div className={styles.shodanWarning}>
                     <Info size={13} />
-                    No Netlas API key — add it in Global Settings to enable.
+                    未配置 Netlas API Key——请在全局设置中填写后启用。
                   </div>
                 )}
               </div>
@@ -200,13 +195,13 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
               <div>
                 <span className={styles.toggleLabel}>VirusTotal</span>
                 <p className={styles.toggleDescription}>
-                  Fetch multi-engine reputation scores, malicious detection counts, and category
-                  labels for the target domain and discovered IPs. Free tier: 4 req/min. Add an API key in Global Settings to enable.
+                  获取目标域名与已发现 IP 的多引擎信誉评分、恶意检测数量与分类标签。免费额度约 4 次/分钟。
+                  需要在全局设置中配置 API Key 后启用。
                 </p>
                 {noKey('virusTotal') && (
                   <div className={styles.shodanWarning}>
                     <Info size={13} />
-                    No VirusTotal API key — add it in Global Settings to enable.
+                    未配置 VirusTotal API Key——请在全局设置中填写后启用。
                   </div>
                 )}
               </div>
@@ -224,13 +219,12 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
               <div>
                 <span className={styles.toggleLabel}>ZoomEye</span>
                 <p className={styles.toggleDescription}>
-                  Query ZoomEye cyberspace search engine for open ports, service banners, and
-                  technologies associated with discovered IPs and the target domain.
+                  查询 ZoomEye 空间搜索引擎，获取与目标域名/已发现 IP 相关的开放端口、服务 Banner 与技术栈信息。
                 </p>
                 {noKey('zoomEye') && (
                   <div className={styles.shodanWarning}>
                     <Info size={13} />
-                    No ZoomEye API key — add it in Global Settings to enable.
+                    未配置 ZoomEye API Key——请在全局设置中填写后启用。
                   </div>
                 )}
               </div>
@@ -243,7 +237,7 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
             {data.zoomEyeEnabled && !noKey('zoomEye') && (
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Max Results</label>
+                  <label className={styles.fieldLabel}>最大结果数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -252,7 +246,7 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
                     min={1}
                     max={10000}
                   />
-                  <span className={styles.fieldHint}>Maximum results to fetch from ZoomEye API (1–10 000)</span>
+                  <span className={styles.fieldHint}>从 ZoomEye API 拉取的最大结果数（1–10,000）</span>
                 </div>
               </div>
             )}
@@ -264,13 +258,12 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
               <div>
                 <span className={styles.toggleLabel}>Criminal IP</span>
                 <p className={styles.toggleDescription}>
-                  Retrieve inbound/outbound risk scores and VPN/proxy/Tor flags for discovered IPs
-                  from Criminal IP threat intelligence platform.
+                  从 Criminal IP 获取已发现 IP 的入/出站风险评分，以及 VPN/代理/Tor 标记等信息。
                 </p>
                 {noKey('criminalIp') && (
                   <div className={styles.shodanWarning}>
                     <Info size={13} />
-                    No Criminal IP API key — add it in Global Settings to enable.
+                    未配置 Criminal IP API Key——请在全局设置中填写后启用。
                   </div>
                 )}
               </div>
@@ -286,12 +279,10 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
           <div className={styles.subSection}>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Uncover (Multi-Engine Search)</span>
+                <span className={styles.toggleLabel}>Uncover（多引擎搜索）</span>
                 <p className={styles.toggleDescription}>
-                  ProjectDiscovery Uncover — searches Shodan, Censys, FOFA, ZoomEye, Netlas,
-                  CriminalIP, Quake, Hunter, and more simultaneously for target expansion.
-                  Discovers additional IPs, subdomains, and open ports before port scanning.
-                  Configure API keys for each engine in Global Settings.
+                  ProjectDiscovery Uncover——同时搜索 Shodan、Censys、FOFA、ZoomEye、Netlas、CriminalIP、Quake、Hunter 等多引擎以扩展目标。
+                  在端口扫描前发现更多 IP、子域名与开放端口。各引擎的 API Key 请在全局设置中配置。
                 </p>
               </div>
               <Toggle
@@ -302,7 +293,7 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
             {data.uncoverEnabled && (
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Max Results</label>
+                  <label className={styles.fieldLabel}>最大结果数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -311,7 +302,7 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
                     min={1}
                     max={10000}
                   />
-                  <span className={styles.fieldHint}>Maximum total results across all engines (1–10 000)</span>
+                  <span className={styles.fieldHint}>所有引擎累计的最大结果数（1–10,000）</span>
                 </div>
               </div>
             )}

@@ -14,13 +14,13 @@ export function SqliSection({ data, updateField }: SqliSectionProps) {
   return (
     <div style={{ padding: 'var(--space-3) var(--space-4)' }}>
       <p className={styles.sectionDescription}>
-        Configure SQLMap scan intensity and WAF bypass settings.
+        配置 SQLMap 扫描强度与 WAF 绕过参数。
       </p>
 
       {/* Level + Risk */}
       <div className={styles.fieldRow}>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>SQLMap Level (1-5)</label>
+          <label className={styles.fieldLabel}>SQLMap Level（1-5）</label>
           <input
             type="number"
             className="textInput"
@@ -30,11 +30,11 @@ export function SqliSection({ data, updateField }: SqliSectionProps) {
             max={5}
           />
           <span className={styles.fieldHint}>
-            Higher levels test more injection points (headers, cookies). Default: 1.
+            Level 越高会测试更多注入点（请求头、Cookie 等）。默认：1。
           </span>
         </div>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>SQLMap Risk (1-3)</label>
+          <label className={styles.fieldLabel}>SQLMap Risk（1-3）</label>
           <input
             type="number"
             className="textInput"
@@ -44,7 +44,7 @@ export function SqliSection({ data, updateField }: SqliSectionProps) {
             max={3}
           />
           <span className={styles.fieldHint}>
-            Higher risk uses more aggressive payloads (e.g., OR-based). Default: 1.
+            Risk 越高会使用更激进的 payload（例如基于 OR 的探测）。默认：1。
           </span>
         </div>
       </div>
@@ -52,16 +52,16 @@ export function SqliSection({ data, updateField }: SqliSectionProps) {
       {/* Tamper Scripts */}
       <div className={styles.fieldRow}>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>Tamper Scripts</label>
+          <label className={styles.fieldLabel}>Tamper 脚本</label>
           <input
             type="text"
             className="textInput"
             value={data.sqliTamperScripts ?? ''}
             onChange={(e) => updateField('sqliTamperScripts', e.target.value)}
-            placeholder="e.g., space2comment,randomcase"
+            placeholder="例如：space2comment,randomcase"
           />
           <span className={styles.fieldHint}>
-            Comma-separated SQLMap tamper scripts for WAF bypass. Leave empty for auto-detection.
+            用于 WAF 绕过的 SQLMap tamper 脚本（逗号分隔）。留空则自动检测。
           </span>
         </div>
       </div>

@@ -19,7 +19,7 @@ export default function NewProjectPage() {
 
   const createProject = async (data: ProjectFormData & { roeFile?: File | null }) => {
     if (!userId) {
-      await alertWarning('Please select a user first')
+      await alertWarning('请先选择一个用户')
       router.push('/projects')
       return null
     }
@@ -49,11 +49,11 @@ export default function NewProjectPage() {
     try {
       const project = await createProject(data)
       if (project) {
-        toast.success('Project created')
+        toast.success('项目已创建')
         router.push(`/graph?project=${project.id}`)
       }
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to create project'
+      const message = error instanceof Error ? error.message : '创建项目失败'
       if (message.toLowerCase().includes('guardrail')) {
         throw error
       }
@@ -64,7 +64,7 @@ export default function NewProjectPage() {
   const handleSaveAndStay = async (data: ProjectFormData & { roeFile?: File | null }) => {
     const project = await createProject(data)
     if (project) {
-      toast.success('Project created')
+      toast.success('项目已创建')
       router.replace(`/projects/${project.id}/settings`)
     }
   }
@@ -77,9 +77,9 @@ export default function NewProjectPage() {
     return (
       <div className={styles.container}>
         <div className={styles.message}>
-          <p>Please select a user first before creating a project.</p>
+          <p>创建项目之前，请先选择一个用户。</p>
           <button className="primaryButton" onClick={() => router.push('/projects')}>
-            Go to Projects
+            前往项目页
           </button>
         </div>
       </div>

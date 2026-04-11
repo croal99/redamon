@@ -85,7 +85,7 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Bot size={16} />
-          Agent Behaviour
+          代理行为（Agent Behaviour）
         </h2>
         <ChevronDown
           size={16}
@@ -96,15 +96,15 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Configure the AI agent orchestrator that performs autonomous pentesting. Controls LLM model, phase transitions, payload settings, and safety gates. Tool access per phase is configured in the Tool Matrix tab.
+            配置执行自动化渗透测试的 AI 代理编排器：控制 LLM 模型、阶段切换、payload 设置与安全闸门。各阶段的工具权限在“工具矩阵（Tool Matrix）”中配置。
           </p>
 
           {/* LLM & Phase Configuration */}
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>LLM & Phase Configuration</h3>
+            <h3 className={styles.subSectionTitle}>LLM 与阶段配置</h3>
             <div className={styles.fieldRow}>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>LLM Model</label>
+                <label className={styles.fieldLabel}>LLM 模型</label>
                 <div className={styles.modelSelector} ref={dropdownRef}>
                   <div
                     className={`${styles.modelSelectorInput} ${dropdownOpen ? styles.modelSelectorInputFocused : ''}`}
@@ -120,7 +120,7 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                         type="text"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        placeholder="Search models..."
+                        placeholder="搜索模型..."
                         onKeyDown={(e) => {
                           if (e.key === 'Escape') {
                             setDropdownOpen(false)
@@ -130,7 +130,7 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                       />
                     ) : (
                       <span className={styles.modelSelectedText}>
-                        {modelsLoading ? 'Loading models...' : getDisplayName(data.agentOpenaiModel, allModels)}
+                        {modelsLoading ? '正在加载模型...' : getDisplayName(data.agentOpenaiModel, allModels)}
                       </span>
                     )}
                     {modelsLoading ? (
@@ -144,7 +144,7 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                     <div className={styles.modelDropdown}>
                       {modelsError ? (
                         <div className={styles.modelDropdownEmpty}>
-                          <span>Failed to load models. Type a model ID manually:</span>
+                          <span>模型加载失败。可手动输入模型 ID：</span>
                           <input
                             className="textInput"
                             type="text"
@@ -156,7 +156,7 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                         </div>
                       ) : Object.keys(filteredModels).length === 0 ? (
                         <div className={styles.modelDropdownEmpty}>
-                          {search ? `No models matching "${search}"` : 'No providers configured'}
+                          {search ? `没有匹配 "${search}" 的模型` : '未配置任何提供方'}
                         </div>
                       ) : (
                         Object.entries(filteredModels).map(([provider, models]) => (
@@ -186,14 +186,14 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                   )}
                 </div>
                 <span className={styles.fieldHint}>
-                  Model used by the agent. Configure providers in Global Settings.
+                  代理使用的模型。在“全局设置”中配置模型提供方。
                 </span>
               </div>
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Activate Post-Exploitation Phase</span>
-                <p className={styles.toggleDescription}>Enable post-exploitation after successful exploitation. When disabled, the agent stops after exploitation.</p>
+                <span className={styles.toggleLabel}>启用后渗透阶段</span>
+                <p className={styles.toggleDescription}>成功利用后进入后渗透阶段。关闭后代理会在利用阶段结束后停止。</p>
               </div>
               <Toggle
                 checked={data.agentActivatePostExplPhase}
@@ -202,12 +202,11 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Deep Think</span>
+                <span className={styles.toggleLabel}>深度思考</span>
                 <p className={styles.toggleDescription}>
-                  When enabled, the agent performs an explicit deep reasoning step at key decision points
-                  (start of session, phase transitions, failure loops) to plan multi-step attack strategies
-                  before acting. Adds ~1 extra LLM call at these moments. Recommended for complex targets
-                  with multiple services.
+                  启用后，代理会在关键决策点（会话开始、阶段切换、失败循环）进行显式深度推理，
+                  先规划多步攻击策略再行动。此类时刻会额外增加约 1 次 LLM 调用。
+                  推荐用于服务较多、结构复杂的目标。
                 </p>
               </div>
               <Toggle
@@ -217,61 +216,61 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
             </div>
             <div className={styles.fieldRow}>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Post-Exploitation Type</label>
+                <label className={styles.fieldLabel}>后渗透类型</label>
                 <select
                   className="select"
                   value={data.agentPostExplPhaseType}
                   onChange={(e) => updateField('agentPostExplPhaseType', e.target.value)}
                 >
-                  <option value="statefull">Stateful</option>
-                  <option value="stateless">Stateless</option>
+                  <option value="statefull">有状态（Stateful）</option>
+                  <option value="stateless">无状态（Stateless）</option>
                 </select>
-                <span className={styles.fieldHint}>Stateful keeps Meterpreter/shell sessions between turns</span>
+                <span className={styles.fieldHint}>有状态模式会在多轮交互间保留 Meterpreter/shell 会话</span>
               </div>
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Informational Phase System Prompt</label>
+              <label className={styles.fieldLabel}>信息收集阶段系统提示词</label>
               <textarea
                 className="textInput"
                 value={data.agentInformationalSystemPrompt}
                 onChange={(e) => updateField('agentInformationalSystemPrompt', e.target.value)}
-                placeholder="Custom system prompt for the informational/recon phase..."
+                placeholder="信息收集/侦察阶段的自定义系统提示词..."
                 rows={2}
               />
-              <span className={styles.fieldHint}>Injected during the informational phase. Leave empty for default.</span>
+              <span className={styles.fieldHint}>仅在信息收集阶段注入。留空则使用默认提示词。</span>
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Exploitation Phase System Prompt</label>
+              <label className={styles.fieldLabel}>利用阶段系统提示词</label>
               <textarea
                 className="textInput"
                 value={data.agentExplSystemPrompt}
                 onChange={(e) => updateField('agentExplSystemPrompt', e.target.value)}
-                placeholder="Custom system prompt for the exploitation phase..."
+                placeholder="利用阶段的自定义系统提示词..."
                 rows={2}
               />
-              <span className={styles.fieldHint}>Injected during the exploitation phase. Leave empty for default.</span>
+              <span className={styles.fieldHint}>仅在利用阶段注入。留空则使用默认提示词。</span>
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Post-Exploitation Phase System Prompt</label>
+              <label className={styles.fieldLabel}>后渗透阶段系统提示词</label>
               <textarea
                 className="textInput"
                 value={data.agentPostExplSystemPrompt}
                 onChange={(e) => updateField('agentPostExplSystemPrompt', e.target.value)}
-                placeholder="Custom system prompt for the post-exploitation phase..."
+                placeholder="后渗透阶段的自定义系统提示词..."
                 rows={2}
               />
-              <span className={styles.fieldHint}>Injected during the post-exploitation phase. Leave empty for default.</span>
+              <span className={styles.fieldHint}>仅在后渗透阶段注入。留空则使用默认提示词。</span>
             </div>
           </div>
 
           {/* Payload Direction */}
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Payload Direction</h3>
+            <h3 className={styles.subSectionTitle}>Payload 方向</h3>
             <p className={styles.toggleDescription} style={{ marginBottom: 'var(--space-2)' }}>
-              <strong>Reverse</strong>: target connects back to you (LHOST + LPORT). <strong>Bind</strong>: you connect to the target (leave LPORT empty).
+              <strong>Reverse</strong>：目标回连你（LHOST + LPORT）。<strong>Bind</strong>：你连接目标（LPORT 留空）。
             </p>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Tunnel Provider</label>
+              <label className={styles.fieldLabel}>隧道方案</label>
               <select
                 className="textInput"
                 value={data.agentNgrokTunnelEnabled ? 'ngrok' : data.agentChiselTunnelEnabled ? 'chisel' : 'none'}
@@ -281,25 +280,25 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                   updateField('agentChiselTunnelEnabled', val === 'chisel');
                 }}
               >
-                <option value="none">None (manual LHOST/LPORT)</option>
-                <option value="ngrok">ngrok (single port — free, no VPS needed)</option>
-                <option value="chisel">chisel (multi-port — requires VPS)</option>
+                <option value="none">不使用（手动配置 LHOST/LPORT）</option>
+                <option value="ngrok">ngrok（单端口——免费，无需 VPS）</option>
+                <option value="chisel">chisel（多端口——需要 VPS）</option>
               </select>
               <span className={styles.fieldHint}>
-                {data.agentNgrokTunnelEnabled && 'Configure ngrok auth token in Global Settings → Tunneling. Tunnels port 4444 only (handler). Stageless payloads required. Web delivery / HTA not supported.'}
-                {data.agentChiselTunnelEnabled && 'Configure chisel server URL in Global Settings → Tunneling. Requires a chisel server running on your VPS. Tunnels ports 4444 (handler) + 8080 (web delivery). Stageless payloads required.'}
-                {!data.agentNgrokTunnelEnabled && !data.agentChiselTunnelEnabled && 'No tunnel — configure LHOST/LPORT manually below.'}
+                {data.agentNgrokTunnelEnabled && '在“全局设置 → Tunneling”中配置 ngrok auth token。仅转发 4444 端口（handler）。需要 stageless payload，不支持 Web delivery / HTA。'}
+                {data.agentChiselTunnelEnabled && '在“全局设置 → Tunneling”中配置 chisel 服务器 URL。需要你的 VPS 上运行 chisel server。转发 4444（handler）+ 8080（web delivery）。需要 stageless payload。'}
+                {!data.agentNgrokTunnelEnabled && !data.agentChiselTunnelEnabled && '不使用隧道——请在下方手动配置 LHOST/LPORT。'}
               </span>
             </div>
             {(data.agentNgrokTunnelEnabled || data.agentChiselTunnelEnabled) ? (
               <p className={styles.toggleDescription} style={{ marginTop: 'var(--space-2)', padding: 'var(--space-2)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-1)' }}>
-                {data.agentNgrokTunnelEnabled && 'LHOST and LPORT are auto-detected from the ngrok tunnel. No manual configuration needed.'}
-                {data.agentChiselTunnelEnabled && 'LHOST is derived from the VPS hostname. Both handler (4444) and web delivery (8080) ports are tunneled. No manual configuration needed.'}
+                {data.agentNgrokTunnelEnabled && 'LHOST 与 LPORT 将从 ngrok 隧道自动识别，无需手动配置。'}
+                {data.agentChiselTunnelEnabled && 'LHOST 会从 VPS 主机名推导，同时转发 handler（4444）与 web delivery（8080）端口，无需手动配置。'}
               </p>
             ) : (
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>LHOST (Attacker IP)</label>
+                  <label className={styles.fieldLabel}>LHOST（攻击机 IP）</label>
                   <input
                     type="text"
                     className="textInput"
@@ -307,7 +306,7 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                     onChange={(e) => updateField('agentLhost', e.target.value)}
                     placeholder="e.g. 172.28.0.2"
                   />
-                  <span className={styles.fieldHint}>Leave empty for bind mode</span>
+                  <span className={styles.fieldHint}>Bind 模式下留空</span>
                 </div>
                 <div className={styles.fieldGroup}>
                   <label className={styles.fieldLabel}>LPORT</label>
@@ -320,10 +319,10 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                     max={65535}
                     placeholder="Empty = bind mode"
                   />
-                  <span className={styles.fieldHint}>Leave empty for bind mode</span>
+                  <span className={styles.fieldHint}>Bind 模式下留空</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Bind Port on Target</label>
+                  <label className={styles.fieldLabel}>目标侧绑定端口</label>
                   <input
                     type="number"
                     className="textInput"
@@ -333,14 +332,14 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                     max={65535}
                     placeholder="Empty = ask agent"
                   />
-                  <span className={styles.fieldHint}>Leave empty if unsure (agent will ask)</span>
+                  <span className={styles.fieldHint}>不确定可留空（代理会询问）</span>
                 </div>
               </div>
             )}
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Payload Use HTTPS</span>
-                <p className={styles.toggleDescription}>Use reverse_https instead of reverse_tcp. Only for reverse payloads.</p>
+                <span className={styles.toggleLabel}>Payload 使用 HTTPS</span>
+                <p className={styles.toggleDescription}>使用 reverse_https 替代 reverse_tcp，仅适用于 reverse payload。</p>
               </div>
               <Toggle
                 checked={data.agentPayloadUseHttps}
@@ -351,10 +350,10 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
 
           {/* Agent Limits */}
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Agent Limits</h3>
+            <h3 className={styles.subSectionTitle}>代理限制</h3>
             <div className={styles.fieldRow}>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Max Iterations</label>
+                <label className={styles.fieldLabel}>最大迭代次数</label>
                 <input
                   type="number"
                   className="textInput"
@@ -362,10 +361,10 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                   onChange={(e) => updateField('agentMaxIterations', parseInt(e.target.value) || 100)}
                   min={1}
                 />
-                <span className={styles.fieldHint}>LLM reasoning iterations limit</span>
+                <span className={styles.fieldHint}>LLM 推理迭代次数上限</span>
               </div>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Trace Memory Steps</label>
+                <label className={styles.fieldLabel}>追踪记忆步数</label>
                 <input
                   type="number"
                   className="textInput"
@@ -373,10 +372,10 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                   onChange={(e) => updateField('agentExecutionTraceMemorySteps', parseInt(e.target.value) || 100)}
                   min={1}
                 />
-                <span className={styles.fieldHint}>Past steps kept in context</span>
+                <span className={styles.fieldHint}>上下文中保留的历史步骤数</span>
               </div>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Tool Output Max Chars</label>
+                <label className={styles.fieldLabel}>工具输出最大字符数</label>
                 <input
                   type="number"
                   className="textInput"
@@ -384,32 +383,32 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                   onChange={(e) => updateField('agentToolOutputMaxChars', parseInt(e.target.value) || 20000)}
                   min={1000}
                 />
-                <span className={styles.fieldHint}>Truncation limit for tool output</span>
+                <span className={styles.fieldHint}>工具输出截断上限</span>
               </div>
             </div>
           </div>
 
           {/* Approval Gates */}
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Approval Gates</h3>
+            <h3 className={styles.subSectionTitle}>确认闸门</h3>
 
             {(!data.agentRequireApprovalForExploitation || !data.agentRequireApprovalForPostExploitation || !(data.agentGuardrailEnabled ?? true) || !(data.agentRequireToolConfirmation ?? true)) && (
               <div className={styles.shodanWarning} style={{ borderColor: 'rgba(239, 68, 68, 0.4)', background: 'rgba(239, 68, 68, 0.08)' }}>
                 <AlertTriangle size={14} style={{ color: '#ef4444' }} />
                 <span>
-                  <strong>Autonomous operation risk:</strong> One or more safety gates are disabled.
-                  The AI agent may perform exploitation, post-exploitation, dangerous tool executions, or out-of-scope actions without human approval.
-                  This significantly increases the risk of unintended damage to target systems.
-                  You assume full responsibility for all autonomous agent actions.
-                  See <a href="https://github.com/samugit83/redamon/blob/master/DISCLAIMER.md" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline' }}>DISCLAIMER.md</a> for details.
+                  <strong>自动化运行风险：</strong>一个或多个安全闸门已关闭。
+                  AI 代理可能在无人确认的情况下执行利用/后渗透/高风险工具，或发生越权（超范围）行为。
+                  这会显著增加对目标系统造成意外损害的风险。
+                  你需要为所有代理的自动化行为承担全部责任。
+                  详情请阅读 <a href="https://github.com/samugit83/redamon/blob/master/DISCLAIMER.md" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline' }}>DISCLAIMER.md</a>。
                 </span>
               </div>
             )}
 
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Require Approval for Exploitation</span>
-                <p className={styles.toggleDescription}>User confirmation before transitioning to exploitation phase.</p>
+                <span className={styles.toggleLabel}>利用前需确认</span>
+                <p className={styles.toggleDescription}>进入利用阶段前需要用户确认。</p>
               </div>
               <Toggle
                 checked={data.agentRequireApprovalForExploitation}
@@ -418,8 +417,8 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Require Approval for Post-Exploitation</span>
-                <p className={styles.toggleDescription}>User confirmation before transitioning to post-exploitation phase.</p>
+                <span className={styles.toggleLabel}>后渗透前需确认</span>
+                <p className={styles.toggleDescription}>进入后渗透阶段前需要用户确认。</p>
               </div>
               <Toggle
                 checked={data.agentRequireApprovalForPostExploitation}
@@ -428,10 +427,10 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Require Tool Confirmation</span>
+                <span className={styles.toggleLabel}>工具执行需确认</span>
                 <p className={styles.toggleDescription}>
-                  Manual confirmation before executing dangerous tools
-                  (nmap, nuclei, metasploit, hydra, kali shell, etc.).
+                  执行高风险工具前需要手动确认
+                  （nmap、nuclei、metasploit、hydra、kali shell 等）。
                 </p>
               </div>
               <Toggle
@@ -441,13 +440,11 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Agent Guardrail</span>
+                <span className={styles.toggleLabel}>代理防护规则（Guardrail）</span>
                 <p className={styles.toggleDescription}>
-                  Verify target authorization on session start and enforce scope restrictions
-                  in the agent&apos;s prompt. Blocks the agent from operating against well-known
-                  public targets and prevents out-of-scope actions.
-                  Government, military, educational, and international organization domains
-                  (.gov, .mil, .edu, .int) are always blocked regardless of this setting.
+                  在会话开始时校验目标授权，并在代理提示词中强制执行范围限制。
+                  阻止代理对知名公共目标操作，并避免越权（超范围）行为。
+                  政府/军队/教育/国际组织域名（.gov/.mil/.edu/.int）无论该开关如何设置都会被永久拦截。
                 </p>
               </div>
               <Toggle
@@ -459,11 +456,11 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
 
           {/* Kali Shell — Library Installation */}
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Kali Shell — Library Installation</h3>
+            <h3 className={styles.subSectionTitle}>Kali Shell — 安装依赖</h3>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Allow Library Installation</span>
-                <p className={styles.toggleDescription}>Let the agent install packages (pip/apt) in kali_shell during a pentest. Installed packages are ephemeral — lost on container restart.</p>
+                <span className={styles.toggleLabel}>允许安装依赖</span>
+                <p className={styles.toggleDescription}>允许代理在渗透测试期间通过 kali_shell 安装 pip/apt 包。已安装依赖为临时数据——容器重启后会丢失。</p>
               </div>
               <Toggle
                 checked={data.agentKaliInstallEnabled}
@@ -473,7 +470,7 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
             {data.agentKaliInstallEnabled && (
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Authorized Packages</label>
+                  <label className={styles.fieldLabel}>允许安装的包</label>
                   <textarea
                     className="textInput"
                     value={data.agentKaliInstallAllowedPackages}
@@ -481,10 +478,10 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                     rows={2}
                     placeholder="e.g. pyftpdlib, scapy, droopescan"
                   />
-                  <span className={styles.fieldHint}>Comma-separated whitelist. If non-empty, ONLY these packages can be installed.</span>
+                  <span className={styles.fieldHint}>逗号分隔白名单。若不为空，则只允许安装这些包。</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Forbidden Packages</label>
+                  <label className={styles.fieldLabel}>禁止安装的包</label>
                   <textarea
                     className="textInput"
                     value={data.agentKaliInstallForbiddenPackages}
@@ -492,7 +489,7 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                     rows={2}
                     placeholder="e.g. metasploit-framework, cobalt-strike"
                   />
-                  <span className={styles.fieldHint}>Comma-separated blacklist. These packages must NEVER be installed.</span>
+                  <span className={styles.fieldHint}>逗号分隔黑名单。这些包绝对不允许被安装。</span>
                 </div>
               </div>
             )}
@@ -500,10 +497,10 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
 
           {/* Retries, Logging & Debug */}
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Retries, Logging & Debug</h3>
+            <h3 className={styles.subSectionTitle}>重试、日志与调试</h3>
             <div className={styles.fieldRow}>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Cypher Max Retries</label>
+                <label className={styles.fieldLabel}>Cypher 最大重试次数</label>
                 <input
                   type="number"
                   className="textInput"
@@ -512,10 +509,10 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                   min={0}
                   max={10}
                 />
-                <span className={styles.fieldHint}>Neo4j query retries</span>
+                <span className={styles.fieldHint}>Neo4j 查询重试次数</span>
               </div>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Log Max MB</label>
+                <label className={styles.fieldLabel}>日志最大 MB</label>
                 <input
                   type="number"
                   className="textInput"
@@ -523,10 +520,10 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                   onChange={(e) => updateField('agentLogMaxMb', parseInt(e.target.value) || 10)}
                   min={1}
                 />
-                <span className={styles.fieldHint}>Max log file size</span>
+                <span className={styles.fieldHint}>日志文件最大大小</span>
               </div>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Log Backups</label>
+                <label className={styles.fieldLabel}>日志备份数</label>
                 <input
                   type="number"
                   className="textInput"
@@ -534,13 +531,13 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                   onChange={(e) => updateField('agentLogBackupCount', parseInt(e.target.value) || 5)}
                   min={0}
                 />
-                <span className={styles.fieldHint}>Rotated backups to keep</span>
+                <span className={styles.fieldHint}>保留的轮转备份数量</span>
               </div>
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Create Graph Image on Init</span>
-                <p className={styles.toggleDescription}>Generate a LangGraph visualization when the agent starts. Useful for debugging.</p>
+                <span className={styles.toggleLabel}>启动时生成图谱图片</span>
+                <p className={styles.toggleDescription}>代理启动时生成 LangGraph 可视化图片，便于调试。</p>
               </div>
               <Toggle
                 checked={data.agentCreateGraphImageOnInit}

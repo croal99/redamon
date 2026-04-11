@@ -22,9 +22,9 @@ export function JsluiceSection({ data, updateField }: JsluiceSectionProps) {
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Code size={16} />
-          jsluice JS Analyzer
+          jsluice JS 分析器
           <NodeInfoTooltip section="Jsluice" />
-          <span className={styles.badgeActive}>Active</span>
+          <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           <div onClick={(e) => e.stopPropagation()}>
@@ -43,14 +43,14 @@ export function JsluiceSection({ data, updateField }: JsluiceSectionProps) {
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Static analysis of JavaScript files using jsluice from Bishop Fox. Extracts hidden API endpoints, paths, query parameters, and secrets (AWS keys, API tokens) from JS source code discovered by Katana and Hakrawler. No additional traffic to the target beyond fetching JS files.
+            使用 Bishop Fox 的 jsluice 对 JavaScript 文件做静态分析。从 Katana/Hakrawler 发现的 JS 源码中提取隐藏 API 端点、路径、查询参数与敏感信息（AWS Key、API Token 等）。除获取 JS 文件外不会对目标产生额外流量。
           </p>
 
           {data.jsluiceEnabled && (
             <>
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Max JS Files</label>
+                  <label className={styles.fieldLabel}>最大 JS 文件数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -59,10 +59,10 @@ export function JsluiceSection({ data, updateField }: JsluiceSectionProps) {
                     min={1}
                     max={1000}
                   />
-                  <span className={styles.fieldHint}>Maximum number of .js files to download and analyze</span>
+                  <span className={styles.fieldHint}>最多下载并分析的 .js 文件数量</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Timeout (seconds)</label>
+                  <label className={styles.fieldLabel}>超时（秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -70,13 +70,13 @@ export function JsluiceSection({ data, updateField }: JsluiceSectionProps) {
                     onChange={(e) => updateField('jsluiceTimeout', parseInt(e.target.value) || 300)}
                     min={30}
                   />
-                  <span className={styles.fieldHint}>Overall analysis timeout</span>
+                  <span className={styles.fieldHint}>整体分析超时</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Concurrency</label>
+                  <label className={styles.fieldLabel}>并发</label>
                   <input
                     type="number"
                     className="textInput"
@@ -85,16 +85,16 @@ export function JsluiceSection({ data, updateField }: JsluiceSectionProps) {
                     min={1}
                     max={20}
                   />
-                  <span className={styles.fieldHint}>Files processed concurrently by jsluice</span>
+                  <span className={styles.fieldHint}>jsluice 并行处理的文件数</span>
                 </div>
               </div>
 
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Extraction Modes</h3>
+                <h3 className={styles.subSectionTitle}>提取模式</h3>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Extract URLs</span>
-                    <p className={styles.toggleDescription}>Find API endpoints, paths, and parameters in fetch(), XMLHttpRequest, jQuery.ajax, and string literals</p>
+                    <span className={styles.toggleLabel}>提取 URL</span>
+                    <p className={styles.toggleDescription}>在 fetch()/XMLHttpRequest/jQuery.ajax 与字符串字面量中识别 API 端点、路径与参数</p>
                   </div>
                   <Toggle
                     checked={data.jsluiceExtractUrls}
@@ -103,8 +103,8 @@ export function JsluiceSection({ data, updateField }: JsluiceSectionProps) {
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Extract Secrets</span>
-                    <p className={styles.toggleDescription}>Detect AWS keys, GCP credentials, GitHub tokens, and other embedded secrets with context</p>
+                    <span className={styles.toggleLabel}>提取敏感信息</span>
+                    <p className={styles.toggleDescription}>检测 AWS Key、GCP 凭据、GitHub Token 等嵌入式敏感信息（包含上下文）</p>
                   </div>
                   <Toggle
                     checked={data.jsluiceExtractSecrets}

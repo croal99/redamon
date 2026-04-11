@@ -18,10 +18,10 @@ interface ArjunSectionProps {
 const METHOD_OPTIONS = ['GET', 'POST', 'JSON', 'XML']
 
 const METHOD_LABELS: Record<string, string> = {
-  GET: 'GET — Query parameters',
-  POST: 'POST — Form body',
-  JSON: 'JSON — JSON body',
-  XML: 'XML — XML body',
+  GET: 'GET — 查询参数',
+  POST: 'POST — 表单 Body',
+  JSON: 'JSON — JSON Body',
+  XML: 'XML — XML Body',
 }
 
 export function ArjunSection({ data, updateField }: ArjunSectionProps) {
@@ -43,10 +43,10 @@ export function ArjunSection({ data, updateField }: ArjunSectionProps) {
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Search size={16} />
-          Arjun (Parameter Discovery)
+          Arjun（参数发现）
           <NodeInfoTooltip section="Arjun" />
-          <span className={styles.badgeActive}>Active</span>
-          {data.arjunPassive && <span className={styles.badgePassive}>Passive</span>}
+          <span className={styles.badgeActive}>主动</span>
+          {data.arjunPassive && <span className={styles.badgePassive}>被动</span>}
         </h2>
         <div className={styles.sectionHeaderRight}>
           <div onClick={(e) => e.stopPropagation()}>
@@ -65,14 +65,14 @@ export function ArjunSection({ data, updateField }: ArjunSectionProps) {
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Discovers hidden HTTP query and body parameters by testing ~25,000 common parameter names against discovered endpoints. Finds debug parameters, admin functionality, and hidden API inputs that aren&apos;t visible in HTML forms or JavaScript. Multiple methods run in parallel.
+            通过对已发现端点测试约 25,000 个常见参数名，发现隐藏的 HTTP 查询/请求体参数。可找到调试参数、后台功能入口与未在表单或 JavaScript 中显式出现的 API 输入点。多种方法可并行运行。
           </p>
 
           {data.arjunEnabled && (
             <>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>HTTP Methods</label>
-                <p className={styles.fieldHint} style={{ marginBottom: '0.5rem' }}>Select which parameter positions to test. Multiple methods run in parallel.</p>
+                <label className={styles.fieldLabel}>HTTP 方法</label>
+                <p className={styles.fieldHint} style={{ marginBottom: '0.5rem' }}>选择要测试的参数位置；多个方法可并行执行。</p>
                 <div className={styles.checkboxGroup}>
                   {METHOD_OPTIONS.map(method => (
                     <label key={method} className="checkboxLabel">
@@ -90,7 +90,7 @@ export function ArjunSection({ data, updateField }: ArjunSectionProps) {
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Max Endpoints</label>
+                  <label className={styles.fieldLabel}>最大端点数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -99,11 +99,11 @@ export function ArjunSection({ data, updateField }: ArjunSectionProps) {
                     min={1}
                     max={500}
                   />
-                  <span className={styles.fieldHint}>Max discovered endpoints to test. API/dynamic endpoints are prioritized.</span>
-                  <TimeEstimate estimate="~10s per endpoint per method" />
+                  <span className={styles.fieldHint}>最多测试的已发现端点数量（优先选择 API/动态端点）</span>
+                  <TimeEstimate estimate="每个端点每种方法约 10 秒" />
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Threads</label>
+                  <label className={styles.fieldLabel}>线程数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -112,13 +112,13 @@ export function ArjunSection({ data, updateField }: ArjunSectionProps) {
                     min={1}
                     max={20}
                   />
-                  <span className={styles.fieldHint}>Concurrent parameter testing threads</span>
+                  <span className={styles.fieldHint}>并发参数测试线程数</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Request Timeout (seconds)</label>
+                  <label className={styles.fieldLabel}>请求超时（秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -126,10 +126,10 @@ export function ArjunSection({ data, updateField }: ArjunSectionProps) {
                     onChange={(e) => updateField('arjunTimeout', parseInt(e.target.value) || 15)}
                     min={1}
                   />
-                  <span className={styles.fieldHint}>Per-request timeout</span>
+                  <span className={styles.fieldHint}>单次请求超时</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Scan Timeout (seconds)</label>
+                  <label className={styles.fieldLabel}>扫描超时（秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -137,13 +137,13 @@ export function ArjunSection({ data, updateField }: ArjunSectionProps) {
                     onChange={(e) => updateField('arjunScanTimeout', parseInt(e.target.value) || 600)}
                     min={60}
                   />
-                  <span className={styles.fieldHint}>Overall scan timeout per method</span>
+                  <span className={styles.fieldHint}>每种方法的整体扫描超时</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Chunk Size</label>
+                  <label className={styles.fieldLabel}>分片大小</label>
                   <input
                     type="number"
                     className="textInput"
@@ -152,10 +152,10 @@ export function ArjunSection({ data, updateField }: ArjunSectionProps) {
                     min={10}
                     max={5000}
                   />
-                  <span className={styles.fieldHint}>Parameters tested per request batch. Lower = more requests, higher accuracy</span>
+                  <span className={styles.fieldHint}>每批请求测试的参数数量。越小请求越多、准确性越高</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Rate Limit</label>
+                  <label className={styles.fieldLabel}>限速</label>
                   <input
                     type="number"
                     className="textInput"
@@ -163,17 +163,17 @@ export function ArjunSection({ data, updateField }: ArjunSectionProps) {
                     onChange={(e) => updateField('arjunRateLimit', parseInt(e.target.value) || 0)}
                     min={0}
                   />
-                  <span className={styles.fieldHint}>Max requests/sec (0 = unlimited)</span>
+                  <span className={styles.fieldHint}>每秒最大请求数（0=不限）</span>
                 </div>
               </div>
 
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Options</h3>
+                <h3 className={styles.subSectionTitle}>选项</h3>
 
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Stable Mode</span>
-                    <p className={styles.toggleDescription}>Add random delays between requests to avoid WAF detection</p>
+                    <span className={styles.toggleLabel}>稳定模式</span>
+                    <p className={styles.toggleDescription}>在请求之间增加随机延迟，降低 WAF 识别风险</p>
                   </div>
                   <Toggle
                     checked={data.arjunStable}
@@ -183,8 +183,8 @@ export function ArjunSection({ data, updateField }: ArjunSectionProps) {
 
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Passive Mode</span>
-                    <p className={styles.toggleDescription}>Use CommonCrawl, OTX, and WaybackMachine only — no active requests to target</p>
+                    <span className={styles.toggleLabel}>被动模式</span>
+                    <p className={styles.toggleDescription}>仅使用 CommonCrawl/OTX/WaybackMachine —— 不对目标发起主动请求</p>
                   </div>
                   <Toggle
                     checked={data.arjunPassive}
@@ -194,8 +194,8 @@ export function ArjunSection({ data, updateField }: ArjunSectionProps) {
 
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Disable Redirects</span>
-                    <p className={styles.toggleDescription}>Do not follow HTTP redirects during parameter testing</p>
+                    <span className={styles.toggleLabel}>禁用重定向</span>
+                    <p className={styles.toggleDescription}>参数测试期间不跟随 HTTP 重定向</p>
                   </div>
                   <Toggle
                     checked={data.arjunDisableRedirects}
@@ -205,9 +205,9 @@ export function ArjunSection({ data, updateField }: ArjunSectionProps) {
               </div>
 
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Custom Headers</h3>
+                <h3 className={styles.subSectionTitle}>自定义请求头</h3>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Request Headers</label>
+                  <label className={styles.fieldLabel}>请求头</label>
                   <textarea
                     className="textarea"
                     value={(data.arjunCustomHeaders ?? []).join('\n')}
@@ -215,7 +215,7 @@ export function ArjunSection({ data, updateField }: ArjunSectionProps) {
                     placeholder="Authorization: Bearer token123&#10;X-API-Key: key123"
                     rows={3}
                   />
-                  <span className={styles.fieldHint}>Add auth tokens or custom headers for authenticated parameter testing</span>
+                  <span className={styles.fieldHint}>用于携带鉴权 Token 或自定义请求头，以测试需要登录的接口</span>
                 </div>
               </div>
             </>

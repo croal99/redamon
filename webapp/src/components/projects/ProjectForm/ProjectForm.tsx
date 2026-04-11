@@ -49,7 +49,7 @@ import { getPresetById, type ReconPreset } from '@/lib/recon-presets'
 
 const WorkflowView = dynamic(
   () => import('./WorkflowView/WorkflowView').then(m => ({ default: m.WorkflowView })),
-  { ssr: false, loading: () => <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>Loading workflow...</div> }
+  { ssr: false, loading: () => <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>正在加载流程视图…</div> }
 )
 
 type ProjectFormData = Omit<Project, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'user'>
@@ -81,46 +81,51 @@ interface ProjectFormProps {
 
 const TAB_GROUPS = [
   {
-    label: 'Recon Pipeline',
+    key: 'recon',
+    label: '侦察流程',
     style: 'tabGroupRecon',
     tabs: [
-      { id: 'preset', label: 'Recon Preset' },
-      { id: 'target', label: 'Target & Modules' },
-      { id: 'discovery', label: 'Discovery & OSINT' },
-      { id: 'port', label: 'Port Scanning' },
-      { id: 'http', label: 'HTTP Probing' },
-      { id: 'resource', label: 'Resource Enum' },
-      { id: 'jsrecon', label: 'JS Recon' },
-      { id: 'vuln', label: 'Vulnerability Scanning' },
-      { id: 'cve', label: 'CVE & MITRE' },
-      { id: 'security', label: 'Security Checks' },
+      { id: 'preset', label: '侦察预设' },
+      { id: 'target', label: '目标与模块' },
+      { id: 'discovery', label: '发现与情报' },
+      { id: 'port', label: '端口扫描' },
+      { id: 'http', label: 'HTTP 探测' },
+      { id: 'resource', label: '资源枚举' },
+      { id: 'jsrecon', label: 'JS 侦察' },
+      { id: 'vuln', label: '漏洞扫描' },
+      { id: 'cve', label: 'CVE 与 MITRE' },
+      { id: 'security', label: '安全检查' },
     ],
   },
   {
+    key: 'other',
     label: '',
     style: 'tabGroupOther',
     tabs: [
-      { id: 'integrations', label: 'Other Scans', wide: true },
+      { id: 'integrations', label: '其他扫描', wide: true },
     ],
   },
   {
-    label: 'Scope',
+    key: 'scope',
+    label: '范围',
     style: 'tabGroupScope',
     tabs: [
       { id: 'roe', label: 'RoE' },
     ],
   },
   {
-    label: 'AI Agent',
+    key: 'agent',
+    label: 'AI 代理',
     style: 'tabGroupAgent',
     tabs: [
-      { id: 'agent', label: 'Agent Behaviour' },
-      { id: 'toolmatrix', label: 'Tool Matrix' },
-      { id: 'attack', label: 'Agent Skills' },
+      { id: 'agent', label: '代理行为' },
+      { id: 'toolmatrix', label: '工具矩阵' },
+      { id: 'attack', label: '代理技能' },
     ],
   },
   {
-    label: 'Remediation',
+    key: 'remediation',
+    label: '修复',
     style: 'tabGroupRemediation',
     tabs: [
       { id: 'cypherfix', label: 'CypherFix' },
@@ -300,7 +305,7 @@ export function ProjectForm({
     setFormData(prev => ({ ...prev, ...preset.parameters }))
     setAppliedPreset(preset)
     setIsPresetModalOpen(false)
-    toast.success(`Recon preset "${preset.name}" applied`, 'Preset Applied')
+    toast.success(`已应用侦察预设“${preset.name}”`, '预设已应用')
   }, [toast])
 
   const handleLoadUserPreset = useCallback((settings: Record<string, unknown>) => {
@@ -317,19 +322,19 @@ export function ProjectForm({
     e.preventDefault()
 
     if (!formData.name.trim()) {
-      alertWarning('Project name is required')
+      alertWarning('项目名称不能为空')
       return
     }
 
     if (!formData.ipMode && !formData.targetDomain.trim()) {
-      alertWarning('Target domain is required')
+      alertWarning('目标域名不能为空')
       return
     }
 
     // Run field validation
     const validationErrors = validateProjectForm(formData as unknown as Record<string, unknown>)
     if (validationErrors.length > 0) {
-      alertWarning('Validation errors:\n' + validationErrors.map(e => `- ${e.message}`).join('\n'))
+      alertWarning('校验错误：\n' + validationErrors.map(e => `- ${e.message}`).join('\n'))
       return
     }
 
@@ -344,7 +349,7 @@ export function ProjectForm({
 
     // Block submission if there's a conflict
     if (conflict?.hasConflict) {
-      alertError('Cannot save project: ' + conflict.message)
+      alertError('无法保存项目：' + conflict.message)
       return
     }
 
@@ -358,7 +363,7 @@ export function ProjectForm({
       }
       await onSubmit(submitData)
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to save project'
+      const message = error instanceof Error ? error.message : '保存项目失败'
       if (message.toLowerCase().includes('guardrail') || message.toLowerCase().includes('permanently blocked')) {
         const reason = message
           .replace(/^Target blocked by guardrail:\s*/i, '')
@@ -374,16 +379,16 @@ export function ProjectForm({
     if (!onSaveAndStay) return
 
     if (!formData.name.trim()) {
-      alertWarning('Project name is required')
+      alertWarning('项目名称不能为空')
       return
     }
     if (!formData.ipMode && !formData.targetDomain.trim()) {
-      alertWarning('Target domain is required')
+      alertWarning('目标域名不能为空')
       return
     }
     const validationErrors = validateProjectForm(formData as unknown as Record<string, unknown>)
     if (validationErrors.length > 0) {
-      alertWarning('Validation errors:\n' + validationErrors.map(e => `- ${e.message}`).join('\n'))
+      alertWarning('校验错误：\n' + validationErrors.map(e => `- ${e.message}`).join('\n'))
       return
     }
     if (!formData.ipMode && formData.targetDomain) {
@@ -394,7 +399,7 @@ export function ProjectForm({
       }
     }
     if (conflict?.hasConflict) {
-      alertError('Cannot save project: ' + conflict.message)
+      alertError('无法保存项目：' + conflict.message)
       return
     }
     try {
@@ -405,9 +410,9 @@ export function ProjectForm({
         ...(mode === 'create' && projectId ? { id: projectId } : {}),
       }
       await onSaveAndStay(submitData)
-      toast.success('Project saved')
+      toast.success('项目已保存')
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to save project'
+      const message = error instanceof Error ? error.message : '保存项目失败'
       if (message.toLowerCase().includes('guardrail') || message.toLowerCase().includes('permanently blocked')) {
         const reason = message
           .replace(/^Target blocked by guardrail:\s*/i, '')
@@ -426,9 +431,9 @@ export function ProjectForm({
     <form onSubmit={handleSubmit} className={styles.form}>
       <div className={styles.header}>
         <h1 className={styles.title}>
-          {mode === 'create' ? 'Create New Project' : 'Project Settings'}
+          {mode === 'create' ? '创建新项目' : '项目设置'}
           {appliedPreset && (
-            <span className={styles.presetBadge}>Started from: {appliedPreset.name}</span>
+            <span className={styles.presetBadge}>基于预设：{appliedPreset.name}</span>
           )}
         </h1>
         <div className={styles.actions}>
@@ -437,62 +442,62 @@ export function ProjectForm({
             className="secondaryButton"
             onClick={onCancel}
             disabled={isSubmitting}
-            title="Discard all unsaved changes and return to the previous page"
+            title="放弃所有未保存的更改并返回上一页"
           >
             <X size={14} />
-            Cancel
+            取消
           </button>
           <button
             type="button"
             className="secondaryButton"
             onClick={() => setIsUserPresetDrawerOpen(true)}
             disabled={isSubmitting || isLoadingDefaults}
-            title="Load a previously saved preset to apply all its settings to this project (target and subdomain fields are preserved)"
+            title="加载已保存的预设并应用到此项目（保留目标与子域名相关字段）"
           >
             <FolderOpen size={14} />
-            Load Preset
+            载入预设
           </button>
           <button
             type="button"
             className="secondaryButton"
             onClick={() => setIsSavePresetModalOpen(true)}
             disabled={isSubmitting || isLoadingDefaults}
-            title="Save the current project settings as a reusable preset (everything except target domain, subdomains, and IP list)"
+            title="将当前项目配置保存为可复用的预设（不包含目标域名、子域名与 IP 列表）"
           >
             <Bookmark size={14} />
-            Save as Preset
+            保存为预设
           </button>
           {mode === 'edit' && projectId && (
             <button
               type="button"
               className="secondaryButton"
               onClick={() => window.open(`/api/projects/${projectId}/export`)}
-              title="Download a full project backup as a ZIP file including settings, conversations, graph data, reports, and artifacts"
+              title="下载完整项目备份（ZIP），包含配置、对话、图谱数据、报告与产物"
             >
               <Download size={14} />
-              Export
+              导出
             </button>
           )}
           <button
             type="submit"
             className="primaryButton"
             disabled={!canSubmit}
-            title={mode === 'create' ? 'Create the project with the current settings and start working' : 'Save all changes to the project settings'}
+            title={mode === 'create' ? '使用当前配置创建项目并开始工作' : '保存对项目配置的所有更改'}
           >
             {isLoadingDefaults ? (
               <>
                 <Loader2 size={14} className={styles.spinner} />
-                Loading...
+                正在加载…
               </>
             ) : isCheckingConflict ? (
               <>
                 <Loader2 size={14} className={styles.spinner} />
-                Checking...
+                正在检查…
               </>
             ) : (
               <>
                 <Save size={14} />
-                {isSubmitting ? 'Saving...' : 'Save Project'}
+                {isSubmitting ? '正在保存…' : '保存项目'}
               </>
             )}
           </button>
@@ -504,13 +509,13 @@ export function ProjectForm({
         <div className={styles.conflictBanner}>
           <AlertTriangle size={20} className={styles.conflictIcon} />
           <div className={styles.conflictContent}>
-            <div className={styles.conflictTitle}>Domain Conflict Detected</div>
+            <div className={styles.conflictTitle}>检测到域名冲突</div>
             <div className={styles.conflictMessage}>{conflict.message}</div>
             {conflict.conflictingProject && (
               <div className={styles.conflictProject}>
-                Conflicting project: <strong>{conflict.conflictingProject.name}</strong>
+                冲突项目：<strong>{conflict.conflictingProject.name}</strong>
                 {conflict.overlappingSubdomains.length > 0 && (
-                  <> (subdomains: {conflict.overlappingSubdomains.join(', ')})</>
+                  <>（子域名：{conflict.overlappingSubdomains.join(', ')}）</>
                 )}
               </div>
             )}
@@ -521,7 +526,7 @@ export function ProjectForm({
       {isLoadingDefaults ? (
         <div className={styles.loadingContainer}>
           <Loader2 size={24} className={styles.spinner} />
-          <p>Loading configuration defaults...</p>
+          <p>正在加载默认配置…</p>
         </div>
       ) : (
         <>
@@ -529,7 +534,7 @@ export function ProjectForm({
           <div className={styles.tabs}>
             {TAB_GROUPS.map((group, gi) => (
               <div key={gi} className={group.style ? styles[group.style] : styles.tabGroup}>
-                {group.label === 'Recon Pipeline' ? (
+                {group.key === 'recon' ? (
                   <>
                     <div className={styles.reconGroupInner}>
                       <div className={styles.viewModeToggle}>
@@ -537,7 +542,7 @@ export function ProjectForm({
                           type="button"
                           className={`${styles.viewModeOption} ${viewMode === 'tabs' ? styles.viewModeOptionActive : ''}`}
                           onClick={() => setViewMode('tabs')}
-                          title="Tab view"
+                          title="标签视图"
                         >
                           <List size={11} />
                         </button>
@@ -548,7 +553,7 @@ export function ProjectForm({
                             setViewMode('workflow')
                             if (!RECON_TAB_IDS.has(activeTab)) setActiveTab('target')
                           }}
-                          title="Workflow view"
+                          title="流程视图"
                         >
                           <GitBranch size={11} />
                         </button>
@@ -652,7 +657,7 @@ export function ProjectForm({
             {!formData.naabuEnabled && !formData.masscanEnabled && (
               <div className={styles.shodanWarning}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                <span>Both port scanners are disabled. The recon pipeline will skip port scanning entirely &mdash; downstream modules (HTTP probe, vulnerability scanning) require open ports to function and will produce no results.</span>
+                <span>两个端口扫描器都已关闭。侦察流程将跳过端口扫描——下游模块（HTTP 探测、漏洞扫描）依赖开放端口才能工作，否则不会产生结果。</span>
               </div>
             )}
             <NaabuSection data={formData} updateField={updateField} />
@@ -758,18 +763,18 @@ export function ProjectForm({
             <div className={styles.guardrailIconWrapper}>
               <ShieldAlert size={32} />
             </div>
-            <h2 className={styles.guardrailTitle}>Target Blocked</h2>
+            <h2 className={styles.guardrailTitle}>目标已被拦截</h2>
             <p className={styles.guardrailMessage}>{guardrailError}</p>
             <p className={styles.guardrailHint}>
-              This target appears to be a well-known public service that you are unlikely authorized to test.
-              Please use a domain or IP range you own or have explicit permission to scan.
+              该目标看起来是知名公共服务，您很可能没有授权进行测试。
+              请使用您拥有或已获得明确授权的域名或 IP 范围进行扫描。
             </p>
             <button
               type="button"
               className={styles.guardrailButton}
               onClick={() => setGuardrailError(null)}
             >
-              Understood
+              我知道了
             </button>
           </div>
         </div>

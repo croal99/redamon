@@ -95,7 +95,7 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Target size={16} />
-          Target Configuration
+          目标配置
         </h2>
         <ChevronDown
           size={16}
@@ -106,17 +106,15 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Define the primary target for your security assessment. Choose between domain-based
-            or IP-based targeting mode.
+            定义本次安全评估的主要目标。可在域名模式与 IP 模式之间切换。
           </p>
 
           {/* IP Mode Toggle - locked in edit mode */}
           <div className={styles.toggleRow}>
             <div>
-              <span className={styles.toggleLabel}>Start from IP</span>
+              <span className={styles.toggleLabel}>从 IP 开始</span>
               <p className={styles.toggleDescription}>
-                Target IP addresses or CIDR ranges instead of a domain. The pipeline will
-                attempt reverse DNS to discover hostnames.
+                使用 IP 地址或 CIDR 网段作为目标（而非域名）。流程会尝试进行反向 DNS 解析以发现主机名。
               </p>
             </div>
             <Toggle
@@ -129,21 +127,21 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
           <div className={styles.fieldRow}>
             <div className={styles.fieldGroup}>
               <label className={`${styles.fieldLabel} ${styles.fieldLabelRequired}`}>
-                Project Name
+                项目名称
               </label>
               <input
                 type="text"
                 className="textInput"
                 value={data.name}
                 onChange={(e) => updateField('name', e.target.value)}
-                placeholder="My Security Project"
+                placeholder="我的安全项目"
               />
             </div>
 
             {!ipMode && (
               <div className={styles.fieldGroup}>
                 <label className={`${styles.fieldLabel} ${styles.fieldLabelRequired}`}>
-                  Target Domain
+                  目标域名
                 </label>
                 <input
                   type="text"
@@ -152,7 +150,7 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
                   onChange={(e) => updateField('targetDomain', e.target.value)}
                   placeholder="example.com"
                   disabled={isLocked}
-                  title={isLocked ? 'Target domain cannot be changed after creation. Create a new project instead.' : undefined}
+                  title={isLocked ? '项目创建后无法修改目标域名。如需更换，请创建新项目。' : undefined}
                 />
               </div>
             )}
@@ -163,9 +161,8 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
             <div className={styles.shodanWarning} style={{ borderColor: 'rgba(239, 68, 68, 0.4)', background: 'rgba(239, 68, 68, 0.08)' }}>
               <ShieldAlert size={14} style={{ color: '#ef4444' }} />
               <span>
-                <strong>Target permanently blocked:</strong> Government, military, educational, and international
-                organization websites (.gov, .mil, .edu, .int, etc.) are always blocked and cannot be used as targets,
-                regardless of guardrail settings. This restriction cannot be disabled.
+                <strong>目标已被永久拦截：</strong>政府、军队、教育与国际组织等网站（.gov、.mil、.edu、.int 等）始终禁止作为目标，
+                与目标防护规则（Guardrail）设置无关，且无法关闭该限制。
               </span>
             </div>
           )}
@@ -174,7 +171,7 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
           {ipMode && (
             <div className={styles.fieldGroup}>
               <label className={`${styles.fieldLabel} ${styles.fieldLabelRequired}`}>
-                Target IPs / CIDRs
+                目标 IP / CIDR
               </label>
               <textarea
                 className="textarea"
@@ -183,23 +180,23 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
                 placeholder={"192.168.1.1\n10.0.0.0/24\n2001:db8::1"}
                 rows={4}
                 disabled={isLocked}
-                title={isLocked ? 'Target IPs cannot be changed after creation.' : undefined}
+                title={isLocked ? '项目创建后无法修改目标 IP。' : undefined}
               />
               <span className={styles.fieldHint}>
                 {isLocked
-                  ? 'Target IPs are locked after project creation. Create a new project to change them.'
-                  : 'Enter one IP or CIDR per line, or comma-separated. IPv4, IPv6, and CIDR ranges supported. Max /24 (256 hosts).'}
+                  ? '项目创建后目标 IP 会被锁定。如需更换，请创建新项目。'
+                  : '每行输入一个 IP 或 CIDR，也可用逗号分隔。支持 IPv4/IPv6/CIDR，最大 /24（256 主机）。'}
               </span>
             </div>
           )}
 
           <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel}>Description</label>
+            <label className={styles.fieldLabel}>描述</label>
             <textarea
               className="textarea"
               value={data.description || ''}
               onChange={(e) => updateField('description', e.target.value)}
-              placeholder="Project description (optional)"
+              placeholder="项目描述（可选）"
               rows={2}
             />
           </div>
@@ -208,33 +205,33 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
           {!ipMode && (
             <>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Subdomain Prefixes</label>
+                <label className={styles.fieldLabel}>子域名前缀</label>
                 <input
                   type="text"
                   className="textInput"
                   value={displayPrefixes}
                   onChange={(e) => handlePrefixesChange(e.target.value)}
-                  placeholder="www, api, admin (comma-separated)"
+                  placeholder="www, api, admin（逗号分隔）"
                   disabled={isLocked}
-                  title={isLocked ? 'Subdomain list cannot be changed after creation. Create a new project instead.' : undefined}
+                  title={isLocked ? '项目创建后无法修改子域名列表。如需更换，请创建新项目。' : undefined}
                 />
                 <span className={styles.fieldHint}>
                   {isLocked
-                    ? 'Target domain and subdomains are locked after project creation to keep graph data consistent. To change them, create a new project.'
-                    : 'Leave empty to discover all subdomains. Enter prefixes without dots (e.g., "www, api, admin").'}
+                    ? '为保持图谱数据一致性，项目创建后目标域名与子域名将被锁定。如需更换，请创建新项目。'
+                    : '留空表示发现全部子域名；填写时请输入不带点的前缀（例如“www, api, admin”）。'}
                 </span>
                 {!isLocked && displayPrefixes.trim().length > 0 && (
                   <span className={styles.fieldHintWarning}>
-                    Specifying prefixes disables full subdomain discovery (Subfinder/Amass). Only the listed prefixes will be scanned.
+                    指定前缀会关闭全量子域名发现（Subfinder/Amass），仅扫描所列前缀。
                   </span>
                 )}
               </div>
 
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>Include Root Domain</span>
+                  <span className={styles.toggleLabel}>包含根域名</span>
                   <p className={styles.toggleDescription}>
-                    Also scan the root domain (e.g., example.com without subdomain)
+                    同时扫描根域名（例如不带子域的 example.com）
                   </p>
                 </div>
                 <Toggle
@@ -245,12 +242,12 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
               </div>
 
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Domain Verification</h3>
+                <h3 className={styles.subSectionTitle}>域名验证</h3>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Verify Domain Ownership</span>
+                    <span className={styles.toggleLabel}>验证域名所有权</span>
                     <p className={styles.toggleDescription}>
-                      Require DNS TXT record verification before scanning
+                      扫描前要求通过 DNS TXT 记录验证
                     </p>
                   </div>
                   <Toggle
@@ -262,7 +259,7 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
                 {data.verifyDomainOwnership && (
                   <div className={styles.fieldRow}>
                     <div className={styles.fieldGroup}>
-                      <label className={styles.fieldLabel}>Ownership Token</label>
+                      <label className={styles.fieldLabel}>所有权令牌</label>
                       <input
                         type="text"
                         className="textInput"
@@ -271,7 +268,7 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
                       />
                     </div>
                     <div className={styles.fieldGroup}>
-                      <label className={styles.fieldLabel}>TXT Record Prefix</label>
+                      <label className={styles.fieldLabel}>TXT 记录前缀</label>
                       <input
                         type="text"
                         className="textInput"
@@ -286,16 +283,14 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
           )}
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Stealth Mode</h3>
+            <h3 className={styles.subSectionTitle}>隐身模式</h3>
             <div className={styles.toggleRow} style={{ gap: 'var(--space-4)' }}>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <span className={styles.toggleLabel}>Enable Stealth Mode</span>
+                <span className={styles.toggleLabel}>启用隐身模式</span>
                 <p className={styles.toggleDescription}>
-                  Force the entire pipeline to use only passive and low-noise techniques.
-                  Active scanners (Kiterunner, banner grabbing) are disabled. Port scanning
-                  switches to passive mode. Nuclei disables DAST and interactsh. The AI agent
-                  uses only stealthy methods and will stop if stealth is impossible for a
-                  requested action.
+                  强制整个流程只使用被动与低噪声技术。
+                  将禁用主动扫描器（Kiterunner、Banner 抓取等）；端口扫描切换为被动模式；
+                  Nuclei 会关闭 DAST 与 interactsh；AI 代理仅使用隐蔽方法，若某个动作无法隐蔽完成则停止。
                 </p>
               </div>
               <Toggle
@@ -307,16 +302,13 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
 
           {/* Target Guardrail */}
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Target Guardrail</h3>
+            <h3 className={styles.subSectionTitle}>目标防护规则（Guardrail）</h3>
             <div className={styles.toggleRow} style={{ gap: 'var(--space-4)' }}>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <span className={styles.toggleLabel}>Enable Target Guardrail</span>
+                <span className={styles.toggleLabel}>启用目标防护规则（Guardrail）</span>
                 <p className={styles.toggleDescription}>
-                  Block well-known public targets (major tech companies,
-                  cloud providers, financial institutions, etc.) when saving the project.
-                  Prevents accidental scanning of unauthorized domains.
-                  Government, military, educational, and international organization domains
-                  (.gov, .mil, .edu, .int) are always blocked regardless of this setting.
+                  保存项目时拦截知名公共目标（大型科技公司、云服务商、金融机构等），避免误扫未授权域名。
+                  政府/军队/教育/国际组织域名（.gov/.mil/.edu/.int）无论该开关如何设置都会被永久拦截。
                 </p>
               </div>
               <Toggle

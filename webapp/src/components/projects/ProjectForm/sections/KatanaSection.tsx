@@ -23,9 +23,9 @@ export function KatanaSection({ data, updateField }: KatanaSectionProps) {
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Bug size={16} />
-          Katana Web Crawler (DAST)
+          Katana Web 爬虫（DAST）
           <NodeInfoTooltip section="Katana" />
-          <span className={styles.badgeActive}>Active</span>
+          <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           <div onClick={(e) => e.stopPropagation()}>
@@ -44,14 +44,14 @@ export function KatanaSection({ data, updateField }: KatanaSectionProps) {
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Active web crawling using Katana from ProjectDiscovery. Discovers URLs, endpoints, and parameters by following links and parsing JavaScript. Found URLs with parameters feed into Nuclei DAST mode for vulnerability fuzzing.
+            使用 ProjectDiscovery Katana 进行主动 Web 爬取。通过跟随链接并解析 JavaScript 来发现 URL、端点与参数。带参数的 URL 会输入到 Nuclei DAST 模式用于漏洞 fuzz。
           </p>
 
           {data.katanaEnabled && (
             <>
           <div className={styles.fieldRow}>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Crawl Depth</label>
+              <label className={styles.fieldLabel}>爬取深度</label>
               <input
                 type="number"
                 className="textInput"
@@ -60,11 +60,11 @@ export function KatanaSection({ data, updateField }: KatanaSectionProps) {
                 min={1}
                 max={10}
               />
-              <span className={styles.fieldHint}>How many links deep to follow. Higher = more URLs but slower</span>
-              <TimeEstimate estimate="Each level adds ~50% time (depth 3 = ~2x depth 2)" />
+              <span className={styles.fieldHint}>跟随链接的层级深度。越大 URL 越多，但越慢</span>
+              <TimeEstimate estimate="每增加 1 层约增加 50% 耗时（深度 3 约为深度 2 的 2 倍）" />
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Max URLs</label>
+              <label className={styles.fieldLabel}>最大 URL 数</label>
               <input
                 type="number"
                 className="textInput"
@@ -72,14 +72,14 @@ export function KatanaSection({ data, updateField }: KatanaSectionProps) {
                 onChange={(e) => updateField('katanaMaxUrls', parseInt(e.target.value) || 300)}
                 min={1}
               />
-              <span className={styles.fieldHint}>Maximum number of URLs to collect per domain</span>
-              <TimeEstimate estimate="300 URLs: ~1-2 min/domain | 1000+: scales linearly" />
+              <span className={styles.fieldHint}>每个域名最多收集的 URL 数量</span>
+              <TimeEstimate estimate="300 URLs：约 1–2 分钟/域名 | 1000+：近似线性增长" />
             </div>
           </div>
 
           <div className={styles.fieldRow}>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Rate Limit</label>
+              <label className={styles.fieldLabel}>限速</label>
               <input
                 type="number"
                 className="textInput"
@@ -87,10 +87,10 @@ export function KatanaSection({ data, updateField }: KatanaSectionProps) {
                 onChange={(e) => updateField('katanaRateLimit', parseInt(e.target.value) || 50)}
                 min={1}
               />
-              <span className={styles.fieldHint}>Requests per second to avoid overloading target</span>
+              <span className={styles.fieldHint}>请求/秒，用于避免给目标造成过大压力</span>
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Timeout (seconds)</label>
+              <label className={styles.fieldLabel}>超时（秒）</label>
               <input
                 type="number"
                 className="textInput"
@@ -98,17 +98,17 @@ export function KatanaSection({ data, updateField }: KatanaSectionProps) {
                 onChange={(e) => updateField('katanaTimeout', parseInt(e.target.value) || 3600)}
                 min={60}
               />
-              <span className={styles.fieldHint}>Overall crawl timeout (default: 60 minutes)</span>
+              <span className={styles.fieldHint}>整体爬取超时（默认：60 分钟）</span>
             </div>
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Options</h3>
+            <h3 className={styles.subSectionTitle}>选项</h3>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>JavaScript Crawling</span>
-                <p className={styles.toggleDescription}>Parse JS files to find hidden endpoints and API calls. Slower but finds more URLs</p>
-                <TimeEstimate estimate="+50-100% (uses headless browser)" />
+                <span className={styles.toggleLabel}>JavaScript 爬取</span>
+                <p className={styles.toggleDescription}>解析 JS 文件以发现隐藏端点与 API 调用。更慢，但能找到更多 URL</p>
+                <TimeEstimate estimate="耗时 +50–100%（使用无头浏览器）" />
               </div>
               <Toggle
                 checked={data.katanaJsCrawl}
@@ -117,8 +117,8 @@ export function KatanaSection({ data, updateField }: KatanaSectionProps) {
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Parameters Only</span>
-                <p className={styles.toggleDescription}>Only keep URLs with query parameters (?key=value) for DAST fuzzing</p>
+                <span className={styles.toggleLabel}>仅保留带参数 URL</span>
+                <p className={styles.toggleDescription}>仅保留包含查询参数（?key=value）的 URL，用于 DAST fuzz</p>
               </div>
               <Toggle
                 checked={data.katanaParamsOnly}
@@ -128,9 +128,9 @@ export function KatanaSection({ data, updateField }: KatanaSectionProps) {
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Exclude Patterns</h3>
+            <h3 className={styles.subSectionTitle}>排除规则</h3>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>URL Patterns to Exclude</label>
+              <label className={styles.fieldLabel}>要排除的 URL 规则</label>
               <textarea
                 className="textarea"
                 value={(data.katanaExcludePatterns ?? []).join('\n')}
@@ -139,15 +139,15 @@ export function KatanaSection({ data, updateField }: KatanaSectionProps) {
                 rows={5}
               />
               <span className={styles.fieldHint}>
-                Skip static assets, images, and CDN URLs. These aren't vulnerable to injection attacks
+                跳过静态资源、图片与 CDN URL。它们通常不易受注入类攻击影响
               </span>
             </div>
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Custom Headers</h3>
+            <h3 className={styles.subSectionTitle}>自定义请求头</h3>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Request Headers</label>
+              <label className={styles.fieldLabel}>请求头</label>
               <textarea
                 className="textarea"
                 value={(data.katanaCustomHeaders ?? []).join('\n')}
@@ -155,12 +155,12 @@ export function KatanaSection({ data, updateField }: KatanaSectionProps) {
                 placeholder="User-Agent: Mozilla/5.0...&#10;Accept: text/html..."
                 rows={3}
               />
-              <span className={styles.fieldHint}>Browser-like headers help avoid detection during DAST crawling</span>
+              <span className={styles.fieldHint}>更接近浏览器的请求头有助于降低 DAST 爬取时的识别/拦截风险</span>
             </div>
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel}>Docker Image</label>
+            <label className={styles.fieldLabel}>Docker 镜像</label>
             <input
               type="text"
               className="textInput"

@@ -22,9 +22,9 @@ export function NmapSection({ data, updateField }: NmapSectionProps) {
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Shield size={16} />
-          Nmap Service Detection
+          Nmap 服务识别
           <NodeInfoTooltip section="Nmap" />
-          <span className={styles.badgeActive}>Active</span>
+          <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           <div onClick={(e) => e.stopPropagation()}>
@@ -43,16 +43,16 @@ export function NmapSection({ data, updateField }: NmapSectionProps) {
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Deep service version detection (-sV) and NSE vulnerability scripts (--script vuln).
-            Runs after port discovery to identify exact software versions and known CVEs on each open port.
+            深度服务版本识别（-sV）与 NSE 漏洞脚本（--script vuln）。
+            在端口发现之后执行，用于识别每个开放端口的精确软件版本与已知 CVE。
           </p>
 
           {data.nmapEnabled && (
             <>
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>Version Detection (-sV)</span>
-                  <p className={styles.toggleDescription}>Probe open ports to determine service/version info. Essential for CVE matching.</p>
+                  <span className={styles.toggleLabel}>版本识别（-sV）</span>
+                  <p className={styles.toggleDescription}>探测开放端口以确定服务/版本信息，是 CVE 匹配的关键</p>
                 </div>
                 <Toggle
                   checked={data.nmapVersionDetection}
@@ -62,8 +62,8 @@ export function NmapSection({ data, updateField }: NmapSectionProps) {
 
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>NSE Vulnerability Scripts (--script vuln)</span>
-                  <p className={styles.toggleDescription}>Run Nmap Scripting Engine vulnerability checks (vsftpd backdoor, Log4Shell, etc.). Disabled in stealth mode.</p>
+                  <span className={styles.toggleLabel}>NSE 漏洞脚本（--script vuln）</span>
+                  <p className={styles.toggleDescription}>运行 Nmap Scripting Engine 漏洞检查（vsftpd 后门、Log4Shell 等）。隐身模式下会禁用</p>
                 </div>
                 <Toggle
                   checked={data.nmapScriptScan}
@@ -73,22 +73,22 @@ export function NmapSection({ data, updateField }: NmapSectionProps) {
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Timing Template</label>
+                  <label className={styles.fieldLabel}>时序模板</label>
                   <select
                     className="textInput"
                     value={data.nmapTimingTemplate}
                     onChange={(e) => updateField('nmapTimingTemplate', e.target.value)}
                   >
-                    <option value="T1">T1 - Sneaky</option>
-                    <option value="T2">T2 - Polite</option>
-                    <option value="T3">T3 - Normal (default)</option>
-                    <option value="T4">T4 - Aggressive</option>
-                    <option value="T5">T5 - Insane</option>
+                    <option value="T1">T1 - 隐蔽</option>
+                    <option value="T2">T2 - 礼貌</option>
+                    <option value="T3">T3 - 正常（默认）</option>
+                    <option value="T4">T4 - 激进</option>
+                    <option value="T5">T5 - 疯狂</option>
                   </select>
-                  <span className={styles.fieldHint}>Higher = faster but noisier. Stealth mode forces T2.</span>
+                  <span className={styles.fieldHint}>越高越快但噪声更大。隐身模式会强制使用 T2</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Total Timeout (seconds)</label>
+                  <label className={styles.fieldLabel}>总超时（秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -96,13 +96,13 @@ export function NmapSection({ data, updateField }: NmapSectionProps) {
                     onChange={(e) => updateField('nmapTimeout', parseInt(e.target.value) || 600)}
                     min={60}
                   />
-                  <span className={styles.fieldHint}>Maximum total scan duration</span>
+                  <span className={styles.fieldHint}>扫描允许的最大总时长</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Per-Host Timeout (seconds)</label>
+                  <label className={styles.fieldLabel}>单主机超时（秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -110,7 +110,7 @@ export function NmapSection({ data, updateField }: NmapSectionProps) {
                     onChange={(e) => updateField('nmapHostTimeout', parseInt(e.target.value) || 300)}
                     min={30}
                   />
-                  <span className={styles.fieldHint}>Max time per host before moving on</span>
+                  <span className={styles.fieldHint}>单个主机最多扫描多久后跳过</span>
                 </div>
               </div>
             </>

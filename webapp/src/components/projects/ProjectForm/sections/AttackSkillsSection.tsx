@@ -36,32 +36,32 @@ interface UserSkillDef {
 const BUILT_IN_SKILLS: BuiltInSkillDef[] = [
   {
     id: 'cve_exploit',
-    name: 'CVE (MSF)',
-    description: 'Exploit known CVEs using Metasploit Framework modules against target services',
+    name: 'CVE 利用（MSF）',
+    description: '使用 Metasploit Framework 模块对目标服务的已知 CVE 进行利用测试',
     icon: <Bug size={16} />,
   },
   {
     id: 'sql_injection',
-    name: 'SQL Injection',
-    description: 'SQL injection testing with SQLMap, WAF bypass, blind injection, and OOB DNS exfiltration',
+    name: 'SQL 注入',
+    description: '使用 SQLMap 进行注入测试，支持 WAF 绕过、盲注与 OOB DNS 外带等场景',
     icon: <Database size={16} />,
   },
   {
     id: 'brute_force_credential_guess',
-    name: 'Credential Testing',
-    description: 'Credential policy validation using Hydra against login services',
+    name: '凭据测试',
+    description: '使用 Hydra 对登录服务进行口令策略与弱口令测试（仅限已授权场景）',
     icon: <KeyRound size={16} />,
   },
   {
     id: 'phishing_social_engineering',
-    name: 'Social Engineering Simulation',
-    description: 'Payload generation, document crafting, and email delivery for authorized awareness testing',
+    name: '社会工程模拟',
+    description: '用于已授权的安全意识测试：生成 payload、制作文档并通过邮件投递',
     icon: <Mail size={16} />,
   },
   {
     id: 'denial_of_service',
-    name: 'Availability Testing',
-    description: 'Assess service resilience using flooding, resource exhaustion, and crash vectors',
+    name: '可用性测试',
+    description: '通过洪泛、资源耗尽与崩溃向量评估服务韧性（仅限已授权场景）',
     icon: <Zap size={16} />,
   },
 ]
@@ -149,8 +149,8 @@ export function AttackSkillsSection({ data, updateField }: AttackSkillsSectionPr
         <div className={styles.sectionHeader} onClick={() => setBuiltInOpen(!builtInOpen)}>
           <h2 className={styles.sectionTitle}>
             <Bug size={16} />
-            Built-in Agent Skills
-            <span className={styles.badgeActive}>Active</span>
+            内置代理技能
+            <span className={styles.badgeActive}>主动</span>
           </h2>
           <ChevronDown
             size={16}
@@ -161,8 +161,7 @@ export function AttackSkillsSection({ data, updateField }: AttackSkillsSectionPr
         {builtInOpen && (
           <div className={styles.sectionContent}>
             <p className={styles.sectionDescription}>
-              Core agent skills with specialized workflows. Disable a skill to prevent the agent
-              from classifying requests into that skill type and using its prompts.
+              核心代理技能（含专用工作流）。关闭某个技能后，代理将不会把请求归类到该技能，也不会使用其对应提示词与流程。
             </p>
 
             {BUILT_IN_SKILLS.map(skill => {
@@ -202,7 +201,7 @@ export function AttackSkillsSection({ data, updateField }: AttackSkillsSectionPr
                       }}>
                         {skill.icon}
                         {skill.name}
-                        <span className={styles.badgeActive}>Active</span>
+                        <span className={styles.badgeActive}>主动</span>
                       </div>
                       <div style={{
                         fontSize: 'var(--text-xs)',
@@ -239,7 +238,7 @@ export function AttackSkillsSection({ data, updateField }: AttackSkillsSectionPr
         <div className={styles.sectionHeader} onClick={() => setUserOpen(!userOpen)}>
           <h2 className={styles.sectionTitle}>
             <Swords size={16} />
-            User Agent Skills
+            用户代理技能
           </h2>
           <ChevronDown
             size={16}
@@ -250,13 +249,12 @@ export function AttackSkillsSection({ data, updateField }: AttackSkillsSectionPr
         {userOpen && (
           <div className={styles.sectionContent}>
             <p className={styles.sectionDescription}>
-              Custom agent skills uploaded from Global Settings. Enable a skill to let the agent
-              classify requests into it and use its workflow.
+              从“全局设置”上传的自定义代理技能。启用后，代理可将请求归类到该技能并执行其工作流。
             </p>
 
             {loading ? (
               <div style={{ textAlign: 'center', padding: 'var(--space-4)', color: 'var(--text-tertiary)' }}>
-                <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> Loading...
+                <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> 加载中...
               </div>
             ) : userSkills.length === 0 ? (
               <div style={{
@@ -266,7 +264,7 @@ export function AttackSkillsSection({ data, updateField }: AttackSkillsSectionPr
                 fontSize: 'var(--text-sm)',
               }}>
                 <p style={{ marginBottom: 'var(--space-3)' }}>
-                  No user skills uploaded yet. Upload <code>.md</code> skill files from Global Settings to create custom attack workflows.
+                  暂无已上传的用户技能。请在“全局设置”中上传 <code>.md</code> 技能文件以创建自定义攻击工作流。
                 </p>
                 <Link
                   href="/settings"
@@ -286,7 +284,7 @@ export function AttackSkillsSection({ data, updateField }: AttackSkillsSectionPr
                   }}
                 >
                   <Settings size={13} />
-                  Go to Global Settings
+                  前往全局设置
                 </Link>
               </div>
             ) : (
@@ -330,7 +328,7 @@ export function AttackSkillsSection({ data, updateField }: AttackSkillsSectionPr
                         color: 'var(--text-tertiary)',
                         marginTop: '2px',
                       }}>
-                        Uploaded {new Date(skill.createdAt).toLocaleDateString()}
+                        上传于 {new Date(skill.createdAt).toLocaleDateString()}
                       </div>
                     </div>
                   </div>

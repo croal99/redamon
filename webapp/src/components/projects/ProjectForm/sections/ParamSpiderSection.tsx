@@ -22,9 +22,9 @@ export function ParamSpiderSection({ data, updateField }: ParamSpiderSectionProp
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Search size={16} />
-          ParamSpider Parameter Discovery
+          ParamSpider 参数发现
           <NodeInfoTooltip section="ParamSpider" />
-          <span className={styles.badgePassive}>Passive</span>
+          <span className={styles.badgePassive}>被动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           <div onClick={(e) => e.stopPropagation()}>
@@ -43,24 +43,24 @@ export function ParamSpiderSection({ data, updateField }: ParamSpiderSectionProp
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Passive URL parameter discovery using ParamSpider. Queries the Wayback Machine for historically-documented URLs containing query parameters. Only returns parameterized URLs (with ?key=value), making results directly useful for fuzzing and vulnerability testing. Complements GAU by focusing specifically on parameter-bearing endpoints. No API keys required.
+            使用 ParamSpider 进行被动 URL 参数发现。通过查询 Wayback Machine 获取历史记录中包含查询参数的 URL。仅返回带参数的 URL（?key=value），可直接用于 fuzz 与漏洞测试。相较 GAU 更聚焦“带参数端点”。无需 API Key。
           </p>
 
           {data.paramspiderEnabled && (
             <>
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Placeholder</label>
+                  <label className={styles.fieldLabel}>占位符</label>
                   <input
                     type="text"
                     className="textInput"
                     value={data.paramspiderPlaceholder}
                     onChange={(e) => updateField('paramspiderPlaceholder', e.target.value || 'FUZZ')}
                   />
-                  <span className={styles.fieldHint}>Replacement value for parameter values (e.g., FUZZ for fuzzing tools)</span>
+                  <span className={styles.fieldHint}>用于替换参数值的占位符（例如给 fuzz 工具使用的 FUZZ）</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Timeout (seconds)</label>
+                  <label className={styles.fieldLabel}>超时（秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -68,7 +68,7 @@ export function ParamSpiderSection({ data, updateField }: ParamSpiderSectionProp
                     onChange={(e) => updateField('paramspiderTimeout', parseInt(e.target.value) || 120)}
                     min={10}
                   />
-                  <span className={styles.fieldHint}>Per-domain query timeout</span>
+                  <span className={styles.fieldHint}>每个域名的查询超时</span>
                 </div>
               </div>
             </>

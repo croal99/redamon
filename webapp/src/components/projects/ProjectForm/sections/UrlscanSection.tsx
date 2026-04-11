@@ -39,9 +39,9 @@ export function UrlscanSection({ data, updateField }: UrlscanSectionProps) {
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Globe size={16} />
-          URLScan.io Enrichment
+          URLScan.io 情报增强
           <NodeInfoTooltip section="Urlscan" />
-          <span className={styles.badgePassive}>Passive</span>
+          <span className={styles.badgePassive}>被动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           <div onClick={(e) => e.stopPropagation()}>
@@ -60,23 +60,21 @@ export function UrlscanSection({ data, updateField }: UrlscanSectionProps) {
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Passive OSINT enrichment using URLScan.io historical scan data. Discovers additional
-            subdomains, IPs, ASN info, domain age, TLS certificates, server technologies, and
-            screenshots — all without touching the target directly. Runs after domain discovery,
-            before port scanning.
+            使用 URLScan.io 历史扫描数据进行被动 OSINT 情报增强，发现额外的子域名、IP、ASN 信息、域名年龄、
+            TLS 证书、服务器技术栈与截图——全程不直接触达目标。执行顺序位于域名发现之后、端口扫描之前。
           </p>
 
           <div className={styles.shodanWarning} style={{ borderColor: 'var(--color-info, #3b82f6)' }}>
             <Info size={14} />
             {hasApiKey
-              ? 'URLScan API key configured — higher rate limits enabled.'
-              : 'Works without API key (public results only). Add a key in Global Settings for higher rate limits.'}
+              ? '已配置 URLScan API Key——将启用更高的速率限制。'
+              : '无需 API Key 也可使用（仅公共结果）。如需更高速率限制，请在全局设置中配置 Key。'}
           </div>
 
           {data.urlscanEnabled && (
             <div className={styles.fieldRow}>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Max Results</label>
+                <label className={styles.fieldLabel}>最大结果数</label>
                 <input
                   type="number"
                   className="textInput"
@@ -85,7 +83,7 @@ export function UrlscanSection({ data, updateField }: UrlscanSectionProps) {
                   min={1}
                   max={10000}
                 />
-                <span className={styles.fieldHint}>Maximum scan results to fetch from URLScan API</span>
+                <span className={styles.fieldHint}>从 URLScan API 拉取的扫描结果上限</span>
               </div>
             </div>
           )}

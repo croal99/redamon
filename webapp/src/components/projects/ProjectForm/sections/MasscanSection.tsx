@@ -23,9 +23,9 @@ export function MasscanSection({ data, updateField }: MasscanSectionProps) {
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Radar size={16} />
-          Masscan Port Scanner
+          Masscan 端口扫描
           <NodeInfoTooltip section="Masscan" />
-          <span className={styles.badgeActive}>Active</span>
+          <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           <div onClick={(e) => e.stopPropagation()}>
@@ -44,16 +44,16 @@ export function MasscanSection({ data, updateField }: MasscanSectionProps) {
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            High-speed SYN port scanner optimized for large networks and IP/CIDR ranges.
-            Uses raw packets for maximum speed. Requires root or CAP_NET_RAW.
-            Incompatible with Tor (raw SYN packets bypass TCP stack).
+            面向大网段与 IP/CIDR 的高速 SYN 端口扫描器。
+            使用原始报文以获得最高速度；需要 root 或 CAP_NET_RAW 权限。
+            与 Tor 不兼容（原始 SYN 报文绕过 TCP 协议栈）。
           </p>
 
           {data.masscanEnabled && (
             <>
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Top Ports</label>
+                  <label className={styles.fieldLabel}>Top 端口</label>
                   <input
                     type="text"
                     className="textInput"
@@ -61,10 +61,10 @@ export function MasscanSection({ data, updateField }: MasscanSectionProps) {
                     onChange={(e) => updateField('masscanTopPorts', e.target.value)}
                     placeholder="1000"
                   />
-                  <span className={styles.fieldHint}>Use &ldquo;100&rdquo;, &ldquo;1000&rdquo;, or &ldquo;full&rdquo; for all 65535 ports</span>
+                  <span className={styles.fieldHint}>可填 “100”、“1000” 或 “full”（扫描全部 65535 端口）</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Custom Ports</label>
+                  <label className={styles.fieldLabel}>自定义端口</label>
                   <input
                     type="text"
                     className="textInput"
@@ -72,13 +72,13 @@ export function MasscanSection({ data, updateField }: MasscanSectionProps) {
                     onChange={(e) => updateField('masscanCustomPorts', e.target.value)}
                     placeholder="80,443,8080-8090"
                   />
-                  <span className={styles.fieldHint}>Overrides Top Ports if set. Use ranges: 8080-8090</span>
+                  <span className={styles.fieldHint}>设置后会覆盖 Top 端口；支持范围：8080-8090</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Rate (packets/sec)</label>
+                  <label className={styles.fieldLabel}>速率（包/秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -86,11 +86,11 @@ export function MasscanSection({ data, updateField }: MasscanSectionProps) {
                     onChange={(e) => updateField('masscanRate', parseInt(e.target.value) || 1000)}
                     min={1}
                   />
-                  <span className={styles.fieldHint}>Packets/sec. Masscan can handle very high rates (10k+)</span>
-                  <TimeEstimate estimate="1000: safe default | 10000+: fast but may overwhelm targets" />
+                  <span className={styles.fieldHint}>包/秒。Masscan 可支持很高的速率（10k+）</span>
+                  <TimeEstimate estimate="1000：相对安全的默认值 | 10000+：更快，但可能压垮目标" />
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Wait (seconds)</label>
+                  <label className={styles.fieldLabel}>等待（秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -98,13 +98,13 @@ export function MasscanSection({ data, updateField }: MasscanSectionProps) {
                     onChange={(e) => updateField('masscanWait', parseInt(e.target.value) || 10)}
                     min={0}
                   />
-                  <span className={styles.fieldHint}>Seconds to wait for late responses after scan completes</span>
+                  <span className={styles.fieldHint}>扫描结束后等待延迟响应的秒数</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Retries</label>
+                  <label className={styles.fieldLabel}>重试次数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -113,10 +113,10 @@ export function MasscanSection({ data, updateField }: MasscanSectionProps) {
                     min={0}
                     max={10}
                   />
-                  <span className={styles.fieldHint}>Retry attempts for unresponsive ports</span>
+                  <span className={styles.fieldHint}>对无响应端口的重试次数</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Exclude Targets</label>
+                  <label className={styles.fieldLabel}>排除目标</label>
                   <input
                     type="text"
                     className="textInput"
@@ -124,14 +124,14 @@ export function MasscanSection({ data, updateField }: MasscanSectionProps) {
                     onChange={(e) => updateField('masscanExcludeTargets', e.target.value)}
                     placeholder="10.0.0.1, 192.168.0.0/24"
                   />
-                  <span className={styles.fieldHint}>Comma-separated IPs/CIDRs to exclude from scanning</span>
+                  <span className={styles.fieldHint}>用逗号分隔要从扫描中排除的 IP/CIDR</span>
                 </div>
               </div>
 
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>Banner Grabbing</span>
-                  <p className={styles.toggleDescription}>Capture service banners (SSH, HTTP, etc.). Increases scan time but provides richer data.</p>
+                  <span className={styles.toggleLabel}>抓取 Banner</span>
+                  <p className={styles.toggleDescription}>抓取服务 Banner（SSH/HTTP 等）。会增加耗时，但能提供更丰富的数据</p>
                 </div>
                 <Toggle
                   checked={data.masscanBanners}

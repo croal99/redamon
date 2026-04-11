@@ -35,6 +35,7 @@
   border-bottom: 1px solid var(--border-default);
   background: var(--bg-tertiary);
   width: 100%;
+  overflow-x: auto;
 }
 
 :global([data-theme="light"]) .tabsWrapper {
@@ -47,9 +48,10 @@
   gap: var(--space-2);
   padding: var(--space-4) var(--space-3) var(--space-1);
   align-items: stretch;
-  max-width: 1220px;
-  margin: 0 auto;
-  width: 100%;
+  flex-wrap: nowrap;
+  width: max-content;
+  min-width: 100%;
+  margin: 0;
 }
 
 .tabGroup {
@@ -141,8 +143,8 @@
 .tabGroupLabel {
   font-size: 9px;
   font-weight: var(--font-semibold);
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
+  text-transform: none;
+  letter-spacing: 0;
   color: var(--text-tertiary);
   padding: 0 2px;
 }
@@ -224,14 +226,15 @@
   gap: 2px;
   margin-top: auto;
   margin-bottom: auto;
+  flex-wrap: nowrap;
 }
 
 .compactTab {
-  padding: 4px 1px !important;
+  padding: 6px 10px !important;
   font-size: 11px !important;
   text-align: center;
   line-height: 1.2;
-  white-space: normal !important;
+  white-space: nowrap !important;
 }
 
 .hiddenTab {
@@ -240,15 +243,15 @@
 }
 
 .wideTab {
-  padding: 4px 6px !important;
+  padding: 6px 12px !important;
 }
 
 .presetTab {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 0 !important;
-  padding-left: 8px !important;
-  padding-right: 1px !important;
+  gap: 4px !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
   border: 1px solid rgba(34, 197, 94, 0.3) !important;
 }
 

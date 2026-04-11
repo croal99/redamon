@@ -25,6 +25,13 @@ interface CustomTemplate {
 }
 
 const SEVERITY_OPTIONS = ['critical', 'high', 'medium', 'low', 'info']
+const SEVERITY_LABELS: Record<string, string> = {
+  critical: '严重',
+  high: '高',
+  medium: '中',
+  low: '低',
+  info: '信息',
+}
 
 const SEVERITY_COLORS: Record<string, string> = {
   critical: '#e53e3e',
@@ -73,13 +80,13 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
 
       const result = await res.json()
       if (!res.ok) {
-        setUploadError(result.error || 'Upload failed')
+        setUploadError(result.error || '上传失败')
         return
       }
 
       setCustomTemplates(result.templates || [])
     } catch {
-      setUploadError('Upload failed. Please try again.')
+      setUploadError('上传失败，请重试。')
     } finally {
       setIsUploading(false)
       if (templateFileRef.current) templateFileRef.current.value = ''
@@ -116,9 +123,9 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Shield size={16} />
-          Nuclei Vulnerability Scanner
+          Nuclei 漏洞扫描
           <NodeInfoTooltip section="Nuclei" />
-          <span className={styles.badgeActive}>Active</span>
+          <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           <div onClick={(e) => e.stopPropagation()}>
@@ -137,14 +144,14 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Template-based vulnerability scanning using ProjectDiscovery's Nuclei. Runs thousands of security checks against discovered endpoints to identify CVEs, misconfigurations, exposed panels, and other security issues.
+            基于 ProjectDiscovery Nuclei 的模板化漏洞扫描。会对已发现的端点执行大量安全检查，用于识别 CVE、错误配置、暴露面板及其他安全问题。
           </p>
           {data.nucleiEnabled && (
           <>
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Severity Levels</h3>
-            <p className={styles.fieldHint} style={{ marginBottom: '0.5rem' }}>Filter vulnerabilities by severity. Exclude &ldquo;info&rdquo; for production scans</p>
-            <TimeEstimate estimate="Critical only: ~70% faster than all severities" />
+            <h3 className={styles.subSectionTitle}>严重级别</h3>
+            <p className={styles.fieldHint} style={{ marginBottom: '0.5rem' }}>按严重级别过滤漏洞；生产扫描建议排除 “info”</p>
+            <TimeEstimate estimate="仅扫描 critical：相较全量严重级别约快 70%" />
             <div className={styles.checkboxGroup}>
               {SEVERITY_OPTIONS.map(severity => (
                 <label key={severity} className="checkboxLabel">
@@ -154,7 +161,7 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
                     checked={(data.nucleiSeverity ?? []).includes(severity)}
                     onChange={() => toggleSeverity(severity)}
                   />
-                  {severity.charAt(0).toUpperCase() + severity.slice(1)}
+                  {(SEVERITY_LABELS[severity] ?? (severity.charAt(0).toUpperCase() + severity.slice(1)))}（{severity}）
                 </label>
               ))}
             </div>
@@ -162,7 +169,7 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
 
           <div className={styles.fieldRow}>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Rate Limit</label>
+              <label className={styles.fieldLabel}>限速</label>
               <input
                 type="number"
                 className="textInput"
@@ -170,10 +177,10 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
                 onChange={(e) => updateField('nucleiRateLimit', parseInt(e.target.value) || 100)}
                 min={1}
               />
-              <span className={styles.fieldHint}>Requests/sec. 100-150 for most targets, lower for sensitive systems</span>
+              <span className={styles.fieldHint}>请求/秒。大多数目标建议 100–150；敏感系统建议更低</span>
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Bulk Size</label>
+              <label className={styles.fieldLabel}>批量大小</label>
               <input
                 type="number"
                 className="textInput"
@@ -181,13 +188,13 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
                 onChange={(e) => updateField('nucleiBulkSize', parseInt(e.target.value) || 25)}
                 min={1}
               />
-              <span className={styles.fieldHint}>Number of hosts to process in parallel</span>
+              <span className={styles.fieldHint}>并行处理的主机数量</span>
             </div>
           </div>
 
           <div className={styles.fieldRow}>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Concurrency</label>
+              <label className={styles.fieldLabel}>并发</label>
               <input
                 type="number"
                 className="textInput"
@@ -195,10 +202,10 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
                 onChange={(e) => updateField('nucleiConcurrency', parseInt(e.target.value) || 25)}
                 min={1}
               />
-              <span className={styles.fieldHint}>Templates to execute in parallel</span>
+              <span className={styles.fieldHint}>并行执行的模板数量</span>
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Timeout (seconds)</label>
+              <label className={styles.fieldLabel}>超时（秒）</label>
               <input
                 type="number"
                 className="textInput"
@@ -206,13 +213,13 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
                 onChange={(e) => updateField('nucleiTimeout', parseInt(e.target.value) || 10)}
                 min={1}
               />
-              <span className={styles.fieldHint}>Request timeout per template check</span>
+              <span className={styles.fieldHint}>每个模板检查的请求超时</span>
             </div>
           </div>
 
           <div className={styles.fieldRow}>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Retries</label>
+              <label className={styles.fieldLabel}>重试次数</label>
               <input
                 type="number"
                 className="textInput"
@@ -221,10 +228,10 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
                 min={0}
                 max={10}
               />
-              <span className={styles.fieldHint}>Retry attempts for failed requests</span>
+              <span className={styles.fieldHint}>失败请求的重试次数</span>
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Max Redirects</label>
+              <label className={styles.fieldLabel}>最大重定向</label>
               <input
                 type="number"
                 className="textInput"
@@ -233,25 +240,25 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
                 min={0}
                 max={50}
               />
-              <span className={styles.fieldHint}>Maximum redirect chain to follow</span>
+              <span className={styles.fieldHint}>允许跟随的最大重定向链长度</span>
             </div>
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Template Configuration</h3>
+            <h3 className={styles.subSectionTitle}>模板配置</h3>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Template Folders</label>
+              <label className={styles.fieldLabel}>模板目录</label>
               <input
                 type="text"
                 className="textInput"
                 value={(data.nucleiTemplates ?? []).join(', ')}
                 onChange={(e) => updateField('nucleiTemplates', e.target.value.split(',').map(s => s.trim()).filter(Boolean))}
-                placeholder="cves, vulnerabilities, misconfig (empty = all)"
+                placeholder="cves, vulnerabilities, misconfig（留空=全部）"
               />
-              <span className={styles.fieldHint}>cves, vulnerabilities, misconfiguration, exposures, technologies, default-logins, takeovers</span>
+              <span className={styles.fieldHint}>示例：cves, vulnerabilities, misconfiguration, exposures, technologies, default-logins, takeovers</span>
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Exclude Template Paths</label>
+              <label className={styles.fieldLabel}>排除模板路径</label>
               <input
                 type="text"
                 className="textInput"
@@ -259,10 +266,10 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
                 onChange={(e) => updateField('nucleiExcludeTemplates', e.target.value.split(',').map(s => s.trim()).filter(Boolean))}
                 placeholder="http/vulnerabilities/generic/"
               />
-              <span className={styles.fieldHint}>Exclude specific directories or template files by path</span>
+              <span className={styles.fieldHint}>按路径排除特定目录或模板文件</span>
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Custom Template Paths</label>
+              <label className={styles.fieldLabel}>自定义模板路径</label>
               <textarea
                 className="textarea"
                 value={(data.nucleiCustomTemplates ?? []).join('\n')}
@@ -270,27 +277,27 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
                 placeholder="/path/to/custom-templates&#10;~/my-nuclei-templates"
                 rows={2}
               />
-              <span className={styles.fieldHint}>Add your own templates in addition to the official repository</span>
+              <span className={styles.fieldHint}>除官方仓库外，额外添加你自己的模板</span>
             </div>
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Template Tags</h3>
-            <p className={styles.fieldHint} style={{ marginBottom: '0.5rem' }}>Filter templates by functionality tags</p>
+            <h3 className={styles.subSectionTitle}>模板标签</h3>
+            <p className={styles.fieldHint} style={{ marginBottom: '0.5rem' }}>按功能标签过滤模板</p>
             <div className={styles.fieldRow}>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Include Tags</label>
+                <label className={styles.fieldLabel}>包含标签</label>
                 <input
                   type="text"
                   className="textInput"
                   value={(data.nucleiTags ?? []).join(', ')}
                   onChange={(e) => updateField('nucleiTags', e.target.value.split(',').map(s => s.trim()).filter(Boolean))}
-                  placeholder="cve, xss, sqli, rce (empty = all)"
+                  placeholder="cve, xss, sqli, rce（留空=全部）"
                 />
-                <span className={styles.fieldHint}>Popular: cve, xss, sqli, rce, lfi, ssrf, xxe, ssti</span>
+                <span className={styles.fieldHint}>常用：cve, xss, sqli, rce, lfi, ssrf, xxe, ssti</span>
               </div>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Exclude Tags</label>
+                <label className={styles.fieldLabel}>排除标签</label>
                 <input
                   type="text"
                   className="textInput"
@@ -298,17 +305,17 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
                   onChange={(e) => updateField('nucleiExcludeTags', e.target.value.split(',').map(s => s.trim()).filter(Boolean))}
                   placeholder="dos, fuzz"
                 />
-                <span className={styles.fieldHint}>Exclude dos, fuzz for production</span>
+                <span className={styles.fieldHint}>生产环境建议排除 dos、fuzz</span>
               </div>
             </div>
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Template Options</h3>
+            <h3 className={styles.subSectionTitle}>模板选项</h3>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Auto Update Templates</span>
-                <p className={styles.toggleDescription}>Download latest templates before scan. Adds ~10-30 seconds</p>
+                <span className={styles.toggleLabel}>扫描前更新模板</span>
+                <p className={styles.toggleDescription}>扫描前下载最新模板。会额外增加约 10–30 秒</p>
               </div>
               <Toggle
                 checked={data.nucleiAutoUpdateTemplates}
@@ -319,9 +326,9 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
             <div style={{ marginTop: '12px', padding: '12px', background: 'var(--bg-secondary, #1a1a2e)', borderRadius: '8px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                 <div>
-                  <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-primary)' }}>Custom Templates</span>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-primary)' }}>自定义模板</span>
                   <p style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', margin: '2px 0 0' }}>
-                    Upload is global. Check templates to include in this project's scans.
+                    上传为全局共享。勾选需要纳入本项目扫描的模板。
                   </p>
                 </div>
                 <div>
@@ -343,7 +350,7 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
                     disabled={isUploading}
                   >
                     {isUploading ? <Loader2 size={13} className={styles.spin} /> : <Upload size={13} />}
-                    {isUploading ? 'Uploading...' : 'Upload .yaml'}
+                    {isUploading ? '上传中…' : '上传 .yaml'}
                   </button>
                 </div>
               </div>
@@ -354,7 +361,7 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
 
               {customTemplates.length === 0 ? (
                 <p style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontStyle: 'italic', margin: '8px 0 0' }}>
-                  No custom templates uploaded yet.
+                  暂无已上传的自定义模板。
                 </p>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '6px' }}>
@@ -424,7 +431,7 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
                             flexShrink: 0,
                             marginLeft: '8px',
                           }}
-                          title={`Delete ${t.file}`}
+                          title={`删除 ${t.file}`}
                         >
                           <Trash2 size={13} />
                         </button>
@@ -437,8 +444,8 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
 
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>New Templates Only</span>
-                <p className={styles.toggleDescription}>Only run templates added since last update. Good for daily scans</p>
+                <span className={styles.toggleLabel}>仅扫描新增模板</span>
+                <p className={styles.toggleDescription}>只运行上次更新后新增的模板，适合每日例行扫描</p>
               </div>
               <Toggle
                 checked={data.nucleiNewTemplatesOnly}
@@ -447,9 +454,9 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>DAST Mode</span>
-                <p className={styles.toggleDescription}>Active fuzzing for XSS, SQLi, RCE. More aggressive, may trigger alerts. Requires URLs with parameters</p>
-                <TimeEstimate estimate="+50-100% scan time (active fuzzing)" />
+                <span className={styles.toggleLabel}>DAST 模式</span>
+                <p className={styles.toggleDescription}>对 XSS/SQLi/RCE 等进行主动 fuzz。更激进，可能触发告警；需要带参数的 URL</p>
+                <TimeEstimate estimate="扫描耗时 +50–100%（主动 fuzz）" />
               </div>
               <Toggle
                 checked={data.nucleiDastMode}
@@ -459,12 +466,12 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Advanced Options</h3>
+            <h3 className={styles.subSectionTitle}>高级选项</h3>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Headless Mode</span>
-                <p className={styles.toggleDescription}>Use headless browser for JavaScript-rendered pages. Requires Chrome installed</p>
-                <TimeEstimate estimate="+100-200% scan time (browser rendering)" />
+                <span className={styles.toggleLabel}>无头模式</span>
+                <p className={styles.toggleDescription}>对 JavaScript 渲染页面使用无头浏览器。需要安装 Chrome</p>
+                <TimeEstimate estimate="扫描耗时 +100–200%（浏览器渲染）" />
               </div>
               <Toggle
                 checked={data.nucleiHeadless}
@@ -473,8 +480,8 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>System DNS Resolvers</span>
-                <p className={styles.toggleDescription}>Use OS DNS instead of nuclei defaults. Better for internal networks</p>
+                <span className={styles.toggleLabel}>使用系统 DNS</span>
+                <p className={styles.toggleDescription}>使用操作系统 DNS 替代 nuclei 默认解析器，更适合内网环境</p>
               </div>
               <Toggle
                 checked={data.nucleiSystemResolvers}
@@ -484,7 +491,7 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
             <div className={styles.toggleRow}>
               <div>
                 <span className={styles.toggleLabel}>Interactsh</span>
-                <p className={styles.toggleDescription}>Detect blind vulns (SSRF, XXE, RCE) via out-of-band callbacks. Requires internet</p>
+                <p className={styles.toggleDescription}>通过带外回连检测盲打漏洞（SSRF/XXE/RCE）。需要联网</p>
               </div>
               <Toggle
                 checked={data.nucleiInteractsh}
@@ -493,8 +500,8 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Follow Redirects</span>
-                <p className={styles.toggleDescription}>Follow HTTP redirects during template execution</p>
+                <span className={styles.toggleLabel}>跟随重定向</span>
+                <p className={styles.toggleDescription}>模板执行期间跟随 HTTP 重定向</p>
               </div>
               <Toggle
                 checked={data.nucleiFollowRedirects}
@@ -503,8 +510,8 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Scan All IPs</span>
-                <p className={styles.toggleDescription}>Scan all resolved IPs, not just hostnames. May find duplicate vulns</p>
+                <span className={styles.toggleLabel}>扫描全部解析 IP</span>
+                <p className={styles.toggleDescription}>扫描解析到的全部 IP（不只 hostname）。可能会产生重复漏洞结果</p>
               </div>
               <Toggle
                 checked={data.nucleiScanAllIps}
@@ -514,7 +521,7 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel}>Docker Image</label>
+            <label className={styles.fieldLabel}>Docker 镜像</label>
             <input
               type="text"
               className="textInput"

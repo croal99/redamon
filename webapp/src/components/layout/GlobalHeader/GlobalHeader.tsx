@@ -7,7 +7,6 @@ import { Crosshair, FolderOpen, Shield, CircleHelp, TrendingUp, FileText, Settin
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { useAuth } from '@/providers/AuthProvider'
 import { ProjectSelector } from './ProjectSelector'
-import { UserSelector } from './UserSelector'
 import styles from './GlobalHeader.module.css'
 import { UserInfo } from './UserInfo'
 
@@ -25,7 +24,7 @@ export function GlobalHeader() {
   return (
     <header className={styles.header}>
       <Link href="/home" className={styles.logo}>
-        <Image src="/logo.png" alt="合盛智核" width={28} height={28} className={styles.logoImg} />
+        <Image src="/logo.png" alt="合盛智核" width={26} height={26} className={styles.logoImg} />
         <span className={styles.logoText}>
           <span className={styles.logoAccent}>智核·</span>星图
         </span>
@@ -68,18 +67,6 @@ export function GlobalHeader() {
 
         <div className={styles.divider} />
 
-        {isAuthenticated ? (
-          <Link href="/logout" className={styles.helpLink} title={`退出${user?.username ? `（${user.username}）` : ''}`}>
-            <LogOut size={16} />
-          </Link>
-        ) : (
-          <Link href="/login" className={styles.helpLink} title="登录">
-            <LogIn size={16} />
-          </Link>
-        )}
-
-        <div className={styles.divider} />
-
         <a
           href="https://github.com/samugit83/redamon/wiki"
           target="_blank"
@@ -93,6 +80,18 @@ export function GlobalHeader() {
         <div className={styles.divider} />
 
         <UserInfo />
+
+        <div className={styles.divider} />
+
+        {isAuthenticated ? (
+          <Link href="/logout" className={styles.helpLink} title={`退出${user?.username ? `（${user.username}）` : ''}`}>
+            <LogOut size={16} />
+          </Link>
+        ) : (
+          <Link href="/login" className={styles.helpLink} title="登录">
+            <LogIn size={16} />
+          </Link>
+        )}
 
         <div className={styles.divider} />
 

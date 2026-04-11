@@ -73,7 +73,7 @@ export function FfufSection({ data, updateField, projectId, mode }: FfufSectionP
       const result = await res.json()
 
       if (!res.ok) {
-        setUploadError(result.error || 'Upload failed')
+        setUploadError(result.error || '上传失败')
         return
       }
 
@@ -82,7 +82,7 @@ export function FfufSection({ data, updateField, projectId, mode }: FfufSectionP
         updateField('ffufWordlist', result.uploaded.path)
       }
     } catch {
-      setUploadError('Upload failed. Please try again.')
+      setUploadError('上传失败，请重试。')
     } finally {
       setIsUploading(false)
       if (fileInputRef.current) fileInputRef.current.value = ''
@@ -123,9 +123,9 @@ export function FfufSection({ data, updateField, projectId, mode }: FfufSectionP
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <FolderSearch size={16} />
-          FFuf Directory Fuzzer
+          FFuf 目录爆破（Fuzzer）
           <NodeInfoTooltip section="Ffuf" />
-          <span className={styles.badgeActive}>Active</span>
+          <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           <div onClick={(e) => e.stopPropagation()}>
@@ -144,14 +144,14 @@ export function FfufSection({ data, updateField, projectId, mode }: FfufSectionP
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Fast directory and endpoint fuzzer that brute-forces common paths using wordlists. Discovers hidden content (admin panels, backup files, configs, undocumented APIs) that crawlers cannot find. Runs after crawlers complete and can target discovered base paths for smart fuzzing.
+            使用字典对常见路径进行爆破的高速目录/端点 fuzzer，可发现爬虫无法覆盖的隐藏内容（管理后台、备份文件、配置文件、未公开 API 等）。通常在爬虫完成后运行，并可对已发现的基础路径进行智能 fuzz。
           </p>
 
           {data.ffufEnabled && (
             <>
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Threads</label>
+                  <label className={styles.fieldLabel}>线程数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -160,10 +160,10 @@ export function FfufSection({ data, updateField, projectId, mode }: FfufSectionP
                     min={1}
                     max={200}
                   />
-                  <span className={styles.fieldHint}>Concurrent request threads</span>
+                  <span className={styles.fieldHint}>并发请求线程数</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Rate Limit (req/s)</label>
+                  <label className={styles.fieldLabel}>限速（请求/秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -171,13 +171,13 @@ export function FfufSection({ data, updateField, projectId, mode }: FfufSectionP
                     onChange={(e) => updateField('ffufRate', parseInt(e.target.value) || 0)}
                     min={0}
                   />
-                  <span className={styles.fieldHint}>Max requests per second (0 = unlimited)</span>
+                  <span className={styles.fieldHint}>每秒最大请求数（0=不限）</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Request Timeout (s)</label>
+                  <label className={styles.fieldLabel}>请求超时（秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -185,10 +185,10 @@ export function FfufSection({ data, updateField, projectId, mode }: FfufSectionP
                     onChange={(e) => updateField('ffufTimeout', parseInt(e.target.value) || 10)}
                     min={1}
                   />
-                  <span className={styles.fieldHint}>Per-request timeout</span>
+                  <span className={styles.fieldHint}>单次请求超时</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Max Time (s)</label>
+                  <label className={styles.fieldLabel}>最大执行时长（秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -196,13 +196,13 @@ export function FfufSection({ data, updateField, projectId, mode }: FfufSectionP
                     onChange={(e) => updateField('ffufMaxTime', parseInt(e.target.value) || 600)}
                     min={60}
                   />
-                  <span className={styles.fieldHint}>Maximum total execution time per target</span>
+                  <span className={styles.fieldHint}>每个目标的最大总执行时长</span>
                 </div>
               </div>
 
               <div className={styles.fieldGroup}>
                 <label className={styles.fieldLabel}>
-                  Wordlist <span style={{ fontWeight: 400, color: 'var(--text-tertiary)' }}>(built-in or upload)</span>
+                  字典 <span style={{ fontWeight: 400, color: 'var(--text-tertiary)' }}>(内置或上传)</span>
                 </label>
                 <div
                   style={{
@@ -217,9 +217,9 @@ export function FfufSection({ data, updateField, projectId, mode }: FfufSectionP
                       className="select"
                       value={data.ffufWordlist}
                       onChange={(e) => updateField('ffufWordlist', e.target.value || DEFAULT_WORDLIST)}
-                      aria-label="FFuf wordlist"
+                      aria-label="FFuf 字典"
                     >
-                      <optgroup label="Built-in (SecLists in recon image)">
+                      <optgroup label="内置（recon 镜像内的 SecLists）">
                         {BUILTIN_WORDLISTS.map((wl) => (
                           <option key={wl.path} value={wl.path}>
                             {wl.name}
@@ -227,14 +227,14 @@ export function FfufSection({ data, updateField, projectId, mode }: FfufSectionP
                         ))}
                       </optgroup>
                       {canUpload && customWordlists.length === 0 && (
-                        <optgroup label="Your custom lists">
+                        <optgroup label="你的自定义字典">
                           <option disabled value="__ffuf_no_custom_yet__">
-                            (None yet — use Upload .txt →)
+                            （暂无——请先点击“上传 .txt”→）
                           </option>
                         </optgroup>
                       )}
                       {customWordlists.length > 0 && (
-                        <optgroup label="Your custom lists">
+                        <optgroup label="你的自定义字典">
                           {customWordlists.map((wl) => (
                             <option key={wl.path} value={wl.path}>
                               {wl.name} ({formatSize(wl.size)})
@@ -269,12 +269,12 @@ export function FfufSection({ data, updateField, projectId, mode }: FfufSectionP
                     disabled={isUploading || !canUpload}
                     title={
                       !canUpload
-                        ? 'Save the project first to upload custom wordlists'
-                        : 'Upload a .txt wordlist — it will appear under “Your custom lists” in the menu'
+                        ? '请先保存项目，再上传自定义字典'
+                        : '上传 .txt 字典——上传后会出现在菜单的“你的自定义字典”中'
                     }
                   >
                     {isUploading ? <Loader2 size={14} className={styles.spinner} /> : <Upload size={14} />}
-                    {isUploading ? 'Uploading...' : 'Upload .txt'}
+                    {isUploading ? '上传中…' : '上传 .txt'}
                   </button>
                 </div>
                 {uploadError && (
@@ -284,21 +284,20 @@ export function FfufSection({ data, updateField, projectId, mode }: FfufSectionP
                 )}
                 {!uploadError && !canUpload && (
                   <span className={styles.fieldHint}>
-                    Save the project first; then you can upload .txt payload lists (max 50MB) and select them in the menu
-                    above.
+                    请先保存项目；随后即可上传 .txt payload 字典（最大 50MB），并在上方菜单中选择使用。
                   </span>
                 )}
                 {!uploadError && canUpload && (
                   <span className={styles.fieldHint}>
-                    Custom files are <strong>not</strong> listed until you upload them. Click <strong>Upload .txt</strong>,
-                    then choose your file under <strong>Your custom lists</strong> in the dropdown.
+                    自定义文件在上传前<strong>不会</strong>显示。点击 <strong>上传 .txt</strong>，
+                    然后在下拉菜单的 <strong>你的自定义字典</strong> 下选择对应文件。
                   </span>
                 )}
               </div>
 
               {customWordlists.length > 0 && canUpload && (
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Uploaded Wordlists</label>
+                  <label className={styles.fieldLabel}>已上传字典</label>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
                     {customWordlists.map((wl) => (
                       <div
@@ -332,7 +331,7 @@ export function FfufSection({ data, updateField, projectId, mode }: FfufSectionP
                             display: 'flex',
                             alignItems: 'center',
                           }}
-                          title={`Delete ${wl.name}`}
+                          title={`删除 ${wl.name}`}
                         >
                           <X size={14} />
                         </button>
@@ -344,41 +343,41 @@ export function FfufSection({ data, updateField, projectId, mode }: FfufSectionP
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Match Status Codes</label>
+                  <label className={styles.fieldLabel}>匹配状态码</label>
                   <input
                     type="text"
                     className="textInput"
                     value={(data.ffufMatchCodes ?? []).join(', ')}
                     onChange={(e) => updateField('ffufMatchCodes', e.target.value.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n)))}
                   />
-                  <span className={styles.fieldHint}>Include these HTTP status codes (comma-separated)</span>
+                  <span className={styles.fieldHint}>白名单：仅包含这些 HTTP 状态码（逗号分隔）</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Filter Status Codes</label>
+                  <label className={styles.fieldLabel}>过滤状态码</label>
                   <input
                     type="text"
                     className="textInput"
                     value={(data.ffufFilterCodes ?? []).join(', ')}
                     onChange={(e) => updateField('ffufFilterCodes', e.target.value.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n)))}
                   />
-                  <span className={styles.fieldHint}>Exclude these HTTP status codes (comma-separated)</span>
+                  <span className={styles.fieldHint}>黑名单：排除这些 HTTP 状态码（逗号分隔）</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Filter Response Size</label>
+                  <label className={styles.fieldLabel}>过滤响应大小</label>
                   <input
                     type="text"
                     className="textInput"
                     value={data.ffufFilterSize}
                     onChange={(e) => updateField('ffufFilterSize', e.target.value)}
-                    placeholder="e.g., 0 or 4242"
+                    placeholder="例如：0 或 4242"
                   />
-                  <span className={styles.fieldHint}>Exclude responses of this size (bytes). Useful for uniform error pages</span>
+                  <span className={styles.fieldHint}>排除该大小（字节）的响应，适用于统一错误页去噪</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Extensions</label>
+                  <label className={styles.fieldLabel}>扩展名</label>
                   <input
                     type="text"
                     className="textInput"
@@ -386,16 +385,16 @@ export function FfufSection({ data, updateField, projectId, mode }: FfufSectionP
                     onChange={(e) => updateField('ffufExtensions', e.target.value.split(',').map(s => s.trim()).filter(Boolean))}
                     placeholder=".php, .bak, .env, .json"
                   />
-                  <span className={styles.fieldHint}>File extensions to append to each word (comma-separated)</span>
+                  <span className={styles.fieldHint}>为每个词条追加的文件扩展名（逗号分隔）</span>
                 </div>
               </div>
 
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Options</h3>
+                <h3 className={styles.subSectionTitle}>选项</h3>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Auto-Calibrate</span>
-                    <p className={styles.toggleDescription}>Automatically filter false positives based on response patterns</p>
+                    <span className={styles.toggleLabel}>自动校准</span>
+                    <p className={styles.toggleDescription}>根据响应特征自动过滤误报</p>
                   </div>
                   <Toggle
                     checked={data.ffufAutoCalibrate}
@@ -404,8 +403,8 @@ export function FfufSection({ data, updateField, projectId, mode }: FfufSectionP
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Smart Fuzz (Post-Crawler)</span>
-                    <p className={styles.toggleDescription}>Also fuzz under base paths discovered by crawlers (e.g., /api/v1/FUZZ)</p>
+                    <span className={styles.toggleLabel}>智能 Fuzz（爬虫后）</span>
+                    <p className={styles.toggleDescription}>对爬虫发现的基础路径继续 fuzz（例如：/api/v1/FUZZ）</p>
                   </div>
                   <Toggle
                     checked={data.ffufSmartFuzz}
@@ -414,8 +413,8 @@ export function FfufSection({ data, updateField, projectId, mode }: FfufSectionP
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Follow Redirects</span>
-                    <p className={styles.toggleDescription}>Follow HTTP redirects. May lead to out-of-scope domains (filtered post-hoc)</p>
+                    <span className={styles.toggleLabel}>跟随重定向</span>
+                    <p className={styles.toggleDescription}>跟随 HTTP 重定向。可能跳到范围外域名（会在后续进行过滤）</p>
                   </div>
                   <Toggle
                     checked={data.ffufFollowRedirects}
@@ -424,8 +423,8 @@ export function FfufSection({ data, updateField, projectId, mode }: FfufSectionP
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Recursion</span>
-                    <p className={styles.toggleDescription}>Recursively fuzz discovered directories</p>
+                    <span className={styles.toggleLabel}>递归</span>
+                    <p className={styles.toggleDescription}>对发现的目录递归 fuzz</p>
                   </div>
                   <Toggle
                     checked={data.ffufRecursion}
@@ -434,7 +433,7 @@ export function FfufSection({ data, updateField, projectId, mode }: FfufSectionP
                 </div>
                 {data.ffufRecursion && (
                   <div className={styles.fieldGroup} style={{ marginTop: '0.5rem' }}>
-                    <label className={styles.fieldLabel}>Recursion Depth</label>
+                    <label className={styles.fieldLabel}>递归深度</label>
                     <input
                       type="number"
                       className="textInput"
@@ -448,9 +447,9 @@ export function FfufSection({ data, updateField, projectId, mode }: FfufSectionP
               </div>
 
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Custom Headers</h3>
+                <h3 className={styles.subSectionTitle}>自定义请求头</h3>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Request Headers</label>
+                  <label className={styles.fieldLabel}>请求头</label>
                   <textarea
                     className="textarea"
                     value={(data.ffufCustomHeaders ?? []).join('\n')}
@@ -458,7 +457,7 @@ export function FfufSection({ data, updateField, projectId, mode }: FfufSectionP
                     placeholder="Cookie: session=abc123&#10;Authorization: Bearer token..."
                     rows={3}
                   />
-                  <span className={styles.fieldHint}>One header per line. Sent with every request</span>
+                  <span className={styles.fieldHint}>每行一个请求头，会随每个请求发送</span>
                 </div>
               </div>
             </>

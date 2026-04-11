@@ -23,7 +23,7 @@ export function SubdomainDiscoverySection({ data, updateField }: SubdomainDiscov
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Search size={16} />
-          Subdomain Discovery
+          子域名发现
           <NodeInfoTooltip section="SubdomainDiscovery" />
         </h2>
         <div className={styles.sectionHeaderRight}>
@@ -43,25 +43,24 @@ export function SubdomainDiscoverySection({ data, updateField }: SubdomainDiscov
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Configure which subdomain discovery sources to use. Passive sources query external
-            databases without touching the target. Active discovery sends DNS queries directly.
+            配置要使用的子域名发现来源。被动来源查询外部数据库，不触达目标；主动发现会直接向目标发起 DNS 查询。
           </p>
 
           {data.subdomainDiscoveryEnabled && (
           <>
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Sources <span className={styles.badgePassive}>Passive</span></h3>
+            <h3 className={styles.subSectionTitle}>数据来源 <span className={styles.badgePassive}>被动</span></h3>
 
             <div className={styles.toggleRowCompact}>
               <div className={styles.toggleRowCompactInfo}>
                 <span className={styles.toggleLabelLg}>crt.sh</span>
                 <p className={styles.toggleDescription}>
-                  Certificate transparency logs — discovers subdomains from SSL/TLS certificates
+                  证书透明日志——从 SSL/TLS 证书中发现子域名
                 </p>
               </div>
               {data.crtshEnabled && (
                 <>
-                  <span className={styles.toggleRowCompactLabel}>Max</span>
+                  <span className={styles.toggleRowCompactLabel}>上限</span>
                   <input
                     type="number"
                     className={`textInput ${styles.toggleRowCompactInput}`}
@@ -82,12 +81,12 @@ export function SubdomainDiscoverySection({ data, updateField }: SubdomainDiscov
               <div className={styles.toggleRowCompactInfo}>
                 <span className={styles.toggleLabelLg}>HackerTarget</span>
                 <p className={styles.toggleDescription}>
-                  DNS lookup database — discovers subdomains from HackerTarget&apos;s host search API
+                  DNS 查询数据库——通过 HackerTarget 的 host search API 发现子域名
                 </p>
               </div>
               {data.hackerTargetEnabled && (
                 <>
-                  <span className={styles.toggleRowCompactLabel}>Max</span>
+                  <span className={styles.toggleRowCompactLabel}>上限</span>
                   <input
                     type="number"
                     className={`textInput ${styles.toggleRowCompactInput}`}
@@ -108,12 +107,12 @@ export function SubdomainDiscoverySection({ data, updateField }: SubdomainDiscov
               <div className={styles.toggleRowCompactInfo}>
                 <span className={styles.toggleLabelLg}>Subfinder</span>
                 <p className={styles.toggleDescription}>
-                  Passive subdomain enumeration using 50+ online sources (certificate logs, DNS databases, web archives)
+                  使用 50+ 在线数据源进行被动子域名枚举（证书日志、DNS 数据库、Web 存档等）
                 </p>
               </div>
               {data.subfinderEnabled && (
                 <>
-                  <span className={styles.toggleRowCompactLabel}>Max</span>
+                  <span className={styles.toggleRowCompactLabel}>上限</span>
                   <input
                     type="number"
                     className={`textInput ${styles.toggleRowCompactInput}`}
@@ -134,12 +133,12 @@ export function SubdomainDiscoverySection({ data, updateField }: SubdomainDiscov
               <div className={styles.toggleRowCompactInfo}>
                 <span className={styles.toggleLabelLg}>Knockpy Recon</span>
                 <p className={styles.toggleDescription}>
-                  Passive wordlist-based subdomain enumeration using Knockpy&apos;s recon mode
+                  使用 Knockpy 的 recon 模式进行基于字典的被动子域名枚举
                 </p>
               </div>
               {data.knockpyReconEnabled && (
                 <>
-                  <span className={styles.toggleRowCompactLabel}>Max</span>
+                  <span className={styles.toggleRowCompactLabel}>上限</span>
                   <input
                     type="number"
                     className={`textInput ${styles.toggleRowCompactInput}`}
@@ -160,12 +159,12 @@ export function SubdomainDiscoverySection({ data, updateField }: SubdomainDiscov
               <div className={styles.toggleRowCompactInfo}>
                 <span className={styles.toggleLabelLg}>Amass</span>
                 <p className={styles.toggleDescription}>
-                  OWASP Amass — subdomain enumeration using 50+ data sources (certificate logs, DNS databases, web archives, WHOIS)
+                  OWASP Amass——使用 50+ 数据源进行子域名枚举（证书日志、DNS 数据库、Web 存档、WHOIS 等）
                 </p>
               </div>
               {data.amassEnabled && (
                 <>
-                  <span className={styles.toggleRowCompactLabel}>Max</span>
+                  <span className={styles.toggleRowCompactLabel}>上限</span>
                   <input
                     type="number"
                     className={`textInput ${styles.toggleRowCompactInput}`}
@@ -187,7 +186,7 @@ export function SubdomainDiscoverySection({ data, updateField }: SubdomainDiscov
             <div className={styles.subSection}>
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Amass Timeout (minutes)</label>
+                  <label className={styles.fieldLabel}>Amass 超时（分钟）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -202,15 +201,15 @@ export function SubdomainDiscoverySection({ data, updateField }: SubdomainDiscov
           )}
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Discovery <span className={styles.badgeActive}>Active</span></h3>
+            <h3 className={styles.subSectionTitle}>主动发现 <span className={styles.badgeActive}>主动</span></h3>
 
             <div className={styles.toggleRow}>
               <div>
                 <span className={styles.toggleLabel}>Knockpy Bruteforce Mode</span>
                 <p className={styles.toggleDescription}>
-                  Use wordlist-based subdomain bruteforcing — sends thousands of DNS queries
+                  使用字典对候选子域名进行爆破——会发送大量 DNS 查询
                 </p>
-                <TimeEstimate estimate="+5-30 min depending on wordlist size" />
+                <TimeEstimate estimate="预计额外 +5–30 分钟（取决于字典大小）" />
               </div>
               <Toggle
                 checked={data.useBruteforceForSubdomains}
@@ -222,7 +221,7 @@ export function SubdomainDiscoverySection({ data, updateField }: SubdomainDiscov
               <div>
                 <span className={styles.toggleLabel}>Amass Active Mode</span>
                 <p className={styles.toggleDescription}>
-                  Enable zone transfers and certificate name grabs — sends DNS queries directly to target
+                  启用区域传送与证书名称抓取——会直接向目标发起 DNS 查询
                 </p>
               </div>
               <Toggle
@@ -236,9 +235,9 @@ export function SubdomainDiscoverySection({ data, updateField }: SubdomainDiscov
               <div>
                 <span className={styles.toggleLabel}>Amass Bruteforce</span>
                 <p className={styles.toggleDescription}>
-                  DNS brute forcing after passive enumeration — significantly increases scan time
+                  被动枚举后进行 DNS 爆破——会显著增加扫描耗时
                 </p>
-                <TimeEstimate estimate="+10-60 min depending on target size" />
+                <TimeEstimate estimate="预计额外 +10–60 分钟（取决于目标规模）" />
               </div>
               <Toggle
                 checked={data.amassBrute}
@@ -249,15 +248,15 @@ export function SubdomainDiscoverySection({ data, updateField }: SubdomainDiscov
 
             {data.amassBrute && data.amassEnabled && (
               <div style={{ marginLeft: 'var(--space-6)', marginTop: 'var(--space-2)', marginBottom: 'var(--space-3)' }}>
-                <span className={styles.toggleLabel}>Brute Force Wordlists</span>
+                <span className={styles.toggleLabel}>爆破字典</span>
                 <p className={styles.toggleDescription}>
-                  Select which wordlists to use. Amass Default is always active.
+                  选择要使用的字典。Amass 默认字典始终启用。
                 </p>
 
                 <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginTop: 'var(--space-2)', opacity: 0.6 }}>
                   <input type="checkbox" checked disabled />
                   <span>Amass Default (~8K entries)</span>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-tertiary)' }}>always active</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-tertiary)' }}>始终启用</span>
                 </label>
 
                 <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginTop: 'var(--space-2)' }}>
@@ -273,20 +272,19 @@ export function SubdomainDiscoverySection({ data, updateField }: SubdomainDiscov
                   />
                   <span>jhaddix all.txt (~2.18M entries)</span>
                 </label>
-                <TimeEstimate estimate="+30-60 min extra scan time" />
+                <TimeEstimate estimate="预计额外 +30–60 分钟" />
               </div>
             )}
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Wildcard Filtering <span className={styles.badgeActive}>Active</span></h3>
+            <h3 className={styles.subSectionTitle}>泛解析过滤 <span className={styles.badgeActive}>主动</span></h3>
 
             <div className={styles.toggleRow}>
               <div>
                 <span className={styles.toggleLabel}>Puredns Wildcard Filtering</span>
                 <p className={styles.toggleDescription}>
-                  Validates discovered subdomains against public DNS resolvers and removes wildcard
-                  entries and DNS-poisoned results &mdash; runs after all discovery tools complete
+                  使用公共 DNS 解析器验证已发现的子域名，移除泛解析条目与 DNS 污染结果——在所有发现工具结束后执行
                 </p>
               </div>
               <Toggle
@@ -298,7 +296,7 @@ export function SubdomainDiscoverySection({ data, updateField }: SubdomainDiscov
             {data.purednsEnabled && (
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Threads (0 = auto)</label>
+                  <label className={styles.fieldLabel}>线程数（0=自动）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -309,7 +307,7 @@ export function SubdomainDiscoverySection({ data, updateField }: SubdomainDiscov
                   />
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Rate Limit (0 = unlimited)</label>
+                  <label className={styles.fieldLabel}>速率限制（0=不限）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -323,18 +321,18 @@ export function SubdomainDiscoverySection({ data, updateField }: SubdomainDiscov
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>DNS &amp; WHOIS <span className={styles.badgePassive}>Passive</span></h3>
+            <h3 className={styles.subSectionTitle}>DNS 与 WHOIS <span className={styles.badgePassive}>被动</span></h3>
 
             <div className={styles.toggleRowCompact}>
               <div className={styles.toggleRowCompactInfo}>
                 <span className={styles.toggleLabelLg}>WHOIS Lookup</span>
                 <p className={styles.toggleDescription}>
-                  Query public WHOIS databases for domain registration info (registrar, dates, contacts)
+                  查询公开 WHOIS 数据库获取域名注册信息（注册商、日期、联系人等）
                 </p>
               </div>
               {data.whoisEnabled && (
                 <>
-                  <span className={styles.toggleRowCompactLabel}>Retries</span>
+                  <span className={styles.toggleRowCompactLabel}>重试</span>
                   <input
                     type="number"
                     className={`textInput ${styles.toggleRowCompactInput}`}
@@ -355,12 +353,12 @@ export function SubdomainDiscoverySection({ data, updateField }: SubdomainDiscov
               <div className={styles.toggleRowCompactInfo}>
                 <span className={styles.toggleLabelLg}>DNS Resolution</span>
                 <p className={styles.toggleDescription}>
-                  Resolve DNS records (A, AAAA, MX, NS, TXT) and reverse DNS for discovered hosts
+                  解析 DNS 记录（A/AAAA/MX/NS/TXT）并对发现的主机进行反向 DNS
                 </p>
               </div>
               {data.dnsEnabled && (
                 <>
-                  <span className={styles.toggleRowCompactLabel}>Retries</span>
+                  <span className={styles.toggleRowCompactLabel}>重试</span>
                   <input
                     type="number"
                     className={`textInput ${styles.toggleRowCompactInput}`}

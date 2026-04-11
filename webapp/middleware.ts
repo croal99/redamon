@@ -3,9 +3,12 @@ import { NextRequest, NextResponse } from 'next/server'
 export function middleware(req: NextRequest) {
   const { pathname, search } = req.nextUrl
 
+  const isStaticAsset = /\.[a-z0-9]+$/i.test(pathname)
+
   if (
     pathname.startsWith('/api') ||
     pathname.startsWith('/_next') ||
+    isStaticAsset ||
     pathname === '/favicon.ico' ||
     pathname === '/favicon.png'
   ) {
@@ -35,4 +38,3 @@ export function middleware(req: NextRequest) {
 export const config = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico|favicon.png).*)'],
 }
-

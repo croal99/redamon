@@ -29,14 +29,14 @@ const CUSTOM_FILE_TYPES: {
 }[] = [
   {
     key: 'patterns',
-    label: 'Custom Secret Patterns',
+    label: '自定义敏感信息规则',
     accept: '.json,.txt',
-    hint: 'JSON array or TXT (name|regex|severity|confidence per line)',
+    hint: 'JSON 数组或 TXT（每行：name|regex|severity|confidence）',
     guide: {
-      title: 'Custom Secret Patterns',
-      description: 'Add your own regex patterns to detect company-specific secrets, internal API key formats, or custom tokens that the built-in 100 patterns do not cover. These are ADDITIVE -- they run alongside the defaults, never replacing them.',
-      format: 'JSON (.json) or plain text (.txt)',
-      example: `JSON format:
+      title: '自定义敏感信息规则',
+      description: '添加自定义正则规则，用于识别公司特有的敏感信息、内部 API Key 格式或自定义 Token（内置约 100 条规则未覆盖的部分）。这些规则为叠加模式：会与默认规则一起运行，不会替换默认规则。',
+      format: 'JSON（.json）或纯文本（.txt）',
+      example: `JSON 格式：
 [
   {
     "name": "MyCompany API Key",
@@ -52,41 +52,41 @@ const CUSTOM_FILE_TYPES: {
   }
 ]
 
-TXT format (one pattern per line):
+TXT 格式（每行一个规则）：
 MyCompany API Key|MYCO-[a-f0-9]{32}|critical|high
 Internal Token|svc_tok_[A-Za-z0-9]{40}|high|medium
-# Lines starting with # are comments
+# 以 # 开头的行会被视为注释
 
-Fields: name | regex | severity | confidence
-- severity: critical, high, medium, low, info
-- confidence: high, medium, low
-- severity and confidence are optional (default: medium)`,
-      howItWorks: 'Each pattern is compiled as a Python regex and applied line-by-line to every downloaded JS file. When a match is found, a finding is created with the specified severity and confidence. The matched text is redacted in the output (first 6 + last 4 chars shown). Patterns with a high false-positive rate should use confidence "low". Note: patterns run in Python (re module), not JavaScript. Avoid JS-only syntax like (?<name>...) named groups -- use (?P<name>...) or plain capture groups instead.',
+字段：name | regex | severity | confidence
+- severity：critical, high, medium, low, info
+- confidence：high, medium, low
+- severity 与 confidence 可选（默认：medium）`,
+      howItWorks: '每条规则会被编译为 Python 正则（re 模块），并逐行应用到每个下载的 JS 文件内容中。一旦命中，将生成一条发现记录，并使用指定的 severity 与 confidence。命中的文本会在输出中脱敏（仅显示前 6 位 + 后 4 位）。误报较高的规则建议将 confidence 设为 "low"。注意：规则在 Python 中运行（re 模块），不是 JavaScript；请避免仅 JS 支持的语法（如 (?<name>...) 命名分组），改用 (?P<name>...) 或普通捕获分组。',
     },
     validate: (content: string, filename: string) => {
       if (filename.endsWith('.json')) {
         try {
           const parsed = JSON.parse(content)
-          if (!Array.isArray(parsed)) return 'JSON must be an array of pattern objects'
+          if (!Array.isArray(parsed)) return 'JSON 必须是规则对象数组'
           for (let i = 0; i < parsed.length; i++) {
             const p = parsed[i]
-            if (!p.name || typeof p.name !== 'string') return `Pattern ${i + 1}: missing "name" (string)`
-            if (!p.regex || typeof p.regex !== 'string') return `Pattern ${i + 1}: missing "regex" (string)`
-            try { new RegExp(p.regex) } catch { return `Pattern ${i + 1}: invalid regex "${p.regex}"` }
+            if (!p.name || typeof p.name !== 'string') return `规则 ${i + 1}：缺少 "name"（字符串）`
+            if (!p.regex || typeof p.regex !== 'string') return `规则 ${i + 1}：缺少 "regex"（字符串）`
+            try { new RegExp(p.regex) } catch { return `规则 ${i + 1}：regex 无效 "${p.regex}"` }
             if (p.severity && !['critical', 'high', 'medium', 'low', 'info'].includes(p.severity))
-              return `Pattern ${i + 1}: invalid severity "${p.severity}" (must be critical/high/medium/low/info)`
+              return `规则 ${i + 1}：severity 无效 "${p.severity}"（必须为 critical/high/medium/low/info）`
             if (p.confidence && !['high', 'medium', 'low'].includes(p.confidence))
-              return `Pattern ${i + 1}: invalid confidence "${p.confidence}" (must be high/medium/low)`
+              return `规则 ${i + 1}：confidence 无效 "${p.confidence}"（必须为 high/medium/low）`
           }
-          if (parsed.length === 0) return 'JSON array is empty -- add at least one pattern'
-        } catch { return 'Invalid JSON syntax' }
+          if (parsed.length === 0) return 'JSON 数组为空——请至少添加一条规则'
+        } catch { return 'JSON 语法无效' }
       } else {
         const lines = content.split('\n').filter(l => l.trim() && !l.trim().startsWith('#'))
-        if (lines.length === 0) return 'File is empty -- add at least one pattern line'
+        if (lines.length === 0) return '文件为空——请至少添加一行规则'
         for (let i = 0; i < lines.length; i++) {
           const parts = lines[i].split('|')
-          if (parts.length < 2) return `Line ${i + 1}: expected "name|regex" format, got "${lines[i].trim().substring(0, 40)}"`
-          try { new RegExp(parts[1].trim()) } catch { return `Line ${i + 1}: invalid regex "${parts[1].trim()}"` }
+          if (parts.length < 2) return `第 ${i + 1} 行：应为 "name|regex" 格式，实际为 "${lines[i].trim().substring(0, 40)}"`
+          try { new RegExp(parts[1].trim()) } catch { return `第 ${i + 1} 行：regex 无效 "${parts[1].trim()}"` }
         }
       }
       return null
@@ -94,107 +94,107 @@ Fields: name | regex | severity | confidence
   },
   {
     key: 'sourcemap-paths',
-    label: 'Source Map Paths',
+    label: 'Source Map 路径',
     accept: '.txt',
-    hint: 'Extra paths to probe for .map files (one per line)',
+    hint: '用于探测 .map 文件的额外路径（每行一个）',
     guide: {
-      title: 'Custom Source Map Probe Paths',
-      description: 'Add extra URL path templates to probe when looking for .map source map files. The scanner already tries 8 default paths (like {url}.map, {base}/static/js/{filename}.map). Use this to add paths specific to your target application.',
-      format: 'Plain text (.txt), one path template per line',
+      title: '自定义 Source Map 探测路径',
+      description: '添加用于探测 .map Source Map 文件的额外 URL 路径模板。扫描器默认会尝试 8 条路径（如 {url}.map、{base}/static/js/{filename}.map）。可在此补充目标应用特有的路径规则。',
+      format: '纯文本（.txt），每行一个路径模板',
       example: `{base}/assets/maps/{filename}.map
 {base}/sourcemaps/{filename}.map
 {base}/build/static/js/{filename}.map
 {base}/_assets/{filename}.map
-# Lines starting with # are comments
+# 以 # 开头的行会被视为注释
 
-Available variables:
-- {url}      = full JS file URL (e.g., https://example.com/js/app.js)
-- {base}     = scheme + host (e.g., https://example.com)
-- {filename} = JS filename (e.g., app.js)`,
-      howItWorks: 'For each downloaded JS file, the scanner first checks for a sourceMappingURL comment and SourceMap HTTP header. If neither found, it probes each path template by replacing {url}, {base}, and {filename} with actual values and making an HTTP GET request. If a valid source map JSON (with "version" and "sources" fields) is returned, the scanner parses it, extracts original source filenames, and scans any embedded sourcesContent for secrets.',
+可用变量：
+- {url}      = 完整 JS 文件 URL（例如：https://example.com/js/app.js）
+- {base}     = 协议 + 主机（例如：https://example.com）
+- {filename} = JS 文件名（例如：app.js）`,
+      howItWorks: '对每个下载的 JS 文件，扫描器会先检查 sourceMappingURL 注释与 SourceMap HTTP 头。若都不存在，则会将 {url}/{base}/{filename} 替换为真实值并逐条发起 HTTP GET 探测。如果返回有效的 source map JSON（包含 "version" 与 "sources" 字段），扫描器会解析它，提取原始源码文件名，并扫描 sourcesContent 中可能内嵌的敏感信息。',
     },
     validate: (content: string) => {
       const lines = content.split('\n').filter(l => l.trim() && !l.trim().startsWith('#'))
-      if (lines.length === 0) return 'File is empty -- add at least one path template'
+      if (lines.length === 0) return '文件为空——请至少添加一个路径模板'
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim()
-        if (!line.includes('{') && !line.includes('/')) return `Line ${i + 1}: expected a URL path template, got "${line.substring(0, 40)}"`
+        if (!line.includes('{') && !line.includes('/')) return `第 ${i + 1} 行：应为 URL 路径模板，实际为 "${line.substring(0, 40)}"`
       }
       return null
     },
   },
   {
     key: 'packages',
-    label: 'Internal Packages',
+    label: '内部包名',
     accept: '.txt',
-    hint: 'Known internal npm package names to check (one per line)',
+    hint: '需要检查的内部 npm 包名（每行一个）',
     guide: {
-      title: 'Internal Package Names',
-      description: 'List known internal/private npm package names used by the target organization. These are ALWAYS checked against the public npm registry, even if not found in the JS code via import/require statements. This is useful when minified JS strips import names.',
-      format: 'Plain text (.txt), one scoped package name per line',
+      title: '内部包名列表',
+      description: '列出目标组织使用的已知内部/私有 npm 包名。无论这些包名是否能从 JS 代码的 import/require 中解析出来，都会强制对公网 npm Registry 进行检查（适用于压缩代码丢失 import 名称的情况）。',
+      format: '纯文本（.txt），每行一个带 scope 的包名',
       example: `@mycompany/auth-sdk
 @mycompany/api-client
 @mycompany/shared-utils
 @internal/config
 @targetcorp/payment-lib
-# Lines starting with # are comments
+# 以 # 开头的行会被视为注释
 
-Note: packages must use the @scope/name format.
-Well-known public scopes (@types, @babel, @angular, @vue, etc.) are automatically skipped.`,
-      howItWorks: 'For each package name, the scanner makes a GET request to https://registry.npmjs.org/{package}. If the registry returns 404 (package does not exist), this is flagged as a CRITICAL dependency confusion vulnerability -- an attacker could register the package name on public npm and execute arbitrary code when the target runs npm install. If the package DOES exist on npm but is listed here as "internal," it is flagged as HIGH severity (verify ownership).',
+注意：包名必须为 @scope/name 格式。
+常见公共 scope（@types/@babel/@angular/@vue 等）会自动跳过。`,
+      howItWorks: '对每个包名，扫描器会请求 https://registry.npmjs.org/{package}。若返回 404（包不存在），会标记为严重（CRITICAL）的依赖混淆漏洞：攻击者可在公共 npm 注册该包名，在目标执行 npm install 时获得代码执行。若包在 npm 上确实存在，但你将其标为“内部包”，则会标记为高危（HIGH）并建议核验归属权。',
     },
     validate: (content: string) => {
       const lines = content.split('\n').filter(l => l.trim() && !l.trim().startsWith('#'))
-      if (lines.length === 0) return 'File is empty -- add at least one package name'
+      if (lines.length === 0) return '文件为空——请至少添加一个包名'
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim()
         if (!line.startsWith('@') || !line.includes('/'))
-          return `Line ${i + 1}: expected @scope/package format, got "${line}". Packages must be scoped (e.g., @myorg/mylib).`
+          return `第 ${i + 1} 行：应为 @scope/package 格式，实际为 "${line}"。包必须带 scope（例如：@myorg/mylib）。`
       }
       return null
     },
   },
   {
     key: 'endpoint-keywords',
-    label: 'Endpoint Keywords',
+    label: '端点关键词',
     accept: '.txt',
-    hint: 'Extra keywords to search for in JS (one per line)',
+    hint: '在 JS 中额外搜索的关键词（每行一个）',
     guide: {
-      title: 'Custom Endpoint Keywords',
-      description: 'Add extra keywords to search for in JavaScript content. When a keyword is found inside a quoted string in the JS code, the surrounding URL is extracted as a discovered endpoint. Use this for target-specific API paths that the built-in patterns might miss.',
-      format: 'Plain text (.txt), one keyword per line',
+      title: '自定义端点关键词',
+      description: '添加用于在 JavaScript 内容中额外搜索的关键词。当关键词出现在 JS 代码的引号字符串内时，会提取其所在的 URL/路径作为发现的端点。适用于补充内置规则可能漏掉的目标特定 API 路径。',
+      format: '纯文本（.txt），每行一个关键词',
       example: `/internal-api/v2/
 /backoffice/
 mycompany-service
 admin-panel
 graphql-gateway
 /legacy/api/
-# Lines starting with # are comments
+# 以 # 开头的行会被视为注释
 
-Tips:
-- Use path fragments like /internal-api/ for precision
-- Use service names like mycompany-service for broader matching
-- Avoid very short keywords (< 4 chars) to reduce false positives`,
-      howItWorks: 'For each keyword, the scanner searches all JS file content using a case-insensitive regex. When a match is found, it extracts the surrounding quoted string (the URL/path containing the keyword). Each discovered URL is classified by category (admin, debug, auth, api, etc.) and assigned a severity. Results appear in the Endpoints tab of the JS Recon dashboard.',
+提示：
+- 使用 /internal-api/ 等路径片段以提高精度
+- 使用 mycompany-service 等服务名以获得更宽泛匹配
+- 避免过短关键词（< 4 字符）以减少误报`,
+      howItWorks: '对每个关键词，扫描器会用不区分大小写的正则在所有 JS 文件内容中搜索。命中后会提取其所在的引号字符串（包含该关键词的 URL/路径）。每个发现的 URL 会按类别（admin/debug/auth/api 等）进行分类并赋予严重级别。结果会显示在 JS Recon 面板的 Endpoints 标签页。',
     },
     validate: (content: string) => {
       const lines = content.split('\n').filter(l => l.trim() && !l.trim().startsWith('#'))
-      if (lines.length === 0) return 'File is empty -- add at least one keyword'
+      if (lines.length === 0) return '文件为空——请至少添加一个关键词'
       for (let i = 0; i < lines.length; i++) {
-        if (lines[i].trim().length < 2) return `Line ${i + 1}: keyword too short (minimum 2 characters)`
+        if (lines[i].trim().length < 2) return `第 ${i + 1} 行：关键词过短（至少 2 个字符）`
       }
       return null
     },
   },
   {
     key: 'frameworks',
-    label: 'Framework Signatures',
+    label: '框架指纹',
     accept: '.json',
-    hint: 'JSON array of {name, patterns[], version_regex}',
+    hint: 'JSON 数组：{name, patterns[], version_regex}',
     guide: {
-      title: 'Custom Framework Signatures',
-      description: 'Add detection signatures for custom or internal JavaScript frameworks not covered by the 12 built-in ones (React, Next.js, Vue, Nuxt, Angular, jQuery, Svelte, Ember, Backbone, Lodash, Moment.js, Bootstrap). Each signature defines regex patterns that identify the framework and optionally extract its version.',
-      format: 'JSON (.json) array',
+      title: '自定义框架指纹',
+      description: '为自定义/内部 JavaScript 框架添加识别指纹（内置 12 种：React/Next.js/Vue/Nuxt/Angular/jQuery/Svelte/Ember/Backbone/Lodash/Moment.js/Bootstrap）。每条指纹包含用于识别框架的正则 patterns，并可选提供用于提取版本号的 version_regex。',
+      format: 'JSON（.json）数组',
       example: `[
   {
     "name": "MyCompanyFramework",
@@ -215,41 +215,42 @@ Tips:
   }
 ]
 
-Fields:
-- name: display name for the framework
-- patterns: array of regex strings -- if ANY matches, framework is detected
-- version_regex: regex with capture group 1 for version (null if not needed)
+字段：
+- name：框架显示名称
+- patterns：regex 字符串数组——只要任意一个命中即判定框架存在
+- version_regex：用于提取版本的 regex（捕获组 1），不需要则为 null
 
-JSON escaping rules:
-- Literal dot in regex: \\. (one backslash + dot in JSON)
-- Whitespace \\s: \\s (one backslash + s in JSON)
-- Quote in regex: use [\"'] or ['"']
-The example above is ready to copy-paste into a .json file.`,
-      howItWorks: 'Each signature\'s patterns are compiled as Python regexes (re module) and searched in the JS file content. If any pattern matches, the framework is detected. The version_regex (if provided) is then used to extract the version number from capture group 1. Detected frameworks appear in the JS Recon dashboard under Security Patterns. Version information enables targeted CVE lookups. Note: use Python regex syntax -- avoid JS-only features like (?<name>...) named groups.',
+JSON 转义规则：
+- 正则中的字面量点：\\.（JSON 中一个反斜杠 + 点）
+- 空白 \\s：\\s（JSON 中一个反斜杠 + s）
+- 正则中的引号：使用 [\"'] 或 ['"]
+以上示例可直接复制粘贴到 .json 文件中。`,
+      howItWorks: '每条指纹的 patterns 会被编译为 Python 正则（re 模块）并在 JS 文件内容中搜索。只要任意 pattern 命中，即判定该框架存在；若提供 version_regex，则会从捕获组 1 提取版本号。识别出的框架会显示在 JS Recon 面板的 Security Patterns 中；版本信息可用于更精准的 CVE 关联。注意：请使用 Python 正则语法，避免仅 JS 支持的特性（如 (?<name>...) 命名分组）。',
     },
     validate: (content: string) => {
       try {
         const parsed = JSON.parse(content)
-        if (!Array.isArray(parsed)) return 'JSON must be an array of framework signature objects'
+        if (!Array.isArray(parsed)) return 'JSON 必须是框架指纹对象数组'
         for (let i = 0; i < parsed.length; i++) {
           const fw = parsed[i]
-          if (!fw.name || typeof fw.name !== 'string') return `Signature ${i + 1}: missing "name" (string)`
-          if (!Array.isArray(fw.patterns) || fw.patterns.length === 0) return `Signature ${i + 1}: "patterns" must be a non-empty array of regex strings`
+          if (!fw.name || typeof fw.name !== 'string') return `指纹 ${i + 1}：缺少 "name"（字符串）`
+          if (!Array.isArray(fw.patterns) || fw.patterns.length === 0) return `指纹 ${i + 1}："patterns" 必须为非空 regex 字符串数组`
           for (let j = 0; j < fw.patterns.length; j++) {
-            if (typeof fw.patterns[j] !== 'string') return `Signature ${i + 1}, pattern ${j + 1}: must be a string`
-            try { new RegExp(fw.patterns[j]) } catch { return `Signature ${i + 1}, pattern ${j + 1}: invalid regex "${fw.patterns[j]}"` }
+            if (typeof fw.patterns[j] !== 'string') return `指纹 ${i + 1}，pattern ${j + 1}：必须为字符串`
+            try { new RegExp(fw.patterns[j]) } catch { return `指纹 ${i + 1}，pattern ${j + 1}：regex 无效 "${fw.patterns[j]}"` }
           }
           if (fw.version_regex !== null && fw.version_regex !== undefined) {
-            if (typeof fw.version_regex !== 'string') return `Signature ${i + 1}: "version_regex" must be a string or null`
-            try { new RegExp(fw.version_regex) } catch { return `Signature ${i + 1}: invalid version_regex "${fw.version_regex}"` }
+            if (typeof fw.version_regex !== 'string') return `指纹 ${i + 1}："version_regex" 必须为字符串或 null`
+            try { new RegExp(fw.version_regex) } catch { return `指纹 ${i + 1}：version_regex 无效 "${fw.version_regex}"` }
           }
         }
-        if (parsed.length === 0) return 'JSON array is empty -- add at least one framework signature'
-      } catch { return 'Invalid JSON syntax' }
+        if (parsed.length === 0) return 'JSON 数组为空——请至少添加一个框架指纹'
+      } catch { return 'JSON 语法无效' }
       return null
     },
   },
 ]
+
 
 interface JsReconSectionProps {
   data: FormData
@@ -312,12 +313,12 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
       const res = await fetch(`/api/js-recon/${projectId}/upload`, { method: 'POST', body: formData })
       if (!res.ok) {
         const data = await res.json()
-        setUploadError(data.error || 'Upload failed')
+        setUploadError(data.error || '上传失败')
         return
       }
       await fetchUploadedFiles()
     } catch {
-      setUploadError('Upload failed')
+      setUploadError('上传失败')
     } finally {
       setIsUploading(false)
       if (jsFileRef.current) jsFileRef.current.value = ''
@@ -348,7 +349,7 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
           return
         }
       } catch {
-        setValidationError(`${fileTypeConfig.label}: Could not read file`)
+        setValidationError(`${fileTypeConfig.label}：无法读取文件`)
         const ref = customFileRefs.current[fileType]
         if (ref) ref.value = ''
         return
@@ -364,12 +365,12 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
       const res = await fetch(`/api/js-recon/${projectId}/custom-files`, { method: 'POST', body: formData })
       if (!res.ok) {
         const data = await res.json()
-        setUploadError(data.error || 'Upload failed')
+        setUploadError(data.error || '上传失败')
         return
       }
       await fetchCustomFiles()
     } catch {
-      setUploadError('Upload failed')
+      setUploadError('上传失败')
     } finally {
       setIsUploading(false)
       const ref = customFileRefs.current[fileType]
@@ -390,9 +391,9 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Search size={16} />
-          JS Recon Scanner
+          JS Recon 扫描
           <NodeInfoTooltip section="JsRecon" />
-          <span className={styles.badgeActive}>Active</span>
+          <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           <div onClick={(e) => e.stopPropagation()}>
@@ -411,20 +412,19 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Deep JavaScript reconnaissance beyond jsluice. Scans JS files for secrets with 90+ regex patterns,
-            validates discovered API keys against live services, detects dependency confusion vulnerabilities,
-            discovers exposed source maps, extracts hidden API endpoints (REST, GraphQL, WebSocket),
-            fingerprints frameworks with versions, and identifies DOM-based XSS sinks.
+            超越 jsluice 的深度 JavaScript 侦察：使用 90+ 正则规则扫描 JS 中的敏感信息，
+            对发现的 API Key 进行在线校验，检测依赖混淆漏洞，发现暴露的 source map，
+            提取隐藏 API 端点（REST/GraphQL/WebSocket），识别框架及版本，并定位 DOM 型 XSS sink。
           </p>
 
           {(data as any).jsReconEnabled && (
             <>
               {/* Analysis Scope */}
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Analysis Scope</h3>
+                <h3 className={styles.subSectionTitle}>分析范围</h3>
                 <div className={styles.fieldRow}>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Max JS Files</label>
+                    <label className={styles.fieldLabel}>最大 JS 文件数</label>
                     <input
                       type="number"
                       className="textInput"
@@ -433,10 +433,10 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
                       min={10}
                       max={5000}
                     />
-                    <span className={styles.fieldHint}>Maximum JS files to download and analyze</span>
+                    <span className={styles.fieldHint}>最多下载并分析的 JS 文件数量</span>
                   </div>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Timeout (seconds)</label>
+                    <label className={styles.fieldLabel}>超时（秒）</label>
                     <input
                       type="number"
                       className="textInput"
@@ -444,12 +444,12 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
                       onChange={(e) => updateField('jsReconTimeout' as any, parseInt(e.target.value) || 900)}
                       min={60}
                     />
-                    <span className={styles.fieldHint}>Overall scan timeout</span>
+                    <span className={styles.fieldHint}>整体扫描超时</span>
                   </div>
                 </div>
                 <div className={styles.fieldRow}>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Concurrency</label>
+                    <label className={styles.fieldLabel}>并发</label>
                     <input
                       type="number"
                       className="textInput"
@@ -458,31 +458,31 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
                       min={1}
                       max={30}
                     />
-                    <span className={styles.fieldHint}>Parallel file processing threads</span>
+                    <span className={styles.fieldHint}>并行文件处理线程数</span>
                   </div>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Min Confidence</label>
+                    <label className={styles.fieldLabel}>最低置信度</label>
                     <select
                       className="textInput"
                       value={(data as any).jsReconMinConfidence ?? 'low'}
                       onChange={(e) => updateField('jsReconMinConfidence' as any, e.target.value)}
                     >
-                      <option value="low">Low (show all findings)</option>
-                      <option value="medium">Medium (reduce noise)</option>
-                      <option value="high">High (minimal false positives)</option>
+                      <option value="low">低（显示全部）</option>
+                      <option value="medium">中（降低噪声）</option>
+                      <option value="high">高（最少误报）</option>
                     </select>
-                    <span className={styles.fieldHint}>Filter findings by confidence level</span>
+                    <span className={styles.fieldHint}>按置信度过滤发现结果</span>
                   </div>
                 </div>
               </div>
 
               {/* JS File Sources */}
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>JS File Sources</h3>
+                <h3 className={styles.subSectionTitle}>JS 文件来源</h3>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Include Webpack Chunks</span>
-                    <p className={styles.toggleDescription}>Analyze .chunk.js and .bundle.js files excluded by Katana. These contain application code with embedded secrets.</p>
+                    <span className={styles.toggleLabel}>包含 Webpack Chunks</span>
+                    <p className={styles.toggleDescription}>分析 Katana 排除的 .chunk.js/.bundle.js 文件，这些常包含应用代码与内嵌敏感信息。</p>
                   </div>
                   <Toggle
                     checked={(data as any).jsReconIncludeChunks ?? true}
@@ -491,8 +491,8 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Include Framework JS</span>
-                    <p className={styles.toggleDescription}>Fetch Next.js (/_next/static/chunks/) and Nuxt.js (/_nuxt/) bundles that Katana excludes. Often contain API keys and Firebase configs.</p>
+                    <span className={styles.toggleLabel}>包含框架 JS</span>
+                    <p className={styles.toggleDescription}>抓取 Katana 排除的 Next.js（/_next/static/chunks/）与 Nuxt.js（/_nuxt/）bundle，常包含 API Key 与 Firebase 配置。</p>
                   </div>
                   <Toggle
                     checked={(data as any).jsReconIncludeFrameworkJs ?? true}
@@ -501,8 +501,8 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Include Archived JS</span>
-                    <p className={styles.toggleDescription}>Analyze historical JS files from Wayback Machine/GAU. Old builds often contain hardcoded keys removed from production. Requires GAU enabled.</p>
+                    <span className={styles.toggleLabel}>包含归档 JS</span>
+                    <p className={styles.toggleDescription}>分析来自 Wayback Machine/GAU 的历史 JS 文件。旧版本常包含已从生产移除的硬编码 Key。需要启用 GAU。</p>
                   </div>
                   <Toggle
                     checked={(data as any).jsReconIncludeArchivedJs ?? true}
@@ -513,11 +513,11 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
 
               {/* Detection Modules */}
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Detection Modules</h3>
+                <h3 className={styles.subSectionTitle}>检测模块</h3>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Secret Detection (Regex)</span>
-                    <p className={styles.toggleDescription}>90+ patterns for AWS keys, Stripe, Firebase, GitHub tokens, database URIs, JWTs, and more</p>
+                    <span className={styles.toggleLabel}>敏感信息检测（Regex）</span>
+                    <p className={styles.toggleDescription}>90+ 规则覆盖 AWS Key、Stripe、Firebase、GitHub Token、数据库 URI、JWT 等</p>
                   </div>
                   <Toggle
                     checked={(data as any).jsReconRegexPatterns ?? true}
@@ -526,8 +526,8 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Source Map Analysis</span>
-                    <p className={styles.toggleDescription}>Discover exposed .map files that leak original unminified source code and scan them for secrets</p>
+                    <span className={styles.toggleLabel}>Source Map 分析</span>
+                    <p className={styles.toggleDescription}>发现暴露的 .map 文件（可能泄露未压缩源码），并扫描其中的敏感信息</p>
                   </div>
                   <Toggle
                     checked={(data as any).jsReconSourceMaps ?? true}
@@ -537,7 +537,7 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
                 <div className={styles.toggleRow}>
                   <div>
                     <span className={styles.toggleLabel}>Dependency Confusion</span>
-                    <p className={styles.toggleDescription}>Check if scoped npm packages (@org/pkg) exist on public registry. Missing = critical RCE vector</p>
+                    <p className={styles.toggleDescription}>检查带 scope 的 npm 包（@org/pkg）是否存在于公共仓库；缺失即为严重 RCE 向量</p>
                   </div>
                   <Toggle
                     checked={(data as any).jsReconDependencyCheck ?? true}
@@ -546,8 +546,8 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Endpoint Extraction</span>
-                    <p className={styles.toggleDescription}>Extract REST, GraphQL, WebSocket endpoints, admin/debug routes, and API documentation paths</p>
+                    <span className={styles.toggleLabel}>端点提取</span>
+                    <p className={styles.toggleDescription}>提取 REST/GraphQL/WebSocket 端点、管理/调试路由与 API 文档路径</p>
                   </div>
                   <Toggle
                     checked={(data as any).jsReconExtractEndpoints ?? true}
@@ -556,8 +556,8 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>DOM Sink Detection</span>
-                    <p className={styles.toggleDescription}>Find innerHTML, eval(), document.write, prototype pollution, and other XSS/injection vectors</p>
+                    <span className={styles.toggleLabel}>DOM Sink 检测</span>
+                    <p className={styles.toggleDescription}>定位 innerHTML/eval()/document.write、原型污染等 XSS/注入向量</p>
                   </div>
                   <Toggle
                     checked={(data as any).jsReconDomSinks ?? true}
@@ -566,8 +566,8 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Framework Fingerprinting</span>
-                    <p className={styles.toggleDescription}>Detect React, Next.js, Vue, Angular, jQuery and 7 more frameworks with version extraction for CVE targeting</p>
+                    <span className={styles.toggleLabel}>框架指纹识别</span>
+                    <p className={styles.toggleDescription}>识别 React/Next.js/Vue/Angular/jQuery 等 12 种框架并提取版本，用于 CVE 精准关联</p>
                   </div>
                   <Toggle
                     checked={(data as any).jsReconFrameworkDetect ?? true}
@@ -576,8 +576,8 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Developer Comments</span>
-                    <p className={styles.toggleDescription}>Extract TODO, FIXME, HACK markers and comments containing password/secret/token keywords</p>
+                    <span className={styles.toggleLabel}>开发者注释</span>
+                    <p className={styles.toggleDescription}>提取 TODO/FIXME/HACK 标记以及包含 password/secret/token 等关键词的注释</p>
                   </div>
                   <Toggle
                     checked={(data as any).jsReconDevComments ?? true}
@@ -588,11 +588,11 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
 
               {/* Key Validation */}
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Key Validation</h3>
+                <h3 className={styles.subSectionTitle}>密钥校验</h3>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Validate Discovered Keys</span>
-                    <p className={styles.toggleDescription}>Make live API calls to verify if discovered keys are active (AWS STS, GitHub /user, Stripe /v1/account, etc.). Generates outbound traffic to third-party services.</p>
+                    <span className={styles.toggleLabel}>校验已发现 Key</span>
+                    <p className={styles.toggleDescription}>发起真实 API 调用验证 Key 是否有效（AWS STS、GitHub /user、Stripe /v1/account 等），会产生对第三方服务的出站流量。</p>
                   </div>
                   <Toggle
                     checked={(data as any).jsReconValidateKeys ?? true}
@@ -602,7 +602,7 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
                 {(data as any).jsReconValidateKeys && (
                   <div className={styles.fieldRow}>
                     <div className={styles.fieldGroup}>
-                      <label className={styles.fieldLabel}>Validation Timeout (seconds)</label>
+                      <label className={styles.fieldLabel}>校验超时（秒）</label>
                       <input
                         type="number"
                         className="textInput"
@@ -611,7 +611,7 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
                         min={1}
                         max={30}
                       />
-                      <span className={styles.fieldHint}>Per-service API call timeout</span>
+                      <span className={styles.fieldHint}>每个服务的 API 调用超时</span>
                     </div>
                   </div>
                 )}
@@ -624,7 +624,7 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
                     className={styles.subSectionTitleCollapsible}
                     onClick={() => setShowCustomFiles(!showCustomFiles)}
                   >
-                    Custom Extension Files
+                    自定义扩展文件
                     <ChevronDown
                       size={14}
                       className={`${styles.sectionIcon} ${showCustomFiles ? styles.sectionIconOpen : ''}`}
@@ -633,8 +633,8 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
                   {showCustomFiles && (
                     <>
                       <p className={styles.sectionDescription} style={{ marginTop: '8px' }}>
-                        Upload custom files to extend the built-in detection patterns. These are additive and do not replace defaults.
-                        Click the <HelpCircle size={11} style={{ display: 'inline', verticalAlign: 'middle' }} /> icon next to each type for format details and examples.
+                        上传自定义文件以扩展内置检测能力（叠加模式，不会替换默认规则）。
+                        点击每个类型旁的 <HelpCircle size={11} style={{ display: 'inline', verticalAlign: 'middle' }} /> 图标查看格式说明与示例。
                       </p>
 
                       {uploadError && (
@@ -649,7 +649,7 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
                               type="button"
                               onClick={() => setGuideModal(key)}
                               style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', padding: 0, display: 'flex' }}
-                              title={`Format guide for ${label}`}
+                              title={`${label} 格式说明`}
                             >
                               <HelpCircle size={13} />
                             </button>
@@ -674,7 +674,7 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
                               style={{ fontSize: 'var(--text-xs)', padding: '4px 10px' }}
                             >
                               {isUploading ? <Loader2 size={12} className={styles.spin} /> : <Upload size={12} />}
-                              {' '}Upload
+                              {' '}上传
                             </button>
                             {customFiles[key] && (
                               <>
@@ -703,9 +703,9 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
               {/* Manual JS File Upload */}
               {canUpload && (
                 <div className={styles.subSection}>
-                  <h3 className={styles.subSectionTitle}>Manual JS File Upload</h3>
+                  <h3 className={styles.subSectionTitle}>手动上传 JS 文件</h3>
                   <p className={styles.sectionDescription}>
-                    Upload JS files for analysis without crawling (from Burp Suite, mobile APKs, DevTools, or authenticated areas).
+                    无需爬取即可上传 JS 文件进行分析（来源如 Burp Suite、移动端 APK、DevTools 或需登录的页面）。
                   </p>
                   <input
                     ref={jsFileRef}
@@ -728,12 +728,12 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
                     style={{ marginBottom: '8px' }}
                   >
                     {isUploading ? <Loader2 size={13} className={styles.spin} /> : <Upload size={13} />}
-                    {isUploading ? ' Uploading...' : ' Upload JS Files'}
+                    {isUploading ? ' 上传中…' : ' 上传 JS 文件'}
                   </button>
 
                   {uploadedFiles.length > 0 && (
                     <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
-                      <p style={{ marginBottom: '4px' }}>{uploadedFiles.length} file(s) uploaded ({(uploadedFiles.reduce((sum, f) => sum + f.size, 0) / 1024).toFixed(0)} KB total)</p>
+                      <p style={{ marginBottom: '4px' }}>已上传 {uploadedFiles.length} 个文件（总计 {(uploadedFiles.reduce((sum, f) => sum + f.size, 0) / 1024).toFixed(0)} KB）</p>
                       {uploadedFiles.map(f => (
                         <div key={f.name} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '2px 0' }}>
                           <FileText size={11} />
@@ -766,10 +766,10 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
             <div style={{ fontSize: 'var(--text-sm)', lineHeight: '1.6', color: 'var(--text-primary)' }}>
               <p style={{ marginBottom: '16px' }}>{guide.description}</p>
 
-              <h4 style={{ fontWeight: 600, marginBottom: '6px', color: 'var(--text-secondary)', textTransform: 'uppercase', fontSize: 'var(--text-xs)', letterSpacing: '0.05em' }}>Format</h4>
+              <h4 style={{ fontWeight: 600, marginBottom: '6px', color: 'var(--text-secondary)', textTransform: 'uppercase', fontSize: 'var(--text-xs)', letterSpacing: '0.05em' }}>格式</h4>
               <p style={{ marginBottom: '16px' }}>{guide.format}</p>
 
-              <h4 style={{ fontWeight: 600, marginBottom: '6px', color: 'var(--text-secondary)', textTransform: 'uppercase', fontSize: 'var(--text-xs)', letterSpacing: '0.05em' }}>Example</h4>
+              <h4 style={{ fontWeight: 600, marginBottom: '6px', color: 'var(--text-secondary)', textTransform: 'uppercase', fontSize: 'var(--text-xs)', letterSpacing: '0.05em' }}>示例</h4>
               <pre style={{
                 background: 'var(--bg-secondary, #1a1a2e)',
                 padding: '12px 16px',
@@ -784,7 +784,7 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
                 {guide.example}
               </pre>
 
-              <h4 style={{ fontWeight: 600, marginBottom: '6px', color: 'var(--text-secondary)', textTransform: 'uppercase', fontSize: 'var(--text-xs)', letterSpacing: '0.05em' }}>How It Works</h4>
+              <h4 style={{ fontWeight: 600, marginBottom: '6px', color: 'var(--text-secondary)', textTransform: 'uppercase', fontSize: 'var(--text-xs)', letterSpacing: '0.05em' }}>工作原理</h4>
               <p>{guide.howItWorks}</p>
             </div>
           </Modal>
@@ -795,7 +795,7 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
       <Modal
         isOpen={validationError !== null}
         onClose={() => setValidationError(null)}
-        title="Upload Validation Failed"
+        title="上传校验失败"
         size="default"
         footer={
           <button
@@ -804,13 +804,13 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
             onClick={() => setValidationError(null)}
             style={{ marginLeft: 'auto' }}
           >
-            OK
+            确定
           </button>
         }
       >
         <div style={{ fontSize: 'var(--text-sm)', lineHeight: '1.6' }}>
           <p style={{ color: 'var(--error)', marginBottom: '12px', fontWeight: 500 }}>
-            The file was not uploaded because it does not match the expected format.
+            文件未上传：格式与要求不匹配。
           </p>
           <pre style={{
             background: 'var(--bg-secondary, #1a1a2e)',
@@ -824,7 +824,7 @@ export function JsReconSection({ data, updateField, projectId, mode }: JsReconSe
             {validationError}
           </pre>
           <p style={{ marginTop: '12px', color: 'var(--text-secondary)', fontSize: 'var(--text-xs)' }}>
-            Click the <HelpCircle size={11} style={{ display: 'inline', verticalAlign: 'middle' }} /> icon next to the upload for format details and examples.
+            点击上传旁的 <HelpCircle size={11} style={{ display: 'inline', verticalAlign: 'middle' }} /> 图标查看格式说明与示例。
           </p>
         </div>
       </Modal>

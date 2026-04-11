@@ -108,7 +108,7 @@ export function CypherFixSettingsSection({ data, updateField }: CypherFixSetting
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Shield size={16} />
-          CypherFix Settings
+          CypherFix 设置
         </h2>
         <ChevronDown
           size={16}
@@ -119,13 +119,13 @@ export function CypherFixSettingsSection({ data, updateField }: CypherFixSetting
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Configure automated code remediation. CypherFix analyzes your Neo4j graph for vulnerabilities,
-            then generates code fixes via pull requests to your GitHub repository.
+            配置自动化代码修复。CypherFix 会分析你的 Neo4j 图谱中的漏洞，
+            并通过向 GitHub 仓库发起 Pull Request 的方式生成修复补丁。
           </p>
 
           {/* GitHub Token */}
           <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel}>GitHub Token (CypherFix)</label>
+            <label className={styles.fieldLabel}>GitHub 令牌（CypherFix）</label>
             <input
               type="password"
               className="textInput"
@@ -134,13 +134,13 @@ export function CypherFixSettingsSection({ data, updateField }: CypherFixSetting
               placeholder="ghp_xxxxxxxxxxxx"
             />
             <span className={styles.fieldHint}>
-              Personal access token with <code>repo</code> scope. Used for cloning, pushing branches, and creating PRs.
+              需要带 <code>repo</code> 权限的 Personal Access Token。用于克隆仓库、推送分支与创建 PR。
             </span>
           </div>
 
           {/* Default Repository */}
           <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel}>Default Repository</label>
+            <label className={styles.fieldLabel}>默认仓库</label>
             <input
               type="text"
               className="textInput"
@@ -149,13 +149,13 @@ export function CypherFixSettingsSection({ data, updateField }: CypherFixSetting
               placeholder="owner/repo"
             />
             <span className={styles.fieldHint}>
-              GitHub repository to fix (owner/repo format). Can be overridden per remediation.
+              要修复的 GitHub 仓库（owner/repo 格式）。可在每次修复任务中单独覆盖。
             </span>
           </div>
 
           {/* Default Branch */}
           <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel}>Default Branch</label>
+            <label className={styles.fieldLabel}>默认分支</label>
             <input
               type="text"
               className="textInput"
@@ -164,13 +164,13 @@ export function CypherFixSettingsSection({ data, updateField }: CypherFixSetting
               placeholder="main"
             />
             <span className={styles.fieldHint}>
-              Base branch for creating fix branches (default: main).
+              创建修复分支时所基于的分支（默认：main）。
             </span>
           </div>
 
           {/* Branch Prefix */}
           <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel}>Branch Prefix</label>
+            <label className={styles.fieldLabel}>分支前缀</label>
             <input
               type="text"
               className="textInput"
@@ -179,16 +179,16 @@ export function CypherFixSettingsSection({ data, updateField }: CypherFixSetting
               placeholder="cypherfix/"
             />
             <span className={styles.fieldHint}>
-              Prefix for fix branch names (e.g., cypherfix/rem-abc123).
+              修复分支名称前缀（例如：cypherfix/rem-abc123）。
             </span>
           </div>
 
           {/* Require Approval */}
           <div className={styles.toggleRow}>
             <div>
-              <span className={styles.toggleLabel}>Require Approval</span>
+              <span className={styles.toggleLabel}>需要确认</span>
               <p className={styles.toggleDescription}>
-                Pause and wait for user approval before applying each code edit. Recommended for production repositories.
+                每次应用代码修改前暂停并等待用户确认。生产仓库建议开启。
               </p>
             </div>
             <Toggle
@@ -199,7 +199,7 @@ export function CypherFixSettingsSection({ data, updateField }: CypherFixSetting
 
           {/* LLM Model Override — searchable dropdown */}
           <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel}>LLM Model Override</label>
+            <label className={styles.fieldLabel}>LLM 模型覆盖</label>
             <div className={styles.modelSelector} ref={dropdownRef}>
               <div
                 className={`${styles.modelSelectorInput} ${dropdownOpen ? styles.modelSelectorInputFocused : ''}`}
@@ -215,7 +215,7 @@ export function CypherFixSettingsSection({ data, updateField }: CypherFixSetting
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Search models..."
+                    placeholder="搜索模型..."
                     onKeyDown={(e) => {
                       if (e.key === 'Escape') {
                         setDropdownOpen(false)
@@ -226,10 +226,10 @@ export function CypherFixSettingsSection({ data, updateField }: CypherFixSetting
                 ) : (
                   <span className={styles.modelSelectedText} style={!hasOverride ? { opacity: 0.5 } : undefined}>
                     {modelsLoading
-                      ? 'Loading models...'
+                      ? '正在加载模型...'
                       : hasOverride
                         ? getDisplayName(data.cypherfixLlmModel, allModels)
-                        : `Using Agent Behaviour model (${getDisplayName(data.agentOpenaiModel, allModels)})`
+                        : `使用代理行为（Agent Behaviour）模型（${getDisplayName(data.agentOpenaiModel, allModels)}）`
                     }
                   </span>
                 )}
@@ -259,14 +259,14 @@ export function CypherFixSettingsSection({ data, updateField }: CypherFixSetting
                   >
                     <div className={styles.modelOptionMain}>
                       <span className={styles.modelOptionName} style={{ fontStyle: 'italic' }}>
-                        Use Agent Behaviour model ({getDisplayName(data.agentOpenaiModel, allModels)})
+                        使用代理行为（Agent Behaviour）模型（{getDisplayName(data.agentOpenaiModel, allModels)}）
                       </span>
                     </div>
                   </div>
 
                   {modelsError ? (
                     <div className={styles.modelDropdownEmpty}>
-                      <span>Failed to load models. Type a model ID manually:</span>
+                      <span>模型加载失败。可手动输入模型 ID：</span>
                       <input
                         className="textInput"
                         type="text"
@@ -278,7 +278,7 @@ export function CypherFixSettingsSection({ data, updateField }: CypherFixSetting
                     </div>
                   ) : Object.keys(filteredModels).length === 0 ? (
                     <div className={styles.modelDropdownEmpty}>
-                      {search ? `No models matching "${search}"` : 'No providers configured'}
+                      {search ? `没有匹配 "${search}" 的模型` : '未配置任何提供方'}
                     </div>
                   ) : (
                     Object.entries(filteredModels).map(([provider, models]) => (
@@ -308,7 +308,7 @@ export function CypherFixSettingsSection({ data, updateField }: CypherFixSetting
               )}
             </div>
             <span className={styles.fieldHint}>
-              Override the LLM model for CypherFix agents. Leave empty to use the model selected in Agent Behaviour.
+              覆盖 CypherFix 代理使用的 LLM 模型。留空则使用“代理行为（Agent Behaviour）”中选择的模型。
             </span>
           </div>
         </div>
