@@ -18,6 +18,7 @@ export type AuthTokenResponse = {
   token_type: string
   expires_in: number
   user: AuthUser
+  webapp_user_id?: string
 }
 
 type AuthContextValue = {
@@ -101,4 +102,3 @@ export function useAuth() {
   if (!ctx) throw new Error('useAuth must be used within AuthProvider')
   return ctx
 }
-

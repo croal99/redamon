@@ -15,6 +15,10 @@ type AuthTokenResponse = {
   user: AuthUser
 }
 
+type WebappLoginResponse = AuthTokenResponse & {
+  webapp_user_id: string
+}
+
 function normalizeEmail(email: string) {
   return email.trim().toLowerCase()
 }
@@ -85,7 +89,10 @@ export async function POST(request: NextRequest) {
       (preferredEmail ? await prisma.user.findUnique({ where: { email: preferredEmail } }) : null) ??
       (await prisma.user.findUnique({ where: { email: fallbackEmail } }))
 
+    let webappUserId: string
+
     if (existing) {
+      webappUserId = existing.id
       if (preferredEmail && existing.email !== preferredEmail) {
         const emailTaken = await prisma.user.findUnique({ where: { email: preferredEmail } })
         if (!emailTaken) {
@@ -106,15 +113,21 @@ export async function POST(request: NextRequest) {
         })
       }
     } else {
-      await prisma.user.create({
+      const created = await prisma.user.create({
         data: {
           name: authUser.username,
           email: preferredEmail ?? fallbackEmail,
         },
       })
+      webappUserId = created.id
     }
 
-    const res = NextResponse.json(payload, { status: 200 })
+    const responsePayload: WebappLoginResponse = {
+      ...payload,
+      webapp_user_id: webappUserId,
+    }
+
+    const res = NextResponse.json(responsePayload, { status: 200 })
     copySetCookieHeaders(authRes, res)
     return res
   } catch (error) {
@@ -122,4 +135,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: '登录失败' }, { status: 500 })
   }
 }
-

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Crosshair, Eye, EyeOff, FileText, Lock, Shield, TrendingUp, User } from 'lucide-react'
 import { useAuth, type AuthTokenResponse } from '@/providers/AuthProvider'
+import { useProject } from '@/providers/ProjectProvider'
 import styles from './page.module.css'
 
 async function loginRequest(username: string, password: string): Promise<AuthTokenResponse> {
@@ -29,6 +30,7 @@ export default function LoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { isAuthenticated, isLoading, setFromLogin } = useAuth()
+  const { setUserId, setCurrentProject } = useProject()
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -51,6 +53,10 @@ export default function LoginPage() {
     try {
       const payload = await loginRequest(username.trim(), password)
       setFromLogin(payload)
+      if (payload.webapp_user_id) {
+        setUserId(payload.webapp_user_id)
+        setCurrentProject(null)
+      }
       router.replace(next)
     } catch (err) {
       setError(err instanceof Error ? err.message : '认证失败')
