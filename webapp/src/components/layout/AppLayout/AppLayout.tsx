@@ -1,5 +1,6 @@
 'use client'
 
+import { usePathname } from 'next/navigation'
 import { GlobalHeader } from '../GlobalHeader'
 import { Footer } from '../Footer'
 import { DisclaimerGate } from '../DisclaimerGate'
@@ -11,14 +12,17 @@ interface AppLayoutProps {
 }
 
 export function AppLayout({ children }: AppLayoutProps) {
+  const pathname = usePathname()
+  const isAuthPage = pathname === '/login' || pathname === '/logout'
+
   return (
     <div className={styles.layout}>
-      <GlobalHeader />
+      {!isAuthPage && <GlobalHeader />}
       <main className={styles.main}>
-        <DisclaimerGate>{children}</DisclaimerGate>
+        {isAuthPage ? children : <DisclaimerGate>{children}</DisclaimerGate>}
       </main>
-      <Footer />
-      <UpdateNotification />
+      {!isAuthPage && <Footer />}
+      {!isAuthPage && <UpdateNotification />}
     </div>
   )
 }

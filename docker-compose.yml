@@ -558,6 +558,51 @@ services:
     networks:
       - redamon
 
+  # ─── 认证服务 ────────────────────────────────────────────────────
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    container_name: bluenet-auth
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_AUTH_USER:-bluenet}:${POSTGRES_AUTH_PASSWORD:-bluenet_secret}@postgres:5432/${POSTGRES_AUTH_DB:-bluenet}
+      JWT_SECRET: ${JWT_SECRET:-change_this_secret_in_production}
+      JWT_ALGORITHM: HS256
+      JWT_EXPIRE_MINUTES: 1440
+      FIRST_ADMIN_USER: ${FIRST_ADMIN_USER:-admin}
+      FIRST_ADMIN_PASS: ${FIRST_ADMIN_PASS:-Admin@123}
+    ports:
+      - "8100:8100"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - redamon
+
+  # ─── 前端 ────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: bluenet-frontend
+    networks:
+      - redamon
+    restart: unless-stopped
+
+  # ─── Nginx 统一入口 ──────────────────────────────────────────
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: bluenet-nginx
+    ports:
+      - "80:80"
+    # depends_on:
+    #   - frontend
+    networks:
+      - redamon
+    restart: unless-stopped
+
 # =============================================================================
 # Networks
 # =============================================================================

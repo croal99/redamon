@@ -3,8 +3,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Crosshair, FolderOpen, Shield, CircleHelp, TrendingUp, FileText, Settings } from 'lucide-react'
+import { Crosshair, FolderOpen, Shield, CircleHelp, TrendingUp, FileText, Settings, LogIn, LogOut } from 'lucide-react'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { useAuth } from '@/providers/AuthProvider'
 import { ProjectSelector } from './ProjectSelector'
 import { UserSelector } from './UserSelector'
 import styles from './GlobalHeader.module.css'
@@ -18,10 +19,11 @@ const coreNav = [
 
 export function GlobalHeader() {
   const pathname = usePathname()
+  const { isAuthenticated, user } = useAuth()
 
   return (
     <header className={styles.header}>
-      <Link href="/graph" className={styles.logo}>
+      <Link href="/home" className={styles.logo}>
         <Image src="/logo.png" alt="RedAmon" width={28} height={28} className={styles.logoImg} />
         <span className={styles.logoText}>
           <span className={styles.logoAccent}>Red</span>Amon
@@ -62,6 +64,18 @@ export function GlobalHeader() {
         <div className={styles.divider} />
 
         <ThemeToggle />
+
+        <div className={styles.divider} />
+
+        {isAuthenticated ? (
+          <Link href="/logout" className={styles.helpLink} title={`退出${user?.username ? `（${user.username}）` : ''}`}>
+            <LogOut size={16} />
+          </Link>
+        ) : (
+          <Link href="/login" className={styles.helpLink} title="登录">
+            <LogIn size={16} />
+          </Link>
+        )}
 
         <div className={styles.divider} />
 
