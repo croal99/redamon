@@ -33,8 +33,6 @@ export default function RootLayout({
                   var theme = localStorage.getItem('redamon-theme');
                   if (theme === 'dark' || theme === 'light') {
                     document.documentElement.setAttribute('data-theme', theme);
-                  } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-                    document.documentElement.setAttribute('data-theme', 'light');
                   } else {
                     document.documentElement.setAttribute('data-theme', 'dark');
                   }

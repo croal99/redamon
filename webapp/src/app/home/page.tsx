@@ -1,4 +1,6 @@
+import { cookies } from 'next/headers'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import type { ReactNode } from 'react'
 import { ArrowRight, Crosshair, Shield, TrendingUp, FileText, FolderOpen, LogIn } from 'lucide-react'
 import styles from './page.module.css'
@@ -42,7 +44,11 @@ const entries: Entry[] = [
   },
 ]
 
-export default function HomePage() {
+export default async function HomePage() {
+  const cookieStore = await cookies()
+  const token = cookieStore.get('bluenet_token')?.value
+  if (!token) redirect('/login?next=/home')
+
   return (
     <div className={styles.page}>
       <div className={styles.bg} aria-hidden />
