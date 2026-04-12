@@ -108,8 +108,10 @@ export function DisclaimerGate({ children }: DisclaimerGateProps) {
     return null
   }
 
+  // 已同意，直接渲染子组件
+  console.log('isAccepted', isAccepted)
+  return <>{children}</>
   if (isAccepted) {
-    return <>{children}</>
   }
 
   if (step === 'welcome') {
