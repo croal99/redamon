@@ -281,7 +281,7 @@ export function GraphToolbar({
                 className={`${styles.reconButton} ${isReconActive ? styles.reconButtonActive : ''}`}
                 onClick={isReconPaused ? onResumeRecon : onStartRecon}
                 disabled={isReconRunning || isPartialReconRunning}
-                title={isPartialReconRunning ? 'Partial recon is running -- stop it first' : isReconStopping ? '正在停止…' : isReconRunning ? '侦察进行中…' : isReconPaused ? '继续侦察' : '启动侦察'}
+                title={isPartialReconRunning ? '有侦察任务正在进行 — 请先停止' : isReconStopping ? '正在停止…' : isReconRunning ? '侦察进行中…' : isReconPaused ? '继续侦察' : '启动侦察'}
               >
                 {isReconRunning ? (
                   <Loader2 size={14} className={styles.spinner} />
