@@ -1499,7 +1499,10 @@ def run_http_probe(recon_data: dict, output_file: Path = None, settings: dict = 
             text=True
         )
 
-        _, stderr = process.communicate(timeout=1800)  # 30 min timeout
+        # Safety-net timeout: num_urls * per-url timeout (worst case if all sequential)
+        # Under normal parallel operation this will never trigger
+        safety_timeout = len(urls) * HTTPX_TIMEOUT
+        _, stderr = process.communicate(timeout=safety_timeout)
 
         end_time = datetime.now()
         duration = (end_time - start_time).total_seconds()
@@ -1601,7 +1604,8 @@ def run_http_probe(recon_data: dict, output_file: Path = None, settings: dict = 
         return recon_data
 
     except subprocess.TimeoutExpired:
-        print("[!][httpx] Probe timed out after 30 minutes")
+        process.kill()
+        print(f"[!][httpx] Probe hit safety timeout ({len(urls)} urls * {HTTPX_TIMEOUT}s = {safety_timeout}s)")
         return recon_data
     except Exception as e:
         print(f"[!][httpx] Error during probe: {e}")

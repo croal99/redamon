@@ -129,6 +129,26 @@ pull_gvm_images() {
         return 0
     fi
 
+    # Skip pull if all GVM images already exist locally (pass force=true to override)
+    local force="${1:-false}"
+    if [[ "$force" != "true" ]]; then
+        local need_pull=false
+        local compose_json
+        compose_json=$(docker compose config --format json 2>/dev/null)
+        for svc in $gvm_services gvmd; do
+            local img
+            img=$(echo "$compose_json" | jq -r ".services.\"$svc\".image // empty")
+            if [[ -n "$img" ]] && ! docker image inspect "$img" &>/dev/null; then
+                need_pull=true
+                break
+            fi
+        done
+        if [[ "$need_pull" == "false" ]]; then
+            info "GVM images already present locally, skipping pull."
+            return 0
+        fi
+    fi
+
     info "Pulling GVM images (with retry)..."
     local failed=()
     for svc in $gvm_services; do
@@ -656,7 +676,7 @@ cmd_update() {
     # Recreate GVM containers when docker-compose.yml changed (picks up command/image/volume changes)
     if [[ "$rebuild_all" == "true" ]] && is_gvm_enabled; then
         info "Recreating GVM containers to apply compose changes..."
-        pull_gvm_images
+        pull_gvm_images true
         docker compose up -d --force-recreate gvm-redis gvm-postgres gvmd gvm-ospd
     fi
 
@@ -754,6 +774,8 @@ cmd_up() {
         export KB_ENABLED="false"
     fi
 
+    ensure_tool_images
+
     info "Starting RedAmon (GVM: ${gvm_mode})..."
 
     # Pull GVM images with retry (large images, unreliable registry)
@@ -762,10 +784,10 @@ cmd_up() {
     fi
 
     if [[ "$gvm_mode" == "true" ]]; then
-        docker compose up -d --force-recreate
+        docker compose up -d
     else
         # shellcheck disable=SC2086
-        docker compose up -d --force-recreate $CORE_SERVICES
+        docker compose up -d $CORE_SERVICES
     fi
 
     # Show "ready" banner before the KB prompt so the user knows the app
