@@ -369,8 +369,9 @@ services:
         SKIP_KB: "${SKIP_KB:-false}"
     container_name: redamon-agent
     env_file:
-      - path: .env
-        required: false
+      .env
+      # - path: .env
+      #   required: false
     ports:
       - "${AGENT_PORT:-8090}:8080"
     environment:
