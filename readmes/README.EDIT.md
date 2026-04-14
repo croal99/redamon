@@ -1,15 +1,3 @@
-## 禁止访问Wellcome
-
-webapp\src\components\layout\DisclaimerGate\DisclaimerGate.tsx
-
-line 111: 
-```
-  // 已同意，直接渲染子组件
-  return <>{children}</>
-  if (isAccepted) {
-  }
-```
-
 ## 浏览器访问http://127.0.0.1:3000/graph?project=e40c9e707c424d928e57f6a92，是如何获得projectId
 
             
@@ -28,3 +16,31 @@ filePath: d:\ai\redamon\webapp\src\providers\ProjectProvider.tsx
 - 进入 `/graph?project=e40c...` 后：`ProjectProvider` 从 `searchParams.get('project')` 读到 `e40c...` → 请求 `/api/projects/e40c...` → 成功后把 `currentProject.id` 设为 `e40c...` → `GraphPage` 通过 `useProject()` 得到 `projectId=e40c...`。
 
 补充一点：在 Provider 拉取完成前，`projectId` 会短暂是 `null`，因此 `GraphPage` 里很多 hook 都用 `enabled: !!projectId` 或 `if (!projectId) return` 来避免空值请求（例如 [page.tsx:L145-L160](file:///d:/ai/redamon/webapp/src/app/graph/page.tsx#L145-L160)、[page.tsx:L191-L214](file:///d:/ai/redamon/webapp/src/app/graph/page.tsx#L191-L214)）。
+
+## 禁止访问Wellcome
+
+webapp\src\components\layout\DisclaimerGate\DisclaimerGate.tsx
+
+line 111: 
+```
+  // 已同意，直接渲染子组件
+  return <>{children}</>
+  if (isAccepted) {
+  }
+```
+
+## 禁止GVM Scan
+
+webapp\src\app\graph\components\GraphToolbar\GraphToolbar.tsx
+
+line 365: 
+```
+  { false && (
+```
+
+## 启动侦察相关
+
+webapp\src\hooks\useReconStatus.ts
+webapp\src\app\api\recon\[projectId]\start\route.ts
+recon_orchestrator\api.py
+recon_orchestrator\container_manager.py

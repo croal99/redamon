@@ -277,6 +277,8 @@ services:
       - ./mcp/nuclei-templates:/app/nuclei-templates:ro
       - /tmp/redamon:/tmp/redamon:rw
     environment:
+      # Webapp API URL for recon status check
+      WEBAPP_API_URL: http://localhost:${WEBAPP_PORT:-3000}
       # Host paths are auto-detected from container mounts (no hardcoded paths needed)
       RECON_IMAGE: redamon-recon:latest
       GVM_IMAGE: redamon-vuln-scanner:latest
@@ -510,8 +512,8 @@ services:
       args:
         REDAMON_VERSION: "${REDAMON_VERSION:-0.0.0}"
     container_name: redamon-webapp
-    # ports:
-    #   - "${WEBAPP_PORT:-3000}:3000"
+    ports:
+      - "${WEBAPP_PORT:-3000}:3000"
     environment:
       # PostgreSQL (Prisma)
       DATABASE_URL: "postgresql://${POSTGRES_USER:-redamon}:${POSTGRES_PASSWORD:-redamon_secret}@postgres:5432/${POSTGRES_DB:-redamon}"

@@ -12,7 +12,7 @@ import { UserInfo } from './UserInfo'
 
 const coreNav = [
   { label: '渗透分析', href: '/graph', icon: <Crosshair size={14} /> },
-  { label: '漏洞利用', href: '/cypherfix', icon: <Shield size={14} /> },
+  // { label: '漏洞利用', href: '/cypherfix', icon: <Shield size={14} /> },
   { label: '安全洞察', href: '/insights', icon: <TrendingUp size={14} /> },
   { label: '报告中心', href: '/reports', icon: <FileText size={14} /> },
 ]

@@ -97,6 +97,7 @@ GITHUB_HUNT_PATH = _get_host_path(_host_mounts, "/app/github_secret_hunt", "GITH
 GITHUB_HUNT_IMAGE = os.getenv("GITHUB_HUNT_IMAGE", "redamon-github-hunter:latest")
 TRUFFLEHOG_PATH = _get_host_path(_host_mounts, "/app/trufflehog_scan", "TRUFFLEHOG_PATH")
 TRUFFLEHOG_IMAGE = os.getenv("TRUFFLEHOG_IMAGE", "redamon-trufflehog:latest")
+WEBAPP_URL = os.getenv("WEBAPP_URL", "http://webapp:3000")
 try:
     CUSTOM_TEMPLATES_PATH = _get_host_path(_host_mounts, "/app/nuclei-templates", "CUSTOM_TEMPLATES_PATH")
 except RuntimeError:
@@ -129,7 +130,7 @@ app = FastAPI(
 # CORS middleware for webapp access
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=["http://localhost:3000", "http://localhost", "http://127.0.0.1:3000", "http://127.0.0.1:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -269,6 +270,9 @@ async def start_recon(project_id: str, request: ReconStartRequest):
         raise HTTPException(status_code=503, detail="Service not initialized")
 
     # RoE time window check: fetch project settings and verify
+    request.webapp_api_url = os.getenv("WEBAPP_API_URL", "http://localhost:3000")
+    logger.info(f"Checking RoE time window for project {project_id}")
+    logger.info(f"Webapp API URL: {request.webapp_api_url}")
     if request.webapp_api_url:
         try:
             import urllib.request
@@ -280,6 +284,7 @@ async def start_recon(project_id: str, request: ReconStartRequest):
                 from backports import zoneinfo
 
             url = f"{request.webapp_api_url.rstrip('/')}/api/projects/{project_id}"
+            logger.info(f"Requesting project settings from {url}")
             req = urllib.request.Request(url)
             with urllib.request.urlopen(req, timeout=5) as resp:
                 if resp.status == 200:

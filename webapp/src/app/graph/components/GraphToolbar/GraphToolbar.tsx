@@ -362,6 +362,7 @@ export function GraphToolbar({
             )}
 
             {/* GVM Scan Actions */}
+            { false && (
             <div className={styles.actionGroup}>
               <button
                 className={`${styles.gvmButton} ${isGvmActive ? styles.gvmButtonActive : ''}`}
@@ -431,6 +432,7 @@ export function GraphToolbar({
                 <Download size={14} />
               </button>
             </div>
+            )}
 
             {/* Other Scans (GitHub Hunt + TruffleHog) */}
             <div className={styles.actionGroup}>

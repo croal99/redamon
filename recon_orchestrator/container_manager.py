@@ -23,6 +23,8 @@ from models import (
 
 logger = logging.getLogger(__name__)
 
+NETWORK_NAME = "redamon"
+
 # ANSI escape code pattern for stripping terminal colors from logs
 ANSI_ESCAPE = re.compile(r'\x1b\[[0-9;]*m|\033\[[0-9;]*m')
 
@@ -206,11 +208,21 @@ class ContainerManager:
                 )
 
             # Start container with environment variables
+            logger.info(f"Starting recon container for project {project_id} with image {self.recon_image}, api url: {webapp_api_url}")
+
+            # 1. 确保网络存在
+            try:
+                network = self.client.networks.get(NETWORK_NAME)
+                logger.info(f"[+] 网络 {NETWORK_NAME!r} 已存在，ID: {network.id[:12]}")
+            except NotFound:
+                logger.info(f"[*] 网络 {NETWORK_NAME!r} 不存在")
+
             container = self.client.containers.run(
                 self.recon_image,
                 name=container_name,
                 detach=True,
                 network_mode="host",
+                # network=NETWORK_NAME,
                 privileged=True,
                 environment={
                     "PROJECT_ID": project_id,
