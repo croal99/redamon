@@ -6,12 +6,15 @@
   align-items: center;
   justify-content: center;
   padding: var(--space-7) var(--space-4);
+  background: var(--bg-primary);
 }
 
 .bg {
   position: absolute;
   inset: 0;
   background-image: url('/login-bg.jpg');
+  background-color: rgba(0, 0, 0, 0.62);
+  background-blend-mode: multiply;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
