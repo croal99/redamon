@@ -81,6 +81,7 @@ Pentesters running a final comprehensive sweep on a target they have full author
     // --- WHOIS & DNS ---
     whoisEnabled: true,
     dnsEnabled: true,
+    dnsMaxWorkers: 100,
 
     // --- Port Scanning: all 3 maxed ---
     naabuEnabled: true,
@@ -109,6 +110,7 @@ Pentesters running a final comprehensive sweep on a target they have full author
     nmapTimingTemplate: 'T4',
     nmapTimeout: 1200,
     nmapHostTimeout: 600,
+    nmapParallelism: 5,
 
     // --- httpx: all probes maxed ---
     httpxEnabled: true,
@@ -158,6 +160,8 @@ Pentesters running a final comprehensive sweep on a target they have full author
     katanaRateLimit: 150,
     katanaTimeout: 7200,
     katanaJsCrawl: true,
+    katanaParallelism: 15,
+    katanaConcurrency: 25,
 
     // --- Hakrawler: maximum crawl ---
     hakrawlerEnabled: true,
@@ -167,6 +171,7 @@ Pentesters running a final comprehensive sweep on a target they have full author
     hakrawlerMaxUrls: 2000,
     hakrawlerIncludeSubs: true,
     hakrawlerInsecure: true,
+    hakrawlerParallelism: 8,
 
     // --- GAU: all providers, high limits, with verification ---
     gauEnabled: true,
@@ -177,10 +182,12 @@ Pentesters running a final comprehensive sweep on a target they have full author
     gauVerifyUrls: true,
     gauDetectMethods: true,
     gauFilterDeadEndpoints: true,
+    gauWorkers: 15,
 
     // --- ParamSpider: enabled ---
     paramspiderEnabled: true,
     paramspiderTimeout: 180,
+    paramspiderWorkers: 10,
 
     // --- jsluice: high limits ---
     jsluiceEnabled: true,
@@ -188,6 +195,7 @@ Pentesters running a final comprehensive sweep on a target they have full author
     jsluiceExtractSecrets: true,
     jsluiceExtractUrls: true,
     jsluiceConcurrency: 15,
+    jsluiceParallelism: 5,
 
     // --- JS Recon: everything enabled, max files ---
     jsReconEnabled: true,
@@ -220,6 +228,7 @@ Pentesters running a final comprehensive sweep on a target they have full author
     ffufAutoCalibrate: true,
     ffufFollowRedirects: false,
     ffufSmartFuzz: true,
+    ffufParallelism: 5,
 
     // --- Kiterunner: routes-large, high connections ---
     kiterunnerEnabled: true,
@@ -232,6 +241,7 @@ Pentesters running a final comprehensive sweep on a target they have full author
     kiterunnerDetectMethods: true,
     kiterunnerMethodDetectionMode: 'bruteforce',
     kiterunnerBruteforceMethods: ['POST', 'PUT', 'DELETE', 'PATCH'],
+    kiterunnerParallelism: 3,
 
     // --- Arjun: all methods, high limits ---
     arjunEnabled: true,
@@ -313,25 +323,33 @@ Pentesters running a final comprehensive sweep on a target they have full author
     shodanReverseDns: true,
     shodanDomainDns: true,
     shodanPassiveCves: true,
+    shodanWorkers: 10,
 
     urlscanEnabled: true,
     urlscanMaxResults: 10000,
 
     otxEnabled: true,
+    otxWorkers: 10,
 
     censysEnabled: true,
+    censysWorkers: 10,
 
     fofaEnabled: true,
     fofaMaxResults: 5000,
+    fofaWorkers: 10,
 
     netlasEnabled: true,
+    netlasWorkers: 10,
 
     virusTotalEnabled: true,
+    virusTotalWorkers: 4,
 
     zoomEyeEnabled: true,
     zoomEyeMaxResults: 5000,
+    zoomEyeWorkers: 10,
 
     criminalIpEnabled: true,
+    criminalIpWorkers: 10,
 
     uncoverEnabled: true,
     uncoverMaxResults: 1000,

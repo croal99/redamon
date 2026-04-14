@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { ChevronDown, Globe, Info } from 'lucide-react'
+import { ChevronDown, Globe, Info, Play } from 'lucide-react'
 import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import { useProject } from '@/providers/ProjectProvider'
@@ -13,9 +13,10 @@ type FormData = Omit<Project, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'use
 interface UrlscanSectionProps {
   data: FormData
   updateField: <K extends keyof FormData>(field: K, value: FormData[K]) => void
+  onRun?: () => void
 }
 
-export function UrlscanSection({ data, updateField }: UrlscanSectionProps) {
+export function UrlscanSection({ data, updateField, onRun }: UrlscanSectionProps) {
   const [isOpen, setIsOpen] = useState(true)
   const { userId } = useProject()
   const [hasApiKey, setHasApiKey] = useState<boolean | null>(null)
@@ -44,6 +45,22 @@ export function UrlscanSection({ data, updateField }: UrlscanSectionProps) {
           <span className={styles.badgePassive}>被动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
+          {onRun && data.urlscanEnabled && (
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); onRun() }}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '4px',
+                padding: '3px 8px', borderRadius: '4px',
+                border: '1px solid rgba(34, 197, 94, 0.3)',
+                backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
+              }}
+              title="Run URLScan"
+            >
+              <Play size={10} /> Run partial recon
+            </button>
+          )}
           <div onClick={(e) => e.stopPropagation()}>
             <Toggle
               checked={data.urlscanEnabled}

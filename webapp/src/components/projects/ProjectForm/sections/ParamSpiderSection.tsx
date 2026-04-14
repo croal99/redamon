@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, Search } from 'lucide-react'
+import { ChevronDown, Search, Play } from 'lucide-react'
 import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
@@ -12,9 +12,10 @@ type FormData = Omit<Project, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'use
 interface ParamSpiderSectionProps {
   data: FormData
   updateField: <K extends keyof FormData>(field: K, value: FormData[K]) => void
+  onRun?: () => void
 }
 
-export function ParamSpiderSection({ data, updateField }: ParamSpiderSectionProps) {
+export function ParamSpiderSection({ data, updateField, onRun }: ParamSpiderSectionProps) {
   const [isOpen, setIsOpen] = useState(true)
 
   return (
@@ -27,6 +28,22 @@ export function ParamSpiderSection({ data, updateField }: ParamSpiderSectionProp
           <span className={styles.badgePassive}>被动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
+          {onRun && data.paramspiderEnabled && (
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); onRun() }}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '4px',
+                padding: '3px 8px', borderRadius: '4px',
+                border: '1px solid rgba(34, 197, 94, 0.3)',
+                backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
+              }}
+              title="Run ParamSpider"
+            >
+              <Play size={10} /> Run partial recon
+            </button>
+          )}
           <div onClick={(e) => e.stopPropagation()}>
             <Toggle
               checked={data.paramspiderEnabled}
@@ -69,6 +86,21 @@ export function ParamSpiderSection({ data, updateField }: ParamSpiderSectionProp
                     min={10}
                   />
                   <span className={styles.fieldHint}>每个域名的查询超时</span>
+                </div>
+              </div>
+
+              <div className={styles.fieldRow}>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>Workers</label>
+                  <input
+                    type="number"
+                    className="textInput"
+                    value={data.paramspiderWorkers ?? 5}
+                    onChange={(e) => updateField('paramspiderWorkers', parseInt(e.target.value) || 5)}
+                    min={1}
+                    max={10}
+                  />
+                  <span className={styles.fieldHint}>Parallel domain workers</span>
                 </div>
               </div>
             </>

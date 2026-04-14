@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, Code } from 'lucide-react'
+import { ChevronDown, Code, Play } from 'lucide-react'
 import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
@@ -12,9 +12,10 @@ type FormData = Omit<Project, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'use
 interface JsluiceSectionProps {
   data: FormData
   updateField: <K extends keyof FormData>(field: K, value: FormData[K]) => void
+  onRun?: () => void
 }
 
-export function JsluiceSection({ data, updateField }: JsluiceSectionProps) {
+export function JsluiceSection({ data, updateField, onRun }: JsluiceSectionProps) {
   const [isOpen, setIsOpen] = useState(true)
 
   return (
@@ -27,6 +28,22 @@ export function JsluiceSection({ data, updateField }: JsluiceSectionProps) {
           <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
+          {onRun && data.jsluiceEnabled && (
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); onRun() }}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '4px',
+                padding: '3px 8px', borderRadius: '4px',
+                border: '1px solid rgba(34, 197, 94, 0.3)',
+                backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
+              }}
+              title="Run jsluice JS Analyzer"
+            >
+              <Play size={10} /> Run partial recon
+            </button>
+          )}
           <div onClick={(e) => e.stopPropagation()}>
             <Toggle
               checked={data.jsluiceEnabled}
@@ -86,6 +103,18 @@ export function JsluiceSection({ data, updateField }: JsluiceSectionProps) {
                     max={20}
                   />
                   <span className={styles.fieldHint}>jsluice 并行处理的文件数</span>
+                </div>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>Parallelism</label>
+                  <input
+                    type="number"
+                    className="textInput"
+                    value={data.jsluiceParallelism ?? 3}
+                    onChange={(e) => updateField('jsluiceParallelism', parseInt(e.target.value) || 3)}
+                    min={1}
+                    max={10}
+                  />
+                  <span className={styles.fieldHint}>Parallel base URL analysis batches</span>
                 </div>
               </div>
 

@@ -142,6 +142,10 @@ export interface GraphInputs {
   existing_subdomains_count: number
   existing_subdomains?: string[]
   existing_ips_count?: number
+  existing_ports_count?: number
+  existing_baseurls_count?: number
+  existing_baseurls?: string[]
+  existing_endpoints_count?: number
   source: 'graph' | 'settings'
 }
 
@@ -149,6 +153,9 @@ export interface UserTargets {
   subdomains: string[]
   ips: string[]
   ip_attach_to: string | null
+  ports?: number[]
+  urls?: string[]
+  url_attach_to?: string | null
 }
 
 export interface PartialReconParams {
@@ -156,15 +163,33 @@ export interface PartialReconParams {
   graph_inputs: Record<string, string>
   user_inputs: string[]
   user_targets?: UserTargets
-  dedup_enabled: boolean
+  include_graph_targets?: boolean
   settings_overrides?: Record<string, unknown>
 }
 
-export const PARTIAL_RECON_SUPPORTED_TOOLS = new Set(['SubdomainDiscovery', 'Naabu'])
+export const PARTIAL_RECON_SUPPORTED_TOOLS = new Set(['SubdomainDiscovery', 'Naabu', 'Masscan', 'Nmap', 'Httpx', 'Katana', 'Hakrawler', 'Jsluice', 'Gau', 'Kiterunner', 'ParamSpider', 'Arjun', 'Ffuf', 'JsRecon', 'Nuclei', 'SecurityChecks', 'Shodan', 'Urlscan', 'Uncover', 'OsintEnrichment'])
 
 export const PARTIAL_RECON_PHASE_MAP: Record<string, readonly string[]> = {
   SubdomainDiscovery: ['Subdomain Discovery'],
   Naabu: ['Port Scanning'],
+  Masscan: ['Port Scanning'],
+  Nmap: ['Nmap Service Detection'],
+  Httpx: ['HTTP Probing'],
+  Katana: ['Resource Enumeration'],
+  Hakrawler: ['Resource Enumeration'],
+  Jsluice: ['Resource Enumeration'],
+  Gau: ['Resource Enumeration'],
+  Kiterunner: ['Resource Enumeration'],
+  ParamSpider: ['Resource Enumeration'],
+  Arjun: ['Resource Enumeration'],
+  Ffuf: ['Resource Enumeration'],
+  JsRecon: ['JS Recon'],
+  Nuclei: ['Vulnerability Scanning'],
+  SecurityChecks: ['Security Checks'],
+  Shodan: ['Shodan Enrichment'],
+  Urlscan: ['URLScan Enrichment'],
+  Uncover: ['Uncover Expansion'],
+  OsintEnrichment: ['OSINT Enrichment'],
 }
 
 // Backward-compatible default (SubdomainDiscovery phases)

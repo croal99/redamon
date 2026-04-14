@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, Search } from 'lucide-react'
+import { ChevronDown, Play, Search } from 'lucide-react'
 import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
@@ -13,9 +13,10 @@ type FormData = Omit<Project, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'use
 interface SubdomainDiscoverySectionProps {
   data: FormData
   updateField: <K extends keyof FormData>(field: K, value: FormData[K]) => void
+  onRun?: () => void
 }
 
-export function SubdomainDiscoverySection({ data, updateField }: SubdomainDiscoverySectionProps) {
+export function SubdomainDiscoverySection({ data, updateField, onRun }: SubdomainDiscoverySectionProps) {
   const [isOpen, setIsOpen] = useState(true)
 
   return (
@@ -27,6 +28,28 @@ export function SubdomainDiscoverySection({ data, updateField }: SubdomainDiscov
           <NodeInfoTooltip section="SubdomainDiscovery" />
         </h2>
         <div className={styles.sectionHeaderRight}>
+          {onRun && data.subdomainDiscoveryEnabled && (
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); onRun() }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+                padding: '3px 8px',
+                borderRadius: '4px',
+                border: '1px solid rgba(34, 197, 94, 0.3)',
+                backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                color: '#22c55e',
+                cursor: 'pointer',
+                fontSize: '11px',
+                fontWeight: 500,
+              }}
+              title="Run Subdomain Discovery"
+            >
+              <Play size={10} /> Run partial recon
+            </button>
+          )}
           <div onClick={(e) => e.stopPropagation()}>
             <Toggle
               checked={data.subdomainDiscoveryEnabled}
@@ -321,7 +344,37 @@ export function SubdomainDiscoverySection({ data, updateField }: SubdomainDiscov
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>DNS 与 WHOIS <span className={styles.badgePassive}>被动</span></h3>
+            <h3 className={styles.subSectionTitle}>DNS Performance</h3>
+
+            <div className={styles.fieldRow}>
+              <div className={styles.fieldGroup}>
+                <label className={styles.fieldLabel}>DNS Max Workers</label>
+                <input
+                  type="number"
+                  className="textInput"
+                  value={data.dnsMaxWorkers ?? 50}
+                  onChange={(e) => updateField('dnsMaxWorkers', parseInt(e.target.value) || 50)}
+                  min={1}
+                  max={200}
+                />
+                <span className={styles.fieldHint}>Parallel DNS resolution workers</span>
+              </div>
+            </div>
+
+            <div className={styles.toggleRow}>
+              <div>
+                <span className={styles.toggleLabel}>DNS Record Parallelism</span>
+                <p className={styles.toggleDescription}>Query all DNS record types in parallel per hostname</p>
+              </div>
+              <Toggle
+                checked={data.dnsRecordParallelism ?? true}
+                onChange={(checked) => updateField('dnsRecordParallelism', checked)}
+              />
+            </div>
+          </div>
+
+          <div className={styles.subSection}>
+            <h3 className={styles.subSectionTitle}>DNS &amp; WHOIS <span className={styles.badgePassive}>Passive</span></h3>
 
             <div className={styles.toggleRowCompact}>
               <div className={styles.toggleRowCompactInfo}>

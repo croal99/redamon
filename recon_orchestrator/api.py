@@ -535,7 +535,8 @@ async def start_partial_recon(project_id: str, request: PartialReconStartRequest
         "domain": request.graph_inputs.get("domain", ""),
         "user_inputs": request.user_inputs,
         "user_targets": request.user_targets,
-        "dedup_enabled": request.dedup_enabled,
+        "include_graph_targets": request.include_graph_targets,
+        "settings_overrides": request.settings_overrides,
         "user_id": request.user_id,
         "webapp_api_url": request.webapp_api_url,
     }

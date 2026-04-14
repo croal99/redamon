@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.9.2] - 2026-04-13
+
+### Added
+
+- **Per-tool parallelism settings** -- new configurable parallelism/concurrency controls for FFuf, Hakrawler, Katana, Jsluice, Kiterunner, GAU, ParamSpider, and Shodan. Each tool can now process multiple targets concurrently via ThreadPoolExecutor. New Prisma fields, project settings, and frontend controls added across the board
+- **DNS parallelism** -- DNS resolution now queries all 7 record types concurrently per host (configurable via `dnsMaxWorkers` and `dnsRecordParallelism` project settings)
+- **JS Recon false-positive filters** -- Shannon entropy checks, base64 blob detection, binary/font context filtering, repetitive pattern detection, and URL whitelisting to reduce noise from embedded fonts, minified bundles, and documentation URLs. Filter stats are tracked and reported in the summary
+- **JS Recon validation improvements** -- new `format_validated` and `format_invalid` validation statuses for secrets that can only be format-checked (e.g. Twilio SID). Summary now tracks `format_validated` and `incomplete` counts
+- **Dockerfile retry helper** -- all `curl`, `wget`, `go install`, and `git clone` commands in agentic, kali-sandbox, and recon Dockerfiles now use a `retry` wrapper (5 attempts with exponential backoff) to handle transient network failures during builds
+
+### Fixed
+
+- **GVM ospd-openvas image tag** -- changed from pinned `22.7.1` (removed from Greenbone registry) to `stable`, fixing GVM install failures reported in #92
+- **JS Recon regex precision** -- tightened patterns for AWS Secret Key, Twilio API Key/SID, Twitter Bearer Token, and database URIs with word boundaries and stricter prefix matching to reduce false positives
+- **Minified JS context extraction** -- context snippets for findings in minified single-line JS files now extract chars around the match position instead of returning the entire line
+
+---
+
+## [3.9.1] - 2026-04-13
+
+### Added
+
+- **Partial Recon** -- run any single tool from the recon pipeline independently without re-running the entire scan. Every tool section header and Workflow View node has a play button that opens a dedicated modal. The modal shows existing graph data counts (subdomains, IPs, ports, BaseURLs, endpoints), accepts custom targets (subdomains, IPs, ports, URLs, JS file uploads depending on the tool), and launches the tool in isolation. Results are merged back into the Neo4j graph via `MERGE` operations -- duplicates are updated, not recreated. All 20 pipeline tools are supported. Key features:
+  - **Graph-aware targeting** -- the modal queries Neo4j for existing data relevant to each tool and displays counts in the Input panel
+  - **Custom target injection** -- add subdomains, IPs (IPv4/IPv6/CIDR), ports, or URLs with real-time validation (scope checks, format validation, CIDR range restrictions)
+  - **Include graph targets toggle** -- choose whether to scan existing graph data alongside custom inputs, or only scan custom targets
+  - **Attach-to dropdowns** -- link custom IPs to a specific subdomain or custom URLs to a specific BaseURL for correct graph relationships
+  - **Nuclei settings overrides** -- toggle CVE Lookup, MITRE ATT&CK, and Security Checks independently from project settings
+  - **API key warnings** -- the modal checks user settings and warns about missing API keys with impact descriptions per tool
+  - **UserInput node tracking** -- custom inputs create UserInput nodes in the graph linked to results via PRODUCED relationships for traceability
+  - **Project settings inheritance** -- partial recon runs use the project's saved settings (timeouts, wordlists, thread counts, API keys, proxy, Tor) automatically
+
+---
+
 ## [3.9.0] - 2026-04-11
 
 ### Added

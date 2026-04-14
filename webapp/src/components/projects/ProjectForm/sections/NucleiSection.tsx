@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { ChevronDown, Shield, Upload, Trash2, Loader2, FileText } from 'lucide-react'
+import { ChevronDown, Shield, Upload, Trash2, Loader2, FileText, Play } from 'lucide-react'
 import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
@@ -13,6 +13,7 @@ type FormData = Omit<Project, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'use
 interface NucleiSectionProps {
   data: FormData
   updateField: <K extends keyof FormData>(field: K, value: FormData[K]) => void
+  onRun?: () => void
 }
 
 interface CustomTemplate {
@@ -42,7 +43,7 @@ const SEVERITY_COLORS: Record<string, string> = {
   unknown: '#718096',
 }
 
-export function NucleiSection({ data, updateField }: NucleiSectionProps) {
+export function NucleiSection({ data, updateField, onRun }: NucleiSectionProps) {
   const [isOpen, setIsOpen] = useState(true)
   const [customTemplates, setCustomTemplates] = useState<CustomTemplate[]>([])
   const [isUploading, setIsUploading] = useState(false)
@@ -128,6 +129,22 @@ export function NucleiSection({ data, updateField }: NucleiSectionProps) {
           <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
+          {onRun && data.nucleiEnabled && (
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); onRun() }}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '4px',
+                padding: '3px 8px', borderRadius: '4px',
+                border: '1px solid rgba(34, 197, 94, 0.3)',
+                backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
+              }}
+              title="Run Nuclei"
+            >
+              <Play size={10} /> Run partial recon
+            </button>
+          )}
           <div onClick={(e) => e.stopPropagation()}>
             <Toggle
               checked={data.nucleiEnabled}

@@ -8,6 +8,7 @@ import type { Project } from '@prisma/client'
 import { validateProjectForm } from '@/lib/validation'
 import { isHardBlockedDomain } from '@/lib/hard-guardrail'
 import { useProject } from '@/providers/ProjectProvider'
+import useReconStatus from '@/hooks/useReconStatus'
 import { useAlertModal, useToast } from '@/components/ui'
 import type { PartialReconParams } from '@/lib/recon-types'
 import styles from './ProjectForm.module.css'
@@ -223,6 +224,12 @@ export function ProjectForm({
   const projectId =
     projectIdFromRoute ?? (initialData as { id?: string } | undefined)?.id ?? (mode === 'create' ? generatedId : undefined)
 
+  // Track recon status in edit mode to reflect running state on the Start Recon button
+  const { state: reconState } = useReconStatus({ projectId: mode === 'edit' ? (projectId ?? null) : null, enabled: mode === 'edit' })
+  const isReconRunning = reconState?.status === 'running' || reconState?.status === 'starting'
+  const isReconPaused = reconState?.status === 'paused'
+  const isReconBusy = isReconRunning || isReconPaused
+
   // Fetch defaults from backend on mount (only for create mode)
   useEffect(() => {
     if (mode === 'create') {
@@ -239,6 +246,27 @@ export function ProjectForm({
   ) => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
+
+  // Auto-save a single toggle field directly to DB (used in workflow mode)
+  const autoSaveField = useCallback(async <K extends keyof ProjectFormData>(
+    field: K,
+    value: ProjectFormData[K]
+  ) => {
+    if (!projectId || mode !== 'edit') return
+    try {
+      const res = await fetch(`/api/projects/${projectId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ [field]: value }),
+      })
+      if (!res.ok) {
+        const err = await res.json()
+        toast.error(err.error || 'Failed to save')
+      }
+    } catch {
+      toast.error('Failed to save setting')
+    }
+  }, [projectId, mode, toast])
 
   const updateMultipleFields = (fields: Partial<ProjectFormData>) => {
     setFormData(prev => ({ ...prev, ...fields }))
@@ -398,16 +426,33 @@ export function ProjectForm({
           )}
         </h1>
         <div className={styles.actions}>
-          <button
-            type="button"
-            className="secondaryButton"
-            onClick={onCancel}
-            disabled={isSubmitting}
-            title="放弃所有未保存的更改并返回上一页"
-          >
-            <X size={14} />
-            取消
-          </button>
+          {mode === 'edit' && projectId ? (
+            <button
+              type="button"
+              className={`reconStartButton${isReconBusy ? ' reconStartButtonActive' : ''}`}
+              onClick={() => router.push(isReconBusy ? `/graph?project=${projectId}&openlogs=recon` : `/graph?project=${projectId}&autostart=true`)}
+              disabled={isSubmitting}
+              title={isReconRunning ? 'Recon is running -- click to view progress' : isReconPaused ? 'Recon is paused -- click to view' : 'Navigate to the graph page and start the full recon pipeline'}
+            >
+              {isReconRunning ? (
+                <Loader2 size={14} className={styles.spinner} />
+              ) : (
+                <Play size={14} />
+              )}
+              {isReconRunning ? 'Running...' : isReconPaused ? 'Paused' : 'Start Recon Pipeline'}
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="secondaryButton"
+              onClick={onCancel}
+              disabled={isSubmitting}
+              title="放弃所有未保存的更改并返回上一页"
+            >
+              <X size={14} />
+              取消
+            </button>
+          )}
           <button
             type="button"
             className="secondaryButton"
@@ -439,24 +484,26 @@ export function ProjectForm({
               导出
             </button>
           )}
-          <button
-            type="submit"
-            className="primaryButton"
-            disabled={!canSubmit}
-            title={mode === 'create' ? '使用当前配置创建项目并开始工作' : '保存对项目配置的所有更改'}
-          >
-            {isLoadingDefaults ? (
-              <>
-                <Loader2 size={14} className={styles.spinner} />
-                正在加载…
-              </>
-            ) : (
-              <>
-                <Save size={14} />
-                {isSubmitting ? '正在保存…' : '保存项目'}
-              </>
-            )}
-          </button>
+          {!(mode === 'edit' && viewMode === 'workflow') && (
+            <button
+              type="submit"
+              className="primaryButton"
+              disabled={!canSubmit}
+              title={mode === 'create' ? '使用当前配置创建项目并开始工作' : '保存对项目配置的所有更改'}
+            >
+              {isLoadingDefaults ? (
+                <>
+                  <Loader2 size={14} className={styles.spinner} />
+                  正在加载…
+                </>
+              ) : (
+                <>
+                  <Save size={14} />
+                  {isSubmitting ? '正在保存…' : mode === 'edit' ? 'Update Settings' : '保存项目'}
+                </>
+              )}
+            </button>
+          )}
         </div>
       </div>
 
@@ -560,6 +607,7 @@ export function ProjectForm({
                 mode={mode}
                 onSave={onSaveAndStay ? handleSaveAndStay : undefined}
                 onRunPartial={(toolId) => setPartialReconToolId(toolId)}
+                onAutoSaveField={autoSaveField}
               />
             )}
 
@@ -583,33 +631,10 @@ export function ProjectForm({
 
         {activeTab === 'discovery' && viewMode === 'tabs' && (
           <>
-            {mode === 'edit' && projectId && (
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
-                <button
-                  type="button"
-                  onClick={() => setPartialReconToolId('SubdomainDiscovery')}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    padding: '6px 12px',
-                    borderRadius: '6px',
-                    border: '1px solid rgba(34, 197, 94, 0.3)',
-                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
-                    color: '#22c55e',
-                    cursor: 'pointer',
-                    fontSize: '12px',
-                    fontWeight: 500,
-                  }}
-                >
-                  <Play size={12} /> Run Subdomain Discovery
-                </button>
-              </div>
-            )}
-            <SubdomainDiscoverySection data={formData} updateField={updateField} />
-            <ShodanSection data={formData} updateField={updateField} />
-            <UrlscanSection data={formData} updateField={updateField} />
-            <OsintEnrichmentSection data={formData} updateField={updateField} />
+            <SubdomainDiscoverySection data={formData} updateField={updateField} onRun={mode === 'edit' && projectId ? () => setPartialReconToolId('SubdomainDiscovery') : undefined} />
+            <ShodanSection data={formData} updateField={updateField} onRun={mode === 'edit' && projectId ? () => setPartialReconToolId('Shodan') : undefined} />
+            <UrlscanSection data={formData} updateField={updateField} onRun={mode === 'edit' && projectId ? () => setPartialReconToolId('Urlscan') : undefined} />
+            <OsintEnrichmentSection data={formData} updateField={updateField} onRun={mode === 'edit' && projectId ? () => setPartialReconToolId('OsintEnrichment') : undefined} onRunUncover={mode === 'edit' && projectId ? () => setPartialReconToolId('Uncover') : undefined} />
           </>
         )}
 
@@ -621,35 +646,35 @@ export function ProjectForm({
                 <span>两个端口扫描器都已关闭。侦察流程将跳过端口扫描——下游模块（HTTP 探测、漏洞扫描）依赖开放端口才能工作，否则不会产生结果。</span>
               </div>
             )}
-            <NaabuSection data={formData} updateField={updateField} />
-            <NmapSection data={formData} updateField={updateField} />
-            <MasscanSection data={formData} updateField={updateField} />
+            <NaabuSection data={formData} updateField={updateField} onRun={mode === 'edit' && projectId ? () => setPartialReconToolId('Naabu') : undefined} />
+            <NmapSection data={formData} updateField={updateField} onRun={mode === 'edit' && projectId ? () => setPartialReconToolId('Nmap') : undefined} />
+            <MasscanSection data={formData} updateField={updateField} onRun={mode === 'edit' && projectId ? () => setPartialReconToolId('Masscan') : undefined} />
           </>
         )}
 
         {activeTab === 'http' && viewMode === 'tabs' && (
-          <HttpxSection data={formData} updateField={updateField} />
+          <HttpxSection data={formData} updateField={updateField} onRun={mode === 'edit' && projectId ? () => setPartialReconToolId('Httpx') : undefined} />
         )}
 
         {activeTab === 'resource' && viewMode === 'tabs' && (
           <>
-            <KatanaSection data={formData} updateField={updateField} />
-            <HakrawlerSection data={formData} updateField={updateField} />
-            <JsluiceSection data={formData} updateField={updateField} />
-            <FfufSection data={formData} updateField={updateField} projectId={projectId} mode={mode} />
-            <GauSection data={formData} updateField={updateField} />
-            <ParamSpiderSection data={formData} updateField={updateField} />
-            <KiterunnerSection data={formData} updateField={updateField} />
-            <ArjunSection data={formData} updateField={updateField} />
+            <KatanaSection data={formData} updateField={updateField} onRun={mode === 'edit' && projectId ? () => setPartialReconToolId('Katana') : undefined} />
+            <HakrawlerSection data={formData} updateField={updateField} onRun={mode === 'edit' && projectId ? () => setPartialReconToolId('Hakrawler') : undefined} />
+            <JsluiceSection data={formData} updateField={updateField} onRun={mode === 'edit' && projectId ? () => setPartialReconToolId('Jsluice') : undefined} />
+            <FfufSection data={formData} updateField={updateField} projectId={projectId} mode={mode} onRun={mode === 'edit' && projectId ? () => setPartialReconToolId('Ffuf') : undefined} />
+            <GauSection data={formData} updateField={updateField} onRun={mode === 'edit' && projectId ? () => setPartialReconToolId('Gau') : undefined} />
+            <ParamSpiderSection data={formData} updateField={updateField} onRun={mode === 'edit' && projectId ? () => setPartialReconToolId('ParamSpider') : undefined} />
+            <KiterunnerSection data={formData} updateField={updateField} onRun={mode === 'edit' && projectId ? () => setPartialReconToolId('Kiterunner') : undefined} />
+            <ArjunSection data={formData} updateField={updateField} onRun={mode === 'edit' && projectId ? () => setPartialReconToolId('Arjun') : undefined} />
           </>
         )}
 
         {activeTab === 'jsrecon' && viewMode === 'tabs' && (
-          <JsReconSection data={formData} updateField={updateField} projectId={projectId} mode={mode} />
+          <JsReconSection data={formData} updateField={updateField} projectId={projectId} mode={mode} onRun={mode === 'edit' && projectId ? () => setPartialReconToolId('JsRecon') : undefined} />
         )}
 
         {activeTab === 'vuln' && viewMode === 'tabs' && (
-          <NucleiSection data={formData} updateField={updateField} />
+          <NucleiSection data={formData} updateField={updateField} onRun={mode === 'edit' && projectId ? () => setPartialReconToolId('Nuclei') : undefined} />
         )}
 
         {activeTab === 'cve' && viewMode === 'tabs' && (
@@ -660,7 +685,7 @@ export function ProjectForm({
         )}
 
         {activeTab === 'security' && viewMode === 'tabs' && (
-          <SecurityChecksSection data={formData} updateField={updateField} />
+          <SecurityChecksSection data={formData} updateField={updateField} onRun={mode === 'edit' && projectId ? () => setPartialReconToolId('SecurityChecks') : undefined} />
         )}
 
         {activeTab === 'integrations' && (
@@ -727,6 +752,7 @@ export function ProjectForm({
         targetDomain={formData.targetDomain || ''}
         subdomainPrefixes={formData.subdomainList as string[] || []}
         isStarting={isPartialReconStarting}
+        userId={userId ?? undefined}
       />
 
       {/* Guardrail block modal */}

@@ -709,6 +709,9 @@ class ContainerManager:
                     f"{recon_path}": {"bind": "/app/recon", "mode": "rw"},
                     f"{Path(recon_path).parent}/graph_db": {"bind": "/app/graph_db", "mode": "ro"},
                     "/tmp/redamon": {"bind": "/tmp/redamon", "mode": "rw"},
+                    # JS Recon shared volumes with webapp (uploaded files + custom patterns)
+                    "redamon_js_recon_uploads": {"bind": "/data/js-recon-uploads", "mode": "ro"},
+                    "redamon_js_recon_custom": {"bind": "/data/js-recon-custom", "mode": "ro"},
                 },
                 command="python /app/recon/partial_recon.py",
             )

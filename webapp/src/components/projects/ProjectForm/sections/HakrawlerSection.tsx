@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, Bug } from 'lucide-react'
+import { Bug, ChevronDown, Play } from 'lucide-react'
 import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
@@ -12,9 +12,10 @@ type FormData = Omit<Project, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'use
 interface HakrawlerSectionProps {
   data: FormData
   updateField: <K extends keyof FormData>(field: K, value: FormData[K]) => void
+  onRun?: () => void
 }
 
-export function HakrawlerSection({ data, updateField }: HakrawlerSectionProps) {
+export function HakrawlerSection({ data, updateField, onRun }: HakrawlerSectionProps) {
   const [isOpen, setIsOpen] = useState(true)
 
   return (
@@ -27,6 +28,22 @@ export function HakrawlerSection({ data, updateField }: HakrawlerSectionProps) {
           <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
+          {onRun && data.hakrawlerEnabled && (
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); onRun() }}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '4px',
+                padding: '3px 8px', borderRadius: '4px',
+                border: '1px solid rgba(34, 197, 94, 0.3)',
+                backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
+              }}
+              title="Run Hakrawler Web Crawler"
+            >
+              <Play size={10} /> Run partial recon
+            </button>
+          )}
           <div onClick={(e) => e.stopPropagation()}>
             <Toggle
               checked={data.hakrawlerEnabled}
@@ -97,6 +114,21 @@ export function HakrawlerSection({ data, updateField }: HakrawlerSectionProps) {
                     min={5}
                   />
                   <span className={styles.fieldHint}>单个 URL 的爬取超时</span>
+                </div>
+              </div>
+
+              <div className={styles.fieldRow}>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>Parallelism</label>
+                  <input
+                    type="number"
+                    className="textInput"
+                    value={data.hakrawlerParallelism ?? 4}
+                    onChange={(e) => updateField('hakrawlerParallelism', parseInt(e.target.value) || 4)}
+                    min={1}
+                    max={10}
+                  />
+                  <span className={styles.fieldHint}>Number of URLs to crawl in parallel</span>
                 </div>
               </div>
 

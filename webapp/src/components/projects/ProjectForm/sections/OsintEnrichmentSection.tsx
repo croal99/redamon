@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { ChevronDown, ShieldCheck, Info } from 'lucide-react'
+import { ChevronDown, ShieldCheck, Info, Play } from 'lucide-react'
 import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import { useProject } from '@/providers/ProjectProvider'
@@ -13,6 +13,8 @@ type FormData = Omit<Project, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'use
 interface OsintEnrichmentSectionProps {
   data: FormData
   updateField: <K extends keyof FormData>(field: K, value: FormData[K]) => void
+  onRun?: () => void
+  onRunUncover?: () => void
 }
 
 interface KeyStatus {
@@ -25,7 +27,7 @@ interface KeyStatus {
   criminalIp: boolean
 }
 
-export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSectionProps) {
+export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover }: OsintEnrichmentSectionProps) {
   const [isOpen, setIsOpen] = useState(true)
   const { userId } = useProject()
   const [keyStatus, setKeyStatus] = useState<KeyStatus | null>(null)
@@ -64,6 +66,22 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
           <span className={styles.badgePassive}>被动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
+          {onRun && data.osintEnrichmentEnabled && (
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); onRun() }}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '4px',
+                padding: '3px 8px', borderRadius: '4px',
+                border: '1px solid rgba(34, 197, 94, 0.3)',
+                backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
+              }}
+              title="Run OSINT Enrichment"
+            >
+              <Play size={10} /> Run partial recon
+            </button>
+          )}
           <div onClick={(e) => e.stopPropagation()}>
             <Toggle
               checked={data.osintEnrichmentEnabled}
@@ -108,6 +126,22 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
                 disabled={noKey('censys')}
               />
             </div>
+            {data.censysEnabled && !noKey('censys') && (
+              <div className={styles.fieldRow}>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>Workers</label>
+                  <input
+                    type="number"
+                    className="textInput"
+                    value={data.censysWorkers ?? 5}
+                    onChange={(e) => updateField('censysWorkers', parseInt(e.target.value) || 5)}
+                    min={1}
+                    max={20}
+                  />
+                  <span className={styles.fieldHint}>Parallel Censys IP enrichment workers (1-20)</span>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* FOFA */}
@@ -143,7 +177,19 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
                     min={1}
                     max={10000}
                   />
-                  <span className={styles.fieldHint}>从 FOFA API 拉取的最大结果数（1–10,000）</span>
+                  <span className={styles.fieldHint}>从 FOFA API 拉取的最大结果数（1-10,000）</span>
+                </div>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>Workers</label>
+                  <input
+                    type="number"
+                    className="textInput"
+                    value={data.fofaWorkers ?? 5}
+                    onChange={(e) => updateField('fofaWorkers', parseInt(e.target.value) || 5)}
+                    min={1}
+                    max={20}
+                  />
+                  <span className={styles.fieldHint}>Parallel FOFA IP enrichment workers (1-20)</span>
                 </div>
               </div>
             )}
@@ -164,6 +210,22 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
                 onChange={(checked) => updateField('otxEnabled', checked)}
               />
             </div>
+            {data.otxEnabled && (
+              <div className={styles.fieldRow}>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>Workers</label>
+                  <input
+                    type="number"
+                    className="textInput"
+                    value={data.otxWorkers ?? 5}
+                    onChange={(e) => updateField('otxWorkers', parseInt(e.target.value) || 5)}
+                    min={1}
+                    max={20}
+                  />
+                  <span className={styles.fieldHint}>Parallel OTX IP enrichment workers (1-20)</span>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Netlas */}
@@ -187,6 +249,22 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
                 disabled={noKey('netlas')}
               />
             </div>
+            {data.netlasEnabled && !noKey('netlas') && (
+              <div className={styles.fieldRow}>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>Workers</label>
+                  <input
+                    type="number"
+                    className="textInput"
+                    value={data.netlasWorkers ?? 5}
+                    onChange={(e) => updateField('netlasWorkers', parseInt(e.target.value) || 5)}
+                    min={1}
+                    max={20}
+                  />
+                  <span className={styles.fieldHint}>Parallel Netlas IP enrichment workers (1-20)</span>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* VirusTotal */}
@@ -211,6 +289,22 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
                 disabled={noKey('virusTotal')}
               />
             </div>
+            {data.virusTotalEnabled && !noKey('virusTotal') && (
+              <div className={styles.fieldRow}>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>Workers</label>
+                  <input
+                    type="number"
+                    className="textInput"
+                    value={data.virusTotalWorkers ?? 3}
+                    onChange={(e) => updateField('virusTotalWorkers', parseInt(e.target.value) || 3)}
+                    min={1}
+                    max={10}
+                  />
+                  <span className={styles.fieldHint}>Parallel VirusTotal IP enrichment workers (1-10)</span>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* ZoomEye */}
@@ -246,7 +340,19 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
                     min={1}
                     max={10000}
                   />
-                  <span className={styles.fieldHint}>从 ZoomEye API 拉取的最大结果数（1–10,000）</span>
+                  <span className={styles.fieldHint}>从 ZoomEye API 拉取的最大结果数（1-10,000）</span>
+                </div>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>Workers</label>
+                  <input
+                    type="number"
+                    className="textInput"
+                    value={data.zoomEyeWorkers ?? 5}
+                    onChange={(e) => updateField('zoomEyeWorkers', parseInt(e.target.value) || 5)}
+                    min={1}
+                    max={20}
+                  />
+                  <span className={styles.fieldHint}>Parallel ZoomEye IP enrichment workers (1-20)</span>
                 </div>
               </div>
             )}
@@ -273,6 +379,22 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
                 disabled={noKey('criminalIp')}
               />
             </div>
+            {data.criminalIpEnabled && !noKey('criminalIp') && (
+              <div className={styles.fieldRow}>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>Workers</label>
+                  <input
+                    type="number"
+                    className="textInput"
+                    value={data.criminalIpWorkers ?? 5}
+                    onChange={(e) => updateField('criminalIpWorkers', parseInt(e.target.value) || 5)}
+                    min={1}
+                    max={20}
+                  />
+                  <span className={styles.fieldHint}>Parallel CriminalIP IP enrichment workers (1-20)</span>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Uncover */}
@@ -285,10 +407,28 @@ export function OsintEnrichmentSection({ data, updateField }: OsintEnrichmentSec
                   在端口扫描前发现更多 IP、子域名与开放端口。各引擎的 API Key 请在全局设置中配置。
                 </p>
               </div>
-              <Toggle
-                checked={data.uncoverEnabled}
-                onChange={(checked) => updateField('uncoverEnabled', checked)}
-              />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {onRunUncover && data.uncoverEnabled && (
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); onRunUncover() }}
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '4px',
+                      padding: '3px 8px', borderRadius: '4px',
+                      border: '1px solid rgba(34, 197, 94, 0.3)',
+                      backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                      color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
+                    }}
+                    title="Run Uncover"
+                  >
+                    <Play size={10} /> Run partial recon
+                  </button>
+                )}
+                <Toggle
+                  checked={data.uncoverEnabled}
+                  onChange={(checked) => updateField('uncoverEnabled', checked)}
+                />
+              </div>
             </div>
             {data.uncoverEnabled && (
               <div className={styles.fieldRow}>
