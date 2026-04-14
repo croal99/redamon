@@ -602,8 +602,8 @@ services:
     container_name: bluenet-nginx
     ports:
       - "80:80"
-    depends_on:
-      - webapp
+    # depends_on:
+    #   - webapp
     networks:
       - redamon
     restart: unless-stopped

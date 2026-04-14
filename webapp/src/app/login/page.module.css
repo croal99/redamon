@@ -11,9 +11,10 @@
 .bg {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 12% 18%, rgba(220, 38, 38, 0.16), transparent 56%),
-    radial-gradient(circle at 88% 76%, rgba(59, 130, 246, 0.18), transparent 56%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 32%);
+  background-image: url('/login-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   pointer-events: none;
   animation: bgFloat 10s ease-in-out infinite;
 }

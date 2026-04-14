@@ -69,9 +69,6 @@ export default function LoginPage() {
     <div className={styles.page}>
       <div className={styles.bg} aria-hidden />
       <div className={styles.grid} aria-hidden />
-      <div className={styles.scan} aria-hidden>
-        <div className={styles.scanLine} />
-      </div>
       <div className={styles.noise} aria-hidden />
 
       <div className={styles.content}>

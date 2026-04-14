@@ -13,15 +13,16 @@ const BASE_RECONNECT_INTERVAL = 2000
 const PING_INTERVAL_MS = 30000
 
 function getWsUrl(): string {
-  if (process.env.NEXT_PUBLIC_AGENT_WS_URL) {
-    return process.env.NEXT_PUBLIC_AGENT_WS_URL.replace(/\/ws\/agent$/, '/ws/kali-terminal')
-  }
-  if (typeof window !== 'undefined') {
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-    const host = window.location.hostname
-    return `${protocol}//${host}:8090/ws/kali-terminal`
-  }
-  return 'ws://localhost:8090/ws/kali-terminal'
+  return '/ws/kali-terminal'
+  // if (process.env.NEXT_PUBLIC_AGENT_WS_URL) {
+  //   return process.env.NEXT_PUBLIC_AGENT_WS_URL.replace(/\/ws\/agent$/, '/ws/kali-terminal')
+  // }
+  // if (typeof window !== 'undefined') {
+  //   const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+  //   const host = window.location.hostname
+  //   return `${protocol}//${host}:8090/ws/kali-terminal`
+  // }
+  // return 'ws://localhost:8090/ws/kali-terminal'
 }
 
 export const KaliTerminal = memo(function KaliTerminal() {
@@ -134,6 +135,7 @@ export const KaliTerminal = memo(function KaliTerminal() {
     terminal.writeln('\x1b[2;37m  Connecting to kali-sandbox...\x1b[0m')
 
     const url = getWsUrl()
+    console.log("websocket url111:", url)
     const ws = new WebSocket(url)
     wsRef.current = ws
 

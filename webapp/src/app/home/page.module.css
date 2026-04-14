@@ -11,9 +11,10 @@
 .bg {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 15% 20%, rgba(14, 165, 233, 0.18), transparent 48%),
-    radial-gradient(circle at 85% 80%, rgba(99, 102, 241, 0.18), transparent 52%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 30%);
+  background-image: url('/login-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   pointer-events: none;
   animation: homeBgFloat 12s ease-in-out infinite;
 }
@@ -243,24 +244,7 @@
   mask-image: radial-gradient(circle at 55% 35%, rgba(0, 0, 0, 0.9), transparent 74%);
 }
 
-.scan {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  mix-blend-mode: screen;
-}
 
-.scanLine {
-  position: absolute;
-  left: -10%;
-  right: -10%;
-  height: 2px;
-  top: 0;
-  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.42), transparent);
-  box-shadow: 0 0 18px rgba(0, 212, 255, 0.3), 0 0 42px rgba(10, 132, 255, 0.2);
-  animation: homeScanSweep 6.2s ease-in-out infinite;
-}
 
 .noise {
   position: absolute;
@@ -294,12 +278,7 @@
   to { background-position: 0 300px, 300px 0; }
 }
 
-@keyframes homeScanSweep {
-  0% { transform: translateY(-20%); opacity: 0; }
-  15% { opacity: 1; }
-  85% { opacity: 1; }
-  100% { transform: translateY(120vh); opacity: 0; }
-}
+
 
 @keyframes homeNoiseShift {
   0% { transform: translate3d(0, 0, 0); }
