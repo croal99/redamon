@@ -13,8 +13,8 @@
   position: absolute;
   inset: 0;
   background-image: url('/login-bg.jpg');
-  background-color: rgba(0, 0, 0, 0.62);
-  background-blend-mode: multiply;
+  background-color: var(--bg-image-overlay);
+  background-blend-mode: var(--bg-image-blend-mode);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

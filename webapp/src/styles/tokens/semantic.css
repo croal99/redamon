@@ -17,6 +17,8 @@
   --bg-active: var(--color-cyber-bg4);       /* Active/pressed states */
   --bg-input: var(--color-cyber-bg2);        /* Input fields */
   --bg-overlay: rgba(0, 0, 0, 0.6);         /* Modal overlays */
+  --bg-image-overlay: transparent;          /* Background image dim layer (theme-controlled) */
+  --bg-image-blend-mode: normal;            /* Background image blend mode (theme-controlled) */
 
   /* ═══════════════════════════════════════════════════════════════════════════
      TEXT
