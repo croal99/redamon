@@ -1,104 +1,112 @@
-'use client'
+"use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 export type AuthUser = {
-  id: string
-  username: string
-  email?: string | null
-  role: 'admin' | 'operator'
-  is_active: boolean
-  last_login?: string | null
-  created_at: string
-}
+  id?: string | null;
+  username: string;
+  email?: string | null;
+  role?: "admin" | "operator" | string | null;
+};
 
 export type AuthTokenResponse = {
-  access_token: string
-  refresh_token: string
-  token_type: string
-  expires_in: number
-  user: AuthUser
-  webapp_user_id?: string
-}
+  access_token: string;
+  refresh_token: string;
+  token_type: string;
+  expires_in: number;
+  user: AuthUser;
+  webapp_user_id?: string;
+};
 
 type AuthContextValue = {
-  user: AuthUser | null
-  accessToken: string | null
-  refreshToken: string | null
-  isAuthenticated: boolean
-  isLoading: boolean
-  setFromLogin: (payload: AuthTokenResponse) => void
-  logoutLocal: () => void
+  user: AuthUser | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  setFromLogin: (payload: AuthTokenResponse) => void;
+  logoutLocal: () => void;
+};
+
+const AuthContext = createContext<AuthContextValue | null>(null);
+
+type AuthMeResponse = {
+  authenticated: boolean;
+  user?: AuthUser | null;
+};
+
+function parseAuthMeResponse(value: unknown): AuthMeResponse | null {
+  if (!value || typeof value !== "object") return null;
+  const record = value as Record<string, unknown>;
+  if (typeof record.authenticated !== "boolean") return null;
+  return {
+    authenticated: record.authenticated,
+    user: (record.user as AuthUser | null | undefined) ?? null,
+  };
 }
 
-const AuthContext = createContext<AuthContextValue | null>(null)
-
-const STORAGE_ACCESS = 'redamon-auth-access-token'
-const STORAGE_REFRESH = 'redamon-auth-refresh-token'
-const STORAGE_USER = 'redamon-auth-user'
-
-function safeJsonParse<T>(value: string | null): T | null {
-  if (!value) return null
-  try {
-    return JSON.parse(value) as T
-  } catch {
-    return null
-  }
-}
-
+/** AuthProvider：以 HttpOnly Cookie（bluenet_token）为准，向前端提供“是否已登录/当前用户”状态。 */
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null)
-  const [accessToken, setAccessToken] = useState<string | null>(null)
-  const [refreshToken, setRefreshToken] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const savedAccess = localStorage.getItem(STORAGE_ACCESS)
-    const savedRefresh = localStorage.getItem(STORAGE_REFRESH)
-    const savedUser = safeJsonParse<AuthUser>(localStorage.getItem(STORAGE_USER))
+    fetch("/api/auth/me", { cache: "no-store" })
+      .then(async (res) => {
+        if (!res.ok) return null;
+        return parseAuthMeResponse(await res.json().catch(() => null));
+      })
+      .then((data) => {
+        setIsAuthenticated(!!data?.authenticated);
+        setUser(data?.user ?? null);
+      })
+      .catch(() => {
+        setIsAuthenticated(false);
+        setUser(null);
+      })
+      .finally(() => setIsLoading(false));
+  }, []);
 
-    setAccessToken(savedAccess)
-    setRefreshToken(savedRefresh)
-    setUser(savedUser)
-    setIsLoading(false)
-  }, [])
-
+  /** setFromLogin：登录成功后立即更新前端状态；权威会话仍由 Cookie 决定。 */
   const setFromLogin = useCallback((payload: AuthTokenResponse) => {
-    setAccessToken(payload.access_token)
-    setRefreshToken(payload.refresh_token)
-    setUser(payload.user)
+    setUser(payload.user);
+    setIsAuthenticated(true);
+  }, []);
 
-    localStorage.setItem(STORAGE_ACCESS, payload.access_token)
-    localStorage.setItem(STORAGE_REFRESH, payload.refresh_token)
-    localStorage.setItem(STORAGE_USER, JSON.stringify(payload.user))
-  }, [])
-
+  /** logoutLocal：退出时清理前端状态；Cookie 清理由 /api/auth/logout 完成。 */
   const logoutLocal = useCallback(() => {
-    setAccessToken(null)
-    setRefreshToken(null)
-    setUser(null)
-    localStorage.removeItem(STORAGE_ACCESS)
-    localStorage.removeItem(STORAGE_REFRESH)
-    localStorage.removeItem(STORAGE_USER)
-  }, [])
+    setUser(null);
+    setIsAuthenticated(false);
+  }, []);
 
   const value = useMemo<AuthContextValue>(() => {
     return {
       user,
-      accessToken,
-      refreshToken,
-      isAuthenticated: !!accessToken,
+      isAuthenticated,
       isLoading,
       setFromLogin,
       logoutLocal,
-    }
-  }, [user, accessToken, refreshToken, isLoading, setFromLogin, logoutLocal])
+    };
+  }, [
+    user,
+    isAuthenticated,
+    isLoading,
+    setFromLogin,
+    logoutLocal,
+  ]);
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
+/** useAuth：读取 AuthProvider 提供的认证上下文。 */
 export function useAuth() {
-  const ctx = useContext(AuthContext)
-  if (!ctx) throw new Error('useAuth must be used within AuthProvider')
-  return ctx
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
+  return ctx;
 }

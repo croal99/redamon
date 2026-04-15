@@ -19,7 +19,6 @@
   background-position: center;
   background-repeat: no-repeat;
   pointer-events: none;
-  animation: bgFloat 10s ease-in-out infinite;
 }
 
 .bg::before,
@@ -37,7 +36,6 @@
   background: radial-gradient(circle at 20% 35%, rgba(0, 212, 255, 0.35), transparent 55%),
     radial-gradient(circle at 78% 26%, rgba(10, 132, 255, 0.32), transparent 54%),
     radial-gradient(circle at 55% 78%, rgba(220, 38, 38, 0.28), transparent 58%);
-  animation: auroraShift 12s ease-in-out infinite;
 }
 
 .bg::after {
@@ -51,7 +49,6 @@
   );
   mix-blend-mode: screen;
   opacity: 0.55;
-  animation: auroraSpin 16s linear infinite;
 }
 
 .grid {
@@ -62,7 +59,6 @@
   background-image: linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px);
   background-size: 46px 46px;
-  animation: gridDrift 10s linear infinite;
   mask-image: radial-gradient(circle at 50% 35%, rgba(0, 0, 0, 0.95), transparent 72%);
 }
 
@@ -74,7 +70,6 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
   background-size: 240px 240px;
   mix-blend-mode: overlay;
-  animation: noiseShift 3.2s steps(2, end) infinite;
 }
 
 .scan {
@@ -93,81 +88,6 @@
   top: 0;
   background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.45), transparent);
   box-shadow: 0 0 18px rgba(0, 212, 255, 0.35), 0 0 42px rgba(10, 132, 255, 0.22);
-  animation: scanSweep 4.8s ease-in-out infinite;
-}
-
-@keyframes bgFloat {
-  0%,
-  100% {
-    transform: scale(1);
-    filter: saturate(1) brightness(1);
-  }
-  50% {
-    transform: scale(1.03);
-    filter: saturate(1.15) brightness(1.06);
-  }
-}
-
-@keyframes auroraShift {
-  0% {
-    transform: translate3d(-2%, -1%, 0) scale(1);
-  }
-  50% {
-    transform: translate3d(2%, 1.5%, 0) scale(1.06);
-  }
-  100% {
-    transform: translate3d(-2%, -1%, 0) scale(1);
-  }
-}
-
-@keyframes auroraSpin {
-  from {
-    transform: rotate(0deg) scale(1.02);
-  }
-  to {
-    transform: rotate(360deg) scale(1.02);
-  }
-}
-
-@keyframes noiseShift {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  50% {
-    transform: translate3d(-1%, 1%, 0);
-  }
-  100% {
-    transform: translate3d(1%, -1%, 0);
-  }
-}
-
-@keyframes gridDrift {
-  from {
-    background-position: 0 0, 0 0;
-  }
-  to {
-    background-position: 0 260px, 260px 0;
-  }
-}
-
-@keyframes scanSweep {
-  0% {
-    transform: translateY(-20%);
-    opacity: 0;
-  }
-  12% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 1;
-  }
-  88% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(120vh);
-    opacity: 0;
-  }
 }
 
 .scan::before,
@@ -180,45 +100,12 @@
   top: 0;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
   box-shadow: 0 0 14px rgba(255, 255, 255, 0.16), 0 0 32px rgba(0, 212, 255, 0.14);
-  animation: scanSweepAlt 7.2s ease-in-out infinite;
   opacity: 0.9;
 }
 
 .scan::after {
   background: linear-gradient(90deg, transparent, rgba(10, 132, 255, 0.3), transparent);
   box-shadow: 0 0 18px rgba(10, 132, 255, 0.22), 0 0 44px rgba(0, 212, 255, 0.16);
-  animation-duration: 5.6s;
-  animation-delay: 1.2s;
-}
-
-@keyframes scanSweepAlt {
-  0% {
-    transform: translateY(-30%);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  70% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(120vh);
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .bg,
-  .bg::before,
-  .bg::after,
-  .grid,
-  .scanLine,
-  .scan::before,
-  .scan::after,
-  .noise {
-    animation: none !important;
-  }
 }
 
 .content {
@@ -261,23 +148,10 @@
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #00d4ff, #0a84ff);
-  animation: brandPulseCyan 1.8s ease-in-out infinite;
 }
 
 .brandMarkIcon {
   color: var(--bg-primary);
-}
-
-@keyframes brandPulseCyan {
-  0%,
-  100% {
-    transform: scale(1);
-    filter: brightness(1);
-  }
-  50% {
-    transform: scale(1.04);
-    filter: brightness(1.08);
-  }
 }
 
 .brandText {

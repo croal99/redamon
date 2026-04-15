@@ -261,10 +261,10 @@ export function ProjectForm({
       })
       if (!res.ok) {
         const err = await res.json()
-        toast.error(err.error || 'Failed to save')
+        toast.error(err.error || '保存失败')
       }
     } catch {
-      toast.error('Failed to save setting')
+      toast.error('保存设置失败')
     }
   }, [projectId, mode, toast])
 
@@ -400,14 +400,14 @@ export function ProjectForm({
       })
       if (!response.ok) {
         const data = await response.json().catch(() => ({}))
-        toast.error(data.error || 'Failed to start partial recon')
+        toast.error(data.error || '启动部分侦察失败')
         return
       }
       setPartialReconToolId(null)
-      toast.success('Partial recon started')
+      toast.success('部分侦察已启动')
       router.push('/graph')
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to start partial recon')
+      toast.error(err instanceof Error ? err.message : '启动部分侦察失败')
     } finally {
       setIsPartialReconStarting(false)
     }
@@ -432,14 +432,14 @@ export function ProjectForm({
               className={`reconStartButton${isReconBusy ? ' reconStartButtonActive' : ''}`}
               onClick={() => router.push(isReconBusy ? `/graph?project=${projectId}&openlogs=recon` : `/graph?project=${projectId}&autostart=true`)}
               disabled={isSubmitting}
-              title={isReconRunning ? 'Recon is running -- click to view progress' : isReconPaused ? 'Recon is paused -- click to view' : 'Navigate to the graph page and start the full recon pipeline'}
+              title={isReconRunning ? '侦察正在运行——点击查看进度' : isReconPaused ? '侦察已暂停——点击查看' : '前往图谱页面并启动完整侦察流程'}
             >
               {isReconRunning ? (
                 <Loader2 size={14} className={styles.spinner} />
               ) : (
                 <Play size={14} />
               )}
-              {isReconRunning ? 'Running...' : isReconPaused ? 'Paused' : 'Start Recon Pipeline'}
+              {isReconRunning ? '运行中…' : isReconPaused ? '已暂停' : '启动侦察流程'}
             </button>
           ) : (
             <button
@@ -499,7 +499,7 @@ export function ProjectForm({
               ) : (
                 <>
                   <Save size={14} />
-                  {isSubmitting ? '正在保存…' : mode === 'edit' ? 'Update Settings' : '保存项目'}
+                  {isSubmitting ? '正在保存…' : mode === 'edit' ? '保存设置' : '保存项目'}
                 </>
               )}
             </button>

@@ -10,26 +10,25 @@ export function GraphEmptyState() {
         <div className={styles.iconWrapper}>
           <Globe size={48} strokeWidth={1.5} />
         </div>
-        <h2 className={styles.title}>No Recon Data Yet</h2>
+        <h2 className={styles.title}>暂无侦察数据</h2>
         <p className={styles.description}>
-          Run the recon pipeline to discover and map your target's attack surface.
-          The graph will populate with domains, subdomains, IPs, ports, services,
-          and vulnerabilities.
+          运行侦察流程以发现并绘制目标的攻击面。
+          图谱将展示发现的域名、子域名、IP、端口、服务与漏洞等信息。
         </p>
         <div className={styles.steps}>
           <div className={styles.step}>
             <Radar size={16} />
-            <span>Run recon pipeline on your target</span>
+            <span>对目标运行侦察流程</span>
           </div>
           <ArrowDown size={14} className={styles.arrow} />
           <div className={styles.step}>
             <Globe size={16} />
-            <span>Graph populates with discovered assets</span>
+            <span>图谱自动填充已发现资产</span>
           </div>
           <ArrowDown size={14} className={styles.arrow} />
           <div className={styles.step}>
             <MessageSquare size={16} />
-            <span>Use the AI agent to analyze and exploit</span>
+            <span>使用 AI 代理进行分析与利用</span>
           </div>
         </div>
       </div>
