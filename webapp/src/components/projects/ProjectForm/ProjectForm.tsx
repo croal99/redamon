@@ -9,8 +9,15 @@ import { validateProjectForm } from '@/lib/validation'
 import { isHardBlockedDomain } from '@/lib/hard-guardrail'
 import { useProject } from '@/providers/ProjectProvider'
 import useReconStatus from '@/hooks/useReconStatus'
+import { useMultiPartialReconStatus } from '@/hooks/useMultiPartialReconStatus'
+import { useMultiPartialReconSSE } from '@/hooks/useMultiPartialReconSSE'
 import { useAlertModal, useToast } from '@/components/ui'
-import type { PartialReconParams } from '@/lib/recon-types'
+import type { PartialReconParams, PartialReconState } from '@/lib/recon-types'
+import { PARTIAL_RECON_PHASE_MAP } from '@/lib/recon-types'
+import type { ReconStatus } from '@/lib/recon-types'
+import { WORKFLOW_TOOLS } from './WorkflowView/workflowDefinition'
+import { ReconLogsDrawer } from '@/app/graph/components/ReconLogsDrawer'
+import { PartialReconBadges } from '@/components/PartialReconBadges'
 import styles from './ProjectForm.module.css'
 
 // Import sections
@@ -180,6 +187,9 @@ export function ProjectForm({
   // Partial Recon
   const [partialReconToolId, setPartialReconToolId] = useState<string | null>(null)
   const [isPartialReconStarting, setIsPartialReconStarting] = useState(false)
+  const [activePartialLogsRunId, setActivePartialLogsRunId] = useState<string | null>(null)
+  // Locally tracked run state for immediate drawer rendering before polling catches up
+  const [localPartialRun, setLocalPartialRun] = useState<PartialReconState | null>(null)
 
   // Recon Preset
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false)
@@ -229,6 +239,31 @@ export function ProjectForm({
   const isReconRunning = reconState?.status === 'running' || reconState?.status === 'starting'
   const isReconPaused = reconState?.status === 'paused'
   const isReconBusy = isReconRunning || isReconPaused
+
+  // Track partial recon runs to show spinner on running tool nodes
+  const { activeRuns: activePartialRecons } = useMultiPartialReconStatus({
+    projectId: mode === 'edit' ? (projectId ?? null) : null,
+    enabled: mode === 'edit',
+  })
+  const runningPartialToolIds = new Set(
+    activePartialRecons
+      .filter(r => r.status === 'running' || r.status === 'starting')
+      .map(r => r.tool_id)
+  )
+
+  // Find the active run for the logs drawer (fall back to local state before polling picks it up)
+  const activePartialLogsRun = activePartialRecons.find(r => r.run_id === activePartialLogsRunId)
+    ?? (localPartialRun?.run_id === activePartialLogsRunId ? localPartialRun : null)
+
+  // SSE logs for the currently visible partial recon drawer
+  const {
+    logsMap: partialReconLogsMap,
+    phaseMap: partialReconPhaseMap,
+    clearLogsForRun: clearPartialReconLogsForRun,
+  } = useMultiPartialReconSSE({
+    projectId: projectId ?? null,
+    activeRunId: activePartialLogsRunId,
+  })
 
   // Fetch defaults from backend on mount (only for create mode)
   useEffect(() => {
@@ -403,15 +438,18 @@ export function ProjectForm({
         toast.error(data.error || '启动部分侦察失败')
         return
       }
+      const data: PartialReconState = await response.json()
       setPartialReconToolId(null)
       toast.success('部分侦察已启动')
-      router.push('/graph')
+      // Store locally for immediate drawer rendering, then open it
+      setLocalPartialRun(data)
+      setActivePartialLogsRunId(data.run_id)
     } catch (err) {
       toast.error(err instanceof Error ? err.message : '启动部分侦察失败')
     } finally {
       setIsPartialReconStarting(false)
     }
-  }, [projectId, toast, router])
+  }, [projectId, toast])
 
   // Determine if form can be submitted
   const canSubmit = !isSubmitting && !isLoadingDefaults
@@ -427,20 +465,33 @@ export function ProjectForm({
         </h1>
         <div className={styles.actions}>
           {mode === 'edit' && projectId ? (
-            <button
-              type="button"
-              className={`reconStartButton${isReconBusy ? ' reconStartButtonActive' : ''}`}
-              onClick={() => router.push(isReconBusy ? `/graph?project=${projectId}&openlogs=recon` : `/graph?project=${projectId}&autostart=true`)}
-              disabled={isSubmitting}
-              title={isReconRunning ? '侦察正在运行——点击查看进度' : isReconPaused ? '侦察已暂停——点击查看' : '前往图谱页面并启动完整侦察流程'}
-            >
-              {isReconRunning ? (
-                <Loader2 size={14} className={styles.spinner} />
-              ) : (
-                <Play size={14} />
+            <>
+              <button
+                type="button"
+                className={`reconStartButton${isReconBusy ? ' reconStartButtonActive' : ''}`}
+                onClick={() => router.push(isReconBusy ? `/graph?project=${projectId}&openlogs=recon` : `/graph?project=${projectId}&autostart=true`)}
+                disabled={isSubmitting || runningPartialToolIds.size > 0}
+                title={runningPartialToolIds.size > 0 ? 'Partial recon is running -- stop it first' : isReconRunning ? 'Recon is running -- click to view progress' : isReconPaused ? 'Recon is paused -- click to view' : 'Navigate to the graph page and start the full recon pipeline'}
+              >
+                {isReconRunning ? (
+                  <Loader2 size={14} className={styles.spinner} />
+                ) : (
+                  <Play size={14} />
+                )}
+                {isReconRunning ? 'Running...' : isReconPaused ? 'Paused' : 'Start Recon Pipeline'}
+              </button>
+              {/* Partial Recon Badges */}
+              {activePartialRecons.length > 0 && (
+                <PartialReconBadges
+                  activePartialRecons={activePartialRecons}
+                  activeLogsRunId={activePartialLogsRunId}
+                  onToggleLogs={(runId) => setActivePartialLogsRunId(prev => prev === runId ? null : runId)}
+                  onStop={async (runId) => {
+                    await fetch(`/api/recon/${projectId}/partial/${runId}/stop`, { method: 'POST' })
+                  }}
+                />
               )}
-              {isReconRunning ? '运行中…' : isReconPaused ? '已暂停' : '启动侦察流程'}
-            </button>
+            </>
           ) : (
             <button
               type="button"
@@ -607,6 +658,7 @@ export function ProjectForm({
                 mode={mode}
                 onSave={onSaveAndStay ? handleSaveAndStay : undefined}
                 onRunPartial={(toolId) => setPartialReconToolId(toolId)}
+                runningPartialToolIds={runningPartialToolIds}
                 onAutoSaveField={autoSaveField}
               />
             )}
@@ -754,6 +806,30 @@ export function ProjectForm({
         isStarting={isPartialReconStarting}
         userId={userId ?? undefined}
       />
+
+      {/* Partial Recon Logs Drawer */}
+      {activePartialLogsRun && (
+        <ReconLogsDrawer
+          isOpen={!!activePartialLogsRunId}
+          onClose={() => setActivePartialLogsRunId(null)}
+          logs={partialReconLogsMap[activePartialLogsRunId!] || []}
+          currentPhase={partialReconPhaseMap[activePartialLogsRunId!]?.phase || null}
+          currentPhaseNumber={partialReconPhaseMap[activePartialLogsRunId!]?.phaseNumber || null}
+          status={(activePartialLogsRun.status as ReconStatus) || 'idle'}
+          errorMessage={activePartialLogsRun.error}
+          onClearLogs={() => activePartialLogsRunId && clearPartialReconLogsForRun(activePartialLogsRunId)}
+          onStop={async () => {
+            if (activePartialLogsRunId) {
+              await fetch(`/api/recon/${projectId}/partial/${activePartialLogsRunId}/stop`, { method: 'POST' })
+              setActivePartialLogsRunId(null)
+            }
+          }}
+          title={`Partial Recon: ${WORKFLOW_TOOLS.find(t => t.id === activePartialLogsRun.tool_id)?.label || 'Running'}`}
+          phases={PARTIAL_RECON_PHASE_MAP[activePartialLogsRun.tool_id || ''] || ['Running']}
+          totalPhases={(PARTIAL_RECON_PHASE_MAP[activePartialLogsRun.tool_id || ''] || ['Running']).length}
+          hidePhaseProgress
+        />
+      )}
 
       {/* Guardrail block modal */}
       {guardrailError && (
