@@ -75,7 +75,7 @@ export function PhaseIndicatorBar({
             position="bottom"
             content={
               <div className={styles.phaseToolsTooltip}>
-                <div className={styles.phaseToolsHeader}>Phase Tools</div>
+                <div className={styles.phaseToolsHeader}>阶段工具</div>
                 {phaseTools.map(t => (
                   <div key={t} className={styles.phaseToolsItem}>{t}</div>
                 ))}
@@ -94,12 +94,12 @@ export function PhaseIndicatorBar({
             <div className={styles.skillTooltip}>
               <div className={styles.skillTooltipHeader}>
                 <Swords size={11} />
-                Agent Skills
+                代理技能
               </div>
               {skillData && (
                 <>
                   <div className={styles.skillTooltipGroup}>
-                    <div className={styles.skillTooltipGroupLabel}>Built-in</div>
+                    <div className={styles.skillTooltipGroupLabel}>内置</div>
                     {skillData.builtIn.map(s => {
                       const enabled = skillData.config.builtIn[s.id] !== false
                       const isActive = attackPathType === s.id
@@ -107,14 +107,14 @@ export function PhaseIndicatorBar({
                         <div key={s.id} className={`${styles.skillTooltipItem} ${!enabled ? styles.skillTooltipItemDisabled : ''} ${isActive ? styles.skillTooltipItemActive : ''}`}>
                           <span className={styles.skillTooltipName}>{s.name}</span>
                           {isActive && <Check size={11} className={styles.skillTooltipCheck} />}
-                          {!enabled && <span className={styles.skillTooltipOff}>OFF</span>}
+                          {!enabled && <span className={styles.skillTooltipOff}>关闭</span>}
                         </div>
                       )
                     })}
                   </div>
                   {skillData.user.length > 0 && (
                     <div className={styles.skillTooltipGroup}>
-                      <div className={styles.skillTooltipGroupLabel}>User Skills</div>
+                      <div className={styles.skillTooltipGroupLabel}>用户技能</div>
                       {skillData.user.map(s => {
                         const enabled = skillData.config.user[s.id] !== false
                         const isActive = attackPathType === `user_skill:${s.id}`
@@ -122,7 +122,7 @@ export function PhaseIndicatorBar({
                           <div key={s.id} className={`${styles.skillTooltipItem} ${!enabled ? styles.skillTooltipItemDisabled : ''} ${isActive ? styles.skillTooltipItemActive : ''}`}>
                             <span className={styles.skillTooltipName}>{s.name}</span>
                             {isActive && <Check size={11} className={styles.skillTooltipCheck} />}
-                            {!enabled && <span className={styles.skillTooltipOff}>OFF</span>}
+                            {!enabled && <span className={styles.skillTooltipOff}>关闭</span>}
                           </div>
                         )
                       })}
@@ -148,7 +148,7 @@ export function PhaseIndicatorBar({
       )}
 
       {iterationCount > 0 && (
-        <span className={styles.iterationCount}>Step {iterationCount}</span>
+        <span className={styles.iterationCount}>步骤 {iterationCount}</span>
       )}
 
       {onToggleStealth ? (
@@ -156,14 +156,14 @@ export function PhaseIndicatorBar({
           className={`${styles.stealthToggle} ${stealthMode ? styles.stealthToggleActive : ''}`}
           onClick={() => onToggleStealth(!stealthMode)}
           title={stealthMode
-            ? 'Stealth Mode ON — click to disable'
-            : 'Stealth Mode OFF — click to enable passive-only techniques'
+            ? '隐身模式：开启（点击关闭）'
+            : '隐身模式：关闭（点击启用仅被动/低噪技术）'
           }
         >
           <StealthIcon size={11} />
         </button>
       ) : stealthMode ? (
-        <span className={styles.stealthBadge} title="Stealth Mode — passive/low-noise techniques only">
+        <span className={styles.stealthBadge} title="隐身模式：仅被动/低噪技术">
           <StealthIcon size={11} />
         </span>
       ) : null}
@@ -173,14 +173,14 @@ export function PhaseIndicatorBar({
           className={`${styles.deepThinkToggle} ${deepThinkEnabled ? styles.deepThinkToggleActive : ''}`}
           onClick={() => onToggleDeepThink(!deepThinkEnabled)}
           title={deepThinkEnabled
-            ? 'Deep Think ON — the agent performs strategic reasoning at key decision points (start, phase transitions, failure loops) before acting. Click to disable.'
-            : 'Deep Think OFF — click to enable strategic reasoning at key decision points. Adds ~1 extra LLM call at start, phase transitions, and failure loops to plan multi-step strategies.'
+            ? '深度思考：开启（在关键决策点先进行策略推理再行动，点击关闭）'
+            : '深度思考：关闭（点击开启。在开始/阶段切换/失败循环等关键点增加一次策略推理调用）'
           }
         >
           <Lightbulb size={11} />
         </button>
       ) : deepThinkEnabled ? (
-        <span className={styles.deepThinkBadge} title="Deep Think — strategic reasoning at key decision points">
+        <span className={styles.deepThinkBadge} title="深度思考：在关键决策点进行策略推理">
           <Lightbulb size={11} />
         </span>
       ) : null}
@@ -189,7 +189,7 @@ export function PhaseIndicatorBar({
         <button
           className={styles.settingsButton}
           onClick={() => setShowSettingsDropdown(prev => !prev)}
-          title="Agent settings"
+          title="代理设置"
         >
           <Settings size={12} />
         </button>
@@ -199,19 +199,19 @@ export function PhaseIndicatorBar({
               className={styles.settingsDropdownItem}
               onClick={() => { setSettingsModal('agent'); setShowSettingsDropdown(false) }}
             >
-              Agent Behaviour
+              代理行为
             </button>
             <button
               className={styles.settingsDropdownItem}
               onClick={() => { setSettingsModal('toolmatrix'); setShowSettingsDropdown(false) }}
             >
-              Tool Matrix
+              工具矩阵
             </button>
             <button
               className={styles.settingsDropdownItem}
               onClick={() => { setSettingsModal('attack'); setShowSettingsDropdown(false) }}
             >
-              Agent Skills
+              代理技能
             </button>
           </div>
         )}

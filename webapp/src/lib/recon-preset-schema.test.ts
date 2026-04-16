@@ -5,6 +5,14 @@
 import { describe, test, expect } from 'vitest'
 import { reconPresetSchema, extractJson, RECON_PARAMETER_CATALOG } from './recon-preset-schema'
 
+declare global {
+  interface ImportMeta {
+    glob: (pattern: string, options?: { eager?: boolean }) => Record<string, unknown>
+  }
+}
+
+export {}
+
 // ============================================================
 // extractJson
 // ============================================================

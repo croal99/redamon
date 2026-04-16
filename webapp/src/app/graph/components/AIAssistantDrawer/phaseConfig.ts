@@ -29,19 +29,19 @@ export function formatModelDisplay(model: string): string {
 
 export const PHASE_CONFIG = {
   informational: {
-    label: 'Informational',
+    label: '信息收集',
     icon: Shield,
     color: 'var(--status-success)',
     bgColor: 'rgba(0, 255, 136, 0.1)',
   },
   exploitation: {
-    label: 'Exploitation',
+    label: '利用',
     icon: Target,
     color: 'var(--status-warning)',
     bgColor: 'rgba(255, 107, 53, 0.1)',
   },
   post_exploitation: {
-    label: 'Post-Exploitation',
+    label: '后渗透',
     icon: Zap,
     color: 'var(--status-error)',
     bgColor: 'rgba(255, 71, 87, 0.1)',
@@ -56,25 +56,25 @@ export const KNOWN_ATTACK_PATH_CONFIG: Record<string, { label: string; shortLabe
     bgColor: 'rgba(255, 107, 53, 0.15)',
   },
   brute_force_credential_guess: {
-    label: 'Credential Testing',
+    label: '凭证测试',
     shortLabel: 'CRED',
     color: 'var(--accent-secondary)',
     bgColor: 'rgba(10, 132, 255, 0.15)',
   },
   phishing_social_engineering: {
-    label: 'Social Engineering Simulation',
+    label: '社工演练',
     shortLabel: 'SE',
     color: 'var(--color-cyber-purple)',
     bgColor: 'rgba(124, 58, 237, 0.15)',
   },
   denial_of_service: {
-    label: 'Availability Testing',
+    label: '可用性测试',
     shortLabel: 'AVAIL',
     color: 'var(--status-error)',
     bgColor: 'rgba(255, 71, 87, 0.15)',
   },
   sql_injection: {
-    label: 'SQL Injection',
+    label: 'SQL注入攻击',
     shortLabel: 'SQLi',
     color: 'var(--accent-primary)',
     bgColor: 'rgba(0, 212, 255, 0.15)',
@@ -88,8 +88,8 @@ export function getAttackPathConfig(type: string): { label: string; shortLabel: 
   }
   if (type.startsWith('user_skill:')) {
     return {
-      label: 'User Skill',
-      shortLabel: 'SKILL',
+      label: '用户技能',
+      shortLabel: '技能',
       color: 'var(--accent-primary)',
       bgColor: 'rgba(0, 212, 255, 0.15)',
     }
@@ -101,7 +101,7 @@ export function getAttackPathConfig(type: string): { label: string; shortLabel: 
     ? label.slice(0, 5).toUpperCase()
     : words.map((w: string) => w[0]).join('').toUpperCase()
   return {
-    label: `${label} (Unclassified)`,
+    label: `${label}（未分类）`,
     shortLabel,
     color: 'var(--text-secondary, #6b7280)',
     bgColor: 'rgba(107, 114, 128, 0.15)',

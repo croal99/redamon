@@ -26,7 +26,7 @@ export function SuggestionPanels({ isConnected, setInputValue }: SuggestionPanel
           style={{ '--tg-color': 'var(--text-tertiary)' } as React.CSSProperties}
         >
           <Shield size={14} />
-          <span>Informational</span>
+          <span>信息收集</span>
           <ChevronDown size={14} className={styles.templateGroupChevron} />
         </button>
         {openTemplateGroup === 'informational' && (
@@ -68,7 +68,7 @@ export function SuggestionPanels({ isConnected, setInputValue }: SuggestionPanel
           style={{ '--tg-color': 'var(--status-warning)' } as React.CSSProperties}
         >
           <Target size={14} />
-          <span>Exploitation</span>
+          <span>利用</span>
           <ChevronDown size={14} className={styles.templateGroupChevron} />
         </button>
         {openTemplateGroup === 'exploitation' && (
@@ -110,7 +110,7 @@ export function SuggestionPanels({ isConnected, setInputValue }: SuggestionPanel
           style={{ '--tg-color': 'var(--status-error)' } as React.CSSProperties}
         >
           <Zap size={14} />
-          <span>Post-Exploitation</span>
+          <span>后渗透</span>
           <ChevronDown size={14} className={styles.templateGroupChevron} />
         </button>
         {openTemplateGroup === 'post_exploitation' && (

@@ -64,11 +64,11 @@ export function DrawerHeader({
 
   const getConnectionStatusText = () => {
     switch (status) {
-      case ConnectionStatus.CONNECTING: return 'Connecting...'
-      case ConnectionStatus.CONNECTED: return 'Connected'
-      case ConnectionStatus.RECONNECTING: return `Reconnecting... (${reconnectAttempt}/5)`
-      case ConnectionStatus.FAILED: return 'Connection failed'
-      case ConnectionStatus.DISCONNECTED: return 'Disconnected'
+      case ConnectionStatus.CONNECTING: return '连接中…'
+      case ConnectionStatus.CONNECTED: return '已连接'
+      case ConnectionStatus.RECONNECTING: return `重连中…（${reconnectAttempt}/5）`
+      case ConnectionStatus.FAILED: return '连接失败'
+      case ConnectionStatus.DISCONNECTED: return '已断开'
     }
   }
 
@@ -80,20 +80,20 @@ export function DrawerHeader({
             <Bot size={16} />
           </div>
           <div className={styles.headerText}>
-            <h2 className={styles.title}>AI Agent</h2>
+            <h2 className={styles.title}>AI 代理</h2>
             <div className={styles.connectionStatus}>
               {getConnectionStatusIcon()}
               <span className={styles.subtitle} style={{ color: getConnectionStatusColor() }}>
                 {getConnectionStatusText()}
               </span>
               <span className={styles.sessionCode} title={sessionId}>
-                Session: {sessionId.slice(-8)}
+                会话：{sessionId.slice(-8)}
               </span>
               {!requireToolConfirmation && (
-                <Tooltip content="Tool confirmation is disabled. Dangerous tools will execute without manual approval.">
+                <Tooltip content="已关闭工具确认。危险工具将无需人工批准直接执行。">
                   <div className={styles.dangerBadge}>
                     <AlertTriangle size={12} />
-                    <span>Auto-exec</span>
+                    <span>自动执行</span>
                   </div>
                 </Tooltip>
               )}
@@ -105,8 +105,8 @@ export function DrawerHeader({
             <button
               className={`${styles.iconButton} ${isOtherChainsHidden ? styles.iconButtonActive : ''}`}
               onClick={onToggleOtherChains}
-              title={isOtherChainsHidden ? 'Show all sessions in graph' : 'Show only this session in graph'}
-              aria-label={isOtherChainsHidden ? 'Show all sessions in graph' : 'Show only this session in graph'}
+              title={isOtherChainsHidden ? '在图中显示全部会话' : '在图中仅显示当前会话'}
+              aria-label={isOtherChainsHidden ? '在图中显示全部会话' : '在图中仅显示当前会话'}
             >
               {isOtherChainsHidden ? <Eye size={14} /> : <EyeOff size={14} />}
             </button>
@@ -114,24 +114,24 @@ export function DrawerHeader({
           <button
             className={styles.iconButton}
             onClick={() => setShowHistory(!showHistory)}
-            title="Session history"
-            aria-label="Session history"
+            title="会话历史"
+            aria-label="会话历史"
           >
             <History size={14} />
           </button>
           <button
             className={styles.iconButton}
             onClick={handleNewChat}
-            title="New session"
-            aria-label="Start new session"
+            title="新建会话"
+            aria-label="新建会话"
           >
             <Plus size={14} />
           </button>
           <button
             className={styles.iconButton}
             onClick={handleDownloadMarkdown}
-            title="Download chat as Markdown"
-            aria-label="Download chat as Markdown"
+            title="下载聊天记录（Markdown）"
+            aria-label="下载聊天记录（Markdown）"
             disabled={chatItems.length === 0}
           >
             <Download size={14} />
@@ -139,7 +139,7 @@ export function DrawerHeader({
           <button
             className={styles.closeButton}
             onClick={onClose}
-            aria-label="Close assistant"
+            aria-label="关闭助手"
           >
             &times;
           </button>

@@ -366,6 +366,7 @@ export function useSendHandlers(deps: SendHandlersDeps) {
         updateConvMeta({ title: question.substring(0, 100) })
       }
 
+      console.log('finalQuestion', finalQuestion)
       try {
         sendQuery(finalQuestion)
       } catch {

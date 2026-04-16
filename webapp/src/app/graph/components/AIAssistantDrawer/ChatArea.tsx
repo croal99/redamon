@@ -107,16 +107,16 @@ export function ChatArea({
         </div>
         <div className={styles.messageContent}>
           {item.isGuidance && (
-            <span className={styles.guidanceBadge}>Guidance</span>
+            <span className={styles.guidanceBadge}>指引</span>
           )}
           {item.responseTier === 'full_report' && (
             <div className={styles.reportHeader}>
-              <span className={styles.reportBadge}>Report</span>
+              <span className={styles.reportBadge}>报告</span>
             </div>
           )}
           {item.responseTier === 'summary' && (
             <div className={styles.reportHeader}>
-              <span className={styles.summaryBadge}>Summary</span>
+              <span className={styles.summaryBadge}>摘要</span>
             </div>
           )}
           <div
@@ -139,7 +139,7 @@ export function ChatArea({
                         <button
                           className={`${styles.codeBlockCopyButton} ${copiedFieldKey === codeKey ? styles.codeBlockCopyButtonCopied : ''}`}
                           onClick={() => handleCopyField(codeKey, codeText)}
-                          title="Copy code"
+                          title="复制代码"
                         >
                           {copiedFieldKey === codeKey ? <Check size={11} /> : <Copy size={11} />}
                         </button>
@@ -177,7 +177,7 @@ export function ChatArea({
                         <button
                           className={`${styles.tableCellCopyButton} ${copiedFieldKey === cellKey ? styles.tableCellCopyButtonCopied : ''}`}
                           onClick={() => handleCopyField(cellKey, text)}
-                          title="Copy value"
+                          title="复制值"
                         >
                           {copiedFieldKey === cellKey ? <Check size={10} /> : <Copy size={10} />}
                         </button>
@@ -195,9 +195,9 @@ export function ChatArea({
             <button
               className={`${styles.copyButton} ${copiedMessageId === item.id ? styles.copyButtonCopied : ''}`}
               onClick={() => handleCopyMessage(item.id, item.content)}
-              title="Copy to clipboard"
+              title="复制到剪贴板"
             >
-              {copiedMessageId === item.id ? <><Check size={12} /> Copied</> : <><Copy size={12} /> Copy</>}
+              {copiedMessageId === item.id ? <><Check size={12} /> 已复制</> : <><Copy size={12} /> 复制</>}
             </button>
           )}
 
@@ -226,9 +226,9 @@ export function ChatArea({
             <div className={styles.emptyIcon}>
               <img src="/logo.png" alt="RedAmon" width={72} height={72} style={{ objectFit: 'contain' }} />
             </div>
-            <h3 className={styles.emptyTitle}>How can I help you?</h3>
+            <h3 className={styles.emptyTitle}>我可以帮你做什么？</h3>
             <p className={styles.emptyDescription}>
-              Ask me about recon data, vulnerabilities, exploitation, or post-exploitation activities.
+              你可以问我关于侦察数据、漏洞、利用或后渗透等内容。
             </p>
             <SuggestionPanels isConnected={isConnected} setInputValue={setInputValue} />
           </div>

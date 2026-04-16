@@ -105,6 +105,7 @@ export function useAgentWebSocket({
 
     const message: ClientMessage<T> = { type, payload }
     const messageStr = JSON.stringify(message)
+    console.log('sendMessage', messageStr)
 
     wsRef.current.send(messageStr)
   }, [])
@@ -299,6 +300,7 @@ export function useAgentWebSocket({
 
     try {
       const wsUrl = getWebSocketUrl()
+      console.log('wsUrl', wsUrl)
 
       setStatus(ConnectionStatus.CONNECTING)
       setError(null)
