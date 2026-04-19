@@ -160,3 +160,69 @@
 - 5xx：内部异常或依赖服务异常
 - 部分代理接口会透传下游状态码（如会话管理相关接口）
 - WebSocket 错误统一通过 `type: "error"` + `payload.message` 返回
+
+## 6. 前端如何提交 AI 请求（AIAssistantDrawer → agentic）
+
+本节以 `webapp/src/app/graph/components/AIAssistantDrawer` 为例，说明用户操作如何转成对 `agentic/api.py` 的调用。
+
+### 6.1 主要通道：WebSocket `/ws/agent`
+
+- 前端入口：`AIAssistantDrawer.tsx` 通过 `useAgentWebSocket` 建连，并把 `useWebSocketHandler` 作为 `onMessage` 处理器（状态更新、渲染 Timeline）。
+- URL 生成策略：`useAgentWebSocket` 默认直连同域主机的 `:8090` 端口：`ws(s)://{window.location.hostname}:8090/ws/agent`（也可用 `NEXT_PUBLIC_AGENT_WS_URL` 覆盖）。
+- 连接建立后会自动发送 `init` 消息进行“会话身份绑定”。
+
+对应后端入口：
+
+- `agentic/api.py`: `@app.websocket("/ws/agent")` → `websocket_endpoint(websocket, orchestrator, ws_manager)`
+- `agentic/websocket_api.py`: `handle_init/handle_query/handle_approval/handle_answer/...`
+
+### 6.2 WS 消息类型（前端发送 → 后端处理）
+
+前端消息结构统一为：
+
+```json
+{ "type": "<message_type>", "payload": { /* ... */ } }
+```
+
+| 前端 type | 触发点（AIAssistantDrawer） | 后端处理（agentic/websocket_api.py） | 后端实际调用（agentic/orchestrator.py） |
+|---|---|---|---|
+| `init` | WebSocket `onopen` 自动发送 | `handle_init`：认证并保存 `graph_view_cypher` | 无 |
+| `query` | 用户发送问题（空闲态） | `handle_query`：启动后台 task 执行 | `invoke_with_streaming(...)` |
+| `guidance` | 用户发送指引（运行态） | `handle_guidance`：写入 `guidance_queue` 并回 `guidance_ack` | 无（下一次 think 消费） |
+| `skill_inject` | 运行态注入 Chat Skill 内容 | `handle_skill_inject`：格式化后写入 `guidance_queue` | 无（下一次 think 消费） |
+| `approval` | 阶段审批（approve/modify/abort） | `handle_approval`：恢复执行并持续流式推送 | `resume_after_approval_with_streaming(...)` |
+| `answer` | 回答 agent 提问 | `handle_answer`：恢复执行并持续流式推送 | `resume_after_answer_with_streaming(...)` |
+| `tool_confirmation` | 危险工具确认（approve/modify/reject） | `handle_tool_confirmation`：恢复执行并持续流式推送 | `resume_after_tool_confirmation_with_streaming(...)` |
+| `stop` | Stop 按钮 | `handle_stop`：取消当前后台 task，回 `stopped` | 无（cancel task） |
+| `resume` | Resume 按钮 | `handle_resume`：从 checkpoint 继续执行 | `resume_execution_with_streaming(...)` |
+| `ping` | 心跳（30s） | `handle_ping`：回 `pong` | 无 |
+
+### 6.3 结果回流：后端推送 → 前端渲染
+
+- 后端通过 WS 推送 `thinking/tool_start/tool_output_chunk/tool_complete/plan_* / phase_update / todo_update / approval_request / question_request / tool_confirmation_request / response / task_complete / file_ready / stopped ...`
+- 前端 `useWebSocketHandler` 负责把这些事件转换为：
+  - `chatItems`（Timeline 卡片：ThinkingCard、ToolExecutionCard、PlanWaveCard、DeepThinkCard、FileDownloadCard 等）
+  - `awaitingApproval/awaitingQuestion/awaitingToolConfirmation` 等交互态
+  - `isLoading/isStopped` 等运行态
+
+### 6.4 WebApp 侧 HTTP 代理接口（与 agentic/api.py 的对应关系）
+
+除了 WS 主链路，AIAssistantDrawer 还会通过 webapp 的 API route 访问/代理 agentic 的 HTTP 接口：
+
+| 前端调用（webapp） | 实现位置（webapp/src/app/api） | 实际访问（agentic/api.py） | 用途 |
+|---|---|---|---|
+| `GET /api/models?userId=...` | `api/models/route.ts` | `GET /models` | 模型选择器：把 DB 中的 provider 列表传给 agentic 做 model discovery |
+| `GET /api/agent/files?path=...` | `api/agent/files/route.ts` | `GET /files` | 下载 agent 生成的文件（kali-sandbox `/tmp/`） |
+| `GET /api/agent/health` | `api/agent/health/route.ts` | `GET /health` | agent 健康检查 |
+| `GET /api/skills` | `api/skills/route.ts` | `GET /skills` | Chat Skills catalog（用于导入/展示） |
+| `GET /api/community-skills` | `api/community-skills/route.ts` | `GET /community-skills` | 社区技能 catalog（用于导入） |
+| `POST /api/users/:id/llm-providers/:providerId/test` | `api/users/[id]/llm-providers/[providerId]/test/route.ts` | `POST /llm-provider/test` | 测试 LLM provider 配置 |
+
+### 6.5 消息持久化与 agentRunning 状态
+
+为支持“刷新/切会话后恢复时间线”，agentic 会把关键事件持久化回 webapp：
+
+- `agentic/chat_persistence.py` 会调用 webapp API：
+  - `POST /api/conversations/by-session/{session_id}/messages`（保存消息）
+  - `PATCH /api/conversations/by-session/{session_id}`（更新元信息，如 `agentRunning`）
+- `agentic/websocket_api.py` 在开始任务/结束任务时会更新 `agentRunning`，并将 user_message / approval_response / answer_response / tool_confirmation_response 等写入持久化队列。

@@ -1,11 +1,16 @@
 'use client'
 
+/** 删除初始化和版本更新提示
+import { DisclaimerGate } from '../DisclaimerGate'
+import { UpdateNotification } from '../UpdateNotification'
+ */
+
 import { usePathname } from 'next/navigation'
 import { GlobalHeader } from '../GlobalHeader'
 import { Footer } from '../Footer'
-import { DisclaimerGate } from '../DisclaimerGate'
-import { UpdateNotification } from '../UpdateNotification'
 import styles from './AppLayout.module.css'
+
+const HIDE_CHROME_PATHS = new Set<string>(['/', '/home', '/login', '/c2'])
 
 interface AppLayoutProps {
   children: React.ReactNode
@@ -13,17 +18,15 @@ interface AppLayoutProps {
 
 export function AppLayout({ children }: AppLayoutProps) {
   const pathname = usePathname()
-  const isAuthPage = pathname === '/login' || pathname === '/logout'
-  const hideHeader = isAuthPage || pathname === '/' || pathname === '/home'
+  const showChrome = !HIDE_CHROME_PATHS.has(pathname)
 
   return (
     <div className={styles.layout}>
-      {!hideHeader && <GlobalHeader />}
+      {showChrome && <GlobalHeader />}
       <main className={styles.main}>
-        {isAuthPage ? children : <DisclaimerGate>{children}</DisclaimerGate>}
+        {children}
       </main>
-      {!isAuthPage && <Footer />}
-      {!isAuthPage && <UpdateNotification />}
+      {showChrome && <Footer />}
     </div>
   )
 }

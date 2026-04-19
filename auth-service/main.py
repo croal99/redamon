@@ -11,6 +11,7 @@ from api.auth import router as auth_router
 from api.users import router as users_router
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.exc import ProgrammingError
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -19,24 +20,28 @@ settings = get_settings()
 
 async def create_first_admin():
     async with AsyncSession(engine) as session:
-        result = await session.execute(
-            select(User).where(User.username == settings.first_admin_user)
-        )
-        if not result.scalar_one_or_none():
-            admin = User(
-                username=settings.first_admin_user,
-                password_hash=get_password_hash(settings.first_admin_pass),
-                role=UserRole.admin,
+        try:
+            result = await session.execute(
+                select(User).where(User.username == settings.first_admin_user)
             )
-            session.add(admin)
-            await session.commit()
-            logger.info(f"Created first admin user: {settings.first_admin_user}")
+            if not result.scalar_one_or_none():
+                admin = User(
+                    username=settings.first_admin_user,
+                    password_hash=get_password_hash(settings.first_admin_pass),
+                    role=UserRole.admin,
+                )
+                session.add(admin)
+                await session.commit()
+                logger.info(f"Created first admin user: {settings.first_admin_user}")
+        except ProgrammingError as e:
+            logger.error(
+                "Database schema is not initialized. Run Alembic migrations before starting the service."
+            )
+            logger.debug("Schema initialization error: %s", e)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
     await create_first_admin()
     yield
     await engine.dispose()
