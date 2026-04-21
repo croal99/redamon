@@ -1,7 +1,10 @@
 'use client'
 
+import { useState } from 'react'
 import styles from './LinkClient.module.css'
 import type { CenterClientInfo } from '../../types/center'
+import { ViewTabs, type ViewMode } from '../ViewTabs'
+import { ClientTerminal } from '../ClientTerminal'
 
 function formatConnectAt(ts?: number) {
   if (!ts) return ''
@@ -15,7 +18,44 @@ export type LinkClientProps = {
   onBack?: () => void
 }
 
+export type ClientInfoProps = {
+  client: CenterClientInfo
+}
+
+export function ClientInfo({ client }: ClientInfoProps) {
+  return (
+    <div className={styles.grid}>
+      <div className={styles.label}>client_id</div>
+      <div className={styles.value} title={client.client_id ?? ''}>
+        {client.client_id ?? ''}
+      </div>
+
+      <div className={styles.label}>hostname</div>
+      <div className={styles.value} title={client.hostname ?? ''}>
+        {client.hostname ?? ''}
+      </div>
+
+      <div className={styles.label}>host_id</div>
+      <div className={styles.value} title={client.host_id ?? ''}>
+        {client.host_id ?? ''}
+      </div>
+
+      <div className={styles.label}>remote_addr</div>
+      <div className={styles.value} title={client.remote_addr ?? ''}>
+        {client.remote_addr ?? ''}
+      </div>
+
+      <div className={styles.label}>connect_at</div>
+      <div className={styles.value} title={client.connect_at ? String(client.connect_at) : ''}>
+        {formatConnectAt(client.connect_at)}
+      </div>
+    </div>
+  )
+}
+
 export function LinkClient({ client, onBack }: LinkClientProps) {
+  const [activeView, setActiveView] = useState<ViewMode>('sessions')
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -27,31 +67,20 @@ export function LinkClient({ client, onBack }: LinkClientProps) {
         ) : null}
       </div>
 
-      <div className={styles.grid}>
-        <div className={styles.label}>client_id</div>
-        <div className={styles.value} title={client.client_id ?? ''}>
-          {client.client_id ?? ''}
-        </div>
+      <div className={styles.tabsBar}>
+        <ViewTabs activeView={activeView} onViewChange={setActiveView} variant="client" />
+      </div>
 
-        <div className={styles.label}>hostname</div>
-        <div className={styles.value} title={client.hostname ?? ''}>
-          {client.hostname ?? ''}
-        </div>
-
-        <div className={styles.label}>host_id</div>
-        <div className={styles.value} title={client.host_id ?? ''}>
-          {client.host_id ?? ''}
-        </div>
-
-        <div className={styles.label}>remote_addr</div>
-        <div className={styles.value} title={client.remote_addr ?? ''}>
-          {client.remote_addr ?? ''}
-        </div>
-
-        <div className={styles.label}>connect_at</div>
-        <div className={styles.value} title={client.connect_at ? String(client.connect_at) : ''}>
-          {formatConnectAt(client.connect_at)}
-        </div>
+      <div className={styles.viewContent}>
+        {activeView === 'terminal' ? (
+          client.client_id ? (
+            <ClientTerminal clientId={client.client_id} />
+          ) : (
+            <div className={styles.empty}>client_id 为空，无法打开终端</div>
+          )
+        ) : (
+          <ClientInfo client={client} />
+        )}
       </div>
     </div>
   )
