@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertCircle, Loader2, RefreshCw } from 'lucide-react'
 import styles from './OnlineClientsCard.module.css'
-import type { CenterApiResponse, CenterClientInfo } from '../../types/center'
+import type { CenterClientInfo } from '../../types/center'
+import { useBLinkClient } from '../../hooks'
 
 function formatConnectAt(ts: number) {
   if (!ts) return ''
@@ -17,51 +18,35 @@ export type OnlineClientsCardProps = {
 }
 
 export function OnlineClientsCard({ onConnectClient }: OnlineClientsCardProps) {
-  const [clients, setClients] = useState<CenterClientInfo[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [lastUpdatedAt, setLastUpdatedAt] = useState<Date | null>(null)
 
-  const fetchClients = useCallback(async () => {
+  const { clientList, fetchClientList } = useBLinkClient()
+
+  const refreshClients = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
-      const resp = await fetch('/api/icenter/roomapi/clients', { cache: 'no-store' })
-      const json = (await resp.json()) as CenterApiResponse<CenterClientInfo[]>
-      const code = json.code as number
-
-      if (!resp.ok) {
-        setClients([])
-        setError(`HTTP ${resp.status}`)
-        return
-      }
-
-      if (typeof code === 'number' && code !== 20000) {
-        setClients([])
-        setError(`业务错误：${code}`)
-        return
-      }
-
-      const data = (json.data ?? []) as CenterClientInfo[]
-      setClients(Array.isArray(data) ? data : [])
+      await fetchClientList()
       setLastUpdatedAt(new Date())
     } catch (e) {
       setError(e instanceof Error ? e.message : '请求失败')
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [fetchClientList])
 
   useEffect(() => {
-    fetchClients()
-    const timer = setInterval(fetchClients, 50000)
+    refreshClients()
+    const timer = setInterval(refreshClients, 50000)
     return () => clearInterval(timer)
-  }, [fetchClients])
+  }, [refreshClients])
 
-  const count = clients.length
+  const count = clientList.length
   const sorted = useMemo(() => {
-    return [...clients].sort((a, b) => (b.connect_at ?? 0) - (a.connect_at ?? 0))
-  }, [clients])
+    return [...clientList].sort((a, b) => (b.connect_at ?? 0) - (a.connect_at ?? 0))
+  }, [clientList])
 
   return (
     <div className={styles.container}>
@@ -74,7 +59,7 @@ export function OnlineClientsCard({ onConnectClient }: OnlineClientsCardProps) {
           </span>
         </div>
         <div className={styles.toolbarRight}>
-          <button type="button" className={styles.refreshButton} onClick={fetchClients} disabled={loading}>
+          <button type="button" className={styles.refreshButton} onClick={refreshClients} disabled={loading}>
             {loading ? <Loader2 size={14} className={styles.spinner} /> : <RefreshCw size={14} />}
             刷新
           </button>

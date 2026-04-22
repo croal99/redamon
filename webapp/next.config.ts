@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
 
   serverExternalPackages: ['neo4j-driver', 'pdfjs-dist', 'pdf-parse'],
 
+  allowedDevOrigins: ['127.0.0.1', 'localhost'],
+
   images: {
     remotePatterns: [],
   },
@@ -38,6 +40,7 @@ const nextConfig: NextConfig = {
     NEO4J_USER: process.env.NEO4J_USER,
     NEO4J_PASSWORD: process.env.NEO4J_PASSWORD,
     NEXT_PUBLIC_REDAMON_VERSION: process.env.NEXT_PUBLIC_REDAMON_VERSION,
+    NEXT_PUBLIC_BLINK_API_URL: process.env.NEXT_PUBLIC_BLINK_API_URL || process.env.BLINK_API_URL,
   },
 }
 

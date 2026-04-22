@@ -11,11 +11,3 @@ export type CenterClientInfo = {
   host_id?: string
   hostname?: string
 }
-
-export type NormalizedCenterClientInfo = {
-  clientId: string
-  connectAt: number
-  remoteAddr: string
-  hostId: string
-  hostname: string
-}
