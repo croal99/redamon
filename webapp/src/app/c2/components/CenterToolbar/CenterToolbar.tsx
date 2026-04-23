@@ -31,28 +31,13 @@ export function CenterToolbar() {
       <div className={styles.spacer} />
 
       <div className={styles.actions}>
-        <nav className={styles.coreNav}>
-          {coreNav.map(item => {
-            const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`${styles.coreNavItem} ${isActive ? styles.coreNavItemActive : ''}`}
-              >
-                {item.icon}
-                <span>{item.label}</span>
-              </Link>
-            )
-          })}
-        </nav>
 
         <Link
           href="/projects"
           className={`${styles.navItem} ${pathname === '/projects' || pathname.startsWith('/projects/') ? styles.navItemActive : ''}`}
         >
           <FolderOpen size={14} />
-          <span>项目</span>
+          <span>目标 🎯</span>
         </Link>
 
         <div className={styles.divider} />

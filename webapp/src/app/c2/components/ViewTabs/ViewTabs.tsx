@@ -1,24 +1,12 @@
 'use client'
 
-import { memo, useState, useRef, useEffect, useCallback } from 'react'
+import { memo, useState, useRef, useEffect, useCallback, type MouseEvent as ReactMouseEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import { Waypoints, Table2, Terminal, Shield, Search, Download, SquareTerminal, Filter, Plus, Trash2, X, ChevronDown, Code, GitBranch, Info } from 'lucide-react'
 import { Toggle } from '@/components/ui'
 import styles from './ViewTabs.module.css'
 
-export type ViewMode = 'graph' | 'graphViews' | 'table' | 'sessions' | 'terminal' | 'roe'
-
-export interface TunnelInfo {
-  active: boolean
-  host?: string
-  port?: number
-  srvPort?: number
-}
-
-export interface TunnelStatus {
-  ngrok: TunnelInfo
-  chisel: TunnelInfo
-}
+export type ViewMode = 'graph' | 'graphViews' | 'table' | 'sessions' | 'terminal' | 'roe' | 'ai-attack' | 'ai-chat'
 
 interface DataFilterView {
   id: string
@@ -38,8 +26,6 @@ interface ViewTabsProps {
   filteredRows?: number
   // Sessions badge
   sessionCount?: number
-  // Tunnel status
-  tunnelStatus?: TunnelStatus
   // Data filter selector
   dataFilters?: DataFilterView[]
   selectedFilterId?: string | null
@@ -73,7 +59,6 @@ export const ViewTabs = memo(function ViewTabs({
   totalRows,
   filteredRows,
   sessionCount,
-  tunnelStatus,
   dataFilters,
   selectedFilterId,
   onSelectFilter,
@@ -112,6 +97,15 @@ export const ViewTabs = memo(function ViewTabs({
           >
             <SquareTerminal size={14} />
             <span>终端</span>
+          </button>
+          <button
+            role="tab"
+            aria-selected={activeView === 'ai-attack'}
+            className={`${styles.tab} ${activeView === 'ai-attack' ? styles.tabActive : ''}`}
+            onClick={() => onViewChange('ai-attack')}
+          >
+            <Shield size={14} />
+            <span>AI 攻击</span>
           </button>
         </div>
       </div>
@@ -160,12 +154,12 @@ export const ViewTabs = memo(function ViewTabs({
     setDropdownOpen(false)
   }, [selectedFilterId, onSelectFilter])
 
-  const handleDeleteFilter = useCallback((id: string, e: React.MouseEvent) => {
+  const handleDeleteFilter = useCallback((id: string, e: ReactMouseEvent) => {
     e.stopPropagation()
     onDeleteFilter?.(id)
   }, [onDeleteFilter])
 
-  const handleClearFilter = useCallback((e: React.MouseEvent) => {
+  const handleClearFilter = useCallback((e: ReactMouseEvent) => {
     e.stopPropagation()
     onSelectFilter?.(null)
     setDropdownOpen(false)

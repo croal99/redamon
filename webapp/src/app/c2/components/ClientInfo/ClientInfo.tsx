@@ -1,21 +1,13 @@
 'use client'
 
-import { useState } from 'react'
-import styles from './LinkClient.module.css'
+import styles from './ClientInfo.module.css'
 import type { CenterClientInfo } from '../../types/center'
-import { ViewTabs, type ViewMode } from '../ViewTabs'
-import { ClientTerminal } from '../ClientTerminal'
 
 function formatConnectAt(ts?: number) {
   if (!ts) return ''
   const d = new Date(ts * 1000)
   if (Number.isNaN(d.getTime())) return ''
   return d.toLocaleString()
-}
-
-export type LinkClientProps = {
-  client: CenterClientInfo
-  onBack?: () => void
 }
 
 export type ClientInfoProps = {
@@ -53,35 +45,3 @@ export function ClientInfo({ client }: ClientInfoProps) {
   )
 }
 
-export function LinkClient({ client, onBack }: LinkClientProps) {
-  const [activeView, setActiveView] = useState<ViewMode>('sessions')
-
-  return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h4 className={styles.title}>Client 信息</h4>
-        {onBack ? (
-          <button type="button" className={styles.backBtn} onClick={onBack}>
-            返回
-          </button>
-        ) : null}
-      </div>
-
-      <div className={styles.tabsBar}>
-        <ViewTabs activeView={activeView} onViewChange={setActiveView} variant="client" />
-      </div>
-
-      <div className={styles.viewContent}>
-        {activeView === 'terminal' ? (
-          client.client_id ? (
-            <ClientTerminal clientId={client.client_id} />
-          ) : (
-            <div className={styles.empty}>client_id 为空，无法打开终端</div>
-          )
-        ) : (
-          <ClientInfo client={client} />
-        )}
-      </div>
-    </div>
-  )
-}

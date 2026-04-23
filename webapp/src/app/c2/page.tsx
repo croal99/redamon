@@ -5,7 +5,7 @@ import { useAuth } from '@/providers/AuthProvider'
 import { OnlineClientsCard } from './components/OnLineClient'
 import { CenterToolbar } from './components/CenterToolbar/CenterToolbar'
 import styles from './page.module.css'
-import { LinkClient } from './components/LinkClient'
+import { ClientView } from './components/ClientView'
 import type { CenterClientInfo } from './types/center'
 
 export default function C2Page() {
@@ -25,7 +25,7 @@ export default function C2Page() {
             <CenterToolbar />
 
             {currentClient ? (
-                <LinkClient client={currentClient} onBack={() => setCurrentClient(null)} />
+                <ClientView client={currentClient} onBack={() => setCurrentClient(null)} />
             ) : (
                 <OnlineClientsCard onConnectClient={handleConnectClient} />
             )}
