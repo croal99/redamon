@@ -67,19 +67,31 @@ type SseEvent =
 const AGENT_API_BASE = '/api/icenter/agent'
 
 /**
- * extractTerminalCommands: 从 assistant 文本中提取 ```terminal 代码块里的命令（每行一条）。
+ * extractTerminalCommands: 从 assistant 文本中提取 ```terminal / ```bash 等代码块里的命令（每行一条）。
  */
 function extractTerminalCommands(content: string): string[] {
   if (!content) return []
   const results: string[] = []
-  const re = /```terminal\s*([\s\S]*?)```/gi
+  const re = /```(?:terminal|bash|sh|shell|zsh|fish|powershell|pwsh|cmd|console)\s*([\s\S]*?)```/gi
   let match: RegExpExecArray | null = null
   while ((match = re.exec(content)) !== null) {
     const block = match[1] ?? ''
-    for (const rawLine of block.split('\n')) {
+    const nestedFenceRe = /```(?:bash|sh|shell|zsh|fish|powershell|pwsh|cmd|console)?\s*([\s\S]*?)```/gi
+    const nestedBlocks: string[] = []
+    let nestedMatch: RegExpExecArray | null = null
+    while ((nestedMatch = nestedFenceRe.exec(block)) !== null) {
+      const inner = (nestedMatch[1] ?? '').trim()
+      if (inner) nestedBlocks.push(inner)
+    }
+
+    const sourceText = nestedBlocks.length ? nestedBlocks.join('\n') : block
+    for (const rawLine of sourceText.split('\n')) {
       const line = rawLine.trim()
       if (!line) continue
-      const normalized = line.startsWith('$') ? line.slice(1).trim() : line
+      if (line.startsWith('```')) continue
+      const normalized = line
+        .replace(/^(?:[>*$#]\s*)+/, '')
+        .trim()
       if (!normalized) continue
       results.push(normalized)
     }
@@ -88,46 +100,7 @@ function extractTerminalCommands(content: string): string[] {
 }
 
 function extractExecutableCommands(content: string): string[] {
-  const fenced = extractTerminalCommands(content)
-  if (fenced.length) return fenced
-
-  if (!content) return []
-  const lines = content.split('\n').map(l => l.trim())
-  const markerRe = /(终端执行以下命令|执行以下命令|运行以下命令|在.*终端执行|请在.*终端执行)/i
-  const stopRe = /(执行后|执行完|回传|将输出|基于结果|总结分析)/i
-
-  let startIdx = -1
-  for (let i = 0; i < lines.length; i += 1) {
-    const line = lines[i]
-    if (!line) continue
-    if (markerRe.test(line)) {
-      startIdx = i + 1
-      break
-    }
-  }
-  if (startIdx < 0) return []
-
-  const results: string[] = []
-  for (let i = startIdx; i < lines.length; i += 1) {
-    const raw = lines[i]
-    if (!raw) continue
-    if (stopRe.test(raw)) break
-    if (/[，。？！]/.test(raw) && /[\u4e00-\u9fa5]/.test(raw)) continue
-
-    const normalized = raw
-      .replace(/^[-*•]\s+/, '')
-      .replace(/^\d+\.\s+/, '')
-      .replace(/^\$\s+/, '')
-      .trim()
-
-    if (!normalized) continue
-    if (normalized.length > 220) continue
-    if (/[\u4e00-\u9fa5]/.test(normalized)) continue
-
-    results.push(normalized)
-    if (results.length >= 6) break
-  }
-  return results
+  return extractTerminalCommands(content)
 }
 
 /**

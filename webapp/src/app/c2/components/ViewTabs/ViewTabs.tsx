@@ -93,7 +93,7 @@ export const ViewTabs = memo(function ViewTabs({
             role="tab"
             aria-selected={activeView === 'terminal'}
             className={`${styles.tab} ${activeView === 'terminal' ? styles.tabActive : ''}`}
-            onClick={() => onViewChange('terminal')}
+            onClick={() => onViewChange('ai-chat')}
           >
             <SquareTerminal size={14} />
             <span>终端</span>

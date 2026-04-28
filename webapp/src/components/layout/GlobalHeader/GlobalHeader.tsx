@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Crosshair, FolderOpen, Shield, CircleHelp, TrendingUp, FileText, Settings, LogIn, LogOut } from 'lucide-react'
+import { Crosshair, FolderOpen, Shield, CircleHelp, TrendingUp, FileSearch, FileText, Settings, LogIn, LogOut } from 'lucide-react'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { useAuth } from '@/providers/AuthProvider'
 import { ProjectSelector } from './ProjectSelector'
@@ -14,6 +14,7 @@ const coreNav = [
   { label: '渗透分析', href: '/graph', icon: <Crosshair size={14} /> },
   // { label: '漏洞利用', href: '/cypherfix', icon: <Shield size={14} /> },
   { label: '安全洞察', href: '/insights', icon: <TrendingUp size={14} /> },
+  { label: '文档分析', href: '/document', icon: <FileSearch size={14} /> },
   { label: '报告中心', href: '/reports', icon: <FileText size={14} /> },
 ]
 

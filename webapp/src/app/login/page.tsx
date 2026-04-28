@@ -152,29 +152,29 @@ export default function LoginPage() {
             <div className={styles.feature}>
               <Crosshair size={16} className={styles.featureIcon} />
               <div className={styles.featureText}>
-                <div className={styles.featureTitle}>图谱与行动</div>
-                <div className={styles.featureDesc}>以图为中心的态势与任务入口</div>
+                <div className={styles.featureTitle}>智能体驱动</div>
+                <div className={styles.featureDesc}>感知环境自主决策，灵活调度任务流程，驱动系统主动演进</div>
               </div>
             </div>
             <div className={styles.feature}>
               <TrendingUp size={16} className={styles.featureIcon} />
               <div className={styles.featureText}>
-                <div className={styles.featureTitle}>趋势与指标</div>
-                <div className={styles.featureDesc}>从项目数据中提炼关键洞察</div>
+                <div className={styles.featureTitle}>图谱化认知</div>
+                <div className={styles.featureDesc}>关联碎片化信息，构建知识网络，实现深层理解与推理</div>
               </div>
             </div>
             <div className={styles.feature}>
               <FileText size={16} className={styles.featureIcon} />
               <div className={styles.featureText}>
-                <div className={styles.featureTitle}>报告沉淀</div>
-                <div className={styles.featureDesc}>结构化导出，便于交付复盘</div>
+                <div className={styles.featureTitle}>自动化执行</div>
+                <div className={styles.featureDesc}>无缝衔接任务闭环，智能调度资源，精准触发响应动作</div>
               </div>
             </div>
             <div className={styles.feature}>
               <Shield size={16} className={styles.featureIcon} />
               <div className={styles.featureText}>
-                <div className={styles.featureTitle}>安全认证</div>
-                <div className={styles.featureDesc}>统一登录与会话管理能力</div>
+                <div className={styles.featureTitle}>可进化学习</div>
+                <div className={styles.featureDesc}>持续迭代优化策略，适应动态场景，自主积累经验提升</div>
               </div>
             </div>
           </div>

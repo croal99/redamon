@@ -4,7 +4,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import type { CenterClientInfo } from '../../types/center'
+import { readSseStream } from '../../lib'
 import styles from './ClientAIAttack.module.css'
+import { useTerminal, type TerminalCommandMessage } from "../../hooks";
 
 type AttackPreset = {
   id: string
@@ -58,105 +60,21 @@ export type ClientAIAttackProps = {
   client: CenterClientInfo
 }
 
-type SseEventType = 'thinking' | 'tool_call' | 'tool_result' | 'result' | 'error' | 'done'
+type ToolStartEvent = { name: string; args?: Record<string, unknown> }
+type ToolCallEvent = {
+  name: string
+  tool_call_id: string
+  args?: Record<string, unknown>
+  requires_approval?: boolean
+}
+type FinalEvent = { content: string }
+type ErrorEvent = { message: string }
+type InfoEvent = { session_id: string; model?: string }
 
-type SseThinkingEvent = { type: 'thinking'; node: string; content: string }
-type SseToolCallEvent = { type: 'tool_call'; node: string; tool: string; args: Record<string, unknown> }
-type SseToolResultEvent = { type: 'tool_result'; node: string; content: string }
-type SseResultEvent = { type: 'result'; content: string }
-type SseErrorEvent = { type: 'error'; content: string }
-type SseDoneEvent = { type: 'done' }
-
-type SseEvent =
-  | SseThinkingEvent
-  | SseToolCallEvent
-  | SseToolResultEvent
-  | SseResultEvent
-  | SseErrorEvent
-  | SseDoneEvent
-
-const AGENT_API_BASE = '/api/icenter/agent'
+type LegacySseEventType = 'thinking' | 'tool_call' | 'tool_result' | 'result' | 'error' | 'done'
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === 'object'
-}
-
-/**
- * streamAgentChat: 通过 fetch + ReadableStream 消费 Agent API 的 SSE 流（支持 POST）。
- */
-async function streamAgentChat(options: {
-  message: string
-  onEvent: (event: SseEvent) => void
-  signal?: AbortSignal
-}) {
-  const { message, onEvent, signal } = options
-
-  const response = await fetch(`${AGENT_API_BASE}/chat/stream`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'text/event-stream',
-    },
-    body: JSON.stringify({ message }),
-    signal,
-  })
-
-  if (!response.ok) {
-    const text = await response.text().catch(() => '')
-    throw new Error(text || `Agent API 请求失败：HTTP ${response.status}`)
-  }
-
-  if (!response.body) {
-    throw new Error('Agent API 响应体为空')
-  }
-
-  const reader = response.body.getReader()
-  const decoder = new TextDecoder('utf-8')
-  let buffer = ''
-
-  while (true) {
-    if (signal?.aborted) break
-    const { done, value } = await reader.read()
-    if (done) break
-
-    buffer += decoder.decode(value, { stream: true })
-
-    const lines = buffer.split('\n')
-    buffer = lines.pop() ?? ''
-
-    for (const line of lines) {
-      const trimmed = line.trim()
-      if (!trimmed.startsWith('data:')) continue
-      const jsonStr = trimmed.slice(5).trim()
-      if (!jsonStr) continue
-
-      let parsed: unknown = null
-      try {
-        parsed = JSON.parse(jsonStr) as unknown
-      } catch {
-        continue
-      }
-
-      if (!isRecord(parsed) || typeof parsed.type !== 'string') continue
-      const type = parsed.type as SseEventType
-      if (type === 'thinking' && typeof parsed.node === 'string' && typeof parsed.content === 'string') {
-        onEvent({ type, node: parsed.node, content: parsed.content })
-      } else if (type === 'tool_call' && typeof parsed.node === 'string' && typeof parsed.tool === 'string') {
-        const args = isRecord(parsed.args) ? parsed.args : {}
-        onEvent({ type, node: parsed.node, tool: parsed.tool, args })
-      } else if (type === 'tool_result' && typeof parsed.node === 'string' && typeof parsed.content === 'string') {
-        onEvent({ type, node: parsed.node, content: parsed.content })
-      } else if (type === 'result' && typeof parsed.content === 'string') {
-        onEvent({ type, content: parsed.content })
-      } else if (type === 'error' && typeof parsed.content === 'string') {
-        onEvent({ type, content: parsed.content })
-      } else if (type === 'done') {
-        onEvent({ type })
-        reader.cancel().catch(() => {})
-        return
-      }
-    }
-  }
 }
 
 /**
@@ -171,7 +89,7 @@ function createSessionId(clientId?: string) {
  * ClientAIAttack: 在 C2 Client 视图中接入 HexStrike 风格 MCP Agent 攻击能力入口。
  */
 export function ClientAIAttack({ client }: ClientAIAttackProps) {
-  const [, setSessionId] = useState(() => createSessionId(client.client_id))
+  const [sessionId, setSessionId] = useState<string | null>(null)
   const [prompt, setPrompt] = useState('')
   const [lastResponse, setLastResponse] = useState('')
   const [currentPhase, setCurrentPhase] = useState('idle')
@@ -185,8 +103,24 @@ export function ClientAIAttack({ client }: ClientAIAttackProps) {
 
   const targetSummary = client.remote_addr || client.hostname || client.client_id || 'unknown target'
 
+  const apiBase = useMemo(() => {
+    const base = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, '')
+    return base || 'http://localhost:8000'
+  }, [])
+
+  const postToolFeedback = useCallback(
+    async (toolCallId: string, output: string, error?: string) => {
+      await fetch(`${apiBase}/agent/chat/feedback`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tool_call_id: toolCallId, output, error: error ?? null }),
+      });
+    },
+    [apiBase],
+  );
+
   useEffect(() => {
-    setSessionId(createSessionId(client.client_id))
+    setSessionId(null)
     setPrompt('')
     setLastResponse('')
     setCurrentPhase('idle')
@@ -218,6 +152,17 @@ export function ClientAIAttack({ client }: ClientAIAttackProps) {
     })
   }, [])
 
+  const onCommand = useCallback(
+    (command: TerminalCommandMessage) => {
+      console.log("terminal command:", command);
+      appendLog(`info -> ${command.session_id || 'unknown'}`);
+      postToolFeedback(command.session_id, command.result);
+    },
+    [postToolFeedback],
+  );
+
+  const { status, content, initTerminal: connect, disconnect, sendCommandMessage } = useTerminal({ clientId: client?.client_id || '', onCommand });
+
   /**
    * handleRunAttack: 提交 AI 攻击任务给 MCP Agent。
    */
@@ -228,6 +173,7 @@ export function ClientAIAttack({ client }: ClientAIAttackProps) {
     const wrappedPrompt = [
       `Target Context: ${targetSummary}`,
       `Client ID: ${client.client_id || 'unknown'}`,
+      `Session Hint: ${createSessionId(client.client_id)}`,
       '',
       finalPrompt,
     ].join('\n')
@@ -245,45 +191,117 @@ export function ClientAIAttack({ client }: ClientAIAttackProps) {
     abortRef.current = controller
 
     try {
-      await streamAgentChat({
-        message: wrappedPrompt,
+      const resp = await fetch(`${apiBase}/agent/chat/stream`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'text/event-stream',
+        },
+        body: JSON.stringify({ message: "使用HexStrike扫描192.168.31.1/24网络", session_id: sessionId }),
         signal: controller.signal,
-        onEvent: (evt) => {
-          if (evt.type === 'thinking') {
-            appendLog(`thinking -> ${evt.node || 'agent'}: ${evt.content.slice(0, 50)}...`)
+      })
+
+      if (!resp.ok) {
+        const text = await resp.text().catch(() => '')
+        throw new Error(text || `Agent API 请求失败：HTTP ${resp.status}`)
+      }
+
+      let completed = false
+      for await (const msg of readSseStream(resp)) {
+        if (controller.signal.aborted) break
+
+        if (msg.event === 'info') {
+          const info = msg.data as InfoEvent
+          if (info?.session_id) setSessionId(info.session_id)
+          appendLog(`info -> session_id=${info?.session_id || 'unknown'}`)
+          setIterationCount(prev => prev + 1)
+          continue
+        }
+
+        if (msg.event === 'tool_start') {
+          const ev = msg.data as ToolStartEvent
+          appendLog(`tool start -> ${ev?.name || 'unknown'}`)
+          setCurrentPhase('tool_call')
+          setProgressText(`调用工具：${ev?.name || 'unknown'}`)
+          setIterationCount(prev => prev + 1)
+          continue
+        }
+
+        if (msg.event === 'tool_call') {
+          const ev = msg.data as ToolCallEvent
+          appendLog(`tool call -> ${ev?.name || 'unknown'}`)
+          setCurrentPhase('tool_call')
+          setProgressText(`调用工具：${ev?.name || 'unknown'}`)
+          setIterationCount(prev => prev + 1)
+          continue
+        }
+
+        if (msg.event === 'final') {
+          const ev = msg.data as FinalEvent
+          setLastResponse(ev?.content || '')
+          setFindingsMarkdown(ev?.content || '')
+          setCurrentPhase('result')
+          setProgressText('生成结果中')
+          setIterationCount(prev => prev + 1)
+          continue
+        }
+
+        if (msg.event === 'error') {
+          const ev = msg.data as ErrorEvent
+          const err = ev?.message || 'Unknown error'
+          appendLog(`error -> ${err}`)
+          setLastResponse(`Error: ${err}`)
+          setFindingsMarkdown(`Error: ${err}`)
+          setCurrentPhase('error')
+          setProgressText('失败')
+          continue
+        }
+
+        if (msg.event === 'message' && isRecord(msg.data) && typeof msg.data.type === 'string') {
+          const type = msg.data.type as LegacySseEventType
+          if (type === 'thinking' && typeof msg.data.node === 'string' && typeof msg.data.content === 'string') {
+            appendLog(`thinking -> ${msg.data.node}: ${msg.data.content.slice(0, 50)}...`)
             setCurrentPhase('thinking')
             setProgressText('思考中')
             setIterationCount(prev => prev + 1)
-          } else if (evt.type === 'tool_call') {
-            appendLog(`tool start -> ${evt.tool}`)
+          } else if (type === 'tool_call' && typeof msg.data.tool === 'string') {
+            appendLog(`tool call -> ${msg.data.tool}`)
             setCurrentPhase('tool_call')
-            setProgressText(`调用工具：${evt.tool}`)
+            setProgressText(`调用工具：${msg.data.tool}`)
             setIterationCount(prev => prev + 1)
-          } else if (evt.type === 'tool_result') {
-            appendLog(`tool complete -> ${evt.node || 'unknown'}`)
+          } else if (type === 'tool_result' && typeof msg.data.content === 'string') {
+            appendLog(`tool result -> ${typeof msg.data.node === 'string' ? msg.data.node : 'unknown'}`)
             setCurrentPhase('tool_result')
-            setProgressText(`工具完成：${evt.node || 'unknown'}`)
+            setProgressText(`工具完成：${typeof msg.data.node === 'string' ? msg.data.node : 'unknown'}`)
             setIterationCount(prev => prev + 1)
-          } else if (evt.type === 'result') {
-            setLastResponse(evt.content)
-            setFindingsMarkdown(evt.content)
+          } else if (type === 'result' && typeof msg.data.content === 'string') {
+            setLastResponse(msg.data.content)
+            setFindingsMarkdown(msg.data.content)
             setCurrentPhase('result')
             setProgressText('生成结果中')
             setIterationCount(prev => prev + 1)
-          } else if (evt.type === 'error') {
-            appendLog(`error -> ${evt.content}`)
-            setLastResponse(`Error: ${evt.content}`)
-            setFindingsMarkdown(`Error: ${evt.content}`)
+          } else if (type === 'error' && typeof msg.data.content === 'string') {
+            appendLog(`error -> ${msg.data.content}`)
+            setLastResponse(`Error: ${msg.data.content}`)
+            setFindingsMarkdown(`Error: ${msg.data.content}`)
             setCurrentPhase('error')
             setProgressText('失败')
-          } else if (evt.type === 'done') {
+          } else if (type === 'done') {
             appendLog('task complete')
             setCurrentPhase('idle')
             setProgressText('')
             setActiveTab('findings')
+            completed = true
           }
         }
-      })
+      }
+
+      if (!controller.signal.aborted && !completed) {
+        appendLog('task complete')
+        setCurrentPhase('idle')
+        setProgressText('')
+        setActiveTab('findings')
+      }
     } catch (e) {
       const message = e instanceof Error ? e.message : 'Unknown error'
       if (!controller.signal.aborted) {
@@ -296,9 +314,8 @@ export function ClientAIAttack({ client }: ClientAIAttackProps) {
     } finally {
       if (abortRef.current === controller) abortRef.current = null
       setIsRunning(false)
-      if (abortRef.current !== controller) setCurrentPhase('idle')
     }
-  }, [appendLog, client.client_id, isRunning, prompt, targetSummary])
+  }, [appendLog, apiBase, client.client_id, isRunning, prompt, sessionId, targetSummary])
 
   /**
    * handleApplyPreset: 应用预置 Agent 任务模板，便于快速触发常见场景。

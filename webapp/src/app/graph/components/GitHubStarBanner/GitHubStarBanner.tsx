@@ -26,7 +26,8 @@ export function GitHubStarBanner({ hasAttackChain }: GitHubStarBannerProps) {
     setVisible(false)
   }
 
-  if (!visible) return null
+  return null
+  // if (!visible) return null
 
   return (
     <div className={styles.banner}>

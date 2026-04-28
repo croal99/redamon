@@ -8,6 +8,7 @@ import { ClientTerminal } from '../ClientTerminal'
 import { ClientInfo } from '../ClientInfo'
 import { ClientAIAttack } from '../ClientAIAttack'
 import { AIChat } from '../AIChat'
+import { OpsAgentChat } from '../OpsAgentChat'
 
 export type ClientViewProps = {
   client: CenterClientInfo
@@ -42,7 +43,7 @@ export function ClientView({ client, onBack }: ClientViewProps) {
         ) : activeView === 'ai-attack' ? (
           <ClientAIAttack client={client} />
         ) : activeView === 'ai-chat' ? (
-          <AIChat client={client} />
+          <OpsAgentChat clientId={client.client_id || ''} />
         ) : (
           <ClientInfo client={client} />
         )}

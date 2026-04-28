@@ -6,10 +6,10 @@ import type { Terminal } from '@xterm/xterm'
 import type { FitAddon } from '@xterm/addon-fit'
 import styles from './ClientTerminal.module.css'
 import type { TerminalSizeMessage, CommandMessage, TerminalAuthMessage, CenterClientInfo } from '../../types/center'
-import { useBLinkClient } from '../../hooks'
+import { useBLinkClient, useTerminal, ConnectionStatus } from '../../hooks'
 import { AIChat } from '../AIChat'
 
-type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'error'
+// type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'error'
 
 const MAX_RECONNECT_ATTEMPTS = 5
 const BASE_RECONNECT_INTERVAL = 2000
@@ -19,6 +19,95 @@ function getWsUrl(clientId: string): string {
   const encodedClientId = encodeURIComponent(clientId)
   const blinkWS = process.env.NEXT_PUBLIC_BLINK_WS_URL
   return `${blinkWS}/api/terminal/${encodedClientId}`
+}
+
+/**
+ * splitInlineShellCommands: 将同一行里“空格拼接”的多个简单命令拆分为多条命令（仅在无管道/逻辑运算符时启用）。
+ */
+function splitInlineShellCommands(line: string): string[] {
+  if (!line) return []
+  if (line.includes(';') || line.includes('&&') || line.includes('||')) return [line.trim()]
+
+  const starters = [
+    'df',
+    'lsblk',
+    'du',
+    'mount',
+    'uname',
+    'id',
+    'whoami',
+    'ls',
+    'pwd',
+    'cat',
+    'free',
+    'top',
+    'ps',
+    'ip',
+    'ss',
+    'netstat',
+    'dmesg',
+    'journalctl',
+    'systemctl',
+  ]
+
+  const escaped = starters.map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')
+  const re = new RegExp(String.raw`(?:^|\s)(?:sudo\s+)?(?:${escaped})(?=\s|$)`, 'g')
+  const starts: number[] = []
+
+  for (const m of line.matchAll(re)) {
+    const idx = m.index ?? -1
+    if (idx < 0) continue
+    const raw = m[0] ?? ''
+    const start = idx + (raw.startsWith(' ') ? 1 : 0)
+    starts.push(start)
+  }
+
+  if (starts.length <= 1) return [line.trim()]
+
+  const results: string[] = []
+  const uniqueStarts = Array.from(new Set(starts)).sort((a, b) => a - b)
+  for (let i = 0; i < uniqueStarts.length; i += 1) {
+    const s = uniqueStarts[i]!
+    const e = uniqueStarts[i + 1] ?? line.length
+    const seg = line.slice(s, e).trim()
+    if (seg) results.push(seg)
+  }
+
+  return results.length ? results : [line.trim()]
+}
+
+/**
+ * normalizeExecutableTerminalText: 将可能包含 Markdown 代码块/提示符的文本提取为可直接执行的 shell 命令文本。
+ */
+function normalizeExecutableTerminalText(input: string): string {
+  const trimmed = input.trim()
+  if (!trimmed) return ''
+
+  const fenceRe = /```[a-zA-Z0-9_-]*\s*([\s\S]*?)```/g
+  const fencedBlocks: string[] = []
+  let fenceMatch: RegExpExecArray | null = null
+  while ((fenceMatch = fenceRe.exec(trimmed)) !== null) {
+    const inner = (fenceMatch[1] ?? '').trim()
+    if (inner) fencedBlocks.push(inner)
+  }
+
+  const source = fencedBlocks.length ? fencedBlocks.join('\n') : trimmed
+  const lines = source
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean)
+    .filter((l) => !l.startsWith('```'))
+    .map((l) => l.replace(/^(?:[>*$#]\s*)+/, '').trim())
+    .filter(Boolean)
+
+  const expanded: string[] = []
+  for (const line of lines) {
+    for (const seg of splitInlineShellCommands(line)) {
+      if (seg) expanded.push(seg)
+    }
+  }
+
+  return expanded.join('\n').trim()
 }
 
 type ActiveTerminalRun = {
@@ -47,15 +136,10 @@ export const ClientTerminal = memo(function ClientTerminal({ clientId, client }:
   const manualCloseRef = useRef(false)
   const authRef = useRef<TerminalAuthMessage | null>(null)
 
-  const [status, setStatus] = useState<ConnectionStatus>('disconnected')
+  // const [status, setStatus] = useState<ConnectionStatus>('disconnected')
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [showAi, setShowAi] = useState(false)
 
-  const { TerminalDefaultAuthData } = useBLinkClient()
-
-  useEffect(() => {
-    authRef.current = TerminalDefaultAuthData
-  }, [TerminalDefaultAuthData])
 
   /**
    * sendResizeMessage: 通知服务端调整终端尺寸（cols/rows）。
@@ -95,6 +179,18 @@ export const ClientTerminal = memo(function ClientTerminal({ clientId, client }:
       wsRef.current.send(JSON.stringify(message))
     }
   }, [])
+
+  const onConnect = useCallback(() => {
+    console.log('onConnect')
+    setStatus('connected')
+  }, [])
+
+  const onDisconnect = useCallback(() => {
+    setStatus('disconnected')
+  }, [])
+
+
+  const { status, setStatus, initTerminal, content, sendText } = useTerminal({ clientId, onConnect, onDisconnect })
 
   /**
    * endActiveRun: 结束当前正在采集输出的命令执行（用于断线/错误收尾）。
@@ -188,6 +284,8 @@ export const ClientTerminal = memo(function ClientTerminal({ clientId, client }:
 
     terminal.writeln('')
     terminal.writeln('\x1b[1;36m  Connecting to client terminal...\x1b[0m')
+
+    return initTerminal()
 
     const ws = new WebSocket(getWsUrl(clientId))
     wsRef.current = ws
@@ -368,7 +466,10 @@ export const ClientTerminal = memo(function ClientTerminal({ clientId, client }:
    */
   const runTerminalCommand = useCallback(
     async (command: string, options?: { silenceMs?: number; timeoutMs?: number; maxChars?: number }) => {
-      if (!command.trim()) return ''
+      const extracted = normalizeExecutableTerminalText(command)
+      if (!extracted) {
+        throw new Error('未识别到可执行命令')
+      }
       if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
         throw new Error('Terminal 未连接')
       }
@@ -380,7 +481,7 @@ export const ClientTerminal = memo(function ClientTerminal({ clientId, client }:
       const timeoutMs = options?.timeoutMs ?? 15000
       const maxChars = options?.maxChars ?? 64000
 
-      const normalized = command.endsWith('\n') ? command : `${command}\n`
+      const normalized = extracted.endsWith('\n') ? extracted : `${extracted}\n`
 
       return await new Promise<string>((resolve, reject) => {
         let silenceTimer: NodeJS.Timeout | null = null
