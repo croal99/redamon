@@ -1,0 +1,29 @@
+.root {
+  width: 100%;
+  height: 400px;
+  background-color: var(--background-secondary);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid var(--border-color);
+}
+
+.empty {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+  gap: 12px;
+}
+
+.emptyText {
+  font-size: 14px;
+}
+
+.graphContainer {
+  width: 100%;
+  height: 100%;
+}

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlueNet Auth Service - 登录</title>
+  <link rel="stylesheet" href="/static/css/login.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="page">
+    <div class="bg" aria-hidden="true"></div>
+    <div class="grid" aria-hidden="true"></div>
+    <div class="noise" aria-hidden="true"></div>
+
+    <div class="content">
+      <header class="header">
+        <div class="brand">
+          <div class="brandMark" aria-hidden="true">
+            <i data-lucide="shield" class="brandMarkIcon"></i>
+          </div>
+          <div class="brandText">
+            <div class="brandName">合盛智核</div>
+            <div class="brandSub">高级渗透平台</div>
+          </div>
+        </div>
+      </header>
+
+      <section class="card">
+        <div class="cardHeader">
+          <div>
+            <div class="cardTitle">欢迎回来</div>
+          </div>
+        </div>
+
+        <div id="error-message" class="error" role="alert" aria-live="polite" style="display: none;"></div>
+
+        <form id="login-form" class="form">
+          <div class="field">
+            <label class="label">用户名</label>
+            <div class="inputWithIcon">
+              <i data-lucide="user" class="inputIcon"></i>
+              <input
+                id="username"
+                class="textInput"
+                autocomplete="username"
+                placeholder="请输入用户名"
+                autofocus
+                required
+              />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">密码</label>
+            <div class="inputWithIcon">
+              <i data-lucide="lock" class="inputIcon"></i>
+              <input
+                id="password"
+                class="textInput passwordInput"
+                type="password"
+                autocomplete="current-password"
+                placeholder="请输入密码"
+                required
+              />
+              <button
+                type="button"
+                id="toggle-password"
+                class="iconButton passwordToggle"
+                aria-label="显示密码"
+              >
+                <i data-lucide="eye" id="eye-icon"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="actions">
+            <div class="hint">使用账号密码完成认证，进入合盛智核</div>
+            <button class="primaryButton" type="submit" id="submit-btn">登录</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="features" aria-hidden="true">
+        <div class="featureGrid">
+          <div class="feature">
+            <i data-lucide="crosshair" class="featureIcon"></i>
+            <div class="featureText">
+              <div class="featureTitle">智能体驱动</div>
+              <div class="featureDesc">感知环境自主决策，灵活调度任务流程，驱动系统主动演进</div>
+            </div>
+          </div>
+          <div class="feature">
+            <i data-lucide="trending-up" class="featureIcon"></i>
+            <div class="featureText">
+              <div class="featureTitle">图谱化认知</div>
+              <div class="featureDesc">关联碎片化信息，构建知识网络，实现深层理解与推理</div>
+            </div>
+          </div>
+          <div class="feature">
+            <i data-lucide="file-text" class="featureIcon"></i>
+            <div class="featureText">
+              <div class="featureTitle">自动化执行</div>
+              <div class="featureDesc">无缝衔接任务闭环，智能调度资源，精准触发响应动作</div>
+            </div>
+          </div>
+          <div class="feature">
+            <i data-lucide="shield" class="featureIcon"></i>
+            <div class="featureText">
+              <div class="featureTitle">可进化学习</div>
+              <div class="featureDesc">持续迭代优化策略，适应动态场景，自主积累经验提升</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    const form = document.getElementById('login-form');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const togglePasswordBtn = document.getElementById('toggle-password');
+    const eyeIcon = document.getElementById('eye-icon');
+    const submitBtn = document.getElementById('submit-btn');
+    const errorMsg = document.getElementById('error-message');
+
+    // Parse 'next' from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const nextUrl = urlParams.get('next') || '/home';
+
+    let showPassword = false;
+
+    togglePasswordBtn.addEventListener('click', () => {
+      showPassword = !showPassword;
+      passwordInput.type = showPassword ? 'text' : 'password';
+      togglePasswordBtn.setAttribute('aria-label', showPassword ? '隐藏密码' : '显示密码');
+      
+      // Update icon
+      eyeIcon.setAttribute('data-lucide', showPassword ? 'eye-off' : 'eye');
+      lucide.createIcons({
+        nameAttr: 'data-lucide',
+        attrs: {
+          class: 'lucide',
+        }
+      });
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      submitBtn.disabled = true;
+      submitBtn.textContent = '正在认证…';
+      errorMsg.style.display = 'none';
+
+      try {
+        const res = await fetch('/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: usernameInput.value.trim(),
+            password: passwordInput.value
+          }),
+        });
+
+        if (!res.ok) {
+          let message = '认证失败';
+          try {
+            const data = await res.json();
+            message = data?.detail || data?.message || data?.error || message;
+          } catch (e) {}
+          throw new Error(message);
+        }
+
+        window.location.href = nextUrl;
+      } catch (err) {
+        errorMsg.textContent = err.message;
+        errorMsg.style.display = 'block';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '登录';
+      }
+    });
+  </script>
+</body>
+</html>

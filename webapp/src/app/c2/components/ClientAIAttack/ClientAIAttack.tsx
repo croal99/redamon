@@ -161,7 +161,7 @@ export function ClientAIAttack({ client }: ClientAIAttackProps) {
     [postToolFeedback],
   );
 
-  const { status, content, initTerminal: connect, disconnect, sendCommandMessage } = useTerminal({ clientId: client?.client_id || '', onCommand });
+  const { status, initTerminal: connect, disconnect, sendCommandMessage } = useTerminal({ clientId: client?.client_id || '', onCommand });
 
   /**
    * handleRunAttack: 提交 AI 攻击任务给 MCP Agent。

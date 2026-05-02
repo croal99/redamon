@@ -1,13 +1,15 @@
 "use client";
 
+import { homedir } from "os";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+export type TerminalType = "stream" | "pipe";
+export type ConnectionStatus = "disconnected" | "connecting" | "connected" | "error";
 
 export type CommandMessage<T> = {
     type: string;
     data?: T;
 };
-
-export type ConnectionStatus = "disconnected" | "connecting" | "connected" | "error";
 
 export type TerminalSizeMessage = {
     cols: number;
@@ -30,12 +32,7 @@ export type TerminalAuthMessage = {
     terminal_type?: string;
 };
 
-const TERMINAL_DEFAULT_AUTH_DATA: TerminalAuthMessage = {
-    host_ip: '127.0.0.1',
-    host_port: 5922,
-    auth_type: 'key',
-    username: 'root',
-    privilege_key: `-----BEGIN OPENSSH PRIVATE KEY-----
+export const TERMINAL_DEFAULT_AUTH_DATA: string = `-----BEGIN OPENSSH PRIVATE KEY-----
 b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABFwAAAAdzc2gtcn
 NhAAAAAwEAAQAAAQEAuz2tEeuDAdkJNFUahak+HOIiVR1j64+Cuky0OzvC2yhjTcqj3ULt
 TGyWVWHMr76qofwUuFcFLdvwr/1e3n3/VXMFNExV93YX7ns41x/ViEWnr+LSYJ/PBYKcRk
@@ -61,10 +58,7 @@ w/CvwODt0zZxqQ4QK3e+ATlWsGB8Jx3Ag/GTQfluuN/9iK5QAAAIEA1yFQjt0pUDU6fdlx
 dvr0HLYQSYU51ECz39dnmVOXoCyRA3NjIgAw7dA80AnUVKRkNZZwv6yCq5oPq5MVMfegTL
 OoGXxC2OVC4E8zTD+zcO5ba/QGb63VXVrZ/XBz+99yaVIyuLFsZR1qE0fI+yxdCB4n+j2Z
 iW2fkCcla0gPtxsAAAAIdGVzdF9rZXkBAgM=
------END OPENSSH PRIVATE KEY-----
-`,
-    terminal_type: "pipe",
-}
+-----END OPENSSH PRIVATE KEY-----`
 
 interface UseTerminalConfig {
     clientId: string
@@ -96,69 +90,35 @@ export function useTerminal({
     onConnect,
     onDisconnect,
 }: UseTerminalConfig) {
-    const MAX_BUFFER_CHARS = 200_000;
-
     const wsRef = useRef<WebSocket | null>(null);
     const connectPromiseRef = useRef<Promise<void> | null>(null);
-
     const [status, setStatus] = useState<ConnectionStatus>("disconnected");
-    const [content, setContent] = useState("");
 
     const wsUrl = useMemo(() => getWsUrl(clientId), [clientId]);
 
     /**
-     * appendTerminalBuffer: 追加 websocket 的增量文本到 buffer，并限制最大长度避免无限增长。
+     * sendMessage: 向 websocket 发送标准结构消息（type/data）。
      */
-    const appendTerminalBuffer = useCallback(
-        (delta: string) => {
-            if (!delta) return;
-            setContent((prev) => {
-                const next = prev + delta;
-                if (next.length <= MAX_BUFFER_CHARS) return next;
-                return next.slice(next.length - MAX_BUFFER_CHARS);
-            });
-        },
-        [MAX_BUFFER_CHARS],
-    );
-
-    /**
-     * emitTerminalText: 从 websocket 接收的增量文本；追加到 buffer，并对外透传该增量。
-     */
-    const emitTerminalText = useCallback((text: string) => {
-        appendTerminalBuffer(text);
-        // Forward message to handler
-        onMessage?.(text);
-    }, [appendTerminalBuffer, onMessage]);
-
-    /**
-     * sendWsMessage: 向 websocket 发送标准结构消息（type/data）。
-     */
-    const sendWsMessage = useCallback(<T,>(type: string, data: T) => {
+    const sendMessage = useCallback(<T,>(type: string, data: T) => {
         if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
         const message: CommandMessage<T> = { type, data };
         wsRef.current.send(JSON.stringify(message));
     }, []);
 
     /**
-     * sendAuthMessage: 发送终端登录认证信息。
-     */
-    const sendAuthMessage = useCallback((payload: TerminalAuthMessage) => {
-        sendWsMessage("terminal", payload);
-    }, [sendWsMessage]);
-
-    /**
      * sendTextMessage: 向终端通道发送用户输入/命令文本。
      */
     const sendTextMessage = useCallback((text: string) => {
-        sendWsMessage("text", text);
-    }, [sendWsMessage]);
+        sendMessage("text", text);
+    }, [sendMessage]);
 
     /**
      * sendTextMessage: 向终端通道发送用户输入/命令文本。
      */
     const sendCommandMessage = useCallback((command: TerminalCommandMessage) => {
-        sendWsMessage("command", command);
-    }, [sendWsMessage]);
+        if (!command) return;
+        sendMessage("command", command);
+    }, [sendMessage]);
 
     /**
      * disconnect: 主动断开 websocket；会拒绝当前等待中的 sendCommand。
@@ -174,9 +134,9 @@ export function useTerminal({
     }, []);
 
     /**
-     * ensureConnected: 确保 websocket 已连接；若未连接则发起连接并等待 open。
+     * initTerminal: 确保 websocket 已连接；若未连接则发起连接并等待 open。
      */
-    const ensureConnected = useCallback(async () => {
+    const initTerminal = useCallback(async () => {
         const existing = wsRef.current;
         if (existing && existing.readyState === WebSocket.OPEN) return;
         if (connectPromiseRef.current) return await connectPromiseRef.current;
@@ -202,7 +162,7 @@ export function useTerminal({
                     if (message.type === "command") {
                         onCommand?.(message.data as TerminalCommandMessage);
                     } else if (message.type === "text") {
-                        emitTerminalText(message.data as string || "");
+                        onMessage?.(message.data as string || "");
                     }
                 } catch {
                     return;
@@ -230,42 +190,27 @@ export function useTerminal({
 
         connectPromiseRef.current = p;
         return await p;
-    }, [emitTerminalText, wsUrl, onCommand, onError, onDisconnect]);
+    }, [wsUrl, onConnect, onCommand, onError, onDisconnect]);
 
-    /**
-     * connect: 主动触发连接并完成鉴权。
-     */
-    const initTerminal = useCallback(async () => {
-        await ensureConnected();
-        sendAuthMessage(TERMINAL_DEFAULT_AUTH_DATA);
-        console.log("terminal auth success");
-    }, [ensureConnected, sendAuthMessage]);
+    // useEffect(() => {
+    //     void connect();
+    //     return () => disconnect();
+    // }, [connect, disconnect]);
 
-    /**
-     * sendText: 发送文本。
-     */
-    const sendText = useCallback(
-        async (text: string) => {
-            if (!text) return;
-            sendTextMessage(text);
-        },
-        [sendTextMessage],
-    );
-
-    useEffect(() => {
-        void initTerminal();
-        return () => disconnect();
-    }, [initTerminal, disconnect]);
+    const sendResizeMessage = useCallback((dims: TerminalSizeMessage) => {
+        sendMessage("resize", dims);
+    }, [sendMessage]);
 
     return {
         wsUrl,
         status,
         setStatus,
-        content,
         initTerminal,
         disconnect,
-        sendText,
+        sendMessage,
+        sendTextMessage,
         sendCommandMessage,
+        sendResizeMessage,
     };
 }
 

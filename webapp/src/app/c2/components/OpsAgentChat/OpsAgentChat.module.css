@@ -121,7 +121,10 @@
   color: var(--text-primary);
   background: var(--bg-secondary);
   word-break: break-word;
-  max-width: min(860px, 85%);
+  flex: 1;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .msgUser {
@@ -343,4 +346,218 @@
 .secondaryBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* =============================================================================
+   MESSAGE BUBBLES
+   ============================================================================= */
+
+.message {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: var(--space-2);
+  animation: fadeIn 200ms ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.messageUser {
+  flex-direction: row-reverse;
+}
+
+.messageUser .bubble {
+  border-color: rgba(34, 211, 238, 0.35);
+  background: rgba(34, 211, 238, 0.08);
+  text-align: right;
+}
+
+.messageIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid;
+}
+
+.messageUser .messageIcon {
+  border-color: var(--accent-secondary);
+  color: var(--accent-secondary);
+}
+
+.messageAssistant .messageIcon {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.messageContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: 85%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.messageText {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  overflow-x: auto;
+  min-width: 0;
+}
+
+/* Markdown content styling - minimal overrides for react-markdown */
+.messageText p {
+  margin: 0;
+}
+
+.messageText p + p {
+  margin-top: var(--space-2);
+}
+
+/* Headings spacing */
+.messageText h1,
+.messageText h2,
+.messageText h3,
+.messageText h4,
+.messageText h5,
+.messageText h6 {
+  margin: var(--space-3) 0 var(--space-2) 0;
+  font-weight: 600;
+}
+
+.messageText h1:first-child,
+.messageText h2:first-child,
+.messageText h3:first-child,
+.messageText h4:first-child,
+.messageText h5:first-child,
+.messageText h6:first-child {
+  margin-top: 0;
+}
+
+/* Style lists to keep bullets inside container */
+.messageText ul,
+.messageText ol {
+  margin: var(--space-2) 0;
+  padding-left: var(--space-5, 1.25rem);
+}
+
+.messageText li {
+  margin: var(--space-1) 0;
+}
+
+/* Style inline code (not in code blocks) */
+.messageText code {
+  padding: 2px 6px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-sm);
+  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+.messageUser .messageText code {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Tables - horizontal scroll for wide tables */
+.messageText table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin: var(--space-2) 0;
+  font-size: var(--text-xs);
+}
+
+.messageText thead {
+  display: table;
+  width: 100%;
+  table-layout: auto;
+}
+
+.messageText tbody {
+  display: table;
+  width: 100%;
+  table-layout: auto;
+}
+
+.messageText th,
+.messageText td {
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border-default);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.messageText th {
+  background: rgba(255, 255, 255, 0.05);
+  font-weight: var(--font-semibold);
+}
+
+.messageText tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Syntax Highlighter container styling */
+.messageText :global(div[class*="language-"]) {
+  border-radius: var(--radius-md);
+  margin: var(--space-2) 0;
+  font-size: var(--text-xs);
+}
+
+.messageUser .messageText {
+  background: linear-gradient(135deg, var(--bg-elevated) 0%, rgba(10, 132, 255, 0.15) 100%);
+  color: var(--text-primary);
+  border-bottom-right-radius: var(--radius-sm);
+}
+
+.messageAssistant .messageText {
+  background: linear-gradient(135deg, var(--bg-tertiary) 0%, rgba(0, 212, 255, 0.1) 100%);
+  color: var(--text-primary);
+  border-bottom-left-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+}
+
+/* Error Badge */
+.errorBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  background: var(--status-error-bg);
+  border-radius: var(--radius-sm);
+  color: var(--status-error-text);
+  font-size: 10px;
+}
+
+/* Loading Indicator */
+.loadingIndicator {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-lg);
+  border-bottom-left-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
 }

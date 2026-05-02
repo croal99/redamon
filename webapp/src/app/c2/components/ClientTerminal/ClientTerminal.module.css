@@ -83,26 +83,26 @@
   border: 1px solid transparent;
 }
 
-.statusBadge.connected {
+.connected {
   color: #bae67e;
   background: rgba(186, 230, 126, 0.08);
   border-color: rgba(186, 230, 126, 0.2);
 }
 
-.statusBadge.connecting {
+.connecting {
   color: #ffd580;
   background: rgba(255, 213, 128, 0.08);
   border-color: rgba(255, 213, 128, 0.2);
   animation: pulse 1.5s ease-in-out infinite;
 }
 
-.statusBadge.disconnected {
+.disconnected {
   color: #4d556a;
   background: rgba(77, 85, 106, 0.08);
   border-color: rgba(77, 85, 106, 0.2);
 }
 
-.statusBadge.error {
+.error {
   color: #ff3333;
   background: rgba(255, 51, 51, 0.08);
   border-color: rgba(255, 51, 51, 0.2);
@@ -175,11 +175,15 @@
 }
 
 .terminal {
+  display: flex;
+  flex-direction: column;
   flex: 1;
   min-height: 0;
+  height: 100%;
   padding: 4px;
   overflow: hidden;
   min-width: 0;
+  position: relative;
 }
 
 .aiPanel {
@@ -199,8 +203,16 @@
 }
 
 .terminal :global(.xterm) {
+  width: 100%;
   height: 100%;
   padding: 4px;
+  display: flex;
+}
+
+.terminal :global(.xterm-screen),
+.terminal :global(.xterm-viewport) {
+  width: 100%;
+  height: 100%;
 }
 
 .terminal :global(.xterm-viewport) {

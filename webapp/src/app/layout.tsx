@@ -6,6 +6,7 @@ import { ProjectProvider } from '@/providers/ProjectProvider'
 import { AuthProvider } from '@/providers/AuthProvider'
 import { ToastProvider, AlertProvider } from '@/components/ui'
 import { AppLayout } from '@/components/layout'
+import { Toaster } from 'react-hot-toast'
 
 export const metadata: Metadata = {
   title: '合盛智核',
@@ -51,7 +52,10 @@ export default function RootLayout({
               <ProjectProvider>
                 <ToastProvider>
                   <AlertProvider>
-                    <AppLayout>{children}</AppLayout>
+                    <AppLayout>
+                      {children}
+                      <Toaster />
+                    </AppLayout>
                   </AlertProvider>
                 </ToastProvider>
               </ProjectProvider>

@@ -4,6 +4,7 @@ import mammoth from 'mammoth'
 import * as XLSX from 'xlsx'
 import { z } from 'zod'
 import { extractJson } from '@/lib/recon-preset-schema'
+import { addHistory } from '../../history/route'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'

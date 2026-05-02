@@ -1,6 +1,9 @@
 import logging
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from core.database import engine, Base
@@ -49,6 +52,9 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="BlueNet Auth Service", version="1.0.0", lifespan=lifespan)
 
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -60,6 +66,12 @@ app.add_middleware(
 app.include_router(auth_router, prefix="/auth")
 app.include_router(users_router, prefix="/auth")
 
+@app.get("/login", response_class=HTMLResponse)
+async def login_page(request: Request):
+    """
+    渲染登录页面
+    """
+    return templates.TemplateResponse("login.html", {"request": request})
 
 @app.get("/health")
 async def health():

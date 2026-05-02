@@ -7,7 +7,6 @@ import { ViewTabs, type ViewMode } from '../ViewTabs'
 import { ClientTerminal } from '../ClientTerminal'
 import { ClientInfo } from '../ClientInfo'
 import { ClientAIAttack } from '../ClientAIAttack'
-import { AIChat } from '../AIChat'
 import { OpsAgentChat } from '../OpsAgentChat'
 
 export type ClientViewProps = {
@@ -36,7 +35,7 @@ export function ClientView({ client, onBack }: ClientViewProps) {
       <div className={styles.viewContent}>
         {activeView === 'terminal' ? (
           client.client_id ? (
-            <ClientTerminal clientId={client.client_id} client={client} />
+            <ClientTerminal clientId={client.client_id} />
           ) : (
             <div className={styles.empty}>client_id 为空，无法打开终端</div>
           )
