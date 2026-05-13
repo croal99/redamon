@@ -11,32 +11,36 @@ type Entry = {
   description: string
   href: string
   icon: ReactNode
+  img: string
   accent: string
 }
 
 const entries: Entry[] = [
   {
     title: '智核·星图',
-    subtitle: '图谱与行动面板',
-    description: '以图为中心的态势与行动入口。不只是传统的资产扫描，而是基于AI的主动探测与智能测绘。它能以远超人类的效率与精度，自动发现、识别、分类并绘制出目标网络的全景动态地图，包括未知资产、隐蔽入口与脆弱关联，为后续行动构建毫米级的数字战场模型。',
+    subtitle: '资产扫描与测绘',
+    description: '',
     href: '/graph',
     icon: <Crosshair size={16} />,
+    img: '/logo-scan.png',
     accent: '#00d4ff',
   },
   {
     title: '智核·锋矢',
-    subtitle: '自主渗透单元',
-    description: '超越传统的漏洞利用工具。它是具备攻击链自主编排能力的智能代理。在“星图”提供的战场模型基础上，它能像一名经验丰富的渗透专家，自主决策攻击路径，智能绕过防御，自动化执行从初始突破到横向移动的整个攻击链，实现“一键抵达核心”的精准打击。',
+    subtitle: '内网突破与渗透',
+    description: '',
     href: '/c2',
     icon: <Shield size={16} />,
+    img: '/logo-c2.png',
     accent: '#0a84ff',
   },
   {
     title: '智核·洞鉴',
-    subtitle: '趋势与指标',
-    description: '超越简单的文件分析。它是一个深度威胁情报挖掘与战术策略生成中心。不仅能够从海量文件、内存和网络流量中，自动化提取凭证、密钥、通信关系等高价值情报，更能通过关联分析与机器学习，洞察对手战术，并实时生成优化的渗透策略与攻击代码，反哺“锋矢”行动，形成“感知-决策-行动”的智能闭环。',
+    subtitle: '情报挖掘与战术策略',
+    description: '',
     href: '/document',
     icon: <TrendingUp size={16} />,
+    img: '/logo-document.png',
     accent: '#dc2626',
   },
 ]
@@ -80,25 +84,19 @@ export default async function HomePage() {
             >
               <div className={styles.cardTop}>
                 <div className={styles.cardTitleRow}>
-                  <span className={styles.iconWrap} aria-hidden>
-                    {e.icon}
-                  </span>
                   <div className={styles.cardTitleBlock}>
                     <h2 className={styles.cardTitle}>{e.title}</h2>
-                    <span className={styles.cardSubtitle}>{e.subtitle}</span>
                   </div>
                 </div>
                 <ArrowRight size={16} className={styles.cardArrow} aria-hidden />
               </div>
 
-              <p className={styles.cardDesc}>{e.description}</p>
+              <div className={styles.cardImage}>
+                <img src={e.img} alt="" />
+              </div>
 
               <div className={styles.cardFooter}>
-                <div className={styles.cardMeta}>
-                  <span className={styles.cardMetaLabel}>入口</span>
-                  <span className={styles.cardPath}>{e.href}</span>
-                </div>
-                <span className={styles.cardCta}>进入</span>
+                <p>{e.subtitle}</p>
               </div>
             </Link>
           ))}
