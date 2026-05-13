@@ -68,16 +68,6 @@ export function GlobalHeader() {
 
         <div className={styles.divider} />
 
-        <a
-          href="https://github.com/samugit83/redamon/wiki"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.helpLink}
-          title="Wiki 文档"
-        >
-          <CircleHelp size={16} />
-        </a>
-
         <div className={styles.divider} />
 
         <UserInfo />

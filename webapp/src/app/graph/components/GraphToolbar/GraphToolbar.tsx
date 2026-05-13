@@ -410,21 +410,6 @@ export function GraphToolbar({
             </div>
             )}
 
-            {/* Other Scans (GitHub Hunt + TruffleHog) */}
-            <div className={styles.actionGroup}>
-              <button
-                className={`${styles.githubHuntButton} ${(isGithubHuntActive || isTrufflehogActive) ? styles.githubHuntButtonActive : ''}`}
-                onClick={onToggleOtherScansModal}
-                title="其他扫描（GitHub Hunt、TruffleHog）"
-              >
-                {(isGithubHuntRunning || isTrufflehogRunning) ? (
-                  <Loader2 size={14} className={styles.spinner} />
-                ) : (
-                  <Github size={14} />
-                )}
-                <span>{(isGithubHuntBusy || isTrufflehogBusy) ? '扫描中…' : '其他扫描'}</span>
-              </button>
-            </div>
           </>
         )}
 
