@@ -90,10 +90,11 @@ export function useAgentWebSocket({
     // Agent runs on the same host as the webapp, mapped to port 8090
     if (typeof window !== 'undefined') {
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-      const host = window.location.hostname
+      const host = window.location.host
       return `${protocol}//${host}/ws/agent`
     }
-    // 3. Fallback for SSR
+
+    // 3. 保留默认值，用于本地开发
     return 'ws://localhost/ws/agent'
   }, [])
 
