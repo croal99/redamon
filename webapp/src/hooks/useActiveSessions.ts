@@ -124,6 +124,7 @@ export function useActiveSessions({
     }
 
     const interval = fastPoll ? FAST_INTERVAL : SLOW_INTERVAL
+    // console.log('interval', interval) // DEBUG
     pollingRef.current = setInterval(fetchSessions, interval)
 
     return () => {

@@ -393,7 +393,7 @@ services:
       # Webapp API (internal docker network)
       WEBAPP_API_URL: http://webapp:3000
       # Knowledge Base 
-      KB_ENABLED: "${KB_ENABLED:-true}"
+      KB_ENABLED: "${KB_ENABLED:-false}"
       KB_PATH: /app/knowledge_base/data
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -526,7 +526,7 @@ services:
       # Backend services (server-side API routes → internal docker network)
       RECON_ORCHESTRATOR_URL: http://recon-orchestrator:8010
       AGENT_API_URL: http://agent:8080
-      AGENT_WS_URL: ws://agent:8080/ws/agent
+      # AGENT_WS_URL: ws://agent:8080/ws/agent
       # Recon container connects via host network, needs host-accessible webapp URL
       WEBAPP_URL: http://localhost:${WEBAPP_PORT:-3000}
       # Output paths (must match volume mounts below)

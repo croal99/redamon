@@ -46,7 +46,7 @@ export function ThinkingCard({ item, isExpanded, onToggleExpand }: ThinkingCardP
             <Brain size={14} className={styles.thinkingIcon} />
           </div>
           <div className={styles.headerInfo}>
-            <span className={styles.titleText}>Thinking</span>
+            <span className={styles.titleText}>思考</span>
             {item.action && item.action !== 'thinking' && (
               <span className={styles.actionBadge}>{item.action}</span>
             )}
@@ -58,7 +58,7 @@ export function ThinkingCard({ item, isExpanded, onToggleExpand }: ThinkingCardP
                 e.stopPropagation()
                 handleCopy()
               }}
-              title="Copy JSON"
+              title="复制 JSON"
             >
               {copied ? <Check size={12} /> : <Copy size={12} />}
             </button>
@@ -84,7 +84,7 @@ export function ThinkingCard({ item, isExpanded, onToggleExpand }: ThinkingCardP
           {/* Thought */}
           {item.thought && item.thought.trim() && (
             <div className={styles.section}>
-              <div className={styles.sectionLabel}>Thought</div>
+              <div className={styles.sectionLabel}>想法</div>
               <div className={styles.sectionContent}>
                 <p className={styles.text}>{item.thought}</p>
               </div>
@@ -94,7 +94,7 @@ export function ThinkingCard({ item, isExpanded, onToggleExpand }: ThinkingCardP
           {/* Reasoning */}
           {item.reasoning && item.reasoning.trim() && (
             <div className={styles.section}>
-              <div className={styles.sectionLabel}>Reasoning</div>
+              <div className={styles.sectionLabel}>推理</div>
               <div className={styles.sectionContent}>
                 <p className={styles.text}>{item.reasoning}</p>
               </div>
@@ -104,7 +104,7 @@ export function ThinkingCard({ item, isExpanded, onToggleExpand }: ThinkingCardP
           {/* Action (skip redundant "thinking" label) */}
           {item.action && item.action !== 'thinking' && (
             <div className={styles.section}>
-              <div className={styles.sectionLabel}>Action</div>
+              <div className={styles.sectionLabel}>动作</div>
               <div className={styles.sectionContent}>
                 <span className={styles.badge}>{item.action}</span>
                 {item.tool_name && (
@@ -120,7 +120,7 @@ export function ThinkingCard({ item, isExpanded, onToggleExpand }: ThinkingCardP
           {/* Todo List */}
           {item.updated_todo_list && item.updated_todo_list.length > 0 && (
             <div className={styles.section}>
-              <div className={styles.sectionLabel}>Tasks</div>
+              <div className={styles.sectionLabel}>任务</div>
               <div className={styles.sectionContent}>
                 <TodoListWidget items={item.updated_todo_list} />
               </div>

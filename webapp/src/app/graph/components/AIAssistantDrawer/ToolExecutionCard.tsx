@@ -84,13 +84,13 @@ export function ToolExecutionCard({ item, isExpanded, onToggleExpand, missingApi
   const getStatusText = () => {
     switch (item.status) {
       case 'pending_approval':
-        return 'Awaiting approval'
+        return '等待批准'
       case 'running':
-        return `Running... (${duration}s)`
+        return `运行中...（${duration}秒）`
       case 'success':
-        return `Completed (${duration}s)`
+        return `已完成（${duration}秒）`
       case 'error':
-        return 'Failed'
+        return '失败'
     }
   }
 
@@ -136,12 +136,12 @@ export function ToolExecutionCard({ item, isExpanded, onToggleExpand, missingApi
             {missingApiKey && (
               <span
                 className={styles.apiKeyMissing}
-                title={`Set ${TOOL_KEY_LABEL[item.tool_name] || ''} API key`}
+                title={`设置 ${TOOL_KEY_LABEL[item.tool_name] || ''} API Key`}
                 onClick={onAddApiKey ? (e) => { e.stopPropagation(); onAddApiKey() } : undefined}
                 role={onAddApiKey ? 'button' : undefined}
                 tabIndex={onAddApiKey ? 0 : undefined}
               >
-                <AlertTriangle size={10} /> No {TOOL_KEY_LABEL[item.tool_name] || 'API'} key — Add
+                <AlertTriangle size={10} /> 缺少 {TOOL_KEY_LABEL[item.tool_name] || 'API'} Key — 添加
               </span>
             )}
           </span>
@@ -152,8 +152,8 @@ export function ToolExecutionCard({ item, isExpanded, onToggleExpand, missingApi
             </div>
             {item.status === 'pending_approval' && onApprove && (
               <div className={styles.confirmActions}>
-                <button className={styles.allowBtn} onClick={(e) => { e.stopPropagation(); onApprove() }} disabled={confirmationDisabled}>Allow</button>
-                <button className={styles.denyBtn} onClick={(e) => { e.stopPropagation(); onReject?.() }} disabled={confirmationDisabled}>Deny</button>
+                <button className={styles.allowBtn} onClick={(e) => { e.stopPropagation(); onApprove() }} disabled={confirmationDisabled}>允许</button>
+                <button className={styles.denyBtn} onClick={(e) => { e.stopPropagation(); onReject?.() }} disabled={confirmationDisabled}>拒绝</button>
               </div>
             )}
             <button
@@ -162,7 +162,7 @@ export function ToolExecutionCard({ item, isExpanded, onToggleExpand, missingApi
                 e.stopPropagation()
                 handleCopy()
               }}
-              title="Copy JSON"
+              title="复制 JSON"
             >
               {copied ? <Check size={12} /> : <Copy size={12} />}
             </button>
@@ -183,7 +183,7 @@ export function ToolExecutionCard({ item, isExpanded, onToggleExpand, missingApi
           {/* Tool Arguments (expanded view) */}
           {item.tool_args && Object.keys(item.tool_args).length > 0 && (
             <div className={styles.section}>
-              <div className={styles.sectionLabel}>Arguments</div>
+              <div className={styles.sectionLabel}>参数</div>
               <div className={styles.sectionContent}>
                 <div className={styles.argsExpanded}>
                   {Object.entries(item.tool_args).map(([key, value]) => {
@@ -204,9 +204,9 @@ export function ToolExecutionCard({ item, isExpanded, onToggleExpand, missingApi
           {item.output_chunks.length > 0 && (
             <div className={styles.section}>
               <div className={styles.sectionLabel}>
-                Raw Output
+                原始输出
                 {item.status === 'running' && (
-                  <span className={styles.streamingLabel}>(streaming)</span>
+                  <span className={styles.streamingLabel}>(流式)</span>
                 )}
               </div>
               <div className={styles.sectionContent}>
@@ -225,7 +225,7 @@ export function ToolExecutionCard({ item, isExpanded, onToggleExpand, missingApi
           {/* Analysis Summary */}
           {item.final_output && (
             <div className={styles.section}>
-              <div className={styles.sectionLabel}>Analysis</div>
+              <div className={styles.sectionLabel}>分析</div>
               <div className={styles.sectionContent}>
                 <p className={styles.text}>{item.final_output}</p>
               </div>
@@ -235,7 +235,7 @@ export function ToolExecutionCard({ item, isExpanded, onToggleExpand, missingApi
           {/* Actionable Findings */}
           {item.actionable_findings && item.actionable_findings.length > 0 && (
             <div className={styles.section}>
-              <div className={styles.sectionLabel}>Actionable Findings</div>
+              <div className={styles.sectionLabel}>可执行发现</div>
               <div className={styles.sectionContent}>
                 <ul className={styles.findingsList}>
                   {item.actionable_findings.map((finding, index) => (
@@ -249,7 +249,7 @@ export function ToolExecutionCard({ item, isExpanded, onToggleExpand, missingApi
           {/* Recommended Next Steps */}
           {item.recommended_next_steps && item.recommended_next_steps.length > 0 && (
             <div className={styles.section}>
-              <div className={styles.sectionLabel}>Recommended Next Steps</div>
+              <div className={styles.sectionLabel}>推荐下一步</div>
               <div className={styles.sectionContent}>
                 <ul className={styles.stepsList}>
                   {item.recommended_next_steps.map((step, index) => (

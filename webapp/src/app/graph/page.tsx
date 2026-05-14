@@ -147,6 +147,7 @@ export default function GraphPage() {
     if (!projectId || !userId) return
     const fetchStatus = async () => {
       try {
+        // console.log('fetchStatus') // DEBUG
         const res = await fetch(`/api/conversations?projectId=${projectId}&userId=${userId}`)
         if (!res.ok) return
         const convs = await res.json()
@@ -165,6 +166,7 @@ export default function GraphPage() {
   useEffect(() => {
     const fetchTunnels = async () => {
       try {
+        // console.log('fetchTunnels') // DEBUG
         const res = await fetch('/api/agent/tunnel-status')
         if (res.ok) setTunnelStatus(await res.json())
       } catch { /* ignore */ }

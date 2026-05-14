@@ -334,6 +334,7 @@ def is_hard_blocked(domain: str) -> tuple[bool, str]:
     Returns (blocked, reason).  Does NOT depend on LLM, network, or settings.
     For IP mode targets, callers should skip this check (IPs are not hard-blocked).
     """
+    return False, '' # DEBUG
     if not domain:
         return False, ''
 

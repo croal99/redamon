@@ -91,10 +91,10 @@ export function useAgentWebSocket({
     if (typeof window !== 'undefined') {
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
       const host = window.location.hostname
-      return `${protocol}//${host}:8090/ws/agent`
+      return `${protocol}//${host}/ws/agent`
     }
     // 3. Fallback for SSR
-    return 'ws://localhost:8090/ws/agent'
+    return 'ws://localhost/ws/agent'
   }, [])
 
   // Send a message to the server

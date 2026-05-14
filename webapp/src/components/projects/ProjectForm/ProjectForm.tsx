@@ -95,14 +95,14 @@ const TAB_GROUPS = [
       { id: 'security', label: '安全检查' },
     ],
   },
-  {
-    key: 'other',
-    label: '',
-    style: 'tabGroupOther',
-    tabs: [
-      { id: 'integrations', label: '其他扫描', wide: true },
-    ],
-  },
+  // {
+  //   key: 'other',
+  //   label: '',
+  //   style: 'tabGroupOther',
+  //   tabs: [
+  //     { id: 'integrations', label: '其他扫描', wide: true },
+  //   ],
+  // },
   {
     key: 'scope',
     label: '范围',
@@ -120,15 +120,7 @@ const TAB_GROUPS = [
       { id: 'toolmatrix', label: '工具矩阵' },
       { id: 'attack', label: '代理技能' },
     ],
-  },
-  {
-    key: 'remediation',
-    label: '修复',
-    style: 'tabGroupRemediation',
-    tabs: [
-      { id: 'cypherfix', label: 'CypherFix' },
-    ],
-  },
+  }
 ] as const
 
 type TabId = typeof TAB_GROUPS[number]['tabs'][number]['id']
@@ -478,7 +470,7 @@ export function ProjectForm({
                 ) : (
                   <Play size={14} />
                 )}
-                {isReconRunning ? 'Running...' : isReconPaused ? 'Paused' : 'Start Recon Pipeline'}
+                {isReconRunning ? '运行中...' : isReconPaused ? '已暂停' : '启动'}
               </button>
               {/* Partial Recon Badges */}
               {activePartialRecons.length > 0 && (
@@ -740,13 +732,13 @@ export function ProjectForm({
           <SecurityChecksSection data={formData} updateField={updateField} onRun={mode === 'edit' && projectId ? () => setPartialReconToolId('SecurityChecks') : undefined} />
         )}
 
-        {activeTab === 'integrations' && (
+        {/* {activeTab === 'integrations' && (
           <>
             <GvmScanSection data={formData} updateField={updateField} />
             <GithubSection data={formData} updateField={updateField} hasGithubToken={hasGithubToken} />
             <TrufflehogSection data={formData} updateField={updateField} hasGithubToken={hasGithubToken} />
           </>
-        )}
+        )} */}
 
         {activeTab === 'agent' && (
           <AgentBehaviourSection data={formData} updateField={updateField} />
@@ -760,9 +752,6 @@ export function ProjectForm({
           <AttackSkillsSection data={formData} updateField={updateField} />
         )}
 
-        {activeTab === 'cypherfix' && (
-          <CypherFixSettingsSection data={formData} updateField={updateField} />
-        )}
           </div>
         </>
       )}
