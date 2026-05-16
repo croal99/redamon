@@ -250,6 +250,22 @@
   color: var(--text-secondary);
 }
 
+.cardImage {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.cardImage img {
+  display: block;
+  width: min(100%, 240px);
+  height: auto;
+  max-height: 120px;
+  object-fit: contain;
+}
+
 .cardFooter {
   margin-top: auto;
   padding-top: var(--space-3);
