@@ -398,7 +398,7 @@ services:
       context: .
       dockerfile: agentic/Dockerfile
       args:
-        SKIP_KB: "${SKIP_KB:-false}"
+        SKIP_KB: "${SKIP_KB:-true}"
     container_name: redamon-agent
     env_file:
       - path: .env
