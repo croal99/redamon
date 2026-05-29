@@ -31,10 +31,13 @@ RUN CGO_ENABLED=0 retry go install github.com/haccer/subjack@latest
 
 # Stage 1c: Build masscan from source (C project, requires libpcap)
 FROM debian:bookworm-slim AS masscan-builder
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Retry helper for transient network failures
+RUN printf '#!/bin/sh\nmax=5; n=0; until "$@"; do n=$((n+1)); [ $n -ge $max ] && exit 1; echo "Retry $n/$max ..."; sleep $((n*5)); done\n' \
+    > /usr/local/bin/retry && chmod +x /usr/local/bin/retry
+RUN retry apt-get update && retry apt-get install -y --no-install-recommends \
     git gcc make libpcap-dev ca-certificates \
-    && rm -rf /var/lib/apt/lists/* \
-    && git clone --depth 1 https://github.com/robertdavidgraham/masscan.git /masscan \
+    && rm -rf /var/lib/apt/lists/*
+RUN retry git clone --depth 1 https://github.com/robertdavidgraham/masscan.git /masscan \
     && cd /masscan && make -j$(nproc)
 
 # Stage 2: Main recon image
@@ -68,37 +71,32 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
     $(. /etc/os-release && echo "$VERSION_CODENAME") stable" > /etc/apt/sources.list.d/docker.list \
     && rm -rf /var/lib/apt/lists/*
 
-# Install system dependencies
-# - Docker CLI for orchestrating ProjectDiscovery containers
-# - Tor and proxychains for anonymous scanning
-# - DNS utilities for domain resolution
-# - Git for installing knock-subdomains
-# - Build tools for Python packages
+# Install system dependencies (split into layers for better cache reuse on network failures)
+# Layer 1: Docker CLI (requires Docker APT repo from previous step)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    # Docker CLI (to communicate with host Docker daemon)
     docker-ce-cli \
-    # Tor and proxychains for anonymous scanning
+    && rm -rf /var/lib/apt/lists/*
+
+# Layer 2: Small, reliable packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
     tor \
     proxychains4 \
-    # DNS utilities
     dnsutils \
     bind9-host \
-    # Network tools
     curl \
     wget \
     netcat-openbsd \
     iputils-ping \
-    # Git for knock-subdomains installation
     git \
-    # Build dependencies for Python packages
-    build-essential \
+    libpcap0.8 \
     libffi-dev \
     libssl-dev \
-    # Runtime dependency for masscan
-    libpcap0.8 \
-    # Nmap for service version detection (-sV) and NSE vuln scripts (--script vuln)
+    && rm -rf /var/lib/apt/lists/*
+
+# Layer 3: Heavy packages (build-essential ~200MB, nmap ~50MB) — most likely to fail, isolated for easy retry
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
     nmap \
-    # Clean up apt cache
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
