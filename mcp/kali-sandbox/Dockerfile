@@ -19,10 +19,24 @@ RUN echo "deb http://kali.download/kali kali-rolling main contrib non-free non-f
 # Allow HTTPS→HTTP redirects (Kali CDN sometimes redirects to http mirrors)
 RUN echo 'Acquire::https::Redirect::Allowed "true";' > /etc/apt/apt.conf.d/99allow-redirect
 
+# Retry helper for transient network failures (git clone, curl, go install, etc.)
+# Defined early so the apt-get layers below can use it via shell if needed,
+# and so that subsequent RUN steps enjoy retry protection.
+RUN printf '#!/bin/sh\nmax=5; n=0; until "$@"; do n=$((n+1)); [ $n -ge $max ] && exit 1; echo "Retry $n/$max ..."; sleep $((n*5)); done\n' \
+    > /usr/local/bin/retry && chmod +x /usr/local/bin/retry
+
 # Update and install penetration testing tools.
 # `apt-get update` is repeated here (same layer as install) because Kali rolling
 # rotates package versions frequently; a stale list cached from an earlier layer
 # leads to 404s on .deb fetches even minutes later.
+#
+# Split into two layers: metasploit-framework is ~800 MB and the most
+# failure-prone download; isolating it avoids re-downloading everything else
+# when it fails.
+RUN apt-get update && apt-get install -y --fix-missing \
+    metasploit-framework \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN apt-get update && apt-get install -y --fix-missing \
     # Core tools
     curl \
@@ -34,8 +48,6 @@ RUN apt-get update && apt-get install -y --fix-missing \
     python3-venv \
     # Nmap (used by naabu via -nmap-cli for service detection)
     nmap \
-    # Metasploit framework
-    metasploit-framework \
     # Network utilities
     net-tools \
     iputils-ping \
@@ -92,10 +104,6 @@ RUN apt-get update && apt-get install -y --fix-missing \
     wpscan \
     # Clean up
     && rm -rf /var/lib/apt/lists/*
-
-# Retry helper for transient network failures (git clone, curl, go install, etc.)
-RUN printf '#!/bin/sh\nmax=5; n=0; until "$@"; do n=$((n+1)); [ $n -ge $max ] && exit 1; echo "Retry $n/$max ..."; sleep $((n*5)); done\n' \
-    > /usr/local/bin/retry && chmod +x /usr/local/bin/retry
 
 # ysoserial: Java deserialization gadget chains (used by the RCE built-in skill)
 # Source: https://github.com/frohoff/ysoserial (MIT). Downloaded directly from
@@ -175,8 +183,10 @@ RUN retry go install -v github.com/projectdiscovery/vulnx/v2/cmd/vulnx@latest
 # Used by the Subdomain Takeover community skill.
 RUN retry go install -v github.com/PentestPad/subzy@latest
 
-# Update nuclei templates
-RUN nuclei -update-templates || true
+# Nuclei template update is handled at runtime by entrypoint.sh (deferred_init),
+# controlled via the NUCLEI_AUTO_UPDATE env var. Skipping it here avoids baking
+# ~300 MB of templates into the image layer only to have them overwritten on
+# first container start.
 
 # Create virtual environment for Python dependencies
 RUN python3 -m venv /opt/venv

@@ -398,7 +398,8 @@ services:
       context: .
       dockerfile: agentic/Dockerfile
       args:
-        SKIP_KB: "${SKIP_KB:-true}"
+        # SKIP_KB: "${SKIP_KB:-true}"
+        SKIP_KB: "true"
     container_name: redamon-agent
     env_file:
       - path: .env
@@ -447,8 +448,8 @@ services:
     depends_on:
       neo4j:
         condition: service_healthy
-      kali-sandbox:
-        condition: service_healthy
+      # kali-sandbox:
+      #   condition: service_healthy
       postgres:
         condition: service_healthy
     restart: unless-stopped

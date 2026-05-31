@@ -13,35 +13,38 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     DEBIAN_FRONTEND=noninteractive
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    git \
-    ripgrep \
-    jq \
-    make \
-    gcc \
-    g++ \
-    openssh-client \
-    unzip \
-    wget \
-    file \
-    ca-certificates \
-    gnupg \
-    && rm -rf /var/lib/apt/lists/*
-
 # Retry helper for transient network failures
+# Defined before any apt-get / curl layer so all subsequent steps can use it.
 RUN printf '#!/bin/sh\nmax=5; n=0; until "$@"; do n=$((n+1)); [ $n -ge $max ] && exit 1; echo "Retry $n/$max ..."; sleep $((n*5)); done\n' \
     > /usr/local/bin/retry && chmod +x /usr/local/bin/retry
 
+# Install system dependencies — lightweight tools
+# Small, rarely-fail packages stay together; compilers are split out below.
+RUN retry sh -c '\
+    apt-get update && apt-get install -y --no-install-recommends \
+    curl git ripgrep jq make unzip wget file ca-certificates gnupg \
+    && rm -rf /var/lib/apt/lists/*'
+
+# Install system dependencies — compilers & SSH
+# gcc/g++ (~150 MB) and openssh-client are heavier and more failure-prone
+# on Debian rolling mirrors; isolating them avoids re-downloading the
+# lightweight layer above when these fail.
+RUN retry sh -c '\
+    apt-get update && apt-get install -y --no-install-recommends \
+    gcc g++ openssh-client \
+    && rm -rf /var/lib/apt/lists/*'
+
 # Install Node.js 20 LTS + npm (for JS/TS projects)
-RUN retry curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors \
+# Wrap the entire sequence in retry so a failure at any step (download,
+# nodesource setup, apt-get, npm) is re-attempted from the top.
+RUN retry sh -c '\
+    curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors \
         -o /tmp/nodesource.sh https://deb.nodesource.com/setup_20.x \
     && bash /tmp/nodesource.sh \
-    && rm /tmp/nodesource.sh \
+    && rm -f /tmp/nodesource.sh \
     && apt-get install -y --no-install-recommends nodejs \
     && rm -rf /var/lib/apt/lists/* \
-    && npm install -g yarn pnpm
+    && npm install -g yarn pnpm'
 
 # Install Go 1.22 (for Go projects)
 # Download to file first (not piped to tar) so `retry` can cleanly re-run on
@@ -55,33 +58,33 @@ RUN retry curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors \
 ENV PATH="/usr/local/go/bin:/root/go/bin:${PATH}"
 
 # Install Ruby + Bundler (for Ruby/Rails projects)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ruby ruby-dev \
+RUN retry sh -c '\
+    apt-get update && apt-get install -y --no-install-recommends ruby ruby-dev \
     && rm -rf /var/lib/apt/lists/* \
-    && gem install bundler --no-document
+    && gem install bundler --no-document'
 
 # Install Java 17 JDK + Maven (for Java projects)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    default-jdk-headless \
-    maven \
-    && rm -rf /var/lib/apt/lists/*
+RUN retry sh -c '\
+    apt-get update && apt-get install -y --no-install-recommends default-jdk-headless maven \
+    && rm -rf /var/lib/apt/lists/*'
 
 # Install PHP + Composer (for PHP projects)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    php-cli php-xml php-mbstring php-curl php-zip \
+RUN retry sh -c '\
+    apt-get update && apt-get install -y --no-install-recommends php-cli php-xml php-mbstring php-curl php-zip \
     && rm -rf /var/lib/apt/lists/* \
-    && retry curl -sS --retry 5 --retry-delay 5 --retry-all-errors \
+    && curl -sS --retry 5 --retry-delay 5 --retry-all-errors \
         -o /tmp/composer-setup.php https://getcomposer.org/installer \
     && php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer \
-    && rm /tmp/composer-setup.php
+    && rm -f /tmp/composer-setup.php'
 
 # Install .NET 8 SDK (for C# projects)
-RUN apt-get update && apt-get install -y --no-install-recommends libicu-dev && rm -rf /var/lib/apt/lists/* \
-    && retry curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors \
+RUN retry sh -c '\
+    apt-get update && apt-get install -y --no-install-recommends libicu-dev && rm -rf /var/lib/apt/lists/* \
+    && curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors \
         -o /tmp/dotnet-install.sh https://dot.net/v1/dotnet-install.sh \
     && bash /tmp/dotnet-install.sh --channel 8.0 --install-dir /usr/share/dotnet \
-    && rm /tmp/dotnet-install.sh \
-    && ln -s /usr/share/dotnet/dotnet /usr/local/bin/dotnet
+    && rm -f /tmp/dotnet-install.sh \
+    && ln -s /usr/share/dotnet/dotnet /usr/local/bin/dotnet'
 ENV DOTNET_ROOT="/usr/share/dotnet"
 
 # Copy requirements first for better caching.
@@ -134,7 +137,7 @@ COPY knowledge_base/ ./knowledge_base/
 COPY agentic/ ./
 
 # Make knowledge_base and graph_db importable as top-level packages
-ENV PYTHONPATH="/app:${PYTHONPATH}"
+ENV PYTHONPATH="/app:${PYTHONPATH:-}"
 
 # Ensure KB data + cache directories exist (mounted as a volume at runtime).
 # Created BEFORE the chmod -R a-w below so the volume mountpoint exists when
