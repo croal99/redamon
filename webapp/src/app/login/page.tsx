@@ -26,7 +26,7 @@ export default function LoginPage() {
 
       if (!res.ok) {
         const data = await res.json()
-        setError(data.error || 'Login failed')
+        setError(data.error || '登录失败')
         setLoading(false)
         return
       }
@@ -34,7 +34,7 @@ export default function LoginPage() {
       // Force full page reload to pick up the new cookie in middleware
       window.location.href = '/graph'
     } catch {
-      setError('Unable to connect to the server')
+      setError('无法连接到服务器')
       setLoading(false)
     }
   }
@@ -58,7 +58,7 @@ export default function LoginPage() {
               <span className={styles.logoAccent}>Red</span>Amon
             </span>
           </div>
-          <p className={styles.subtitle}>Sign in to your account</p>
+          <p className={styles.subtitle}>登录您的账户</p>
         </div>
 
         <div className={styles.body}>
@@ -66,7 +66,7 @@ export default function LoginPage() {
             {error && <div className={styles.error}>{error}</div>}
 
             <div className={styles.field}>
-              <label htmlFor="email" className={styles.label}>Email</label>
+              <label htmlFor="email" className={styles.label}>电子邮箱</label>
               <input
                 id="email"
                 type="email"
@@ -81,12 +81,12 @@ export default function LoginPage() {
             </div>
 
             <div className={styles.field}>
-              <label htmlFor="password" className={styles.label}>Password</label>
+              <label htmlFor="password" className={styles.label}>密码</label>
               <input
                 id="password"
                 type="password"
                 className={styles.input}
-                placeholder="Enter your password"
+                placeholder="输入您的密码"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
@@ -99,7 +99,7 @@ export default function LoginPage() {
               className={styles.submitButton}
               disabled={loading || !email || !password}
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? '正在登录...' : '登录'}
             </button>
           </form>
         </div>

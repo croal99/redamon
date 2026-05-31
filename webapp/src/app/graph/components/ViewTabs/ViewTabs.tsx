@@ -27,22 +27,22 @@ export type TableViewMode =
   | 'dnsDrift'
 
 const TABLE_MODE_LABELS: Record<TableViewMode, string> = {
-  nodeDetails: 'Node Inspector',
-  all: 'All Nodes',
-  jsRecon: 'JS Recon',
-  killChain: 'Kill-Chain',
-  blastRadius: 'Blast Radius',
-  takeover: 'Takeover',
-  secrets: 'Secrets',
-  netInitAccess: 'Net Init-Access',
-  graphql: 'GraphQL',
-  webInitAccess: 'Web Init-Access',
-  paramMatrix: 'Parameter Matrix',
-  sharedInfra: 'Shared Infra',
-  dnsEmail: 'DNS & Email',
-  threatIntel: 'Threat Intel',
-  supplyChain: 'Supply-Chain',
-  dnsDrift: 'DNS Drift',
+  nodeDetails: '节点详情',
+  all: '所有节点',
+  jsRecon: 'JS 侦察',
+  killChain: '攻击杀伤链',
+  blastRadius: '技术爆炸半径',
+  takeover: '子域名接管',
+  secrets: '敏感信息 & 凭据',
+  netInitAccess: '网络初始访问',
+  graphql: 'GraphQL 风险分类账',
+  webInitAccess: 'Web 初始访问',
+  paramMatrix: '参数矩阵',
+  sharedInfra: '共享基础设施',
+  dnsEmail: 'DNS 与邮件态势',
+  threatIntel: '威胁情报叠加',
+  supplyChain: '供应链',
+  dnsDrift: '历史 DNS 漂移',
 }
 
 export interface TunnelInfo {
@@ -199,7 +199,7 @@ export const ViewTabs = memo(function ViewTabs({
             aria-selected={activeView === 'graphViews'}
             className={`${styles.filterGroupCreate} ${activeView === 'graphViews' ? styles.filterGroupCreateActive : ''}`}
             onClick={() => onViewChange('graphViews')}
-            title="Surface Shaper"
+            title="攻击面整形器"
           >
             <Filter size={13} />
             <Plus size={10} className={styles.createFilterPlus} />
@@ -210,7 +210,7 @@ export const ViewTabs = memo(function ViewTabs({
               <button
                 className={`${styles.filterGroupPill} ${selectedFilter ? styles.filterGroupPillActive : ''}`}
                 onClick={() => setDropdownOpen(prev => !prev)}
-                title={selectedFilter ? `Active surface: ${selectedFilter.name}` : 'Select a surface'}
+                title={selectedFilter ? `当前攻击面: ${selectedFilter.name}` : '选择一个攻击面'}
               >
                 {selectedFilter ? (
                   <>
@@ -218,19 +218,19 @@ export const ViewTabs = memo(function ViewTabs({
                     <span
                       className={styles.filterPillClear}
                       onClick={handleClearFilter}
-                      title="Clear surface"
+                      title="清除攻击面"
                     >
                       <X size={10} />
                     </span>
                   </>
                 ) : (
-                  <span className={styles.filterPillLabel}>Surfaces</span>
+                  <span className={styles.filterPillLabel}>攻击面过滤</span>
                 )}
               </button>
 
               {dropdownOpen && (
                 <div className={styles.filterDropdown}>
-                  <div className={styles.filterDropdownHeader}>Surface Shapers</div>
+                  <div className={styles.filterDropdownHeader}>攻击面整形器</div>
                   <div className={styles.filterDropdownList}>
                     {dataFilters!.map(f => (
                       <div
@@ -247,7 +247,7 @@ export const ViewTabs = memo(function ViewTabs({
                         <button
                           className={styles.filterDropdownDelete}
                           onClick={(e) => handleDeleteFilter(f.id, e)}
-                          title="Delete surface"
+                          title="删除攻击面"
                         >
                           <Trash2 size={11} />
                         </button>
@@ -267,7 +267,7 @@ export const ViewTabs = memo(function ViewTabs({
           onClick={() => onViewChange('graph')}
         >
           <Waypoints size={14} />
-          <span>Graph Map</span>
+          <span>拓扑图谱</span>
         </button>
         <div ref={tableMenuRef} className={styles.tableMenuContainer}>
           <button
@@ -311,97 +311,97 @@ export const ViewTabs = memo(function ViewTabs({
                 className={`${styles.tableDropdownItem} ${tableViewMode === 'nodeDetails' ? styles.tableDropdownItemActive : ''}`}
                 onClick={() => { onTableViewModeChange?.('nodeDetails'); setTableMenuOpen(false); onViewChange('table') }}
               >
-                <Layers size={12} /> Node Inspector
+                <Layers size={12} /> 节点详情
               </button>
               <button
                 className={`${styles.tableDropdownItem} ${tableViewMode === 'all' ? styles.tableDropdownItemActive : ''}`}
                 onClick={() => { onTableViewModeChange?.('all'); setTableMenuOpen(false); onViewChange('table') }}
               >
-                <Table2 size={12} /> All Nodes
+                <Table2 size={12} /> 所有节点
               </button>
               <button
                 className={`${styles.tableDropdownItem} ${tableViewMode === 'jsRecon' ? styles.tableDropdownItemActive : ''}`}
                 onClick={() => { onTableViewModeChange?.('jsRecon'); setTableMenuOpen(false); onViewChange('table') }}
               >
-                <Code size={12} /> JS Recon
+                <Code size={12} /> JS 侦察
               </button>
               <button
                 className={`${styles.tableDropdownItem} ${tableViewMode === 'killChain' ? styles.tableDropdownItemActive : ''}`}
                 onClick={() => { onTableViewModeChange?.('killChain'); setTableMenuOpen(false); onViewChange('table') }}
               >
-                <Target size={12} /> Kill-Chain Explorer
+                <Target size={12} /> 攻击杀伤链
               </button>
               <button
                 className={`${styles.tableDropdownItem} ${tableViewMode === 'blastRadius' ? styles.tableDropdownItemActive : ''}`}
                 onClick={() => { onTableViewModeChange?.('blastRadius'); setTableMenuOpen(false); onViewChange('table') }}
               >
-                <Zap size={12} /> Technology Blast Radius
+                <Zap size={12} /> 技术爆炸半径
               </button>
               <button
                 className={`${styles.tableDropdownItem} ${tableViewMode === 'takeover' ? styles.tableDropdownItemActive : ''}`}
                 onClick={() => { onTableViewModeChange?.('takeover'); setTableMenuOpen(false); onViewChange('table') }}
               >
-                <Flag size={12} /> Subdomain Takeover
+                <Flag size={12} /> 子域名接管
               </button>
               <button
                 className={`${styles.tableDropdownItem} ${tableViewMode === 'secrets' ? styles.tableDropdownItemActive : ''}`}
                 onClick={() => { onTableViewModeChange?.('secrets'); setTableMenuOpen(false); onViewChange('table') }}
               >
-                <Key size={12} /> Secrets & Credentials
+                <Key size={12} /> 敏感信息 & 凭据
               </button>
               <button
                 className={`${styles.tableDropdownItem} ${tableViewMode === 'netInitAccess' ? styles.tableDropdownItemActive : ''}`}
                 onClick={() => { onTableViewModeChange?.('netInitAccess'); setTableMenuOpen(false); onViewChange('table') }}
               >
-                <Server size={12} /> Net Initial-Access
+                <Server size={12} /> 网络初始访问
               </button>
               <button
                 className={`${styles.tableDropdownItem} ${tableViewMode === 'graphql' ? styles.tableDropdownItemActive : ''}`}
                 onClick={() => { onTableViewModeChange?.('graphql'); setTableMenuOpen(false); onViewChange('table') }}
               >
-                <Boxes size={12} /> GraphQL Risk Ledger
+                <Boxes size={12} /> GraphQL 风险分类账
               </button>
               <button
                 className={`${styles.tableDropdownItem} ${tableViewMode === 'webInitAccess' ? styles.tableDropdownItemActive : ''}`}
                 onClick={() => { onTableViewModeChange?.('webInitAccess'); setTableMenuOpen(false); onViewChange('table') }}
               >
-                <LockKeyhole size={12} /> Web Initial-Access
+                <LockKeyhole size={12} /> Web 初始访问
               </button>
               <button
                 className={`${styles.tableDropdownItem} ${tableViewMode === 'paramMatrix' ? styles.tableDropdownItemActive : ''}`}
                 onClick={() => { onTableViewModeChange?.('paramMatrix'); setTableMenuOpen(false); onViewChange('table') }}
               >
-                <Bug size={12} /> Parameter Matrix
+                <Bug size={12} /> 参数矩阵
               </button>
               <button
                 className={`${styles.tableDropdownItem} ${tableViewMode === 'sharedInfra' ? styles.tableDropdownItemActive : ''}`}
                 onClick={() => { onTableViewModeChange?.('sharedInfra'); setTableMenuOpen(false); onViewChange('table') }}
               >
-                <Network size={12} /> Shared Infrastructure
+                <Network size={12} /> 共享基础设施
               </button>
               <button
                 className={`${styles.tableDropdownItem} ${tableViewMode === 'dnsEmail' ? styles.tableDropdownItemActive : ''}`}
                 onClick={() => { onTableViewModeChange?.('dnsEmail'); setTableMenuOpen(false); onViewChange('table') }}
               >
-                <Mail size={12} /> DNS & Email Posture
+                <Mail size={12} /> DNS 与邮件态势
               </button>
               <button
                 className={`${styles.tableDropdownItem} ${tableViewMode === 'threatIntel' ? styles.tableDropdownItemActive : ''}`}
                 onClick={() => { onTableViewModeChange?.('threatIntel'); setTableMenuOpen(false); onViewChange('table') }}
               >
-                <ShieldAlert size={12} /> Threat Intel Overlay
+                <ShieldAlert size={12} /> 威胁情报叠加
               </button>
               <button
                 className={`${styles.tableDropdownItem} ${tableViewMode === 'supplyChain' ? styles.tableDropdownItemActive : ''}`}
                 onClick={() => { onTableViewModeChange?.('supplyChain'); setTableMenuOpen(false); onViewChange('table') }}
               >
-                <Package size={12} /> Supply-Chain
+                <Package size={12} /> 供应链
               </button>
               <button
                 className={`${styles.tableDropdownItem} ${tableViewMode === 'dnsDrift' ? styles.tableDropdownItemActive : ''}`}
                 onClick={() => { onTableViewModeChange?.('dnsDrift'); setTableMenuOpen(false); onViewChange('table') }}
               >
-                <History size={12} /> Historic DNS Drift
+                <History size={12} /> 历史 DNS 漂移
               </button>
             </div>
           )}
@@ -413,7 +413,7 @@ export const ViewTabs = memo(function ViewTabs({
           onClick={() => onViewChange('sessions')}
         >
           <Terminal size={14} />
-          <span>Reverse Shell</span>
+          <span>反向 Shell</span>
           {sessionCount != null && sessionCount > 0 && (
             <span className={styles.badge}>{sessionCount}</span>
           )}
@@ -425,7 +425,7 @@ export const ViewTabs = memo(function ViewTabs({
           onClick={() => onViewChange('terminal')}
         >
           <SquareTerminal size={14} />
-          <span>RedAmon Terminal</span>
+          <span>RedAmon 终端</span>
         </button>
         <button
           role="tab"
@@ -434,28 +434,28 @@ export const ViewTabs = memo(function ViewTabs({
           onClick={() => onViewChange('roe')}
         >
           <Shield size={14} />
-          <span>RoE</span>
+          <span>RoE 授权书</span>
         </button>
       </div>
 
       <div className={styles.rightSection}>
       {activeView === 'graph' && onToggle3D && onToggleLabels && (
         <div className={styles.viewToggles}>
-          <div title={nodeCount > AUTO_2D_THRESHOLD ? `3D disabled: graph has ${nodeCount.toLocaleString()} nodes (max ${AUTO_2D_THRESHOLD.toLocaleString()} for 3D)` : undefined}>
+          <div title={nodeCount > AUTO_2D_THRESHOLD ? `已禁用 3D：图谱有 ${nodeCount.toLocaleString()} 个节点（3D 视图最多支持 ${AUTO_2D_THRESHOLD.toLocaleString()} 个节点）` : undefined}>
             <Toggle
               checked={nodeCount > AUTO_2D_THRESHOLD ? false : (is3D ?? false)}
               onChange={onToggle3D}
               labelOff="2D"
               labelOn="3D"
               disabled={nodeCount > AUTO_2D_THRESHOLD}
-              aria-label="Toggle 2D/3D view"
+              aria-label="切换 2D/3D 视图"
             />
           </div>
           <Toggle
             checked={showLabels ?? false}
             onChange={onToggleLabels}
-            labelOn="Labels"
-            aria-label="Toggle labels"
+            labelOn="标签"
+            aria-label="切换显示标签"
           />
         </div>
       )}
@@ -467,10 +467,10 @@ export const ViewTabs = memo(function ViewTabs({
             <input
               type="text"
               className={styles.searchInput}
-              placeholder="Search..."
+              placeholder="搜索..."
               value={globalFilter || ''}
               onChange={e => onGlobalFilterChange(e.target.value)}
-              aria-label="Search nodes"
+              aria-label="搜索节点"
             />
           </div>
           <span className={styles.rowCount}>
@@ -478,14 +478,14 @@ export const ViewTabs = memo(function ViewTabs({
               ? `${totalRows}`
               : `${filteredRows}/${totalRows}`}
           </span>
-          <button className={styles.exportBtn} onClick={onExport} disabled={!!allNodesExporting} aria-label="Export to CSV" title="Export to CSV">
+          <button className={styles.exportBtn} onClick={onExport} disabled={!!allNodesExporting} aria-label="导出为 CSV" title="导出为 CSV">
             {allNodesExporting === 'csv'
               ? <Loader2 size={12} className={styles.exportSpinner} />
               : <Download size={12} />}
             <span>CSV</span>
           </button>
           {onExportJson && (
-            <button className={styles.exportBtn} onClick={onExportJson} disabled={!!allNodesExporting} aria-label="Export to JSON" title="Export to JSON">
+            <button className={styles.exportBtn} onClick={onExportJson} disabled={!!allNodesExporting} aria-label="导出为 JSON" title="导出为 JSON">
               {allNodesExporting === 'json'
                 ? <Loader2 size={12} className={styles.exportSpinner} />
                 : <Download size={12} />}
@@ -493,7 +493,7 @@ export const ViewTabs = memo(function ViewTabs({
             </button>
           )}
           {onExportMarkdown && (
-            <button className={styles.exportBtn} onClick={onExportMarkdown} disabled={!!allNodesExporting} aria-label="Export to Markdown" title="Export to Markdown">
+            <button className={styles.exportBtn} onClick={onExportMarkdown} disabled={!!allNodesExporting} aria-label="导出为 Markdown" title="导出为 Markdown">
               {allNodesExporting === 'md'
                 ? <Loader2 size={12} className={styles.exportSpinner} />
                 : <Download size={12} />}
@@ -511,14 +511,14 @@ export const ViewTabs = memo(function ViewTabs({
             <input
               type="text"
               className={styles.searchInput}
-              placeholder="Search JS Recon..."
+              placeholder="搜索 JS 侦察..."
               value={jsReconSearch || ''}
               onChange={e => onJsReconSearchChange(e.target.value)}
-              aria-label="Search JS Recon findings"
+              aria-label="搜索 JS 侦察结果"
             />
           </div>
           {onJsReconExportCsv && (
-            <button className={styles.exportBtn} onClick={onJsReconExportCsv} disabled={!!jsReconExporting} aria-label="Export to CSV" title="Export to CSV">
+            <button className={styles.exportBtn} onClick={onJsReconExportCsv} disabled={!!jsReconExporting} aria-label="导出为 CSV" title="导出为 CSV">
               {jsReconExporting === 'csv'
                 ? <Loader2 size={12} className={styles.exportSpinner} />
                 : <Download size={12} />}
@@ -526,7 +526,7 @@ export const ViewTabs = memo(function ViewTabs({
             </button>
           )}
           {onJsReconExportJson && (
-            <button className={styles.exportBtn} onClick={onJsReconExportJson} disabled={!!jsReconExporting} aria-label="Export to JSON" title="Export to JSON">
+            <button className={styles.exportBtn} onClick={onJsReconExportJson} disabled={!!jsReconExporting} aria-label="导出为 JSON" title="导出为 JSON">
               {jsReconExporting === 'json'
                 ? <Loader2 size={12} className={styles.exportSpinner} />
                 : <Download size={12} />}
@@ -534,7 +534,7 @@ export const ViewTabs = memo(function ViewTabs({
             </button>
           )}
           {onJsReconExportMarkdown && (
-            <button className={styles.exportBtn} onClick={onJsReconExportMarkdown} disabled={!!jsReconExporting} aria-label="Export to Markdown" title="Export to Markdown">
+            <button className={styles.exportBtn} onClick={onJsReconExportMarkdown} disabled={!!jsReconExporting} aria-label="导出为 Markdown" title="导出为 Markdown">
               {jsReconExporting === 'md'
                 ? <Loader2 size={12} className={styles.exportSpinner} />
                 : <Download size={12} />}

@@ -65,7 +65,7 @@ import { getPresetById, type ReconPreset } from '@/lib/recon-presets'
 
 const WorkflowView = dynamic(
   () => import('./WorkflowView/WorkflowView').then(m => ({ default: m.WorkflowView })),
-  { ssr: false, loading: () => <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>Loading workflow...</div> }
+  { ssr: false, loading: () => <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>正在加载工作流...</div> }
 )
 
 type ProjectFormData = Omit<Project, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'user'>
@@ -84,49 +84,49 @@ interface ProjectFormProps {
 
 const TAB_GROUPS = [
   {
-    label: 'Recon Pipeline',
+    label: '侦察流水线',
     style: 'tabGroupRecon',
     tabs: [
-      { id: 'preset', label: 'Recon Preset' },
-      { id: 'target', label: 'Target & Modules' },
-      { id: 'discovery', label: 'Discovery & OSINT' },
-      { id: 'port', label: 'Port Scanning' },
-      { id: 'http', label: 'HTTP Probing' },
-      { id: 'resource', label: 'Resource Enum' },
-      { id: 'jsrecon', label: 'JS Recon' },
-      { id: 'vuln', label: 'Vulnerability Scanning' },
-      { id: 'cve', label: 'CVE & MITRE' },
-      { id: 'security', label: 'Security Checks' },
+      { id: 'preset', label: '侦察预设' },
+      { id: 'target', label: '目标与模块' },
+      { id: 'discovery', label: '资产发现与情报' },
+      { id: 'port', label: '端口扫描' },
+      { id: 'http', label: 'HTTP 探测' },
+      { id: 'resource', label: '资源枚举' },
+      { id: 'jsrecon', label: 'JS 侦察' },
+      { id: 'vuln', label: '漏洞扫描' },
+      { id: 'cve', label: 'CVE 与 MITRE' },
+      { id: 'security', label: '安全检查' },
     ],
   },
   {
     label: '',
     style: 'tabGroupOther',
     tabs: [
-      { id: 'integrations', label: 'Other Scans', wide: true },
+      { id: 'integrations', label: '其他扫描', wide: true },
     ],
   },
   {
-    label: 'Scope',
+    label: '范围',
     style: 'tabGroupScope',
     tabs: [
-      { id: 'roe', label: 'RoE' },
+      { id: 'roe', label: '授权书 (RoE)' },
     ],
   },
   {
-    label: 'AI Agent',
+    label: 'AI 智能体',
     style: 'tabGroupAgent',
     tabs: [
-      { id: 'agent', label: 'Agent Behaviour' },
-      { id: 'toolmatrix', label: 'Tool Matrix' },
-      { id: 'attack', label: 'Agent Skills' },
+      { id: 'agent', label: '智能体行为' },
+      { id: 'toolmatrix', label: '工具矩阵' },
+      { id: 'attack', label: '智能体技能' },
     ],
   },
   {
-    label: 'Remediation',
+    label: '漏洞修复',
     style: 'tabGroupRemediation',
     tabs: [
-      { id: 'cypherfix', label: 'CypherFix' },
+      { id: 'cypherfix', label: 'CypherFix 修复' },
     ],
   },
 ] as const
@@ -489,13 +489,13 @@ export function ProjectForm({
     <form onSubmit={handleSubmit} className={styles.form}>
       <div className={styles.header}>
         <h1 className={styles.title}>
-          {mode === 'create' ? 'Create New Project' : 'Project Settings'}
+          {mode === 'create' ? '创建新项目' : '项目设置'}
           <WikiInfoButton
             target={mode === 'create' ? 'projectsNew' : 'projectSettings'}
-            title={mode === 'create' ? 'Open Creating a Project wiki page' : 'Open Project Settings Reference wiki page'}
+            title={mode === 'create' ? '打开创建项目 Wiki 页面' : '打开项目设置参考 Wiki 页面'}
           />
           {appliedPreset && (
-            <span className={styles.presetBadge}>Started from: {appliedPreset.name}</span>
+            <span className={styles.presetBadge}>起自预设：{appliedPreset.name}</span>
           )}
         </h1>
         <div className={styles.actions}>
@@ -506,14 +506,14 @@ export function ProjectForm({
                 className={`reconStartButton${isReconBusy ? ' reconStartButtonActive' : ''}`}
                 onClick={() => router.push(isReconBusy ? `/graph?project=${projectId}&openlogs=recon` : `/graph?project=${projectId}&autostart=true`)}
                 disabled={isSubmitting || runningPartialToolIds.size > 0}
-                title={runningPartialToolIds.size > 0 ? 'Partial recon is running -- stop it first' : isReconRunning ? 'Recon is running -- click to view progress' : isReconPaused ? 'Recon is paused -- click to view' : 'Navigate to the graph page and start the full recon pipeline'}
+                title={runningPartialToolIds.size > 0 ? '局部侦察正在运行 -- 请先停止' : isReconRunning ? '侦察流水线正在运行 -- 点击查看进度' : isReconPaused ? '侦察已暂停 -- 点击查看' : '导航到图谱页面并启动完整的侦察流水线'}
               >
                 {isReconRunning ? (
                   <Loader2 size={14} className={styles.spinner} />
                 ) : (
                   <Play size={14} />
                 )}
-                {isReconRunning ? 'Running...' : isReconPaused ? 'Paused' : 'Start Recon Pipeline'}
+                {isReconRunning ? '运行中...' : isReconPaused ? '已暂停' : '启动侦察流水线'}
               </button>
               {/* Partial Recon Badges */}
               {activePartialRecons.length > 0 && (
@@ -533,10 +533,10 @@ export function ProjectForm({
               className="secondaryButton"
               onClick={onCancel}
               disabled={isSubmitting}
-              title="Discard all unsaved changes and return to the previous page"
+              title="放弃所有未保存的更改并返回上一页"
             >
               <X size={14} />
-              Cancel
+              取消
             </button>
           )}
           <button
@@ -544,47 +544,47 @@ export function ProjectForm({
             className="secondaryButton"
             onClick={() => setIsUserPresetDrawerOpen(true)}
             disabled={isSubmitting || isLoadingDefaults}
-            title="Load a previously saved preset to apply all its settings to this project (target and subdomain fields are preserved)"
+            title="加载之前保存的预设以将其所有设置应用于此项目（目标和子域名字段将被保留）"
           >
             <FolderOpen size={14} />
-            Load Preset
+            加载预设
           </button>
           <button
             type="button"
             className="secondaryButton"
             onClick={() => setIsSavePresetModalOpen(true)}
             disabled={isSubmitting || isLoadingDefaults}
-            title="Save the current project settings as a reusable preset (everything except target domain, subdomains, and IP list)"
+            title="将当前项目设置保存为可重复使用的预设（除目标域名、子域名和 IP 列表外的所有设置）"
           >
             <Bookmark size={14} />
-            Save as Preset
+            另存为预设
           </button>
           {mode === 'edit' && projectId && (
             <button
               type="button"
               className="secondaryButton"
               onClick={() => window.open(`/api/projects/${projectId}/export`)}
-              title="Download a full project backup as a ZIP file including settings, conversations, graph data, reports, and artifacts"
+              title="将完整的项目备份下载为 ZIP 文件，包括设置、会话、图谱数据、报告和产物"
             >
               <Download size={14} />
-              Export
+              导出项目
             </button>
           )}
           <button
             type="submit"
             className="primaryButton"
             disabled={!canSubmit}
-            title={mode === 'create' ? 'Create the project with the current settings and start working' : 'Save all changes to the project settings'}
+            title={mode === 'create' ? '使用当前设置创建项目并开始工作' : '保存对项目设置的所有更改'}
           >
             {isLoadingDefaults ? (
               <>
                 <Loader2 size={14} className={styles.spinner} />
-                Loading...
+                加载中...
               </>
             ) : (
               <>
                 <Save size={14} />
-                {isSubmitting ? 'Saving...' : mode === 'edit' ? 'Update Settings' : 'Save Project'}
+                {isSubmitting ? '保存中...' : mode === 'edit' ? '更新设置' : '保存项目'}
               </>
             )}
           </button>
@@ -595,7 +595,7 @@ export function ProjectForm({
       {isLoadingDefaults ? (
         <div className={styles.loadingContainer}>
           <Loader2 size={24} className={styles.spinner} />
-          <p>Loading configuration defaults...</p>
+          <p>正在加载默认配置...</p>
         </div>
       ) : (
         <>
@@ -603,7 +603,7 @@ export function ProjectForm({
           <div className={styles.tabs}>
             {TAB_GROUPS.map((group, gi) => (
               <div key={gi} className={group.style ? styles[group.style] : styles.tabGroup}>
-                {group.label === 'Recon Pipeline' ? (
+                {group.label === '侦察流水线' ? (
                   <>
                     <div className={styles.reconGroupInner}>
                       <div className={styles.viewModeToggle}>
@@ -611,7 +611,7 @@ export function ProjectForm({
                           type="button"
                           className={`${styles.viewModeOption} ${viewMode === 'tabs' ? styles.viewModeOptionActive : ''}`}
                           onClick={() => setViewMode('tabs')}
-                          title="Tab view"
+                          title="标签视图"
                         >
                           <List size={11} />
                         </button>
@@ -622,7 +622,7 @@ export function ProjectForm({
                             setViewMode('workflow')
                             if (!RECON_TAB_IDS.has(activeTab)) setActiveTab('target')
                           }}
-                          title="Workflow view"
+                          title="工作流视图"
                         >
                           <GitBranch size={11} />
                         </button>
@@ -729,7 +729,7 @@ export function ProjectForm({
             {!formData.naabuEnabled && !formData.masscanEnabled && (
               <div className={styles.shodanWarning}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                <span>Both port scanners are disabled. The recon pipeline will skip port scanning entirely &mdash; downstream modules (HTTP probe, vulnerability scanning) require open ports to function and will produce no results.</span>
+                <span>两个端口扫描器均已禁用。侦察流水线将完全跳过端口扫描 &mdash; 下游模块（HTTP 探测、漏洞扫描）需要开放端口才能运行，否则将无法产生任何结果。</span>
               </div>
             )}
             <NaabuSection data={formData} updateField={updateField} onRun={mode === 'edit' && projectId ? () => setPartialReconToolId('Naabu') : undefined} />
@@ -866,9 +866,9 @@ export function ProjectForm({
               setActivePartialLogsRunId(null)
             }
           }}
-          title={`Partial Recon: ${WORKFLOW_TOOLS.find(t => t.id === activePartialLogsRun.tool_id)?.label || 'Running'}`}
-          phases={PARTIAL_RECON_PHASE_MAP[activePartialLogsRun.tool_id || ''] || ['Running']}
-          totalPhases={(PARTIAL_RECON_PHASE_MAP[activePartialLogsRun.tool_id || ''] || ['Running']).length}
+          title={`局部侦察: ${WORKFLOW_TOOLS.find(t => t.id === activePartialLogsRun.tool_id)?.label || '运行中'}`}
+          phases={PARTIAL_RECON_PHASE_MAP[activePartialLogsRun.tool_id || ''] || ['运行中']}
+          totalPhases={(PARTIAL_RECON_PHASE_MAP[activePartialLogsRun.tool_id || ''] || ['运行中']).length}
           hidePhaseProgress
         />
       )}
@@ -880,18 +880,18 @@ export function ProjectForm({
             <div className={styles.guardrailIconWrapper}>
               <ShieldAlert size={32} />
             </div>
-            <h2 className={styles.guardrailTitle}>Target Blocked</h2>
+            <h2 className={styles.guardrailTitle}>目标已被拦截</h2>
             <p className={styles.guardrailMessage}>{guardrailError}</p>
             <p className={styles.guardrailHint}>
-              This target appears to be a well-known public service that you are unlikely authorized to test.
-              Please use a domain or IP range you own or have explicit permission to scan.
+              此目标似乎是一个知名的公共服务，您不太可能拥有对其进行测试的授权。
+              请使用您拥有所有权或获得明确扫描许可的域名或 IP 范围。
             </p>
             <button
               type="button"
               className={styles.guardrailButton}
               onClick={() => setGuardrailError(null)}
             >
-              Understood
+              已了解
             </button>
           </div>
         </div>

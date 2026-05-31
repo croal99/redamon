@@ -54,7 +54,7 @@ function SessionsCard({ sessions }: { sessions: SessionsData | undefined }) {
   return (
     <div className="statCard">
       <div className="statLabel" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-        <Terminal size={12} />Active Shells
+        <Terminal size={12} />活跃 Shell 会话
       </div>
       <div className="statValue" style={total > 0 ? { color: 'var(--status-success)' } : undefined}>
         {total}
@@ -88,9 +88,9 @@ export function KPICards({ items, isLoading, pipeline, sessions }: KPICardsProps
         </div>
       ))}
       <SessionsCard sessions={sessions} />
-      <PipelineCard label="Recon Pipeline" icon={<Activity size={12} />} status={pipeline?.recon?.status} phase={pipeline?.recon?.currentPhase} />
-      <PipelineCard label="GVM Scan" icon={<Shield size={12} />} status={pipeline?.gvm?.status} />
-      <PipelineCard label="GitHub Hunt" icon={<Github size={12} />} status={pipeline?.githubHunt?.status} />
+      <PipelineCard label="侦察流水线" icon={<Activity size={12} />} status={pipeline?.recon?.status} phase={pipeline?.recon?.currentPhase} />
+      <PipelineCard label="GVM 扫描" icon={<Shield size={12} />} status={pipeline?.gvm?.status} />
+      <PipelineCard label="GitHub 搜寻" icon={<Github size={12} />} status={pipeline?.githubHunt?.status} />
     </div>
   )
 }
