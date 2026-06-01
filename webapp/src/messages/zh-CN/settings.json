@@ -1,0 +1,284 @@
+{
+  "title": "全局设置",
+  "titleSuffix": "（用户级）",
+  "description": "当前用户的个人配置，适用于所有项目。",
+  "tabProviders": "LLM 提供商",
+  "tabSkills": "Agent 技能",
+  "tabChatSkills": "Chat 技能",
+  "tabTradecraft": "攻击知识库",
+  "tabKeys": "API 密钥与隧道",
+  "tabMcp": "MCP 工具插件",
+  "tabSystem": "系统",
+  "providers": {
+    "title": "LLM 提供商",
+    "addProvider": "添加提供商",
+    "editProvider": "编辑提供商",
+    "deleteProvider": "删除此提供商？相关模型将不再可用。",
+    "noProviders": "尚未配置任何提供商，请添加一个以开始使用。",
+    "loading": "加载中...",
+    "providerName": "提供商名称",
+    "providerType": "类型",
+    "modelsAutoDiscovered": "模型已自动发现",
+    "modelsManual": "手动配置模型",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "providerDeleted": "提供商已删除",
+    "providerSaved": "提供商已保存",
+    "failedToDelete": "删除失败",
+    "failedToSave": "保存失败"
+  },
+  "skills": {
+    "title": "Agent 技能",
+    "description": "上传定义自定义攻击技能工作流的 .md 文件。技能将在所有项目设置中作为开关可用。",
+    "communitySkills": "社区技能",
+    "browseCommunity": "浏览社区技能获取即用模板。",
+    "noSkills": "尚未上传任何自定义技能，请上传 .md 文件开始使用。",
+    "uploadSkill": "上传技能",
+    "importFromCommunity": "从社区导入",
+    "skillName": "技能名称",
+    "skillDescription": "技能描述",
+    "editDescription": "编辑描述",
+    "download": "下载",
+    "deleteSkill": "删除此技能？它将从所有项目中移除。",
+    "skillDeleted": "技能已删除",
+    "skillUploaded": "技能已上传",
+    "descriptionUpdated": "技能描述已更新",
+    "failedToUpload": "上传失败",
+    "failedToDelete": "删除失败",
+    "failedToUpdate": "更新失败"
+  },
+  "chatSkills": {
+    "title": "Chat 技能",
+    "description": "上传和管理 AI 助手聊天的按需参考技能。与驱动攻击分类和阶段感知工作流的 Agent 技能不同，Chat 技能是战术参考文档，可通过聊天中使用 /skill <名称> 即时注入到助手上下文中。",
+    "noChatSkills": "暂无 Chat 技能。点击「从社区导入」添加即用参考技能，或上传您自己的 .md 文件。",
+    "uploadSkill": "上传技能 (.md)",
+    "importFromCommunity": "从社区导入",
+    "category": "分类",
+    "editDescription": "编辑描述",
+    "download": "下载",
+    "deleteSkill": "删除此 Chat 技能？",
+    "skillDeleted": "Chat 技能已删除",
+    "skillUploaded": "Chat 技能已上传",
+    "descriptionUpdated": "技能描述已更新",
+    "failedToUpload": "上传失败",
+    "failedToDelete": "删除失败",
+    "failedToUpdate": "更新失败"
+  },
+  "tradecraft": {
+    "title": "攻击知识库",
+    "description": "代理在利用阶段参考的精选知识站点（HackTricks、PayloadsAllTheThings、CVE PoC 仓库等）。添加后，代理会抓取首页、构建站点地图，并写入简短摘要作为工具目录条目。代理仅查看已启用的资源。",
+    "addResource": "添加资源",
+    "editResource": "编辑资源",
+    "resourceName": "资源名称",
+    "resourceUrl": "资源 URL",
+    "resourceDescription": "资源描述",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "confirmDelete": "删除「{name}」？此操作将移除目录条目和磁盘缓存。",
+    "deleted": "已删除",
+    "saved": "已保存",
+    "failedToDelete": "删除失败",
+    "failedToSave": "保存失败",
+    "refresh": "刷新",
+    "refreshed": "已刷新",
+    "refreshFailed": "刷新失败",
+    "toggleEnable": "启用/禁用",
+    "toggleFailed": "切换失败",
+    "statusVerifying": "验证中",
+    "statusReady": "就绪",
+    "statusError": "错误",
+    "enabled": "已启用",
+    "disabled": "已禁用"
+  },
+  "apiKeys": {
+    "title": "API 密钥",
+    "downloadTemplate": "下载模板",
+    "importKeys": "导入密钥",
+    "templateDownloaded": "模板已下载",
+    "keysImported": "密钥已导入 — 请点击「保存设置」以持久化。",
+    "noKeysToImport": "无密钥可导入 — 所有值均为空或被遮盖。",
+    "failedToReadFile": "读取文件失败。",
+    "confirmImport": "确认导入",
+    "importSummary": "以下内容将被加载到表单中：",
+    "emptyValuesSkipped": "空值和遮盖值将被跳过。导入后必须点击「保存设置」以持久化。",
+    "githubAccessToken": {
+      "label": "GitHub 访问令牌",
+      "hint": "GitHub Secret Hunt 和 TruffleHog 扫描器所需。私有仓库需要 repo 作用域，或使用细粒度令牌仅限指定仓库。"
+    },
+    "tavilyApiKey": {
+      "label": "Tavily API 密钥",
+      "hint": "为 CVE 研究和漏洞查找启用 web_search 工具。"
+    },
+    "shodanApiKey": {
+      "label": "Shodan API 密钥",
+      "hint": "启用 shodan 工具进行全网 OSINT（搜索、主机信息、DNS、计数）。"
+    },
+    "serpApiKey": {
+      "label": "SerpAPI 密钥",
+      "hint": "启用 google_dork 工具进行 Google 语法 OSINT（site:、inurl:、filetype:）。免费版：250 次搜索/月。"
+    },
+    "nvdApiKey": {
+      "label": "NVD API 密钥",
+      "hint": "NIST NVD API 密钥 — 将 CVE 查找速率限制从 5 次提升至 120 次/30秒。"
+    },
+    "vulnersApiKey": {
+      "label": "Vulners API 密钥",
+      "hint": "Vulners CVE 数据库 — NVD 的替代方案，提供更丰富的漏洞利用数据。"
+    },
+    "urlscanApiKey": {
+      "label": "URLScan API 密钥",
+      "hint": "可选 — 用于 URLScan.io OSINT 增强以提高速率限制。无密钥也可工作（仅公开结果）。"
+    },
+    "censysApiToken": {
+      "label": "Censys API 令牌",
+      "hint": "Censys 平台个人访问令牌 — 用于侦察管线和 Uncover 引擎。"
+    },
+    "censysOrgId": {
+      "label": "Censys 组织 ID",
+      "hint": "Censys 组织 ID — 与上述 API 令牌配对。在您的 Censys 账户页面查找。"
+    },
+    "foaApiKey": {
+      "label": "FOFA API 密钥",
+      "hint": "FOFA 网络空间搜索 — 通过 Banner、证书、域名进行资产发现。密钥格式：email:key。"
+    },
+    "otxApiKey": {
+      "label": "AlienVault OTX 密钥",
+      "hint": "Open Threat Exchange — 威胁情报脉冲、恶意软件指标、被动 DNS、信誉评分。"
+    },
+    "netlasApiKey": {
+      "label": "Netlas API 密钥",
+      "hint": "Netlas.io — 包含 Banner、证书和 WHOIS 信息的全网扫描数据。"
+    },
+    "virusTotalApiKey": {
+      "label": "VirusTotal API 密钥",
+      "hint": "IP 和域名的多引擎信誉评估。免费层级：4 次查找/分钟，500 次/天。"
+    },
+    "zoomEyeApiKey": {
+      "label": "ZoomEye API 密钥",
+      "hint": "ZoomEye 网络空间搜索 — 带端口、Banner 和地理数据的主机/设备发现。"
+    },
+    "criminalIpApiKey": {
+      "label": "Criminal IP API 密钥",
+      "hint": "AI 驱动的威胁情报 — IP/域名风险评分、漏洞检测、代理/VPN/Tor 识别。"
+    },
+    "quakeApiKey": {
+      "label": "Quake API 密钥",
+      "hint": "360 Quake 网络空间搜索 — 通过服务、证书和 Banner 进行资产发现。"
+    },
+    "hunterApiKey": {
+      "label": "Hunter API 密钥",
+      "hint": "奇安信 Hunter 网络空间搜索 — 中国威胁情报平台。"
+    },
+    "publicWwwApiKey": {
+      "label": "PublicWWW API 密钥",
+      "hint": "搜索引擎，用于查找使用特定技术、脚本或代码片段的网站。"
+    },
+    "hunterHowApiKey": {
+      "label": "HunterHow API 密钥",
+      "hint": "hunter.how 互联网搜索 — 资产发现和侦察。"
+    },
+    "googleApiKey": {
+      "label": "Google 自定义搜索 API 密钥",
+      "hint": "Google 自定义搜索 JSON API — 用于 Uncover Google 搜索引擎（不同于 SerpAPI）。"
+    },
+    "googleApiCx": {
+      "label": "Google 自定义搜索 CX",
+      "hint": "可编程搜索引擎 ID — 与上述 Google API 密钥配对。"
+    },
+    "onypheApiKey": {
+      "label": "Onyphe API 密钥",
+      "hint": "Onyphe — 网络防御搜索引擎，用于暴露资产、威胁检测和攻击面管理。"
+    },
+    "driftnetApiKey": {
+      "label": "Driftnet API 密钥",
+      "hint": "Driftnet — 快速全网端口和服务发现。"
+    },
+    "wpscanApiToken": {
+      "label": "WPScan API 令牌",
+      "hint": "通过 WPScan 数据库丰富 execute_wpscan 结果中的漏洞数据。免费：25 次请求/天。"
+    },
+    "pdcpApiKey": {
+      "label": "PDCP API 密钥",
+      "hint": "可选。通过提升 ProjectDiscovery 的 CVE 数据库（vulnx）的 10 次/分钟匿名速率限制来丰富 cve_intel 工具。"
+    }
+  },
+  "tunneling": {
+    "title": "隧道",
+    "description": "配置反向 Shell 隧道。选择 ngrok（免费，单端口）或 chisel（多端口，需要 VPS）。更改立即生效。",
+    "ngrokAuthtoken": {
+      "label": "ngrok 认证令牌",
+      "hint": "启用 ngrok TCP 隧道用于反向 Shell（端口 4444）。仅支持无阶段载荷。"
+    },
+    "chiselServerUrl": {
+      "label": "Chisel 服务器 URL",
+      "hint": "您的 VPS chisel 服务器 URL。在 VPS 上运行：chisel server -p 9090 --reverse。隧道端口：4444（处理器）+ 8080（Web 投递）。"
+    },
+    "chiselAuth": {
+      "label": "Chisel 认证",
+      "hint": "chisel 服务器认证的 user:pass（可选 — 仅当您的 chisel 服务器需要认证时）。"
+    }
+  },
+  "system": {
+    "title": "系统",
+    "currentVersion": "当前版本",
+    "upToDate": "已是最新版本",
+    "updateAvailable": "有可用更新",
+    "updateCommand": "./redamon.sh update",
+    "copyCommand": "复制命令",
+    "copied": "已复制",
+    "changesSince": "自 v{current} 以来的变更：",
+    "changelog": "变更日志",
+    "troubleshooting": "故障排除"
+  },
+  "keyRotation": {
+    "title": "密钥轮换",
+    "extraKeys": "额外 API 密钥",
+    "rotateEveryN": "每 N 次调用轮换",
+    "rotationPool": "这些密钥加上上述主密钥组成轮换池。所有密钥被平等对待。",
+    "rotateEveryNDesc": "如此多次 API 调用后，切换到池中的下一个密钥（默认：10）。",
+    "clearAllExtraKeys": "清除所有额外密钥",
+    "configuredKeys": "{count} 个额外密钥已配置。在下方粘贴新密钥以替换它们。",
+    "pasteKeys": "在此粘贴 API 密钥，每行一个..."
+  },
+  "importKeys": {
+    "title": "导入 API 密钥",
+    "confirmImport": "导入",
+    "cancel": "取消",
+    "keysCount": "{count} 个 API 密钥",
+    "rotationCount": "{count} 个轮换配置",
+    "tunnelingCount": "{count} 个隧道字段"
+  },
+  "badges": {
+    "aiAgent": "AI 代理",
+    "reconPipeline": "侦察管线",
+    "standaloneUncover": "独立 + Uncover",
+    "githubSecretHunt": "GitHub Secret Hunt",
+    "truffleHog": "TruffleHog"
+  },
+  "categories": {
+    "general": "常规",
+    "vulnerabilities": "漏洞",
+    "tooling": "工具",
+    "scanModes": "扫描模式",
+    "frameworks": "框架",
+    "technologies": "技术",
+    "protocols": "协议",
+    "coordination": "协调",
+    "cloud": "云",
+    "mobile": "移动",
+    "apiSecurity": "API 安全",
+    "wireless": "无线",
+    "network": "网络",
+    "activeDirectory": "Active Directory",
+    "socialEngineering": "社会工程",
+    "reporting": "报告"
+  },
+  "saveSettings": "保存设置",
+  "settingsSaved": "设置已保存",
+  "failedToSave": "保存设置失败",
+  "selectUser": "请选择用户以配置设置。",
+  "noUserSelected": "选择用户以配置设置。"
+}

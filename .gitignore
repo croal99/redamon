@@ -225,3 +225,5 @@ knowledge_base/data/
 
 # DevergoLabs
 DevergoLabs/
+.codebuddy
+node_modules/

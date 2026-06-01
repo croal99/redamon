@@ -1,0 +1,14 @@
+{
+  "title": "RedAmon",
+  "description": "安全侦察与漏洞评估仪表板",
+  "signInToAccount": "登录您的账户",
+  "email": "邮箱",
+  "password": "密码",
+  "emailPlaceholder": "admin@redamon.local",
+  "passwordPlaceholder": "请输入密码",
+  "signIn": "登录",
+  "signingIn": "登录中...",
+  "loginFailed": "登录失败",
+  "unableToConnect": "无法连接至服务器",
+  "version": "版本"
+}
