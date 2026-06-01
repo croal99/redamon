@@ -66,7 +66,7 @@ export function CvssCell({ score }: { score: number | null | undefined }) {
   return <span className={`${styles.cvssBadge} ${cls}`}>{score.toFixed(1)}</span>
 }
 
-export function BoolChip({ value, trueLabel = 'yes', falseLabel = 'no' }: { value: boolean | null | undefined; trueLabel?: string; falseLabel?: string }) {
+export function BoolChip({ value, trueLabel = '是', falseLabel = '否' }: { value: boolean | null | undefined; trueLabel?: string; falseLabel?: string }) {
   if (value === null || value === undefined) return <span className={styles.nullCell}>-</span>
   return (
     <span className={value ? styles.boolTrue : styles.boolFalse}>

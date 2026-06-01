@@ -327,10 +327,10 @@ export function ProjectForm({
       })
       if (!res.ok) {
         const err = await res.json()
-        toast.error(err.error || 'Failed to save')
+        toast.error(err.error || '保存失败')
       }
     } catch {
-      toast.error('Failed to save setting')
+      toast.error('保存设置失败')
     }
   }, [projectId, mode, toast])
 
@@ -345,7 +345,7 @@ export function ProjectForm({
     setFormData(prev => ({ ...prev, ...preset.parameters }))
     setAppliedPreset(preset)
     setIsPresetModalOpen(false)
-    toast.success(`Recon preset "${preset.name}" applied`, 'Preset Applied')
+    toast.success(`已应用侦察预设 "${preset.name}"`, '预设已应用')
   }, [toast])
 
   const handleLoadUserPreset = useCallback((settings: Record<string, unknown>) => {
@@ -374,7 +374,7 @@ export function ProjectForm({
     // Run field validation
     const validationErrors = validateProjectForm(formData as unknown as Record<string, unknown>)
     if (validationErrors.length > 0) {
-      alertWarning('Validation errors:\n' + validationErrors.map(e => `- ${e.message}`).join('\n'))
+      alertWarning('验证错误:\n' + validationErrors.map(e => `- ${e.message}`).join('\n'))
       return
     }
 
@@ -397,7 +397,7 @@ export function ProjectForm({
       }
       await onSubmit(submitData)
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to save project'
+      const message = error instanceof Error ? error.message : '保存项目失败'
       if (message.toLowerCase().includes('guardrail') || message.toLowerCase().includes('permanently blocked')) {
         const reason = message
           .replace(/^Target blocked by guardrail:\s*/i, '')
@@ -413,16 +413,16 @@ export function ProjectForm({
     if (!onSaveAndStay) return
 
     if (!formData.name.trim()) {
-      alertWarning('Project name is required')
+      alertWarning('项目名称为必填项')
       return
     }
     if (!formData.ipMode && !formData.targetDomain.trim()) {
-      alertWarning('Target domain is required')
+      alertWarning('目标域名为必填项')
       return
     }
     const validationErrors = validateProjectForm(formData as unknown as Record<string, unknown>)
     if (validationErrors.length > 0) {
-      alertWarning('Validation errors:\n' + validationErrors.map(e => `- ${e.message}`).join('\n'))
+      alertWarning('验证错误:\n' + validationErrors.map(e => `- ${e.message}`).join('\n'))
       return
     }
     if (!formData.ipMode && formData.targetDomain) {
@@ -440,9 +440,9 @@ export function ProjectForm({
         ...(mode === 'create' && projectId ? { id: projectId } : {}),
       }
       await onSaveAndStay(submitData)
-      toast.success('Project saved')
+      toast.success('项目已保存')
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to save project'
+      const message = error instanceof Error ? error.message : '保存项目失败'
       if (message.toLowerCase().includes('guardrail') || message.toLowerCase().includes('permanently blocked')) {
         const reason = message
           .replace(/^Target blocked by guardrail:\s*/i, '')
@@ -466,17 +466,17 @@ export function ProjectForm({
       })
       if (!response.ok) {
         const data = await response.json().catch(() => ({}))
-        toast.error(data.error || 'Failed to start partial recon')
+        toast.error(data.error || '启动局部侦察失败')
         return
       }
       const data: PartialReconState = await response.json()
       setPartialReconToolId(null)
-      toast.success('Partial recon started')
+      toast.success('局部侦察已启动')
       // Store locally for immediate drawer rendering, then open it
       setLocalPartialRun(data)
       setActivePartialLogsRunId(data.run_id)
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to start partial recon')
+      toast.error(err instanceof Error ? err.message : '启动局部侦察失败')
     } finally {
       setIsPartialReconStarting(false)
     }

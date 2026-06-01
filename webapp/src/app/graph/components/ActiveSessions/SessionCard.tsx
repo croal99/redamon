@@ -69,10 +69,10 @@ export const SessionCard = memo(function SessionCard({
           className={`${styles.actionBtn} ${styles.killBtn} ${killing ? styles.loading : ''}`}
           onClick={handleKill}
           disabled={killing}
-          title="Kill session"
+          title="终止会话"
         >
           {killing ? <Loader2 size={11} className={styles.spinner} /> : <Skull size={11} />}
-          {killing ? 'Killing...' : 'Kill'}
+          {killing ? '终止中...' : '终止'}
         </button>
       </div>
     </div>
@@ -142,10 +142,10 @@ export const JobCard = memo(function JobCard({ job, onKill }: JobCardProps) {
         className={`${styles.actionBtn} ${styles.killBtn} ${stopping ? styles.loading : ''}`}
         onClick={handleStop}
         disabled={stopping}
-        title="Stop job"
+        title="停止任务"
       >
         {stopping ? <Loader2 size={10} className={styles.spinner} /> : <Square size={10} />}
-        {stopping ? 'Stopping...' : 'Stop'}
+        {stopping ? '停止中...' : '停止'}
       </button>
     </div>
   )

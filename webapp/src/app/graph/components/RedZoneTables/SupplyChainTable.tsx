@@ -98,18 +98,19 @@ export const SupplyChainTable = memo(function SupplyChainTable({ projectId }: Pr
 
   return (
     <RedZoneTableShell
-      title="Supply-Chain & Dependency Panel"
+      title="供应链与依赖面板"
+
       meta={meta}
       search={search}
       onSearchChange={setSearch}
-      searchPlaceholder="Search package, framework, title, URL..."
+      searchPlaceholder="搜索包名、框架、标题、URL..."
       exportConfig={exportConfig}
       onRefresh={refetch}
       isLoading={isLoading}
       error={error}
       rowCount={rows.length}
       filteredRowCount={filtered.length}
-      emptyLabel="No supply-chain findings yet. Enable js_recon with dependency-confusion + source-map + framework detection."
+      emptyLabel="暂无供应链发现。启用 js_recon 并开启依赖混淆 + source-map + 框架检测。"
     >
       <table className={rowStyles.table}>
         <thead>

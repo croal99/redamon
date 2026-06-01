@@ -10,7 +10,7 @@ import { ThemeDbBridge } from '@/components/ThemeDbBridge'
 
 export const metadata: Metadata = {
   title: 'RedAmon',
-  description: 'Security reconnaissance and vulnerability assessment dashboard',
+  description: '安全侦察与漏洞评估仪表盘',
   icons: {
     icon: '/favicon.ico',
     apple: '/favicon.png',
@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="zh-CN" suppressHydrationWarning>
       <head>
         {/* Prevent flash of wrong theme */}
         <script

@@ -46,7 +46,7 @@ export default function GraphError({
           marginBottom: 'var(--space-3)',
         }}
       >
-        Failed to load graph view
+        加载图谱视图失败
       </h2>
       <p
         style={{
@@ -55,7 +55,7 @@ export default function GraphError({
           maxWidth: '480px',
         }}
       >
-        {error.message || 'An unexpected error occurred while rendering the graph.'}
+        {error.message || '渲染图谱时发生了意外错误。'}
       </p>
       <button
         type="button"
@@ -72,7 +72,7 @@ export default function GraphError({
           transition: 'var(--transition-all)',
         }}
       >
-        Retry
+        重试
       </button>
     </div>
   )

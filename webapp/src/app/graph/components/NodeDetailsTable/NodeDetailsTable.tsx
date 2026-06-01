@@ -87,8 +87,8 @@ export function NodeDetailsTable({ data, isLoading, error }: NodeDetailsTablePro
   // count columns get fixed keys that can't collide with `prop:*` IDs.
   const FIXED_HIDEABLE = useMemo(
     () => [
-      { storageKey: 'connectionsIn', columnId: 'connectionsIn', label: 'In' },
-      { storageKey: 'connectionsOut', columnId: 'connectionsOut', label: 'Out' },
+      { storageKey: 'connectionsIn', columnId: 'connectionsIn', label: '入' },
+      { storageKey: 'connectionsOut', columnId: 'connectionsOut', label: '出' },
     ],
     []
   )
@@ -124,7 +124,7 @@ export function NodeDetailsTable({ data, isLoading, error }: NodeDetailsTablePro
             className={styles.expandBtn}
             onClick={row.getToggleExpandedHandler()}
             aria-expanded={row.getIsExpanded()}
-            aria-label={row.getIsExpanded() ? 'Collapse row' : 'Expand row'}
+            aria-label={row.getIsExpanded() ? '折叠行' : '展开行'}
           >
             {row.getIsExpanded() ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
           </button>
@@ -132,7 +132,7 @@ export function NodeDetailsTable({ data, isLoading, error }: NodeDetailsTablePro
       }),
       columnHelper.accessor(row => row.node.name, {
         id: 'name',
-        header: 'Name',
+        header: '名称',
         size: 320,
         enableHiding: false,
         cell: info => {
@@ -170,7 +170,7 @@ export function NodeDetailsTable({ data, isLoading, error }: NodeDetailsTablePro
     const trailing = [
       columnHelper.accessor(row => row.connectionsIn.length, {
         id: 'connectionsIn',
-        header: 'In',
+        header: '入',
         size: 70,
         cell: info => {
           const n = info.getValue()
@@ -183,7 +183,7 @@ export function NodeDetailsTable({ data, isLoading, error }: NodeDetailsTablePro
       }),
       columnHelper.accessor(row => row.connectionsOut.length, {
         id: 'connectionsOut',
-        header: 'Out',
+        header: '出',
         size: 70,
         cell: info => {
           const n = info.getValue()
@@ -306,7 +306,7 @@ export function NodeDetailsTable({ data, isLoading, error }: NodeDetailsTablePro
     return (
       <div className={styles.stateContainer}>
         <Loader2 size={32} className={styles.spinner} />
-        <p className={styles.stateText}>Loading graph data...</p>
+        <p className={styles.stateText}>加载图谱数据中...</p>
       </div>
     )
   }
@@ -314,7 +314,7 @@ export function NodeDetailsTable({ data, isLoading, error }: NodeDetailsTablePro
     return (
       <div className={styles.stateContainer}>
         <AlertCircle size={32} className={styles.errorIcon} />
-        <p className={styles.stateText}>Failed to load graph data</p>
+        <p className={styles.stateText}>加载图谱数据失败</p>
         <p className={styles.stateSubtext}>{error.message}</p>
       </div>
     )
@@ -323,8 +323,8 @@ export function NodeDetailsTable({ data, isLoading, error }: NodeDetailsTablePro
     return (
       <div className={styles.stateContainer}>
         <Database size={32} className={styles.emptyIcon} />
-        <p className={styles.stateText}>No data yet</p>
-        <p className={styles.stateSubtext}>Run a reconnaissance scan to populate the graph.</p>
+        <p className={styles.stateText}>暂无数据</p>
+        <p className={styles.stateSubtext}>运行侦察扫描以填充图谱。</p>
       </div>
     )
   }
@@ -342,10 +342,10 @@ export function NodeDetailsTable({ data, isLoading, error }: NodeDetailsTablePro
             <input
               type="text"
               className={styles.searchInput}
-              placeholder="Search…"
+              placeholder="搜索…"
               value={globalFilter}
               onChange={e => setGlobalFilter(e.target.value)}
-              aria-label="Search nodes"
+              aria-label="搜索节点"
             />
           </div>
           <span className={styles.rowCount}>
@@ -358,8 +358,8 @@ export function NodeDetailsTable({ data, isLoading, error }: NodeDetailsTablePro
             className={styles.exportBtn}
             onClick={handleExportCsv}
             disabled={rows.length === 0 || !!exporting}
-            aria-label="Export to CSV"
-            title="Export to CSV"
+            aria-label="导出为 CSV"
+            title="导出为 CSV"
           >
             {exporting === 'csv'
               ? <Loader2 size={12} className={styles.spinner} />
@@ -370,8 +370,8 @@ export function NodeDetailsTable({ data, isLoading, error }: NodeDetailsTablePro
             className={styles.exportBtn}
             onClick={handleExportJson}
             disabled={rows.length === 0 || !!exporting}
-            aria-label="Export to JSON"
-            title="Export to JSON"
+            aria-label="导出为 JSON"
+            title="导出为 JSON"
           >
             {exporting === 'json'
               ? <Loader2 size={12} className={styles.spinner} />
@@ -382,8 +382,8 @@ export function NodeDetailsTable({ data, isLoading, error }: NodeDetailsTablePro
             className={styles.exportBtn}
             onClick={handleExportMarkdown}
             disabled={rows.length === 0 || !!exporting}
-            aria-label="Export to Markdown"
-            title="Export to Markdown"
+            aria-label="导出为 Markdown"
+            title="导出为 Markdown"
           >
             {exporting === 'md'
               ? <Loader2 size={12} className={styles.spinner} />
@@ -400,7 +400,7 @@ export function NodeDetailsTable({ data, isLoading, error }: NodeDetailsTablePro
               aria-expanded={typeMenuOpen}
             >
               <span className={styles.typeDot} style={{ background: selectedColor }} />
-              <span className={styles.menuButtonLabel}>{selectedNodeType ?? 'Select type'}</span>
+              <span className={styles.menuButtonLabel}>{selectedNodeType ?? '选择类型'}</span>
               {selectedNodeType && (
                 <span className={styles.menuButtonCount}>
                   {typeCounts.get(selectedNodeType)}
@@ -443,7 +443,7 @@ export function NodeDetailsTable({ data, isLoading, error }: NodeDetailsTablePro
               aria-expanded={colsMenuOpen}
             >
               <Columns3 size={14} />
-              <span className={styles.menuButtonLabel}>Columns</span>
+              <span className={styles.menuButtonLabel}>列</span>
               <span className={styles.menuButtonCount}>
                 {visibleHideableCount}/{totalHideableCount}
               </span>
@@ -453,10 +453,10 @@ export function NodeDetailsTable({ data, isLoading, error }: NodeDetailsTablePro
               <div className={styles.dropdownMenu} role="menu">
                 <div className={styles.dropdownActions}>
                   <button className={styles.dropdownActionBtn} onClick={showAllColumns}>
-                    Show all
+                    全部显示
                   </button>
                   <button className={styles.dropdownActionBtn} onClick={hideAllColumns}>
-                    Hide all
+                    全部隐藏
                   </button>
                 </div>
                 <div className={styles.dropdownList}>
@@ -547,15 +547,15 @@ export function NodeDetailsTable({ data, isLoading, error }: NodeDetailsTablePro
       {/* Pagination */}
       <div className={styles.pagination}>
         <div className={styles.paginationInfo}>
-          Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount() || 1}
-          <span className={styles.paginationRows}>({filteredRowCount} rows)</span>
+          第 {table.getState().pagination.pageIndex + 1} 页，共 {table.getPageCount() || 1} 页
+          <span className={styles.paginationRows}>({filteredRowCount} 行)</span>
         </div>
         <div className={styles.paginationControls}>
           <button
             className={styles.pageBtn}
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
-            aria-label="First page"
+            aria-label="第一页"
           >
             <ChevronsLeft size={14} />
           </button>
@@ -563,7 +563,7 @@ export function NodeDetailsTable({ data, isLoading, error }: NodeDetailsTablePro
             className={styles.pageBtn}
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
-            aria-label="Previous page"
+            aria-label="上一页"
           >
             <ChevronLeft size={14} />
           </button>
@@ -571,7 +571,7 @@ export function NodeDetailsTable({ data, isLoading, error }: NodeDetailsTablePro
             className={styles.pageBtn}
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            aria-label="Next page"
+            aria-label="下一页"
           >
             <ChevronRight size={14} />
           </button>
@@ -579,7 +579,7 @@ export function NodeDetailsTable({ data, isLoading, error }: NodeDetailsTablePro
             className={styles.pageBtn}
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
-            aria-label="Last page"
+            aria-label="最后一页"
           >
             <ChevronsRight size={14} />
           </button>
@@ -589,11 +589,11 @@ export function NodeDetailsTable({ data, isLoading, error }: NodeDetailsTablePro
             value={table.getState().pagination.pageSize}
             onChange={e => table.setPageSize(Number(e.target.value))}
             className={styles.select}
-            aria-label="Rows per page"
+            aria-label="每页行数"
           >
             {[10, 25, 50, 100].map(size => (
               <option key={size} value={size}>
-                {size} rows
+                {size} 行
               </option>
             ))}
           </select>

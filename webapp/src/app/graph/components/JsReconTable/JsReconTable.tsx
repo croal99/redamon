@@ -40,12 +40,12 @@ interface JsReconData {
 }
 
 const SUB_TABS = [
-  { id: 'secrets', label: 'Secrets' },
-  { id: 'endpoints', label: 'Endpoints' },
-  { id: 'dependencies', label: 'Dependencies' },
-  { id: 'sourcemaps', label: 'Source Maps' },
-  { id: 'security', label: 'Security' },
-  { id: 'surface', label: 'Attack Surface' },
+  { id: 'secrets', label: '密钥' },
+  { id: 'endpoints', label: '端点' },
+  { id: 'dependencies', label: '依赖' },
+  { id: 'sourcemaps', label: 'Source Map' },
+  { id: 'security', label: '安全' },
+  { id: 'surface', label: '攻击面' },
 ] as const
 
 const PAGE_SIZE = 50
@@ -154,7 +154,7 @@ export async function exportJsReconMarkdown(data: JsReconData) {
   const sheets = buildJsReconSheets(data).filter(s => s.rows.length > 0)
 
   async function* combined(): AsyncGenerator<string> {
-    yield `# JS Recon Findings\n\nGenerated: ${new Date().toISOString()}\n\n`
+    yield `# JS 侦察发现\n\n生成时间: ${new Date().toISOString()}\n\n`
     for (const sheet of sheets) {
       yield `## ${sheet.name} (${sheet.rows.length})\n\n`
       yield* streamMarkdownTableChunks(
@@ -179,10 +179,10 @@ function sevBadge(severity: string) {
 }
 
 function valBadge(status: string) {
-  if (status === 'validated') return <span className={`${styles.badge} ${styles.badgeLive}`}>LIVE</span>
-  if (status === 'format_validated') return <span className={`${styles.badge} ${styles.badgeFormatValid}`}>format ok</span>
-  if (status === 'invalid') return <span className={`${styles.badge} ${styles.badgeInvalid}`}>invalid</span>
-  return <span className={`${styles.badge} ${styles.badgeUnvalidated}`}>{status || 'n/a'}</span>
+  if (status === 'validated') return <span className={`${styles.badge} ${styles.badgeLive}`}>已验证</span>
+  if (status === 'format_validated') return <span className={`${styles.badge} ${styles.badgeFormatValid}`}>格式正确</span>
+  if (status === 'invalid') return <span className={`${styles.badge} ${styles.badgeInvalid}`}>无效</span>
+  return <span className={`${styles.badge} ${styles.badgeUnvalidated}`}>{status || '未验证'}</span>
 }
 
 const VALIDATION_PRIORITY: Record<string, number> = {
@@ -218,13 +218,13 @@ export const JsReconTable = memo(function JsReconTable({
     setError(null)
     try {
       const res = await fetch(`/api/js-recon/${projectId}/download`)
-      if (res.status === 404) { setError('No JS Recon data. Run a recon scan with JS Recon enabled.'); return }
+      if (res.status === 404) { setError('无 JS 侦察数据。请运行启用 JS 侦察的扫描。'); return }
       if (!res.ok) throw new Error('Failed to fetch')
       const json = await res.json()
       setData(json)
       onDataLoaded?.(json)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to load')
+      setError(e instanceof Error ? e.message : '加载失败')
     } finally {
       setIsLoading(false)
     }
@@ -245,10 +245,10 @@ export const JsReconTable = memo(function JsReconTable({
     }
   }, [data])
 
-  if (!projectId) return <div className={styles.stateContainer}>Select a project.</div>
-  if (isLoading) return <div className={styles.stateContainer}><Loader2 size={24} className={styles.spinner} /> Loading JS Recon data...</div>
+  if (!projectId) return <div className={styles.stateContainer}>请选择一个项目。</div>
+  if (isLoading) return <div className={styles.stateContainer}><Loader2 size={24} className={styles.spinner} /> 加载 JS 侦察数据中...</div>
   if (error) return <div className={styles.stateContainer}><AlertTriangle size={20} />{error}</div>
-  if (!data) return <div className={styles.stateContainer}>No data loaded.</div>
+  if (!data) return <div className={styles.stateContainer}>未加载数据。</div>
 
   return (
     <div className={styles.container}>
@@ -282,7 +282,7 @@ export const JsReconTable = memo(function JsReconTable({
         if (limit < totalForTab) return (
           <div className={styles.pagination}>
             <button className={styles.loadMoreBtn} onClick={() => setLimit(l => l + PAGE_SIZE)}>
-              Showing {Math.min(limit, totalForTab)} of {totalForTab} -- Load more
+              显示 {Math.min(limit, totalForTab)} / {totalForTab} — 加载更多
             </button>
           </div>
         )
@@ -330,7 +330,7 @@ function CopyButton({ text }: { text: string }) {
       type="button"
       className={styles.copyButton}
       onClick={handleCopy}
-      title="Copy full value"
+      title="复制完整值"
     >
       {copied ? <Check size={12} /> : <Copy size={12} />}
     </button>
@@ -339,10 +339,10 @@ function CopyButton({ text }: { text: string }) {
 
 function SecretsTable({ rows, search, limit }: { rows: any[]; search: string; limit: number }) {
   const filtered = sortSecrets(filterRows(rows, search)).slice(0, limit)
-  if (!filtered.length) return <div className={styles.stateContainer}>No secrets found.</div>
+  if (!filtered.length) return <div className={styles.stateContainer}>未发现密钥。</div>
   return (
     <table className={styles.table}>
-      <thead><tr><th>Severity</th><th>Type</th><th>Redacted Value</th><th>Source</th><th>Validation</th><th>Confidence</th></tr></thead>
+      <thead><tr><th>严重性</th><th>类型</th><th>脱敏值</th><th>来源</th><th>验证</th><th>置信度</th></tr></thead>
       <tbody>
         {filtered.map((s, i) => (
           <tr key={s.id || i}>
@@ -364,10 +364,10 @@ function SecretsTable({ rows, search, limit }: { rows: any[]; search: string; li
 
 function EndpointsTable({ rows, search, limit }: { rows: any[]; search: string; limit: number }) {
   const filtered = filterRows(rows, search).slice(0, limit)
-  if (!filtered.length) return <div className={styles.stateContainer}>No endpoints extracted.</div>
+  if (!filtered.length) return <div className={styles.stateContainer}>未提取到端点。</div>
   return (
     <table className={styles.table}>
-      <thead><tr><th>Severity</th><th>Method</th><th>Path</th><th>Type</th><th>Category</th><th>Source</th></tr></thead>
+      <thead><tr><th>严重性</th><th>方法</th><th>路径</th><th>类型</th><th>分类</th><th>来源</th></tr></thead>
       <tbody>
         {filtered.map((ep, i) => (
           <tr key={ep.id || i}>
@@ -386,17 +386,17 @@ function EndpointsTable({ rows, search, limit }: { rows: any[]; search: string; 
 
 function DepsTable({ rows, search, limit }: { rows: any[]; search: string; limit: number }) {
   const filtered = filterRows(rows, search).slice(0, limit)
-  if (!filtered.length) return <div className={styles.stateContainer}>No dependency confusion findings.</div>
+  if (!filtered.length) return <div className={styles.stateContainer}>无依赖混淆发现。</div>
   return (
     <table className={styles.table}>
-      <thead><tr><th>Severity</th><th>Package</th><th>Scope</th><th>On npm?</th><th>Detail</th></tr></thead>
+      <thead><tr><th>严重性</th><th>包名</th><th>范围</th><th>npm 存在？</th><th>详情</th></tr></thead>
       <tbody>
         {filtered.map((d, i) => (
           <tr key={d.id || i}>
             <td>{sevBadge(d.severity)}</td>
             <td><code className={styles.mono}>{d.package_name}</code></td>
             <td>{d.scope}</td>
-            <td>{d.npm_exists ? 'Yes' : 'No'}</td>
+            <td>{d.npm_exists ? '是' : '否'}</td>
             <td className={styles.truncate} title={d.detail}>{d.title}</td>
           </tr>
         ))}
@@ -407,16 +407,16 @@ function DepsTable({ rows, search, limit }: { rows: any[]; search: string; limit
 
 function SourceMapsTable({ rows, search, limit }: { rows: any[]; search: string; limit: number }) {
   const filtered = filterRows(rows, search).slice(0, limit)
-  if (!filtered.length) return <div className={styles.stateContainer}>No source maps discovered.</div>
+  if (!filtered.length) return <div className={styles.stateContainer}>未发现 Source Map。</div>
   return (
     <table className={styles.table}>
-      <thead><tr><th>JS File</th><th>Map URL</th><th>Accessible</th><th>Files</th><th>Secrets</th><th>Discovery</th></tr></thead>
+      <thead><tr><th>JS 文件</th><th>Map URL</th><th>可访问</th><th>文件数</th><th>密钥</th><th>发现方式</th></tr></thead>
       <tbody>
         {filtered.map((sm, i) => (
           <tr key={sm.id || i}>
             <td className={styles.truncate} title={sm.js_url}><code className={styles.mono}><ExternalLink href={sm.js_url}>{sm.js_url}</ExternalLink></code></td>
             <td className={styles.truncate} title={sm.map_url}><code className={styles.mono}><ExternalLink href={sm.map_url}>{sm.map_url}</ExternalLink></code></td>
-            <td>{sm.accessible ? 'Yes' : 'No'}</td>
+            <td>{sm.accessible ? '是' : '否'}</td>
             <td>{sm.files_count || 0}</td>
             <td>{sm.secrets_in_source || 0}</td>
             <td>{sm.discovery_method}</td>
@@ -434,7 +434,7 @@ function SecurityTable({ data, search, limit }: { data: JsReconData; search: str
   const refs = filterRows(data.object_references || [], search)
 
   if (!frameworks.length && !sinks.length && !comments.length && !refs.length)
-    return <div className={styles.stateContainer}>No security pattern findings.</div>
+    return <div className={styles.stateContainer}>无安全模式发现。</div>
 
   // Calculate per-section limits upfront (not during render)
   let budget = limit
@@ -447,9 +447,9 @@ function SecurityTable({ data, search, limit }: { data: JsReconData; search: str
     <>
       {frameworks.length > 0 && (
         <>
-          <div className={styles.sectionTitle}>Frameworks ({frameworks.length})</div>
+          <div className={styles.sectionTitle}>框架 ({frameworks.length})</div>
           <table className={styles.table}>
-            <thead><tr><th>Framework</th><th>Version</th><th>Source</th></tr></thead>
+            <thead><tr><th>框架</th><th>版本</th><th>来源</th></tr></thead>
             <tbody>{frameworks.slice(0, fwLimit).map((f, i) => (
               <tr key={f.id || i}><td>{f.name}</td><td>{f.version || '-'}</td><td className={styles.truncate} title={f.source_url}><ExternalLink href={f.source_url}>{f.source_url}</ExternalLink></td></tr>
             ))}</tbody>
@@ -458,9 +458,9 @@ function SecurityTable({ data, search, limit }: { data: JsReconData; search: str
       )}
       {sinks.length > 0 && sinkLimit > 0 && (
         <>
-          <div className={styles.sectionTitle}>DOM Sinks ({sinks.length})</div>
+          <div className={styles.sectionTitle}>DOM 接收器 ({sinks.length})</div>
           <table className={styles.table}>
-            <thead><tr><th>Severity</th><th>Type</th><th>Pattern</th><th>Source</th><th>Line</th></tr></thead>
+            <thead><tr><th>严重性</th><th>类型</th><th>模式</th><th>来源</th><th>行号</th></tr></thead>
             <tbody>{sinks.slice(0, sinkLimit).map((s, i) => (
               <tr key={s.id || i}>
                 <td>{sevBadge(s.severity)}</td>
@@ -475,9 +475,9 @@ function SecurityTable({ data, search, limit }: { data: JsReconData; search: str
       )}
       {comments.length > 0 && cmtLimit > 0 && (
         <>
-          <div className={styles.sectionTitle}>Developer Comments ({comments.length})</div>
+          <div className={styles.sectionTitle}>开发者注释 ({comments.length})</div>
           <table className={styles.table}>
-            <thead><tr><th>Severity</th><th>Type</th><th>Content</th><th>Source</th><th>Line</th></tr></thead>
+            <thead><tr><th>严重性</th><th>类型</th><th>内容</th><th>来源</th><th>行号</th></tr></thead>
             <tbody>{comments.slice(0, cmtLimit).map((c, i) => (
               <tr key={c.id || i}>
                 <td>{sevBadge(c.severity)}</td>
@@ -492,9 +492,9 @@ function SecurityTable({ data, search, limit }: { data: JsReconData; search: str
       )}
       {refs.length > 0 && refLimit > 0 && (
         <>
-          <div className={styles.sectionTitle}>Object References / IDOR ({refs.length})</div>
+          <div className={styles.sectionTitle}>对象引用 / IDOR ({refs.length})</div>
           <table className={styles.table}>
-            <thead><tr><th>Type</th><th>Value</th><th>Source</th></tr></thead>
+            <thead><tr><th>类型</th><th>值</th><th>来源</th></tr></thead>
             <tbody>{refs.slice(0, refLimit).map((r, i) => (
               <tr key={i}><td>{r.type}</td><td><code className={styles.mono}>{r.value}</code></td><td className={styles.truncate} title={r.source_url}><ExternalLink href={r.source_url}>{r.source_url}</ExternalLink></td></tr>
             ))}</tbody>
@@ -513,7 +513,7 @@ function SurfaceTable({ data, search, limit }: { data: JsReconData; search: stri
   const extDomains = filterRows(data.external_domains || [], search)
 
   if (!subs.length && !cloud.length && !emails.length && !ips.length && !extDomains.length)
-    return <div className={styles.stateContainer}>No attack surface data found.</div>
+    return <div className={styles.stateContainer}>未发现攻击面数据。</div>
 
   // Calculate per-section limits upfront
   let budget = limit
@@ -527,9 +527,9 @@ function SurfaceTable({ data, search, limit }: { data: JsReconData; search: stri
     <>
       {subs.length > 0 && (
         <>
-          <div className={styles.sectionTitle}>New Subdomains ({subs.length})</div>
+          <div className={styles.sectionTitle}>新子域名 ({subs.length})</div>
           <table className={styles.table}>
-            <thead><tr><th>Subdomain</th></tr></thead>
+            <thead><tr><th>子域名</th></tr></thead>
             <tbody>{subs.slice(0, subsLimit).map(s => (
               <tr key={s}><td><code className={styles.mono}>{s}</code></td></tr>
             ))}</tbody>
@@ -538,9 +538,9 @@ function SurfaceTable({ data, search, limit }: { data: JsReconData; search: stri
       )}
       {cloud.length > 0 && cloudLimit > 0 && (
         <>
-          <div className={styles.sectionTitle}>Cloud Assets ({cloud.length})</div>
+          <div className={styles.sectionTitle}>云资产 ({cloud.length})</div>
           <table className={styles.table}>
-            <thead><tr><th>Provider</th><th>Type</th><th>URL</th><th>Source</th></tr></thead>
+            <thead><tr><th>提供商</th><th>类型</th><th>URL</th><th>来源</th></tr></thead>
             <tbody>{cloud.slice(0, cloudLimit).map((a, i) => (
               <tr key={i}><td>{a.provider}</td><td>{a.type}</td><td className={styles.truncate} title={a.url}><code className={styles.mono}><ExternalLink href={a.url}>{a.url}</ExternalLink></code></td><td className={styles.truncate} title={a.source_url}><ExternalLink href={a.source_url}>{a.source_url}</ExternalLink></td></tr>
             ))}</tbody>
@@ -549,9 +549,9 @@ function SurfaceTable({ data, search, limit }: { data: JsReconData; search: stri
       )}
       {emails.length > 0 && emailsLimit > 0 && (
         <>
-          <div className={styles.sectionTitle}>Email Addresses ({emails.length})</div>
+          <div className={styles.sectionTitle}>邮箱地址 ({emails.length})</div>
           <table className={styles.table}>
-            <thead><tr><th>Email</th><th>Source</th></tr></thead>
+            <thead><tr><th>邮箱</th><th>来源</th></tr></thead>
             <tbody>{emails.slice(0, emailsLimit).map((e, i) => (
               <tr key={i}><td>{e.email}</td><td className={styles.truncate} title={e.source_url}><ExternalLink href={e.source_url}>{e.source_url}</ExternalLink></td></tr>
             ))}</tbody>
@@ -560,9 +560,9 @@ function SurfaceTable({ data, search, limit }: { data: JsReconData; search: stri
       )}
       {ips.length > 0 && ipsLimit > 0 && (
         <>
-          <div className={styles.sectionTitle}>Internal IPs ({ips.length})</div>
+          <div className={styles.sectionTitle}>内部 IP ({ips.length})</div>
           <table className={styles.table}>
-            <thead><tr><th>IP</th><th>Type</th><th>Source</th></tr></thead>
+            <thead><tr><th>IP</th><th>类型</th><th>来源</th></tr></thead>
             <tbody>{ips.slice(0, ipsLimit).map((ip, i) => (
               <tr key={i}><td><code className={styles.mono}>{ip.ip}</code></td><td>{ip.type}</td><td className={styles.truncate} title={ip.source_url}><ExternalLink href={ip.source_url}>{ip.source_url}</ExternalLink></td></tr>
             ))}</tbody>
@@ -571,9 +571,9 @@ function SurfaceTable({ data, search, limit }: { data: JsReconData; search: stri
       )}
       {extDomains.length > 0 && extLimit > 0 && (
         <>
-          <div className={styles.sectionTitle}>External Domains ({extDomains.length})</div>
+          <div className={styles.sectionTitle}>外部域名 ({extDomains.length})</div>
           <table className={styles.table}>
-            <thead><tr><th>Domain</th><th>Times Seen</th></tr></thead>
+            <thead><tr><th>域名</th><th>出现次数</th></tr></thead>
             <tbody>{extDomains.slice(0, extLimit).map((d, i) => (
               <tr key={i}><td><code className={styles.mono}>{d.domain}</code></td><td>{d.times_seen}</td></tr>
             ))}</tbody>

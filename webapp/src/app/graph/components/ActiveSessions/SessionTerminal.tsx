@@ -84,7 +84,7 @@ export const SessionTerminal = memo(function SessionTerminal({
     const result = await onInteract(sessionId, command)
 
     if (result.busy) {
-      setLines(prev => [...prev, { text: result.message || 'Agent is busy, try again shortly', type: 'error' }])
+      setLines(prev => [...prev, { text: result.message || '智能体正忙，请稍后重试', type: 'error' }])
     } else if (result.output) {
       setLines(prev => [...prev, { text: result.output!, type: 'output' }])
     }
@@ -137,7 +137,7 @@ export const SessionTerminal = memo(function SessionTerminal({
 
       if (!resp.ok) {
         const data = await resp.json().catch(() => ({ error: 'Request failed' }))
-        setNlpError(data.error || `Error ${resp.status}`)
+        setNlpError(data.error || `错误 ${resp.status}`)
         return
       }
 
@@ -148,7 +148,7 @@ export const SessionTerminal = memo(function SessionTerminal({
         inputRef.current?.focus()
       }
     } catch (err) {
-      setNlpError(err instanceof Error ? err.message : 'Network error')
+      setNlpError(err instanceof Error ? err.message : '网络错误')
     } finally {
       setIsGenerating(false)
     }
@@ -166,7 +166,7 @@ export const SessionTerminal = memo(function SessionTerminal({
     return (
       <div className={styles.emptyTerminal}>
         <Terminal size={32} />
-        <p>Select a session to interact</p>
+        <p>选择一个会话进行交互</p>
       </div>
     )
   }
@@ -178,14 +178,14 @@ export const SessionTerminal = memo(function SessionTerminal({
       <div className={styles.terminalHeader}>
         <div className={styles.terminalTitle}>
           <span className={styles.dot} />
-          Session #{sessionId} — {sessionType}
+          会话 #{sessionId} — {sessionType}
         </div>
       </div>
 
       {agentBusy && (
         <div className={styles.busyBanner}>
           <AlertTriangle size={12} />
-          Agent is executing a command — interaction may be delayed
+          智能体正在执行命令 — 交互可能会延迟
         </div>
       )}
 
@@ -203,7 +203,7 @@ export const SessionTerminal = memo(function SessionTerminal({
         ))}
         {isSending && (
           <pre className={`${styles.outputLine} ${styles.sending}`}>
-            Executing...
+            执行中...
           </pre>
         )}
       </div>
@@ -217,7 +217,7 @@ export const SessionTerminal = memo(function SessionTerminal({
           value={nlpInput}
           onChange={e => { setNlpInput(e.target.value); setNlpError(null) }}
           onKeyDown={handleNlpKeyDown}
-          placeholder="Describe what you want to do..."
+          placeholder="描述您想执行的操作..."
           disabled={isGenerating}
           autoComplete="off"
           spellCheck={false}
@@ -229,7 +229,7 @@ export const SessionTerminal = memo(function SessionTerminal({
             className={styles.nlpBtn}
             onClick={handleNlpSubmit}
             disabled={!nlpInput.trim() || isGenerating}
-            title="Generate command"
+            title="生成命令"
           >
             <Send size={11} />
           </button>
@@ -245,7 +245,7 @@ export const SessionTerminal = memo(function SessionTerminal({
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Type a command..."
+          placeholder="输入命令..."
           disabled={isSending}
           autoComplete="off"
           spellCheck={false}
@@ -254,7 +254,7 @@ export const SessionTerminal = memo(function SessionTerminal({
           className={styles.sendBtn}
           onClick={handleSend}
           disabled={!input.trim() || isSending}
-          title="Send command"
+          title="发送命令"
         >
           <Send size={13} />
         </button>

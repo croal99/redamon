@@ -64,7 +64,7 @@ export const DataTable = memo(function DataTable({
           className={styles.expandBtn}
           onClick={row.getToggleExpandedHandler()}
           aria-expanded={row.getIsExpanded()}
-          aria-label={row.getIsExpanded() ? 'Collapse row' : 'Expand row'}
+          aria-label={row.getIsExpanded() ? '收起行' : '展开行'}
         >
           {row.getIsExpanded() ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
         </button>
@@ -72,7 +72,7 @@ export const DataTable = memo(function DataTable({
     }),
     columnHelper.accessor(row => row.node.type, {
       id: 'type',
-      header: 'Type',
+      header: '类型',
       size: 160,
       cell: info => {
         const type = info.getValue()
@@ -86,7 +86,7 @@ export const DataTable = memo(function DataTable({
     }),
     columnHelper.accessor(row => row.node.name, {
       id: 'name',
-      header: 'Name',
+      header: '名称',
       size: 400,
       cell: info => {
         const name = info.getValue()
@@ -137,7 +137,7 @@ export const DataTable = memo(function DataTable({
     }),
     columnHelper.accessor(row => row.connectionsIn.length, {
       id: 'connectionsIn',
-      header: 'In',
+      header: '入',
       size: 70,
       cell: info => {
         const count = info.getValue()
@@ -150,7 +150,7 @@ export const DataTable = memo(function DataTable({
     }),
     columnHelper.accessor(row => row.connectionsOut.length, {
       id: 'connectionsOut',
-      header: 'Out',
+      header: '出',
       size: 70,
       cell: info => {
         const count = info.getValue()
@@ -163,7 +163,7 @@ export const DataTable = memo(function DataTable({
     }),
     columnHelper.accessor(row => row.connectionsIn.length + row.connectionsOut.length, {
       id: 'totalConns',
-      header: 'Conns',
+      header: '连接',
       size: 60,
       cell: info => {
         const count = info.getValue()
@@ -217,7 +217,7 @@ export const DataTable = memo(function DataTable({
     return (
       <div className={styles.stateContainer}>
         <AlertCircle size={32} className={styles.errorIcon} />
-        <p className={styles.stateText}>Failed to load graph data</p>
+        <p className={styles.stateText}>加载图谱数据失败</p>
         <p className={styles.stateSubtext}>{error.message}</p>
       </div>
     )
@@ -228,8 +228,8 @@ export const DataTable = memo(function DataTable({
     return (
       <div className={styles.stateContainer}>
         <Database size={32} className={styles.emptyIcon} />
-        <p className={styles.stateText}>No data yet</p>
-        <p className={styles.stateSubtext}>Run a reconnaissance scan to populate the graph.</p>
+        <p className={styles.stateText}>暂无数据</p>
+        <p className={styles.stateSubtext}>运行侦察扫描以填充图谱。</p>
       </div>
     )
   }
@@ -304,10 +304,10 @@ export const DataTable = memo(function DataTable({
       {/* Pagination */}
       <div className={styles.pagination}>
         <div className={styles.paginationInfo}>
-          Page {table.getState().pagination.pageIndex + 1} of{' '}
-          {table.getPageCount() || 1}
+          第 {table.getState().pagination.pageIndex + 1} 页，共{' '}
+          {table.getPageCount() || 1} 页
           <span className={styles.paginationRows}>
-            ({filteredRowCount} rows)
+            ({filteredRowCount} 行)
           </span>
         </div>
 
@@ -316,7 +316,7 @@ export const DataTable = memo(function DataTable({
             className={styles.pageBtn}
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
-            aria-label="First page"
+            aria-label="首页"
           >
             <ChevronsLeft size={14} />
           </button>
@@ -324,7 +324,7 @@ export const DataTable = memo(function DataTable({
             className={styles.pageBtn}
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
-            aria-label="Previous page"
+            aria-label="上一页"
           >
             <ChevronLeft size={14} />
           </button>
@@ -340,7 +340,7 @@ export const DataTable = memo(function DataTable({
             className={styles.pageBtn}
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
-            aria-label="Last page"
+            aria-label="末页"
           >
             <ChevronsRight size={14} />
           </button>
@@ -351,11 +351,11 @@ export const DataTable = memo(function DataTable({
             value={table.getState().pagination.pageSize}
             onChange={e => table.setPageSize(Number(e.target.value))}
             className={styles.select}
-            aria-label="Rows per page"
+            aria-label="每页行数"
           >
             {[10, 25, 50, 100].map(size => (
               <option key={size} value={size}>
-                {size} rows
+                {size} 行
               </option>
             ))}
           </select>

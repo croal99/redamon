@@ -46,7 +46,7 @@ export default function Error({
           marginBottom: 'var(--space-3)',
         }}
       >
-        Something went wrong
+        出错了
       </h2>
       <p
         style={{
@@ -55,7 +55,7 @@ export default function Error({
           maxWidth: '480px',
         }}
       >
-        {error.message || 'An unexpected error occurred.'}
+        {error.message || '发生了意外错误。'}
       </p>
       <button
         type="button"
@@ -72,7 +72,7 @@ export default function Error({
           transition: 'var(--transition-all)',
         }}
       >
-        Try again
+        重试
       </button>
     </div>
   )

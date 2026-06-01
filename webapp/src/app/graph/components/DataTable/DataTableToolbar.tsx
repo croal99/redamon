@@ -42,21 +42,21 @@ export const DataTableToolbar = memo(function DataTableToolbar({
         <input
           type="text"
           className={styles.searchInput}
-          placeholder="Search by name or type..."
+          placeholder="按名称或类型搜索..."
           value={globalFilter}
           onChange={e => onGlobalFilterChange(e.target.value)}
-          aria-label="Search nodes"
+          aria-label="搜索节点"
         />
       </div>
 
-      <button className={styles.exportBtn} onClick={onExport} aria-label="Export to CSV">
+      <button className={styles.exportBtn} onClick={onExport} aria-label="导出为 CSV">
         <Download size={14} />
         <span>CSV</span>
       </button>
 
       <div className={styles.chipActions}>
-        <button className={styles.chipAction} onClick={onSelectAllTypes}>All</button>
-        <button className={styles.chipAction} onClick={onClearAllTypes}>None</button>
+        <button className={styles.chipAction} onClick={onSelectAllTypes}>全选</button>
+        <button className={styles.chipAction} onClick={onClearAllTypes}>无</button>
       </div>
 
       <div className={styles.chips}>
@@ -81,8 +81,8 @@ export const DataTableToolbar = memo(function DataTableToolbar({
 
       <span className={styles.rowCount}>
         {filteredRows === totalRows
-          ? `${totalRows} nodes`
-          : `${filteredRows} of ${totalRows} nodes`}
+          ? `${totalRows} 个节点`
+          : `${filteredRows} / ${totalRows} 个节点`}
       </span>
     </div>
   )

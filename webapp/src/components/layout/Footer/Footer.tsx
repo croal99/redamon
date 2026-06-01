@@ -25,7 +25,7 @@ export function Footer() {
             className={styles.legalLink}
           >
             <Scale size={12} />
-            Legal & Terms of Use
+            法律声明与使用条款
           </a>
         </div>
         <div className={styles.versionWrapper}>
@@ -33,10 +33,10 @@ export function Footer() {
             <button
               className={styles.updateBadge}
               onClick={() => router.push('/settings?tab=system')}
-              title={`Update to v${latestVersion}`}
+              title={`更新到 v${latestVersion}`}
             >
               <ArrowUpCircle size={12} />
-              v{latestVersion} available
+              v{latestVersion} 可更新
             </button>
           )}
           <span className={styles.version}>v{currentVersion}</span>

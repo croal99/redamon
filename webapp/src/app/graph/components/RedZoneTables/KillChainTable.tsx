@@ -88,18 +88,19 @@ export const KillChainTable = memo(function KillChainTable({ projectId }: Props)
 
   return (
     <RedZoneTableShell
-      title="Kill-Chain Explorer"
+      title="杀伤链探索器"
+
       meta={meta}
       search={search}
       onSearchChange={setSearch}
-      searchPlaceholder="Search subdomain, CVE, tech, CWE..."
+      searchPlaceholder="搜索子域名、CVE、技术、CWE..."
       exportConfig={exportConfig}
       onRefresh={refetch}
       isLoading={isLoading}
       error={error}
       rowCount={rows.length}
       filteredRowCount={filtered.length}
-      emptyLabel="No Subdomain → IP → Port → Tech → CVE chains found. Run recon + vuln scan to populate."
+      emptyLabel="未发现 子域名 → IP → 端口 → 技术 → CVE 链。运行侦察 + 漏洞扫描以填充。"
     >
       <table className={rowStyles.table}>
         <thead>

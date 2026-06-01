@@ -275,7 +275,7 @@ export function FileSystemDrawer({
       if (silent) setEntriesError(null)
     } catch (e) {
       if (!silent) {
-        setEntriesError(e instanceof Error ? e.message : 'Failed to load')
+        setEntriesError(e instanceof Error ? e.message : '加载失败')
         setEntries([])
       }
     } finally {
@@ -298,7 +298,7 @@ export function FileSystemDrawer({
       if (silent) setJobsError(null)
     } catch (e) {
       if (!silent) {
-        setJobsError(e instanceof Error ? e.message : 'Failed to load')
+        setJobsError(e instanceof Error ? e.message : '加载失败')
         setJobs([])
       }
     } finally {
@@ -389,7 +389,7 @@ export function FileSystemDrawer({
       fetchEntries(currentPath)
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'rename failed'
-      alertError(msg, 'Rename failed')
+      alertError(msg, '重命名失败')
     }
   }, [projectId, renameValue, currentPath, fetchEntries, alertError])
 
@@ -409,7 +409,7 @@ export function FileSystemDrawer({
       fetchEntries(currentPath)
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'delete failed'
-      alertError(msg, 'Delete failed')
+      alertError(msg, '删除失败')
     } finally {
       setDeletePending(null)
     }
@@ -428,7 +428,7 @@ export function FileSystemDrawer({
       return
     }
     if (name.includes('/') || name.includes('\\') || name === '.' || name === '..') {
-      alertWarning('Folder name cannot contain / \\ or be . / ..', 'Invalid folder name')
+      alertWarning('文件夹名称不能包含 / \\ 或为 . / ..', '无效的文件夹名称')
       return
     }
     const fullPath = currentPath === '.' || currentPath === '' ? name : `${currentPath}/${name}`
@@ -444,7 +444,7 @@ export function FileSystemDrawer({
       fetchEntries(currentPath)
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'mkdir failed'
-      alertError(msg, 'Create folder failed')
+      alertError(msg, '创建文件夹失败')
     }
   }, [mkdirInput, projectId, currentPath, fetchEntries, alertWarning, alertError])
 
@@ -472,7 +472,7 @@ export function FileSystemDrawer({
       fetchEntries(currentPath)
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'upload failed'
-      alertError(msg, 'Upload failed')
+      alertError(msg, '上传失败')
     } finally {
       setUploadingCount((n) => Math.max(0, n - 1))
     }
@@ -609,7 +609,7 @@ export function FileSystemDrawer({
     const allSelected = entries.filter(e => selectedPaths.has(e.path))
     const deletable = allSelected.filter(e => !isProtectedPath(e.path))
     if (deletable.length === 0) {
-      alertWarning('All selected entries are protected default folders; nothing to delete.', 'Nothing to delete')
+      alertWarning('所有选中条目均为受保护的默认文件夹，无法删除。', '无内容可删除')
       return
     }
     setBulkDeletePending(deletable)
@@ -631,7 +631,7 @@ export function FileSystemDrawer({
     setBulkDeletePending(null)
     setSelectedPaths(new Set())
     fetchEntries(currentPath)
-    if (errors > 0) alertError(`${errors} entries failed to delete; see browser console.`, 'Bulk delete')
+    if (errors > 0) alertError(`${errors} 项删除失败；请查看浏览器控制台。`, '批量删除')
   }, [projectId, currentPath, fetchEntries, alertError])
 
   const handleBulkDownload = useCallback(async () => {
@@ -667,7 +667,7 @@ export function FileSystemDrawer({
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
     } catch (e) {
-      alertError(e instanceof Error ? e.message : 'unknown', 'Bulk download failed')
+      alertError(e instanceof Error ? e.message : '未知错误', '批量下载失败')
     } finally {
       setBulkActionLoading(false)
     }
@@ -704,8 +704,8 @@ export function FileSystemDrawer({
   // four PROTECTED_SUBDIRS empty. Always behind a confirmation modal.
   const handleCleanAll = useCallback(async () => {
     const ok = await dangerConfirm(
-      'This will permanently delete every file and folder in the project workspace and reset it to the four empty default folders (jobs, notes, tool-outputs, uploads). This cannot be undone.',
-      'Clean entire workspace?',
+      '这将永久删除项目工作区中的所有文件和文件夹，并将其重置为四个空的默认文件夹（jobs、notes、tool-outputs、uploads）。此操作无法撤销。',
+      '清空整个工作区？',
     )
     if (!ok) return
     try {
@@ -722,14 +722,14 @@ export function FileSystemDrawer({
       fetchEntries('.')
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'reset failed'
-      alertError(msg, 'Clean all failed')
+      alertError(msg, '清空失败')
     }
   }, [projectId, fetchEntries, dangerConfirm, alertError])
 
   const handleCancelJob = useCallback(async (job: JobRow) => {
     const ok = await dangerConfirm(
-      `Cancel the running ${job.tool_name} job? Any work done so far will be discarded.`,
-      'Cancel job',
+      `取消正在运行的 ${job.tool_name} 任务？已完成的工作将被丢弃。`,
+      '取消任务',
     )
     if (!ok) return
     try {
@@ -740,7 +740,7 @@ export function FileSystemDrawer({
       fetchJobs()
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'cancel failed'
-      alertError(msg, 'Cancel failed')
+      alertError(msg, '取消失败')
     }
   }, [projectId, fetchJobs, dangerConfirm, alertError])
 
@@ -764,11 +764,11 @@ export function FileSystemDrawer({
       position="left"
       mode="overlay"
       width={`${drawerWidth}px`}
-      title="Agent Workspace"
+      title="智能体工作区"
       headerActions={
         <WikiInfoButton
           target="https://github.com/samugit83/redamon/wiki/Agent-Workspace"
-          title="Open Agent Workspace wiki page"
+          title="打开智能体工作区 Wiki 页面"
         />
       }
       resizable
@@ -782,13 +782,13 @@ export function FileSystemDrawer({
           className={`${styles.tab} ${tab === 'files' ? styles.tabActive : ''}`}
           onClick={() => setTab('files')}
         >
-          <FolderOpen size={14} /> Files
+          <FolderOpen size={14} /> 文件
         </button>
         <button
           className={`${styles.tab} ${tab === 'jobs' ? styles.tabActive : ''}`}
           onClick={() => setTab('jobs')}
         >
-          <Briefcase size={14} /> Jobs
+          <Briefcase size={14} /> 任务
         </button>
       </div>
 
@@ -798,7 +798,7 @@ export function FileSystemDrawer({
             <button
               className={styles.actionBtn}
               onClick={closePreview}
-              title="Back to files"
+              title="返回文件"
             >
               <ArrowLeft size={14} />
             </button>
@@ -810,7 +810,7 @@ export function FileSystemDrawer({
             <span>{formatSize(previewing.size)}</span>
             {previewing.mime && <span>· {previewing.mime}</span>}
             {previewing.truncated && (
-              <span className={styles.previewTruncated}>· truncated</span>
+              <span className={styles.previewTruncated}>· 已截断</span>
             )}
           </div>
           {previewLoading && <div className={styles.loading}>Loading…</div>}
@@ -818,8 +818,8 @@ export function FileSystemDrawer({
           {!previewLoading && !previewError && previewing.isBinary && (
             <div className={styles.previewBinary}>
               <AlertTriangle size={16} />
-              <div>Binary file ({formatSize(previewing.size)}).</div>
-              <div>Use Download to inspect locally.</div>
+              <div>二进制文件 ({formatSize(previewing.size)})。</div>
+              <div>请下载后在本地查看。</div>
             </div>
           )}
           {!previewLoading && !previewError && !previewing.isBinary && (
@@ -834,7 +834,7 @@ export function FileSystemDrawer({
             <button
               className={styles.crumb}
               onClick={() => setCurrentPath('.')}
-              title="Project root"
+              title="项目根目录"
             >
               /workspace
             </button>
@@ -854,28 +854,28 @@ export function FileSystemDrawer({
             <button
               className={styles.actionBtn}
               onClick={handleMkdirToggle}
-              title="New folder in current directory"
+              title="在当前目录新建文件夹"
             >
               <FolderPlus size={12} />
             </button>
             <button
               className={styles.actionBtn}
               onClick={handleUploadPick}
-              title="Upload file(s) to current directory"
+              title="上传文件到当前目录"
             >
               <UploadIcon size={12} />
             </button>
             <button
               className={styles.actionBtn}
               onClick={() => fetchEntries(currentPath)}
-              title="Refresh"
+              title="刷新"
             >
               <RefreshCw size={12} />
             </button>
             <button
               className={`${styles.actionBtn} ${styles.actionBtnDanger}`}
               onClick={handleCleanAll}
-              title="Clean all — reset workspace to 4 empty default folders"
+              title="清空 — 重置工作区为 4 个空默认文件夹"
             >
               <Eraser size={12} />
             </button>
@@ -888,7 +888,7 @@ export function FileSystemDrawer({
                 autoFocus
                 className={styles.renameInput}
                 value={mkdirInput}
-                placeholder="new folder name"
+                placeholder="新文件夹名称"
                 onChange={(ev) => setMkdirInput(ev.target.value)}
                 onKeyDown={(ev) => {
                   if (ev.key === 'Enter') handleMkdirCommit()
@@ -904,7 +904,7 @@ export function FileSystemDrawer({
 
           {uploadingCount > 0 && (
             <div className={styles.uploadingHint}>
-              Uploading {uploadingCount} file{uploadingCount > 1 ? 's' : ''}…
+              正在上传 {uploadingCount} 个文件…
             </div>
           )}
 
@@ -913,16 +913,16 @@ export function FileSystemDrawer({
             <input
               className={styles.filterInput}
               type="text"
-              placeholder="Filter files…"
+              placeholder="筛选文件…"
               value={filterText}
               onChange={(ev) => setFilterText(ev.target.value)}
-              aria-label="Filter files"
+              aria-label="筛选文件"
             />
             {filterText && (
               <button
                 className={styles.actionBtn}
                 onClick={() => setFilterText('')}
-                title="Clear filter"
+                title="清除筛选"
               >
                 <XCircle size={12} />
               </button>
@@ -935,19 +935,19 @@ export function FileSystemDrawer({
               className={`${styles.sortBtn} ${sortBy === 'name' ? styles.sortBtnActive : ''}`}
               onClick={() => handleSortClick('name')}
             >
-              Name {sortBy === 'name' ? (sortDir === 'asc' ? '▲' : '▼') : ''}
+              名称 {sortBy === 'name' ? (sortDir === 'asc' ? '▲' : '▼') : ''}
             </button>
             <button
               className={`${styles.sortBtn} ${sortBy === 'size' ? styles.sortBtnActive : ''}`}
               onClick={() => handleSortClick('size')}
             >
-              Size {sortBy === 'size' ? (sortDir === 'asc' ? '▲' : '▼') : ''}
+              大小 {sortBy === 'size' ? (sortDir === 'asc' ? '▲' : '▼') : ''}
             </button>
             <button
               className={`${styles.sortBtn} ${sortBy === 'mtime' ? styles.sortBtnActive : ''}`}
               onClick={() => handleSortClick('mtime')}
             >
-              Modified {sortBy === 'mtime' ? (sortDir === 'asc' ? '▲' : '▼') : ''}
+              修改时间 {sortBy === 'mtime' ? (sortDir === 'asc' ? '▲' : '▼') : ''}
             </button>
           </div>
 
@@ -956,30 +956,30 @@ export function FileSystemDrawer({
           {selectedPaths.size > 0 && (
             <div className={styles.bulkBar}>
               <span className={styles.bulkCount}>
-                {selectedPaths.size} selected
+                {selectedPaths.size} 已选
               </span>
               <button
                 className={styles.bulkBtn}
                 onClick={handleBulkDownload}
                 disabled={bulkActionLoading}
-                title="Download selected as one tar.gz"
+                title="下载选中项为 tar.gz"
               >
-                <DownloadIcon size={12} /> Download
+                <DownloadIcon size={12} /> 下载
               </button>
               <button
                 className={`${styles.bulkBtn} ${styles.bulkBtnDanger}`}
                 onClick={handleBulkDeleteRequest}
                 disabled={bulkActionLoading}
-                title="Delete selected (protected entries are skipped)"
+                title="删除选中项（受保护条目将被跳过）"
               >
-                <TrashIcon size={12} /> Delete
+                <TrashIcon size={12} /> 删除
               </button>
               <button
                 className={styles.bulkBtn}
                 onClick={clearSelection}
-                title="Clear selection"
+                title="清除选择"
               >
-                Clear
+                清除
               </button>
             </div>
           )}
@@ -998,7 +998,7 @@ export function FileSystemDrawer({
               )}
               {displayedEntries.length === 0 ? (
                 <div className={styles.empty}>
-                  {filterText ? `No matches for "${filterText}"` : '(empty)'}
+                  {filterText ? `无匹配项 "${filterText}"` : '（空）'}
                 </div>
               ) : (
                 displayedEntries.map((e) => (
@@ -1014,7 +1014,7 @@ export function FileSystemDrawer({
                       checked={selectedPaths.has(e.path)}
                       onChange={() => toggleSelect(e.path)}
                       onClick={(ev) => ev.stopPropagation()}
-                      aria-label={`Select ${e.name}`}
+                      aria-label={`选择 ${e.name}`}
                     />
                     {e.isSymlink ? <SymlinkIcon size={14} /> :
                       e.isDir ? <FolderIcon size={14} /> : <FileIcon size={14} />}
@@ -1045,7 +1045,7 @@ export function FileSystemDrawer({
                         <button
                           className={styles.actionBtn}
                           onClick={(ev) => { ev.stopPropagation(); handleDownload(e) }}
-                          title="Download"
+                          title="下载"
                         >
                           <DownloadIcon size={12} />
                         </button>
@@ -1054,7 +1054,7 @@ export function FileSystemDrawer({
                         <button
                           className={styles.actionBtn}
                           onClick={(ev) => { ev.stopPropagation(); handleFolderDownload(e) }}
-                          title="Download folder as .tar.gz"
+                          title="下载文件夹为 .tar.gz"
                         >
                           <ArchiveIcon size={12} />
                         </button>
@@ -1062,14 +1062,14 @@ export function FileSystemDrawer({
                       <button
                         className={styles.actionBtn}
                         onClick={(ev) => { ev.stopPropagation(); openProperties(e) }}
-                        title="Properties (size, hash, modified)"
+                        title="属性（大小、哈希、修改时间）"
                       >
                         <Info size={12} />
                       </button>
                       {isProtectedPath(e.path) ? (
                         <span
                           className={styles.protectedBadge}
-                          title="Protected default folder - cannot be renamed or deleted"
+                          title="受保护的默认文件夹 - 无法重命名或删除"
                         >
                           <Lock size={12} />
                         </span>
@@ -1078,14 +1078,14 @@ export function FileSystemDrawer({
                           <button
                             className={styles.actionBtn}
                             onClick={(ev) => { ev.stopPropagation(); startRename(e) }}
-                            title="Rename"
+                            title="重命名"
                           >
                             <PencilIcon size={12} />
                           </button>
                           <button
                             className={`${styles.actionBtn} ${styles.actionBtnDanger}`}
                             onClick={(ev) => { ev.stopPropagation(); handleDeleteRequest(e) }}
-                            title="Delete"
+                            title="删除"
                           >
                             <TrashIcon size={12} />
                           </button>
@@ -1107,7 +1107,7 @@ export function FileSystemDrawer({
             <button
               className={styles.actionBtn}
               onClick={() => fetchJobs()}
-              title="Refresh"
+              title="刷新"
             >
               <RefreshCw size={12} />
             </button>
@@ -1117,7 +1117,7 @@ export function FileSystemDrawer({
           {!jobsError && (
             <div className={styles.jobList}>
               {jobs.length === 0 ? (
-                <div className={styles.empty}>No background jobs.</div>
+                <div className={styles.empty}>暂无后台任务。</div>
               ) : (
                 jobs.map((j) => (
                   <div key={j.job_id} className={styles.job}>
@@ -1138,7 +1138,7 @@ export function FileSystemDrawer({
                       <button
                         className={styles.actionBtn}
                         onClick={() => handleViewJobLog(j)}
-                        title="View log in Files tab"
+                        title="在文件标签页中查看日志"
                       >
                         <Eye size={12} />
                       </button>
@@ -1146,7 +1146,7 @@ export function FileSystemDrawer({
                         <button
                           className={`${styles.actionBtn} ${styles.actionBtnDanger}`}
                           onClick={() => handleCancelJob(j)}
-                          title="Cancel job"
+                          title="取消任务"
                         >
                           <XCircle size={12} />
                         </button>
@@ -1170,7 +1170,7 @@ export function FileSystemDrawer({
         {isDragging && (
           <div className={styles.dropHint}>
             <UploadIcon size={32} />
-            <div>Drop to upload to {currentPath === '.' ? 'workspace root' : currentPath}</div>
+            <div>拖放到此处上传至 {currentPath === '.' ? '工作区根目录' : currentPath}</div>
           </div>
         )}
       </div>
@@ -1183,17 +1183,17 @@ export function FileSystemDrawer({
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <AlertTriangle size={18} />
-              <span>Delete {deletePending.isDir ? 'folder' : 'file'}?</span>
+              <span>删除{deletePending.isDir ? '文件夹' : '文件'}？</span>
             </div>
             <div className={styles.modalBody}>
               {deletePending.isDir ? (
                 <>
-                  <code>{deletePending.path}</code> and <strong>all its contents</strong>{' '}
-                  will be permanently deleted. This cannot be undone.
+                  <code>{deletePending.path}</code> 及其<strong>所有内容</strong>{' '}
+                  将被永久删除。此操作无法撤销。
                 </>
               ) : (
                 <>
-                  <code>{deletePending.path}</code> will be permanently deleted.
+                  <code>{deletePending.path}</code> 将被永久删除。
                 </>
               )}
             </div>
@@ -1202,13 +1202,13 @@ export function FileSystemDrawer({
                 className={styles.modalBtn}
                 onClick={() => setDeletePending(null)}
               >
-                Cancel
+                取消
               </button>
               <button
                 className={`${styles.modalBtn} ${styles.modalBtnDanger}`}
                 onClick={() => performDelete(deletePending)}
               >
-                Delete
+                删除
               </button>
             </div>
           </div>
@@ -1222,24 +1222,24 @@ export function FileSystemDrawer({
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <AlertTriangle size={18} />
-              <span>Delete {bulkDeletePending.length} {bulkDeletePending.length === 1 ? 'entry' : 'entries'}?</span>
+              <span>删除 {bulkDeletePending.length} 项？</span>
             </div>
             <div className={styles.modalBody}>
               {bulkDeletePending.some(e => e.isDir) && (
-                <p>One or more directories will be deleted <strong>recursively</strong>.</p>
+                <p>一个或多个目录将被<strong>递归</strong>删除。</p>
               )}
-              <p>This cannot be undone. Entries to delete:</p>
+              <p>此操作无法撤销。待删除条目：</p>
               <ul className={styles.bulkList}>
                 {bulkDeletePending.slice(0, 10).map(e => (
                   <li key={e.path}><code>{e.path}</code>{e.isDir ? ' /' : ''}</li>
                 ))}
                 {bulkDeletePending.length > 10 && (
-                  <li>… and {bulkDeletePending.length - 10} more</li>
+                  <li>… 还有 {bulkDeletePending.length - 10} 项</li>
                 )}
               </ul>
               {selectedPaths.size > bulkDeletePending.length && (
                 <p className={styles.bulkHint}>
-                  {selectedPaths.size - bulkDeletePending.length} protected default folder(s) will be skipped.
+                  {selectedPaths.size - bulkDeletePending.length} 个受保护的默认文件夹将被跳过。
                 </p>
               )}
             </div>
@@ -1249,14 +1249,14 @@ export function FileSystemDrawer({
                 onClick={() => setBulkDeletePending(null)}
                 disabled={bulkActionLoading}
               >
-                Cancel
+                取消
               </button>
               <button
                 className={`${styles.modalBtn} ${styles.modalBtnDanger}`}
                 onClick={() => performBulkDelete(bulkDeletePending)}
                 disabled={bulkActionLoading}
               >
-                {bulkActionLoading ? 'Deleting…' : `Delete ${bulkDeletePending.length}`}
+                {bulkActionLoading ? '删除中…' : `删除 ${bulkDeletePending.length}`}
               </button>
             </div>
           </div>
@@ -1270,7 +1270,7 @@ export function FileSystemDrawer({
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <Info size={18} />
-              <span>Properties</span>
+              <span>属性</span>
             </div>
             <div className={styles.modalBody}>
               {propertiesLoading && <div>Loading…</div>}
@@ -1281,15 +1281,15 @@ export function FileSystemDrawer({
                 <table className={styles.propertiesTable}>
                   <tbody>
                     <tr>
-                      <th>Path</th>
+                      <th>路径</th>
                       <td><code>{propertiesFor.path}</code></td>
                     </tr>
-                    <tr><th>Type</th><td>{propertiesFor.type}</td></tr>
+                    <tr><th>类型</th><td>{propertiesFor.type}</td></tr>
                     {propertiesFor.type !== 'dir' && (
-                      <tr><th>Size</th><td>{formatSize(propertiesFor.size)} ({propertiesFor.size} B)</td></tr>
+                      <tr><th>大小</th><td>{formatSize(propertiesFor.size)} ({propertiesFor.size} B)</td></tr>
                     )}
-                    <tr><th>Modified</th><td>{formatMtime(propertiesFor.mtime)}</td></tr>
-                    <tr><th>Mode</th><td><code>{propertiesFor.mode}</code></td></tr>
+                    <tr><th>修改时间</th><td>{formatMtime(propertiesFor.mtime)}</td></tr>
+                    <tr><th>权限模式</th><td><code>{propertiesFor.mode}</code></td></tr>
                     {propertiesFor.sha256 && (
                       <tr>
                         <th>SHA-256</th>
@@ -1298,7 +1298,7 @@ export function FileSystemDrawer({
                     )}
                     {propertiesFor.target && (
                       <tr>
-                        <th>Symlink target</th>
+                        <th>符号链接目标</th>
                         <td><code>{propertiesFor.target}</code></td>
                       </tr>
                     )}
@@ -1321,25 +1321,25 @@ export function FileSystemDrawer({
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <AlertTriangle size={18} />
-              <span>File already exists</span>
+              <span>文件已存在</span>
             </div>
             <div className={styles.modalBody}>
-              <code>{overwritePending.file.name}</code> already exists in{' '}
-              <code>{overwritePending.destDir === '.' ? 'workspace root' : overwritePending.destDir}</code>.
-              Replace it?
+              <code>{overwritePending.file.name}</code> 已存在于{' '}
+              <code>{overwritePending.destDir === '.' ? '工作区根目录' : overwritePending.destDir}</code>。
+              是否替换？
             </div>
             <div className={styles.modalActions}>
               <button
                 className={styles.modalBtn}
                 onClick={() => setOverwritePending(null)}
               >
-                Cancel
+                取消
               </button>
               <button
                 className={`${styles.modalBtn} ${styles.modalBtnDanger}`}
                 onClick={handleConfirmOverwrite}
               >
-                Overwrite
+                覆盖
               </button>
             </div>
           </div>

@@ -107,18 +107,19 @@ export const DnsEmailTable = memo(function DnsEmailTable({ projectId }: Props) {
 
   return (
     <RedZoneTableShell
-      title="DNS & Email Security Posture"
+      title="DNS 与邮件安全态势"
+
       meta={rows.length ? `${rows.length} domain${rows.length === 1 ? '' : 's'}` : undefined}
       search={search}
       onSearchChange={setSearch}
-      searchPlaceholder="Search domain, NS, registrar..."
+      searchPlaceholder="搜索域名、NS、注册商..."
       exportConfig={exportConfig}
       onRefresh={refetch}
       isLoading={isLoading}
       error={error}
       rowCount={rows.length}
       filteredRowCount={filtered.length}
-      emptyLabel="No Domain nodes yet. Run domain_recon + security_checks to populate."
+      emptyLabel="暂无域名节点。运行 domain_recon + security_checks 以填充。"
     >
       <table className={rowStyles.table}>
         <thead>

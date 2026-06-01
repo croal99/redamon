@@ -32,9 +32,9 @@ export function GitHubStarBanner({ hasAttackChain }: GitHubStarBannerProps) {
     <div className={styles.banner}>
       <Star size={16} className={styles.icon} />
       <span className={styles.text}>
-        Enjoying RedAmon? A <a href="https://github.com/samugit83/redamon" target="_blank" rel="noopener noreferrer">GitHub star</a> helps others discover the project.
+        喜欢使用 RedAmon？给个 <a href="https://github.com/samugit83/redamon" target="_blank" rel="noopener noreferrer">GitHub star</a> 可以帮助更多人发现这个项目。
       </span>
-      <button className={styles.close} onClick={handleDismiss} aria-label="Dismiss">
+      <button className={styles.close} onClick={handleDismiss} aria-label="关闭">
         <X size={14} />
       </button>
     </div>

@@ -35,7 +35,7 @@ export function ReconLogsDrawer({
   onPause,
   onResume,
   onStop,
-  title = 'Reconnaissance Logs',
+  title = '侦察日志',
   phases = RECON_PHASES,
   totalPhases = 7,
   errorMessage,
@@ -81,25 +81,25 @@ export function ReconLogsDrawer({
   const getStatusText = () => {
     switch (status) {
       case 'starting':
-        return 'Starting...'
+        return '启动中...'
       case 'running':
-        if (!currentPhase) return 'Running...'
+        if (!currentPhase) return '运行中...'
         return hidePhaseProgress
-          ? `Scanning: ${currentPhase}`
-          : `Phase ${currentPhaseNumber}/${totalPhases}: ${currentPhase}`
+          ? `扫描中: ${currentPhase}`
+          : `阶段 ${currentPhaseNumber}/${totalPhases}: ${currentPhase}`
       case 'paused':
-        if (!currentPhase) return 'Paused'
+        if (!currentPhase) return '已暂停'
         return hidePhaseProgress
-          ? `Paused: ${currentPhase}`
-          : `Paused — Phase ${currentPhaseNumber}/${totalPhases}: ${currentPhase}`
+          ? `已暂停: ${currentPhase}`
+          : `已暂停 — 阶段 ${currentPhaseNumber}/${totalPhases}: ${currentPhase}`
       case 'completed':
-        return 'Completed'
+        return '已完成'
       case 'error':
-        return errorMessage ? `Error: ${errorMessage}` : 'Error'
+        return errorMessage ? `错误: ${errorMessage}` : '错误'
       case 'stopping':
-        return 'Stopping...'
+        return '停止中...'
       default:
-        return 'Idle'
+        return '空闲'
     }
   }
 
@@ -168,7 +168,7 @@ export function ReconLogsDrawer({
         <button
           className={styles.closeButton}
           onClick={onClose}
-          aria-label="Close drawer"
+          aria-label="关闭抽屉"
         >
           <X size={16} />
         </button>
@@ -185,7 +185,7 @@ export function ReconLogsDrawer({
             <button
               className={`${styles.iconButton} ${status === 'paused' ? styles.iconButtonPaused : ''}`}
               onClick={status === 'paused' ? onResume : onPause}
-              title={status === 'paused' ? 'Resume pipeline' : 'Pause pipeline'}
+              title={status === 'paused' ? '恢复流水线' : '暂停流水线'}
             >
               {status === 'paused' ? <Play size={14} /> : <Pause size={14} />}
             </button>
@@ -194,7 +194,7 @@ export function ReconLogsDrawer({
             <button
               className={`${styles.iconButton} ${styles.iconButtonStop}`}
               onClick={onStop}
-              title="Stop pipeline"
+              title="停止流水线"
             >
               <Square size={14} />
             </button>
@@ -203,14 +203,14 @@ export function ReconLogsDrawer({
             className={styles.iconButton}
             onClick={handleDownloadLogs}
             disabled={logs.length === 0}
-            title="Download logs"
+            title="下载日志"
           >
             <Download size={14} />
           </button>
           <button
             className={styles.iconButton}
             onClick={onClearLogs}
-            title="Clear logs"
+            title="清除日志"
           >
             <Trash2 size={14} />
           </button>

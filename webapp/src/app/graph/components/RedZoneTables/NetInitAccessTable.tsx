@@ -96,18 +96,19 @@ export const NetInitAccessTable = memo(function NetInitAccessTable({ projectId }
 
   return (
     <RedZoneTableShell
-      title="Network Initial-Access Surface"
+      title="网络初始访问面"
+
       meta={rows.length ? `${rows.length} sensitive exposures (DB / mgmt / origin)` : undefined}
       search={search}
       onSearchChange={setSearch}
-      searchPlaceholder="Search IP, port, tag, service, country..."
+      searchPlaceholder="搜索 IP、端口、标签、服务、国家..."
       exportConfig={exportConfig}
       onRefresh={refetch}
       isLoading={isLoading}
       error={error}
       rowCount={rows.length}
       filteredRowCount={filtered.length}
-      emptyLabel="No sensitive network exposures yet. Run port scan + security checks to populate."
+      emptyLabel="暂无敏感网络暴露。运行端口扫描 + 安全检查以填充。"
     >
       <table className={rowStyles.table}>
         <thead>

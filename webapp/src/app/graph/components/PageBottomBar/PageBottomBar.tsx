@@ -104,11 +104,11 @@ export function PageBottomBar({
   return (
     <div className={styles.bottomBar}>
       <div className={styles.legend}>
-        <span className={styles.sectionTitle}>Filter:</span>
+        <span className={styles.sectionTitle}>筛选：</span>
         {onToggleNodeType && (
           <div className={styles.chipActions}>
-            <button className={styles.chipAction} onClick={onSelectAllTypes}>All</button>
-            <button className={styles.chipAction} onClick={onClearAllTypes}>None</button>
+            <button className={styles.chipAction} onClick={onSelectAllTypes}>全选</button>
+            <button className={styles.chipAction} onClick={onClearAllTypes}>无</button>
           </div>
         )}
         {canScrollLeft && (
@@ -183,10 +183,10 @@ export function PageBottomBar({
                 }}
               >
                 <div className={styles.sessionMenuHeader}>
-                  <span>Attack Chain Sessions</span>
+                  <span>攻击链会话</span>
                   <div className={styles.sessionMenuActions}>
-                    <button className={styles.chipAction} onClick={onShowAllSessions}>All</button>
-                    <button className={styles.chipAction} onClick={onHideAllSessions}>None</button>
+                    <button className={styles.chipAction} onClick={onShowAllSessions}>全选</button>
+                    <button className={styles.chipAction} onClick={onHideAllSessions}>无</button>
                   </div>
                 </div>
                 <div className={styles.sessionMenuList}>
@@ -206,7 +206,7 @@ export function PageBottomBar({
                                 : sessionTitles[chainId])
                             : chainId.slice(-8)}
                         </span>
-                        <span className={styles.sessionStatus}>{isVisible ? 'ON' : 'OFF'}</span>
+                        <span className={styles.sessionStatus}>{isVisible ? '开' : '关'}</span>
                       </button>
                     )
                   })}
@@ -220,14 +220,14 @@ export function PageBottomBar({
       <div className={styles.divider} />
 
       <div className={styles.stats}>
-        <span className={styles.sectionTitle}>Stats:</span>
+        <span className={styles.sectionTitle}>统计：</span>
         <div className={styles.statItems}>
           <div className={styles.statItem}>
-            <span className={styles.statLabel}>Nodes:</span>
+            <span className={styles.statLabel}>节点：</span>
             <span className={styles.statValue}>{data?.nodes.length ?? '-'}</span>
           </div>
           <div className={styles.statItem}>
-            <span className={styles.statLabel}>Links:</span>
+            <span className={styles.statLabel}>链接：</span>
             <span className={styles.statValue}>{data?.links.length ?? '-'}</span>
           </div>
         </div>

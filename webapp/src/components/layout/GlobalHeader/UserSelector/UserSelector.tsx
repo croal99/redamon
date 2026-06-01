@@ -61,13 +61,13 @@ export function UserSelector() {
       <button
         className={styles.trigger}
         onClick={() => setIsOpen(!isOpen)}
-        title="User Menu"
+        title="用户菜单"
       >
         <div className={styles.avatar}>
           <span>{initials}</span>
         </div>
         <span className={styles.userName}>
-          {displayUser?.name || 'No User'}
+          {displayUser?.name || '未选择用户'}
         </span>
         <ChevronDown size={14} className={isOpen ? styles.iconOpen : ''} />
       </button>
@@ -77,7 +77,7 @@ export function UserSelector() {
           {isAdmin ? (
             <>
               <div className={styles.header}>
-                <span className={styles.headerTitle}>Users</span>
+                <span className={styles.headerTitle}>用户</span>
               </div>
 
               <div className={styles.list}>
@@ -105,7 +105,7 @@ export function UserSelector() {
                   ))
                 ) : (
                   <div className={styles.empty}>
-                    No users yet
+                    暂无用户
                   </div>
                 )}
               </div>
@@ -113,25 +113,25 @@ export function UserSelector() {
               <div className={styles.footer}>
                 <button className={styles.footerButton} onClick={handleManageUsers}>
                   <Users size={12} />
-                  Manage Users
+                  管理用户
                 </button>
                 <button className={styles.logoutButton} onClick={handleLogout}>
                   <LogOut size={12} />
-                  Logout
+                  退出登录
                 </button>
               </div>
             </>
           ) : (
             <>
               <div className={styles.header}>
-                <span className={styles.headerTitle}>Account</span>
+                <span className={styles.headerTitle}>账户</span>
               </div>
 
               <div className={styles.list}>
                 <button className={styles.item} onClick={handleChangePassword}>
                   <KeyRound size={14} />
                   <div className={styles.itemContent}>
-                    <span className={styles.itemName}>Change Password</span>
+                    <span className={styles.itemName}>修改密码</span>
                   </div>
                 </button>
               </div>
@@ -139,7 +139,7 @@ export function UserSelector() {
               <div className={styles.footer}>
                 <button className={styles.logoutButton} onClick={handleLogout}>
                   <LogOut size={12} />
-                  Logout
+                  退出登录
                 </button>
               </div>
             </>

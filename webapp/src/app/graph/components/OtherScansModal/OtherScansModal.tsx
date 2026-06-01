@@ -94,7 +94,7 @@ export function OtherScansModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Other Scans"
+      title="其他扫描"
       size="large"
     >
       <div className={styles.content}>
@@ -102,11 +102,11 @@ export function OtherScansModal({
         <div className={styles.card}>
           <div className={styles.cardHeader}>
             <Github size={18} className={styles.cardIcon} />
-            <h3 className={styles.cardTitle}>GitHub Secret Hunt</h3>
+            <h3 className={styles.cardTitle}>GitHub 密钥搜索</h3>
             <StatusBadge status={githubHuntStatus} />
           </div>
           <p className={styles.cardDescription}>
-            Search GitHub repositories for exposed secrets, API keys, and credentials related to your target domain.
+            搜索 GitHub 仓库中与目标域相关的暴露密钥、API 密钥和凭证。
           </p>
           {!hasGithubToken && (
             <div style={{
@@ -120,9 +120,9 @@ export function OtherScansModal({
             }}>
               <AlertTriangle size={14} style={{ color: '#f59e0b', flexShrink: 0 }} />
               <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
-                GitHub Access Token required.{' '}
+                需要 GitHub 访问令牌。{' '}
                 <Link href="/settings" style={{ color: 'var(--accent-primary)', fontWeight: 500 }}>
-                  Global Settings
+                  全局设置
                 </Link>
               </span>
             </div>
@@ -133,24 +133,24 @@ export function OtherScansModal({
                 className={styles.resumeButton}
                 onClick={onResumeGithubHunt}
                 disabled={!hasGithubToken}
-                title={!hasGithubToken ? 'GitHub token required' : 'Resume GitHub Hunt'}
+                title={!hasGithubToken ? '需要 GitHub 令牌' : '恢复 GitHub 密钥搜索'}
               >
                 <Play size={12} />
-                <span>Resume</span>
+                <span>恢复</span>
               </button>
             ) : (
               <button
                 className={styles.startButton}
                 onClick={onStartGithubHunt}
                 disabled={!hasGithubToken || isGHRunning || (!hasReconData && !isGHPaused)}
-                title={!hasGithubToken ? 'GitHub token required' : !hasReconData ? 'Run recon first' : isGHRunning ? 'In progress...' : 'Start GitHub Hunt'}
+                title={!hasGithubToken ? '需要 GitHub 令牌' : !hasReconData ? '请先运行侦察' : isGHRunning ? '进行中...' : '启动 GitHub 密钥搜索'}
               >
                 {isGHRunning ? (
                   <Loader2 size={12} className={styles.spinner} />
                 ) : (
                   <Play size={12} />
                 )}
-                <span>{isGHBusy ? 'Running...' : isGHStopping ? 'Stopping...' : 'Start'}</span>
+                <span>{isGHBusy ? '运行中...' : isGHStopping ? '停止中...' : '启动'}</span>
               </button>
             )}
 
@@ -158,10 +158,10 @@ export function OtherScansModal({
               <button
                 className={styles.pauseButton}
                 onClick={onPauseGithubHunt}
-                title="Pause"
+                title="暂停"
               >
                 <Pause size={12} />
-                <span>Pause</span>
+                <span>暂停</span>
               </button>
             )}
 
@@ -170,10 +170,10 @@ export function OtherScansModal({
                 className={styles.stopButton}
                 onClick={onStopGithubHunt}
                 disabled={isGHStopping}
-                title="Stop"
+                title="停止"
               >
                 <Square size={12} />
-                <span>Stop</span>
+                <span>停止</span>
               </button>
             )}
 
@@ -181,20 +181,20 @@ export function OtherScansModal({
               className={`${styles.logsButton} ${isGithubHuntLogsOpen ? styles.logsButtonActive : ''}`}
               onClick={onToggleGithubHuntLogs}
               disabled={!isGHActive}
-              title="View Logs"
+              title="查看日志"
             >
               <Terminal size={12} />
-              <span>Logs</span>
+              <span>日志</span>
             </button>
 
             <button
               className={styles.downloadButton}
               onClick={onDownloadGithubHuntJSON}
               disabled={!hasGithubHuntData || isGHActive}
-              title={hasGithubHuntData ? 'Download JSON' : 'No data available'}
+              title={hasGithubHuntData ? '下载 JSON' : '暂无数据'}
             >
               <Download size={12} />
-              <span>Download</span>
+              <span>下载</span>
             </button>
           </div>
         </div>
@@ -203,11 +203,11 @@ export function OtherScansModal({
         <div className={styles.card}>
           <div className={styles.cardHeader}>
             <Search size={18} className={styles.cardIcon} />
-            <h3 className={styles.cardTitle}>TruffleHog Scanner</h3>
+            <h3 className={styles.cardTitle}>TruffleHog 扫描器</h3>
             <StatusBadge status={trufflehogStatus} />
           </div>
           <p className={styles.cardDescription}>
-            Deep secret scanning with 700+ detectors and optional verification against live APIs.
+            使用 700+ 检测器进行深度密钥扫描，并可选地针对实时 API 进行验证。
           </p>
           {!hasGithubToken && (
             <div style={{
@@ -221,9 +221,9 @@ export function OtherScansModal({
             }}>
               <AlertTriangle size={14} style={{ color: '#f59e0b', flexShrink: 0 }} />
               <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
-                GitHub Access Token required.{' '}
+                需要 GitHub 访问令牌。{' '}
                 <Link href="/settings" style={{ color: 'var(--accent-primary)', fontWeight: 500 }}>
-                  Global Settings
+                  全局设置
                 </Link>
               </span>
             </div>
@@ -234,24 +234,24 @@ export function OtherScansModal({
                 className={styles.resumeButton}
                 onClick={onResumeTrufflehog}
                 disabled={!hasGithubToken}
-                title={!hasGithubToken ? 'GitHub token required' : 'Resume TruffleHog'}
+                title={!hasGithubToken ? '需要 GitHub 令牌' : '恢复 TruffleHog'}
               >
                 <Play size={12} />
-                <span>Resume</span>
+                <span>恢复</span>
               </button>
             ) : (
               <button
                 className={styles.startButton}
                 onClick={onStartTrufflehog}
                 disabled={!hasGithubToken || isTHRunning || (!hasReconData && !isTHPaused)}
-                title={!hasGithubToken ? 'GitHub token required' : !hasReconData ? 'Run recon first' : isTHRunning ? 'In progress...' : 'Start TruffleHog'}
+                title={!hasGithubToken ? '需要 GitHub 令牌' : !hasReconData ? '请先运行侦察' : isTHRunning ? '进行中...' : '启动 TruffleHog'}
               >
                 {isTHRunning ? (
                   <Loader2 size={12} className={styles.spinner} />
                 ) : (
                   <Play size={12} />
                 )}
-                <span>{isTHBusy ? 'Running...' : isTHStopping ? 'Stopping...' : 'Start'}</span>
+                <span>{isTHBusy ? '运行中...' : isTHStopping ? '停止中...' : '启动'}</span>
               </button>
             )}
 
@@ -259,10 +259,10 @@ export function OtherScansModal({
               <button
                 className={styles.pauseButton}
                 onClick={onPauseTrufflehog}
-                title="Pause"
+                title="暂停"
               >
                 <Pause size={12} />
-                <span>Pause</span>
+                <span>暂停</span>
               </button>
             )}
 
@@ -271,10 +271,10 @@ export function OtherScansModal({
                 className={styles.stopButton}
                 onClick={onStopTrufflehog}
                 disabled={isTHStopping}
-                title="Stop"
+                title="停止"
               >
                 <Square size={12} />
-                <span>Stop</span>
+                <span>停止</span>
               </button>
             )}
 
@@ -282,20 +282,20 @@ export function OtherScansModal({
               className={`${styles.logsButton} ${isTrufflehogLogsOpen ? styles.logsButtonActive : ''}`}
               onClick={onToggleTrufflehogLogs}
               disabled={!isTHActive}
-              title="View Logs"
+              title="查看日志"
             >
               <Terminal size={12} />
-              <span>Logs</span>
+              <span>日志</span>
             </button>
 
             <button
               className={styles.downloadButton}
               onClick={onDownloadTrufflehogJSON}
               disabled={!hasTrufflehogData || isTHActive}
-              title={hasTrufflehogData ? 'Download JSON' : 'No data available'}
+              title={hasTrufflehogData ? '下载 JSON' : '暂无数据'}
             >
               <Download size={12} />
-              <span>Download</span>
+              <span>下载</span>
             </button>
           </div>
         </div>

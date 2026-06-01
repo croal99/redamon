@@ -220,14 +220,14 @@ export default function SettingsPage() {
         setPendingSkillContent('')
         setPendingSkillName('')
         setPendingSkillDescription('')
-        toast.success('Attack skill uploaded')
+        toast.success('攻击技能已上传')
       } else {
         const err = await resp.json()
-        alertError(err.error || 'Failed to upload skill')
+        alertError(err.error || '上传技能失败')
       }
     } catch (err) {
       console.error('Failed to upload skill:', err)
-      toast.error('Failed to upload skill')
+      toast.error('上传技能失败')
     } finally {
       setSkillUploading(false)
     }
@@ -255,14 +255,14 @@ export default function SettingsPage() {
 
   // Delete skill
   const deleteSkill = useCallback(async (skillId: string) => {
-    if (!userId || !(await showConfirm('Delete this skill? It will be removed from all projects.'))) return
+    if (!userId || !(await showConfirm('删除此技能？它将从所有项目中移除。'))) return
     try {
       await fetch(`/api/users/${userId}/attack-skills/${skillId}`, { method: 'DELETE' })
       fetchSkills()
-      toast.success('Attack skill deleted')
+      toast.success('攻击技能已删除')
     } catch (err) {
       console.error('Failed to delete skill:', err)
-      toast.error('Failed to delete skill')
+      toast.error('删除技能失败')
     }
   }, [userId, fetchSkills])
 
@@ -297,14 +297,14 @@ export default function SettingsPage() {
         setEditDescModal(false)
         setEditingSkillId('')
         setEditingSkillDescription('')
-        toast.success('Skill description updated')
+        toast.success('技能描述已更新')
       } else {
         const err = await resp.json()
-        alertError(err.error || 'Failed to update description')
+        alertError(err.error || '更新描述失败')
       }
     } catch (err) {
       console.error('Failed to update skill description:', err)
-      toast.error('Failed to update description')
+      toast.error('更新描述失败')
     } finally {
       setEditDescSaving(false)
     }
@@ -319,9 +319,9 @@ export default function SettingsPage() {
       const data = await resp.json()
       if (resp.ok) {
         fetchSkills()
-        showAlert(data.message || `Imported ${data.imported ?? 0} community skill(s).`)
+        showAlert(data.message || `已导入 ${data.imported ?? 0} 个社区技能。`)
       } else {
-        alertError(data.error || 'Failed to import community skills')
+        alertError(data.error || '导入社区技能失败')
       }
     } catch (err) {
       console.error('Failed to import community skills:', err)
@@ -380,14 +380,14 @@ export default function SettingsPage() {
         setPendingChatSkillName('')
         setPendingChatSkillDescription('')
         setPendingChatSkillCategory('general')
-        toast.success('Chat skill uploaded')
+        toast.success('聊天技能已上传')
       } else {
         const err = await resp.json()
-        alertError(err.error || 'Failed to upload chat skill')
+        alertError(err.error || '上传聊天技能失败')
       }
     } catch (err) {
       console.error('Failed to upload chat skill:', err)
-      toast.error('Failed to upload chat skill')
+      toast.error('上传聊天技能失败')
     } finally {
       setChatSkillUploading(false)
     }
@@ -415,14 +415,14 @@ export default function SettingsPage() {
 
   // Delete chat skill
   const deleteChatSkill = useCallback(async (skillId: string) => {
-    if (!userId || !(await showConfirm('Delete this chat skill?'))) return
+    if (!userId || !(await showConfirm('删除此聊天技能？'))) return
     try {
       await fetch(`/api/users/${userId}/chat-skills/${skillId}`, { method: 'DELETE' })
       fetchChatSkills()
-      toast.success('Chat skill deleted')
+      toast.success('聊天技能已删除')
     } catch (err) {
       console.error('Failed to delete chat skill:', err)
-      toast.error('Failed to delete chat skill')
+      toast.error('删除聊天技能失败')
     }
   }, [userId, fetchChatSkills])
 
@@ -457,14 +457,14 @@ export default function SettingsPage() {
         setEditChatDescModal(false)
         setEditingChatSkillId('')
         setEditingChatSkillDescription('')
-        toast.success('Chat skill description updated')
+        toast.success('聊天技能描述已更新')
       } else {
         const err = await resp.json()
-        alertError(err.error || 'Failed to update description')
+        alertError(err.error || '更新描述失败')
       }
     } catch (err) {
       console.error('Failed to update chat skill description:', err)
-      toast.error('Failed to update description')
+      toast.error('更新描述失败')
     } finally {
       setEditChatDescSaving(false)
     }
@@ -479,9 +479,9 @@ export default function SettingsPage() {
       const data = await resp.json()
       if (resp.ok) {
         fetchChatSkills()
-        showAlert(data.message || `Imported ${data.imported ?? 0} community chat skill(s).`)
+        showAlert(data.message || `已导入 ${data.imported ?? 0} 个社区聊天技能。`)
       } else {
-        alertError(data.error || 'Failed to import community chat skills')
+        alertError(data.error || '导入社区聊天技能失败')
       }
     } catch (err) {
       console.error('Failed to import community chat skills:', err)
@@ -560,14 +560,14 @@ export default function SettingsPage() {
 
   // Delete provider
   const deleteProvider = useCallback(async (providerId: string) => {
-    if (!userId || !(await showConfirm('Delete this provider? Models from it will no longer be available.'))) return
+    if (!userId || !(await showConfirm('删除此提供商？其模型将不再可用。'))) return
     try {
       await fetch(`/api/users/${userId}/llm-providers/${providerId}`, { method: 'DELETE' })
       fetchProviders()
-      toast.success('Provider deleted')
+      toast.success('提供商已删除')
     } catch (err) {
       console.error('Failed to delete provider:', err)
-      toast.error('Failed to delete provider')
+      toast.error('删除提供商失败')
     }
   }, [userId, fetchProviders])
 
@@ -636,11 +636,11 @@ export default function SettingsPage() {
           setRotationConfigs(data.rotationConfigs)
         }
         setSettingsDirty(false)
-        toast.success('Settings saved')
+        toast.success('设置已保存')
       }
     } catch (err) {
       console.error('Failed to save settings:', err)
-      toast.error('Failed to save settings')
+      toast.error('保存设置失败')
     } finally {
       setSettingsSaving(false)
     }
@@ -736,7 +736,7 @@ export default function SettingsPage() {
     a.download = 'redamon-api-keys-template.json'
     a.click()
     URL.revokeObjectURL(url)
-    toast.success('Template downloaded')
+    toast.success('模板已下载')
   }, [settings])
 
   const handleKeysFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -752,12 +752,12 @@ export default function SettingsPage() {
         return
       }
       if (result.keyCount === 0 && result.rotationCount === 0 && result.tunnelingCount === 0) {
-        toast.error('No keys to import — all values are empty or masked.')
+        toast.error('没有可导入的密钥 — 所有值为空或已遮蔽。')
         return
       }
       setPendingImport(result)
     }
-    reader.onerror = () => toast.error('Failed to read file.')
+    reader.onerror = () => toast.error('读取文件失败。')
     reader.readAsText(file)
   }, [])
 
@@ -776,7 +776,7 @@ export default function SettingsPage() {
     }
     setSettingsDirty(true)
     setPendingImport(null)
-    toast.success('Keys imported — click "Save Settings" to persist.')
+    toast.success('密钥已导入 — 点击"保存设置"以持久化。')
   }, [pendingImport])
 
   const searchParams = useSearchParams()
@@ -831,7 +831,7 @@ export default function SettingsPage() {
   }, [activeTab, userId, tcResources, fetchTcResources])
 
   const tcHandleSave = useCallback(() => {
-    setTcShowForm(false); setTcEditing(null); fetchTcResources(); toast.success('Saved')
+    setTcShowForm(false); setTcEditing(null); fetchTcResources();     toast.success('已保存')
   }, [fetchTcResources, toast])
 
   const tcHandleCancel = useCallback(() => { setTcShowForm(false); setTcEditing(null) }, [])
@@ -839,16 +839,16 @@ export default function SettingsPage() {
   const tcHandleDelete = useCallback(async (r: TcResource) => {
     if (!userId || !r.id) return
     const ok = await showConfirm(
-      `Delete "${r.name}"? This removes the catalog entry and disk cache.`,
-      'Delete tradecraft resource',
+      `删除 "${r.name}"？这将移除目录条目和磁盘缓存。`,
+      '删除战术资源',
     )
     if (!ok) return
     try {
       const resp = await fetch(`/api/users/${userId}/tradecraft-resources/${r.id}`, { method: 'DELETE' })
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
-      toast.success('Deleted')
+      toast.success('已删除')
       fetchTcResources()
-    } catch (e) { toast.error(`Delete failed: ${e instanceof Error ? e.message : String(e)}`) }
+    } catch (e) { toast.error(`删除失败: ${e instanceof Error ? e.message : String(e)}`) }
   }, [userId, showConfirm, toast, fetchTcResources])
 
   const tcHandleRefresh = useCallback(async (r: TcResource) => {
@@ -862,9 +862,9 @@ export default function SettingsPage() {
         const data = await resp.json().catch(() => ({}))
         throw new Error(data.error || `HTTP ${resp.status}`)
       }
-      toast.success('Refreshed')
+      toast.success('已刷新')
       fetchTcResources()
-    } catch (e) { toast.error(`Refresh failed: ${e instanceof Error ? e.message : String(e)}`) }
+    } catch (e) { toast.error(`刷新失败: ${e instanceof Error ? e.message : String(e)}`) }
     finally { setTcRefreshingId(null) }
   }, [userId, toast, fetchTcResources])
 
@@ -879,7 +879,7 @@ export default function SettingsPage() {
       })
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
     } catch (e) {
-      toast.error(`Toggle failed: ${e instanceof Error ? e.message : String(e)}`)
+      toast.error(`切换失败: ${e instanceof Error ? e.message : String(e)}`)
       fetchTcResources()
     }
   }, [userId, toast, fetchTcResources])
@@ -888,42 +888,42 @@ export default function SettingsPage() {
     return (
       <div className={styles.page}>
         <h1 className={styles.pageTitle} style={{ display: 'inline-flex', alignItems: 'center', gap: '12px' }}>
-          <span>Global Settings <span style={{ fontSize: '0.55em', fontWeight: 400, opacity: 0.5 }}>(User-Scoped)</span></span>
-          <WikiInfoButton target="settings" title="Open Global Settings wiki page" />
+          <span>全局设置 <span style={{ fontSize: '0.55em', fontWeight: 400, opacity: 0.5 }}>(用户级别)</span></span>
+          <WikiInfoButton target="settings" title="打开全局设置文档页面" />
         </h1>
-        <div className={styles.emptyState}>Select a user to configure settings.</div>
+        <div className={styles.emptyState}>请选择用户以配置设置。</div>
       </div>
     )
   }
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.pageTitle}>Global Settings <span style={{ fontSize: '0.55em', fontWeight: 400, opacity: 0.5 }}>(User-Scoped)</span></h1>
+      <h1 className={styles.pageTitle}>全局设置 <span style={{ fontSize: '0.55em', fontWeight: 400, opacity: 0.5 }}>(用户级别)</span></h1>
       <p style={{ color: 'var(--text-secondary)', fontSize: '13px', margin: '0 0 var(--space-4)' }}>
-        Personal configuration for the current user. These settings apply across all projects.
+        当前用户的个人配置。这些设置适用于所有项目。
       </p>
 
       <div className={styles.tabBar}>
         <button className={`${styles.tab} ${activeTab === 'providers' ? styles.tabActive : ''}`} onClick={() => setActiveTab('providers')}>
-          LLM Providers
+          LLM 提供商
         </button>
         <button className={`${styles.tab} ${activeTab === 'skills' ? styles.tabActive : ''}`} onClick={() => setActiveTab('skills')}>
-          <Swords size={14} /> Agent Skills
+          <Swords size={14} /> 智能体技能
         </button>
         <button className={`${styles.tab} ${activeTab === 'chat-skills' ? styles.tabActive : ''}`} onClick={() => setActiveTab('chat-skills')}>
-          <BookOpen size={14} /> Chat Skills
+          <BookOpen size={14} /> 聊天技能
         </button>
         <button className={`${styles.tab} ${activeTab === 'tradecraft' ? styles.tabActive : ''}`} onClick={() => setActiveTab('tradecraft')}>
-          <BookOpen size={14} /> Tradecraft
+          <BookOpen size={14} /> 战术资源
         </button>
         <button className={`${styles.tab} ${activeTab === 'keys' ? styles.tabActive : ''}`} onClick={() => setActiveTab('keys')}>
-          API Keys & Tunneling
+          API 密钥与隧道
         </button>
         <button className={`${styles.tab} ${activeTab === 'mcp' ? styles.tabActive : ''}`} onClick={() => setActiveTab('mcp')}>
-          <Server size={14} /> MCP Tool Plugins
+          <Server size={14} /> MCP 工具插件
         </button>
         <button className={`${styles.tab} ${activeTab === 'system' ? styles.tabActive : ''}`} onClick={() => setActiveTab('system')}>
-          <Info size={14} /> System
+          <Info size={14} /> 系统
         </button>
       </div>
 
@@ -931,17 +931,17 @@ export default function SettingsPage() {
       {activeTab === 'providers' && <div className={styles.section}>
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-            <span>LLM Providers</span>
-            <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/AI-Model-Providers" title="Open AI Model Providers wiki page" />
+            <span>LLM 提供商</span>
+            <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/AI-Model-Providers" title="打开 AI 模型提供商文档页面" />
           </h2>
           {!showProviderForm && !editingProvider && (
             <button className="primaryButton" onClick={() => setShowProviderForm(true)}>
-              <Plus size={14} /> Add Provider
+              <Plus size={14} /> 添加提供商
             </button>
           )}
         </div>
         <p className={styles.sectionHint}>
-          Models from all providers appear in every project&apos;s LLM selector. Key-based providers auto-discover available models.
+          所有提供商的模型将出现在每个项目的 LLM 选择器中。基于密钥的提供商会自动发现可用模型。
         </p>
 
         {/* Provider form */}
@@ -965,9 +965,9 @@ export default function SettingsPage() {
         {/* Provider list */}
         {!showProviderForm && !editingProvider && (
           providersLoading ? (
-            <div className={styles.emptyState}><Loader2 size={16} className={styles.spin} /> Loading...</div>
+            <div className={styles.emptyState}><Loader2 size={16} className={styles.spin} /> 加载中...</div>
           ) : providers.length === 0 ? (
-            <div className={styles.emptyState}>No providers configured. Add one to get started.</div>
+            <div className={styles.emptyState}>尚未配置提供商。添加一个以开始使用。</div>
           ) : (
             <div className={styles.providerList}>
               {providers.map((p: ProviderData) => {
@@ -985,10 +985,10 @@ export default function SettingsPage() {
                     </div>
                   </div>
                   <div className={styles.providerActions}>
-                    <button className="iconButton" title="Edit" onClick={() => setEditingProvider(p)}>
+                    <button className="iconButton" title="编辑" onClick={() => setEditingProvider(p)}>
                       <Pencil size={14} />
                     </button>
-                    <button className="iconButton" title="Delete" onClick={() => deleteProvider(p.id!)}>
+                    <button className="iconButton" title="删除" onClick={() => deleteProvider(p.id!)}>
                       <Trash2 size={14} />
                     </button>
                   </div>
@@ -1004,8 +1004,8 @@ export default function SettingsPage() {
       {activeTab === 'skills' && <div className={styles.section}>
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-            <Swords size={16} /> Agent Skills
-            <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Agent-Skills" title="Open Agent Skills wiki page" />
+            <Swords size={16} /> 智能体技能
+            <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Agent-Skills" title="打开智能体技能文档页面" />
           </h2>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             <button
@@ -1014,10 +1014,10 @@ export default function SettingsPage() {
               disabled={importingAgentSkills}
             >
               {importingAgentSkills ? <Loader2 size={14} className={styles.spin} /> : <Download size={14} />}
-              Import from Community
+              从社区导入
             </button>
             <label className="primaryButton" style={{ cursor: 'pointer' }}>
-              <Upload size={14} /> Upload Skill
+              <Upload size={14} /> 上传技能
               <input
                 type="file"
                 accept=".md"
@@ -1028,14 +1028,14 @@ export default function SettingsPage() {
           </div>
         </div>
         <p className={styles.sectionHint}>
-          Upload .md files defining custom attack skill workflows. Skills become available as toggles in all project settings.
-          {' '}Browse <a href="https://github.com/samugit83/redamon/wiki/Agent-Skills#community-skills" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'underline' }}>community skills</a> for ready-to-use templates.
+          上传 .md 文件定义自定义攻击技能工作流。技能将在所有项目设置中可作为开关使用。
+          {' '}浏览<a href="https://github.com/samugit83/redamon/wiki/Agent-Skills#community-skills" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', textDecoration: 'underline' }}>社区技能</a>获取即用模板。
         </p>
 
         {skillsLoading ? (
-          <div className={styles.emptyState}><Loader2 size={16} className={styles.spin} /> Loading...</div>
+          <div className={styles.emptyState}><Loader2 size={16} className={styles.spin} /> 加载中...</div>
         ) : attackSkills.length === 0 ? (
-          <div className={styles.emptyState}>No custom skills uploaded yet. Upload a .md file to get started.</div>
+          <div className={styles.emptyState}>尚未上传自定义技能。上传 .md 文件以开始使用。</div>
         ) : (
           <div className={styles.providerList}>
             {attackSkills.map(skill => (
@@ -1051,13 +1051,13 @@ export default function SettingsPage() {
                   </div>
                 </div>
                 <div className={styles.providerActions}>
-                  <button className="iconButton" title="Edit description" onClick={() => openEditDescription(skill.id)}>
+                  <button className="iconButton" title="编辑描述" onClick={() => openEditDescription(skill.id)}>
                     <Pencil size={14} />
                   </button>
-                  <button className="iconButton" title="Download" onClick={() => downloadSkill(skill.id, skill.name)}>
+                  <button className="iconButton" title="下载" onClick={() => downloadSkill(skill.id, skill.name)}>
                     <Download size={14} />
                   </button>
-                  <button className="iconButton" title="Delete" onClick={() => deleteSkill(skill.id)}>
+                  <button className="iconButton" title="删除" onClick={() => deleteSkill(skill.id)}>
                     <Trash2 size={14} />
                   </button>
                 </div>
@@ -1071,8 +1071,8 @@ export default function SettingsPage() {
       {activeTab === 'chat-skills' && <div className={styles.section}>
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-            <BookOpen size={16} /> Chat Skills
-            <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Chat-Skills" title="Open Chat Skills wiki page" />
+            <BookOpen size={16} /> 聊天技能
+            <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Chat-Skills" title="打开聊天技能文档页面" />
           </h2>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             <button
@@ -1081,10 +1081,10 @@ export default function SettingsPage() {
               disabled={importingChatSkills}
             >
               {importingChatSkills ? <Loader2 size={14} className={styles.spin} /> : <Download size={14} />}
-              Import from Community
+              从社区导入
             </button>
             <label className="primaryButton" style={{ cursor: 'pointer' }}>
-              <Upload size={14} /> Upload Skill (.md)
+              <Upload size={14} /> 上传技能 (.md)
               <input
                 type="file"
                 accept=".md"
@@ -1095,13 +1095,13 @@ export default function SettingsPage() {
           </div>
         </div>
         <p className={styles.sectionHint}>
-          Upload and manage on-demand reference skills for the AI agent chat. Unlike Agent Skills (which drive attack classification and phase-aware workflows), Chat Skills are tactical reference docs that you inject into the agent&apos;s context on the fly using <code>/skill &lt;name&gt;</code> in the chat.
+          上传和管理 AI 智能体聊天的按需参考技能。与智能体技能（驱动攻击分类和阶段感知工作流）不同，聊天技能是战术参考文档，您可以在聊天中使用 <code>/skill &lt;name&gt;</code> 即时注入到智能体上下文中。
         </p>
 
         {chatSkillsLoading ? (
           <div className={styles.emptyState}><Loader2 size={16} className={styles.spin} /> Loading...</div>
         ) : chatSkills.length === 0 ? (
-          <div className={styles.emptyState}>No Chat Skills yet. Click Import from Community to add ready-to-use reference skills, or upload your own .md files.</div>
+          <div className={styles.emptyState}>暂无聊天技能。点击"从社区导入"添加即用参考技能，或上传您自己的 .md 文件。</div>
         ) : (
           <div className={styles.providerList}>
             {chatSkills.map(skill => (

@@ -94,18 +94,19 @@ export const SecretsTable = memo(function SecretsTable({ projectId }: Props) {
 
   return (
     <RedZoneTableShell
-      title="Secrets & Credential Exposure"
+      title="密钥与凭据泄露"
+
       meta={rows.length ? `${rows.length} credential finding${rows.length === 1 ? '' : 's'}` : undefined}
       search={search}
       onSearchChange={setSearch}
-      searchPlaceholder="Search secret type, category, URL, subdomain..."
+      searchPlaceholder="搜索密钥类型、分类、URL、子域名..."
       exportConfig={exportConfig}
       onRefresh={refetch}
       isLoading={isLoading}
       error={error}
       rowCount={rows.length}
       filteredRowCount={filtered.length}
-      emptyLabel="No leaked secrets found. Run js_recon or resource_enum to discover credentials."
+      emptyLabel="未发现泄露的密钥。运行 js_recon 或 resource_enum 以发现凭据。"
     >
       <table className={rowStyles.table}>
         <thead>

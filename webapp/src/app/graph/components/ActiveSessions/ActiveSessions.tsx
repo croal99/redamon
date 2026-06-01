@@ -47,7 +47,7 @@ export const ActiveSessions = memo(function ActiveSessions({
     return (
       <div className={styles.loading}>
         <div className={styles.spinner} />
-        Loading sessions...
+        加载会话中...
       </div>
     )
   }
@@ -57,10 +57,10 @@ export const ActiveSessions = memo(function ActiveSessions({
     return (
       <div className={styles.emptyState}>
         <Terminal size={40} className={styles.emptyIcon} />
-        <p className={styles.emptyTitle}>No Reverse Shells</p>
+        <p className={styles.emptyTitle}>无反向 Shell</p>
         <p className={styles.emptyText}>
-          Sessions appear here when the agent establishes connections —
-          reverse shells, meterpreter sessions, bind shells, and listeners.
+          当智能体建立连接时，会话将显示在此处——
+          反向 Shell、Meterpreter 会话、绑定 Shell 和监听器。
         </p>
       </div>
     )
@@ -72,7 +72,7 @@ export const ActiveSessions = memo(function ActiveSessions({
       <div className={styles.sidebar}>
         <div className={styles.sidebarHeader}>
           <span className={styles.sidebarTitle}>
-            Sessions
+            会话
             <span className={styles.count}>{totalSessions}</span>
           </span>
         </div>
@@ -115,7 +115,7 @@ export const ActiveSessions = memo(function ActiveSessions({
             <>
               <div className={styles.divider} />
               <p className={styles.sectionLabel}>
-                Background Jobs ({jobs.length})
+                后台任务 ({jobs.length})
               </p>
               {jobs.map(j => (
                 <JobCard

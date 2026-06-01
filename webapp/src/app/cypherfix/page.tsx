@@ -44,10 +44,10 @@ export default function CypherFixPage() {
     return (
       <div className={styles.page}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: '12px' }}>
-          <h2>No Project Selected</h2>
-          <p>Select a project from the dropdown in the header or create a new one.</p>
+          <h2>未选择项目</h2>
+          <p>请从顶部下拉菜单中选择项目或创建新项目。</p>
           <button className="primaryButton" onClick={() => router.push('/projects')}>
-            Go to Projects
+            前往项目
           </button>
         </div>
       </div>
@@ -57,7 +57,7 @@ export default function CypherFixPage() {
   return (
     <div className={styles.page} style={{ position: 'relative' }}>
       <div style={{ position: 'absolute', top: 12, right: 16, zIndex: 5 }}>
-        <WikiInfoButton target="cypherfix" title="Open CypherFix wiki page" />
+        <WikiInfoButton target="cypherfix" title="打开 CypherFix 文档页面" />
       </div>
       <CypherFixTab
         projectId={projectId || ''}

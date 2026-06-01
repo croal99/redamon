@@ -90,18 +90,19 @@ export const TakeoverTable = memo(function TakeoverTable({ projectId }: Props) {
 
   return (
     <RedZoneTableShell
-      title="Subdomain Takeover Watchlist"
+      title="子域名接管监控表"
+
       meta={meta}
       search={search}
       onSearchChange={setSearch}
-      searchPlaceholder="Search hostname, provider, CNAME target..."
+      searchPlaceholder="搜索主机名、提供商、CNAME 目标..."
       exportConfig={exportConfig}
       onRefresh={refetch}
       isLoading={isLoading}
       error={error}
       rowCount={rows.length}
       filteredRowCount={filtered.length}
-      emptyLabel="No takeover findings yet. Enable Subdomain Takeover in project settings and run recon."
+      emptyLabel="暂无接管发现。在项目设置中启用子域名接管并运行侦察。"
     >
       <table className={rowStyles.table}>
         <thead>

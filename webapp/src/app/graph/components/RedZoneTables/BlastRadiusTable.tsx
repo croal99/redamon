@@ -63,18 +63,18 @@ export const BlastRadiusTable = memo(function BlastRadiusTable({ projectId }: Pr
 
   return (
     <RedZoneTableShell
-      title="Technology Blast Radius"
+      title="技术爆炸半径"
       meta={rows.length ? `${rows.length} technologies with known CVEs` : undefined}
       search={search}
       onSearchChange={setSearch}
-      searchPlaceholder="Search tech name, CVE, version..."
+      searchPlaceholder="搜索技术名称、CVE、版本..."
       exportConfig={exportConfig}
       onRefresh={refetch}
       isLoading={isLoading}
       error={error}
       rowCount={rows.length}
       filteredRowCount={filtered.length}
-      emptyLabel="No technologies with mapped CVEs. Run nmap + vuln scan to populate."
+      emptyLabel="暂无具有映射 CVE 的技术。运行 nmap + 漏洞扫描以填充。"
     >
       <table className={rowStyles.table}>
         <thead>

@@ -714,10 +714,10 @@ export default function GraphPage() {
     setAllNodesExporting('csv')
     try {
       await exportToCsv(filteredExportRows())
-      toast.success('CSV exported')
+      toast.success('CSV 已导出')
     } catch (err) {
       console.error('Failed to export CSV:', err)
-      toast.error('Failed to export CSV')
+      toast.error('导出 CSV 失败')
     } finally {
       setAllNodesExporting(null)
     }
@@ -728,10 +728,10 @@ export default function GraphPage() {
     setAllNodesExporting('json')
     try {
       await exportToJson(filteredExportRows())
-      toast.success('JSON exported')
+      toast.success('JSON 已导出')
     } catch (err) {
       console.error('Failed to export JSON:', err)
-      toast.error('Failed to export JSON')
+      toast.error('导出 JSON 失败')
     } finally {
       setAllNodesExporting(null)
     }
@@ -742,10 +742,10 @@ export default function GraphPage() {
     setAllNodesExporting('md')
     try {
       await exportToMarkdown(filteredExportRows())
-      toast.success('Markdown exported')
+      toast.success('Markdown 已导出')
     } catch (err) {
       console.error('Failed to export Markdown:', err)
-      toast.error('Failed to export Markdown')
+      toast.error('导出 Markdown 失败')
     } finally {
       setAllNodesExporting(null)
     }
@@ -1050,7 +1050,7 @@ export default function GraphPage() {
       }
     } catch (err) {
       console.error('Failed to start Trufflehog:', err)
-      toast.error('Failed to start Trufflehog')
+      toast.error('启动 TruffleHog 失败')
     }
   }, [startTrufflehog, clearTrufflehogLogs, toast])
 
@@ -1142,10 +1142,10 @@ export default function GraphPage() {
     return (
       <div className={styles.page}>
         <div className={styles.noProject}>
-          <h2>No Project Selected</h2>
-          <p>Select a project from the dropdown in the header or create a new one.</p>
+          <h2>未选择项目</h2>
+          <p>请从顶部下拉菜单中选择项目或创建新项目。</p>
           <button className="primaryButton" onClick={() => router.push('/projects')}>
-            Go to Projects
+            前往项目
           </button>
         </div>
       </div>
@@ -1436,7 +1436,7 @@ export default function GraphPage() {
         onPause={handlePauseGvm}
         onResume={handleResumeGvm}
         onStop={handleStopGvm}
-        title="GVM Vulnerability Scan Logs"
+        title="GVM 漏洞扫描日志"
         phases={GVM_PHASES}
         totalPhases={4}
       />
@@ -1453,7 +1453,7 @@ export default function GraphPage() {
         onPause={handlePauseGithubHunt}
         onResume={handleResumeGithubHunt}
         onStop={handleStopGithubHunt}
-        title="GitHub Secret Hunt Logs"
+        title="GitHub 密钥搜索日志"
         phases={GITHUB_HUNT_PHASES}
         totalPhases={3}
       />
@@ -1470,7 +1470,7 @@ export default function GraphPage() {
         onPause={handlePauseTrufflehog}
         onResume={handleResumeTrufflehog}
         onStop={handleStopTrufflehog}
-        title="TruffleHog Secret Scanner Logs"
+        title="TruffleHog 密钥扫描日志"
         phases={TRUFFLEHOG_PHASES}
         totalPhases={3}
       />
@@ -1487,7 +1487,7 @@ export default function GraphPage() {
           errorMessage={run.error}
           onClearLogs={() => clearPartialReconLogsForRun(run.run_id)}
           onStop={() => handleStopPartialRecon(run.run_id)}
-          title={`Partial Recon: ${WORKFLOW_TOOLS.find(t => t.id === run.tool_id)?.label || 'Running'}`}
+          title={`局部侦察: ${WORKFLOW_TOOLS.find(t => t.id === run.tool_id)?.label || '运行中'}`}
           phases={PARTIAL_RECON_PHASE_MAP[run.tool_id || ''] || ['Running']}
           totalPhases={(PARTIAL_RECON_PHASE_MAP[run.tool_id || ''] || ['Running']).length}
           hidePhaseProgress

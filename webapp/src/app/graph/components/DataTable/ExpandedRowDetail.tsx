@@ -35,9 +35,9 @@ export const ExpandedRowDetail = memo(function ExpandedRowDetail({ row }: Expand
       <div className={styles.sections}>
         {/* Properties */}
         <div className={styles.section}>
-          <h4 className={styles.sectionTitle}>Properties</h4>
+          <h4 className={styles.sectionTitle}>属性</h4>
           {properties.length === 0 ? (
-            <p className={styles.empty}>No properties</p>
+            <p className={styles.empty}>无属性</p>
           ) : (
             <div className={styles.propsGrid}>
               {properties.map(([key, value]) => (
@@ -57,11 +57,11 @@ export const ExpandedRowDetail = memo(function ExpandedRowDetail({ row }: Expand
         {/* Connections In */}
         <div className={styles.section}>
           <h4 className={styles.sectionTitle}>
-            Connections In
+            入向连接
             <span className={styles.connCount}>{row.connectionsIn.length}</span>
           </h4>
           {row.connectionsIn.length === 0 ? (
-            <p className={styles.empty}>No incoming connections</p>
+            <p className={styles.empty}>无入向连接</p>
           ) : (
             <div className={styles.connList}>
               {row.connectionsIn.map((conn, i) => (
@@ -82,11 +82,11 @@ export const ExpandedRowDetail = memo(function ExpandedRowDetail({ row }: Expand
         {/* Connections Out */}
         <div className={styles.section}>
           <h4 className={styles.sectionTitle}>
-            Connections Out
+            出向连接
             <span className={styles.connCount}>{row.connectionsOut.length}</span>
           </h4>
           {row.connectionsOut.length === 0 ? (
-            <p className={styles.empty}>No outgoing connections</p>
+            <p className={styles.empty}>无出向连接</p>
           ) : (
             <div className={styles.connList}>
               {row.connectionsOut.map((conn, i) => (
@@ -107,11 +107,11 @@ export const ExpandedRowDetail = memo(function ExpandedRowDetail({ row }: Expand
         {/* Level 2 */}
         <div className={styles.section}>
           <h4 className={styles.sectionTitle}>
-            Level 2 (2 hops)
+            二级节点 (2 跳)
             <span className={styles.connCount}>{level2.length}</span>
           </h4>
           {level2.length === 0 ? (
-            <p className={styles.empty}>No 2nd-level connections</p>
+            <p className={styles.empty}>无二级连接</p>
           ) : (
             <div className={styles.connList}>
               {level2.map((conn, i) => (
@@ -131,11 +131,11 @@ export const ExpandedRowDetail = memo(function ExpandedRowDetail({ row }: Expand
         {/* Level 3 */}
         <div className={styles.section}>
           <h4 className={styles.sectionTitle}>
-            Level 3 (3 hops)
+            三级节点 (3 跳)
             <span className={styles.connCount}>{level3.length}</span>
           </h4>
           {level3.length === 0 ? (
-            <p className={styles.empty}>No 3rd-level connections</p>
+            <p className={styles.empty}>无三级连接</p>
           ) : (
             <div className={styles.connList}>
               {level3.map((conn, i) => (

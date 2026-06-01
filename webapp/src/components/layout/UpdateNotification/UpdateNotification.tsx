@@ -25,7 +25,7 @@ function ChangelogDisplay({ changelog }: { changelog: ChangelogEntry[] }) {
 
   return (
     <div className={styles.changelog}>
-      <h3 className={styles.changelogTitle}>What&apos;s New</h3>
+      <h3 className={styles.changelogTitle}>更新内容</h3>
       <div className={styles.changelogList}>
         {changelog.map(entry => {
           const isExpanded = expandedVersions.has(entry.version)
@@ -79,7 +79,7 @@ function CopyCommand({ command }: { command: string }) {
         type="button"
         className={styles.copyButton}
         onClick={handleCopy}
-        title="Copy command"
+        title="复制命令"
       >
         {copied ? <Check size={14} /> : <Copy size={14} />}
       </button>
@@ -105,7 +105,7 @@ export function UpdateNotification() {
     <Modal
       isOpen
       onClose={dismissUpdate}
-      title="Update Available"
+      title="发现新版本"
       size="large"
       footer={
         <div className={styles.footer}>
@@ -116,10 +116,10 @@ export function UpdateNotification() {
             className={styles.releasesLink}
           >
             <ExternalLink size={14} />
-            Changelog
+            更新日志
           </a>
           <button type="button" className={styles.laterButton} onClick={dismissUpdate}>
-            Later
+            稍后
           </button>
         </div>
       }
@@ -129,8 +129,8 @@ export function UpdateNotification() {
           <Download size={20} className={styles.downloadIcon} />
           <div>
             <p className={styles.versionText}>
-              RedAmon <strong>v{latestVersion}</strong> is available.
-              You are running <strong>v{currentVersion}</strong>.
+              RedAmon <strong>v{latestVersion}</strong> 已发布。
+              您当前运行的是 <strong>v{currentVersion}</strong>。
             </p>
           </div>
         </div>
@@ -138,7 +138,7 @@ export function UpdateNotification() {
         <ChangelogDisplay changelog={changelog} />
 
         <div className={styles.updateSection}>
-          <p className={styles.updateLabel}>Run this command in your terminal to update:</p>
+          <p className={styles.updateLabel}>在终端中运行以下命令进行更新：</p>
           <CopyCommand command="./redamon.sh update" />
         </div>
       </div>

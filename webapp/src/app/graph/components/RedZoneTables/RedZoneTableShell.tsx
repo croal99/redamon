@@ -35,7 +35,7 @@ export const RedZoneTableShell = memo(function RedZoneTableShell({
   meta,
   search,
   onSearchChange,
-  searchPlaceholder = 'Search...',
+  searchPlaceholder = '搜索...',
   exportConfig,
   onExport,
   onRefresh,
@@ -43,8 +43,8 @@ export const RedZoneTableShell = memo(function RedZoneTableShell({
   error,
   rowCount,
   filteredRowCount,
-  emptyLabel = 'No findings yet. Run a recon scan to populate this table.',
-  noMatchLabel = 'No rows match your search.',
+  emptyLabel = '暂无发现。运行侦察扫描以填充此表。',
+  noMatchLabel = '没有匹配的行。',
   children,
 }: RedZoneTableShellProps) {
   const [exporting, setExporting] = useState<'csv' | 'json' | 'md' | null>(null)
@@ -82,7 +82,7 @@ export const RedZoneTableShell = memo(function RedZoneTableShell({
           <span className={styles.title}>{title}</span>
           {meta && <span className={styles.meta}>{meta}</span>}
           <span className={styles.rowCount}>
-            {filteredRowCount === rowCount ? `${rowCount}` : `${filteredRowCount}/${rowCount}`} rows
+            {filteredRowCount === rowCount ? `${rowCount}` : `${filteredRowCount}/${rowCount}`} 行
           </span>
         </div>
         <div className={styles.headerRight}>
@@ -94,29 +94,29 @@ export const RedZoneTableShell = memo(function RedZoneTableShell({
               placeholder={searchPlaceholder}
               value={search}
               onChange={e => onSearchChange(e.target.value)}
-              aria-label={`Search ${title}`}
+              aria-label={`搜索 ${title}`}
             />
           </div>
           {onRefresh && (
-            <button className={styles.iconBtn} onClick={onRefresh} aria-label="Refresh" title="Refresh">
+            <button className={styles.iconBtn} onClick={onRefresh} aria-label="刷新" title="刷新">
               <RefreshCw size={12} />
             </button>
           )}
           {exportConfig ? (
             <>
-              <button className={styles.exportBtn} onClick={handleCsv} disabled={!!exporting} aria-label="Export to CSV" title="Export to CSV">
+              <button className={styles.exportBtn} onClick={handleCsv} disabled={!!exporting} aria-label="导出为 CSV" title="导出为 CSV">
                 {exporting === 'csv'
                   ? <Loader2 size={12} className={styles.spinner} />
                   : <Download size={12} />}
                 <span>CSV</span>
               </button>
-              <button className={styles.exportBtn} onClick={handleJson} disabled={!!exporting} aria-label="Export to JSON" title="Export to JSON">
+              <button className={styles.exportBtn} onClick={handleJson} disabled={!!exporting} aria-label="导出为 JSON" title="导出为 JSON">
                 {exporting === 'json'
                   ? <Loader2 size={12} className={styles.spinner} />
                   : <Download size={12} />}
                 <span>JSON</span>
               </button>
-              <button className={styles.exportBtn} onClick={handleMd} disabled={!!exporting} aria-label="Export to Markdown" title="Export to Markdown">
+              <button className={styles.exportBtn} onClick={handleMd} disabled={!!exporting} aria-label="导出为 Markdown" title="导出为 Markdown">
                 {exporting === 'md'
                   ? <Loader2 size={12} className={styles.spinner} />
                   : <Download size={12} />}
@@ -124,7 +124,7 @@ export const RedZoneTableShell = memo(function RedZoneTableShell({
               </button>
             </>
           ) : onExport ? (
-            <button className={styles.exportBtn} onClick={onExport} aria-label="Export to CSV">
+            <button className={styles.exportBtn} onClick={onExport} aria-label="导出为 CSV">
               <Download size={12} />
               <span>CSV</span>
             </button>
@@ -136,12 +136,12 @@ export const RedZoneTableShell = memo(function RedZoneTableShell({
         {isLoading ? (
           <div className={styles.stateContainer}>
             <Loader2 size={24} className={styles.spinner} />
-            <p className={styles.stateText}>Loading...</p>
+            <p className={styles.stateText}>加载中...</p>
           </div>
         ) : error ? (
           <div className={styles.stateContainer}>
             <AlertTriangle size={24} className={styles.errorIcon} />
-            <p className={styles.stateText}>Failed to load</p>
+            <p className={styles.stateText}>加载失败</p>
             <p className={styles.stateSubtext}>{error}</p>
           </div>
         ) : rowCount === 0 ? (
@@ -153,7 +153,7 @@ export const RedZoneTableShell = memo(function RedZoneTableShell({
           <div className={styles.stateContainer}>
             <SearchX size={24} className={styles.emptyIcon} />
             <p className={styles.stateText}>{noMatchLabel}</p>
-            <p className={styles.stateSubtext}>{rowCount} total rows — clear the search to see them.</p>
+            <p className={styles.stateSubtext}>{rowCount} 行总计 — 清除搜索以查看全部。</p>
           </div>
         ) : (
           <div className={styles.tableScroll}>{children}</div>

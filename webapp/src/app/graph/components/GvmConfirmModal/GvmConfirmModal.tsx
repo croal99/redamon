@@ -36,29 +36,27 @@ export function GvmConfirmModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Start GVM Vulnerability Scan"
+      title="启动 GVM 漏洞扫描"
       size="default"
     >
       <div className={styles.content}>
         <div className={styles.info}>
           <p className={styles.projectInfo}>
-            <strong>Project:</strong> {projectName}
+            <strong>项目：</strong> {projectName}
           </p>
           <p className={styles.projectInfo}>
-            <strong>Target:</strong> {targetDomain}
+            <strong>目标：</strong> {targetDomain}
           </p>
         </div>
 
         <div className={styles.disclaimer}>
           <ShieldAlert size={18} className={styles.disclaimerIcon} />
           <div className={styles.disclaimerContent}>
-            <p className={styles.disclaimerTitle}>Authorization Required</p>
+            <p className={styles.disclaimerTitle}>需要授权</p>
             <p className={styles.disclaimerText}>
-              Vulnerability scanning actively probes the target for security weaknesses.
-              This operation may trigger security alerts and can impact target system performance.
-              By proceeding, you confirm that you <strong>own the target</strong> or have{' '}
-              <strong>explicit written permission</strong> from the owner to perform this scan.
-              Unauthorized scanning is illegal and may result in criminal penalties.
+              漏洞扫描会主动探测目标的安全弱点。此操作可能会触发安全警报，并可能影响目标系统性能。
+              继续操作即表示您确认<strong>拥有该目标</strong>或已获得所有者的<strong>明确书面授权</strong>来执行此扫描。
+              未经授权的扫描是违法的，可能会导致刑事处罚。
             </p>
           </div>
         </div>
@@ -67,11 +65,10 @@ export function GvmConfirmModal({
           <div className={styles.warning}>
             <AlertTriangle size={20} className={styles.warningIcon} />
             <div className={styles.warningContent}>
-              <p className={styles.warningTitle}>Existing GVM Data Found</p>
+              <p className={styles.warningTitle}>发现已有 GVM 数据</p>
               <p className={styles.warningText}>
-                This project has <strong>{stats.totalGvmNodes}</strong> GVM-related nodes.
-                Starting a new vulnerability scan will <strong>delete existing GVM data</strong> and
-                replace it with fresh scan results. Recon data will not be affected.
+                此项目有 <strong>{stats.totalGvmNodes}</strong> 个 GVM 相关节点。
+                启动新的漏洞扫描将<strong>删除已有的 GVM 数据</strong>，并替换为新的扫描结果。侦察数据不受影响。
               </p>
               <div className={styles.stats}>
                 {Object.entries(stats.nodesByType).map(([type, count]) => (
@@ -84,10 +81,9 @@ export function GvmConfirmModal({
           </div>
         ) : (
           <div className={styles.ready}>
-            <p>No existing GVM data found. Ready to start vulnerability scan.</p>
+            <p>未发现已有 GVM 数据，可以启动漏洞扫描。</p>
             <p className={styles.readyNote}>
-              This will scan <strong>{targetDomain}</strong> using GVM/OpenVAS and populate
-              the graph with detected technologies, vulnerabilities, and CVEs.
+              这将使用 GVM/OpenVAS 扫描 <strong>{targetDomain}</strong>，并将检测到的技术、漏洞和 CVE 填充到图中。
             </p>
           </div>
         )}
@@ -105,7 +101,7 @@ export function GvmConfirmModal({
             onClick={onClose}
             disabled={isLoading}
           >
-            Cancel
+            取消
           </button>
           <button
             className={styles.confirmButton}
@@ -115,12 +111,12 @@ export function GvmConfirmModal({
             {isLoading ? (
               <>
                 <Loader2 size={14} className={styles.spinner} />
-                <span>Starting...</span>
+                <span>启动中...</span>
               </>
             ) : (
               <>
                 <Play size={14} />
-                <span>{hasExistingData ? 'Delete & Scan' : 'Start Scan'}</span>
+                <span>{hasExistingData ? '删除并扫描' : '启动扫描'}</span>
               </>
             )}
           </button>

@@ -134,12 +134,12 @@ export const KaliTerminal = memo(function KaliTerminal({ userId, projectId }: Ka
     terminal.writeln('\x1b[1;31m |_| \\_\\___|\\__,_/_/   \\_\\_| |_| |_|\\___/|_| |_|\x1b[0m')
     terminal.writeln('')
     terminal.writeln('\x1b[1;36m  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\x1b[0m')
-    terminal.writeln('\x1b[1;36m  \u2502\x1b[0m  \x1b[1;33m\u26a1 Kali Sandbox Terminal\x1b[0m                     \x1b[1;36m\u2502\x1b[0m')
-    terminal.writeln('\x1b[1;36m  \u2502\x1b[0m  \x1b[2;37mFull access to Kali Linux pentesting tools\x1b[0m  \x1b[1;36m\u2502\x1b[0m')
+    terminal.writeln('\x1b[1;36m  \u2502\x1b[0m  \x1b[1;33m\u26a1 Kali 沙箱终端\x1b[0m                       \x1b[1;36m\u2502\x1b[0m')
+    terminal.writeln('\x1b[1;36m  \u2502\x1b[0m  \x1b[2;37m完全访问 Kali Linux 渗透测试工具\x1b[0m  \x1b[1;36m\u2502\x1b[0m')
     terminal.writeln('\x1b[1;36m  \u2502\x1b[0m  \x1b[2;37mmetasploit \u2022 nmap \u2022 nuclei \u2022 hydra \u2022 sqlmap\x1b[0m \x1b[1;36m\u2502\x1b[0m')
     terminal.writeln('\x1b[1;36m  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\x1b[0m')
     terminal.writeln('')
-    terminal.writeln('\x1b[2;37m  Connecting to kali-sandbox...\x1b[0m')
+    terminal.writeln('\x1b[2;37m  正在连接 kali-sandbox...\x1b[0m')
 
     const url = getWsUrl()
     const ws = new WebSocket(url)
@@ -154,7 +154,7 @@ export const KaliTerminal = memo(function KaliTerminal({ userId, projectId }: Ka
       }
       setStatus('connected')
       reconnectAttemptRef.current = 0
-      terminal.writeln('\x1b[1;32m\u2713 Connected\x1b[0m\n')
+      terminal.writeln('\x1b[1;32m\u2713 已连接\x1b[0m\n')
 
       // Send tenant context FIRST so the sandbox can inject env vars before
       // forking the shell. The terminal server consumes only the first frame
@@ -214,7 +214,7 @@ export const KaliTerminal = memo(function KaliTerminal({ userId, projectId }: Ka
     ws.onerror = () => {
       if (!mountedRef.current) return
       setStatus('error')
-      terminal.writeln('\n\x1b[1;31mWebSocket connection failed. Is the kali-sandbox running?\x1b[0m')
+      terminal.writeln('\n\x1b[1;31mWebSocket 连接失败。kali-sandbox 是否正在运行？\x1b[0m')
     }
 
     ws.onclose = () => {
@@ -227,17 +227,17 @@ export const KaliTerminal = memo(function KaliTerminal({ userId, projectId }: Ka
       }
 
       setStatus('disconnected')
-      terminal.writeln('\n\x1b[1;31m\u2717 Disconnected from kali-sandbox\x1b[0m')
+      terminal.writeln('\n\x1b[1;31m\u2717 已与 kali-sandbox 断开连接\x1b[0m')
 
       // Auto-reconnect with exponential backoff
       const attempt = reconnectAttemptRef.current
       if (attempt < MAX_RECONNECT_ATTEMPTS) {
         const delay = BASE_RECONNECT_INTERVAL * Math.pow(2, attempt)
-        terminal.writeln(`\x1b[2;37m  Reconnecting in ${(delay / 1000).toFixed(0)}s (attempt ${attempt + 1}/${MAX_RECONNECT_ATTEMPTS})...\x1b[0m`)
+        terminal.writeln(`\x1b[2;37m  ${(delay / 1000).toFixed(0)} 秒后重连（第 ${attempt + 1}/${MAX_RECONNECT_ATTEMPTS} 次）...\x1b[0m`)
         reconnectAttemptRef.current = attempt + 1
         reconnectTimerRef.current = setTimeout(() => connect(), delay)
       } else {
-        terminal.writeln('\x1b[2;37m  Max reconnect attempts reached. Click "Reconnect" to try again.\x1b[0m')
+        terminal.writeln('\x1b[2;37m  已达最大重连次数。点击"重新连接"重试。\x1b[0m')
       }
     }
   }, [])
@@ -380,7 +380,7 @@ export const KaliTerminal = memo(function KaliTerminal({ userId, projectId }: Ka
       <div className={styles.toolbar}>
         <div className={styles.toolbarLeft}>
           <TerminalIcon size={14} className={styles.terminalIcon} />
-          <span className={styles.title}>RedAmon Terminal</span>
+          <span className={styles.title}>RedAmon 终端</span>
           <span className={styles.subtitle}>kali-sandbox</span>
         </div>
         <div className={styles.toolbarRight}>
@@ -395,24 +395,24 @@ export const KaliTerminal = memo(function KaliTerminal({ userId, projectId }: Ka
           <button
             className={styles.toolbarBtn}
             onClick={reconnect}
-            title="Reconnect"
+            title="重新连接"
             disabled={status === 'connecting'}
-            aria-label="Reconnect to terminal"
+            aria-label="重新连接终端"
           >
             <RefreshCw size={12} />
           </button>
           <button
             className={styles.toolbarBtn}
             onClick={toggleFullscreen}
-            title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
-            aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+            title={isFullscreen ? '退出全屏' : '全屏'}
+            aria-label={isFullscreen ? '退出全屏' : '进入全屏'}
             aria-pressed={isFullscreen}
           >
             {isFullscreen ? <Minimize2 size={12} /> : <Maximize2 size={12} />}
           </button>
         </div>
       </div>
-      <div ref={termRef} className={styles.terminal} role="application" aria-label="Kali Linux terminal" />
+      <div ref={termRef} className={styles.terminal} role="application" aria-label="Kali Linux 终端" />
     </div>
   )
 })

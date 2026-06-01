@@ -76,11 +76,11 @@ export default function UsersPage() {
   async function handleCreateUser() {
     setFormError('')
     if (!name || !email) {
-      setFormError('Name and email are required')
+      setFormError('姓名和邮箱为必填项')
       return
     }
     if (password && password !== confirmPassword) {
-      setFormError('Passwords do not match')
+      setFormError('两次输入的密码不一致')
       return
     }
 
@@ -93,7 +93,7 @@ export default function UsersPage() {
       })
       closeModal()
     } catch (err: unknown) {
-      setFormError(err instanceof Error ? err.message : 'Failed to create user')
+      setFormError(err instanceof Error ? err.message : '创建用户失败')
     }
   }
 
@@ -101,11 +101,11 @@ export default function UsersPage() {
     setFormError('')
     setFormSuccess('')
     if (!password || password.length < 4) {
-      setFormError('Password must be at least 4 characters')
+      setFormError('密码至少需要4个字符')
       return
     }
     if (password !== confirmPassword) {
-      setFormError('Passwords do not match')
+      setFormError('两次输入的密码不一致')
       return
     }
 
@@ -116,27 +116,23 @@ export default function UsersPage() {
         userId: modal.userId,
         data: { newPassword: password },
       })
-      setFormSuccess('Password updated')
+      setFormSuccess('密码已更新')
       setPassword('')
       setConfirmPassword('')
     } catch (err: unknown) {
-      setFormError(err instanceof Error ? err.message : 'Failed to change password')
-    }
-  }
-
-  async function handleChangeOwnPassword() {
+      setFormError(err instanceof Error ? err.message : '修改密码失败') {
     setFormError('')
     setFormSuccess('')
     if (!currentPassword) {
-      setFormError('Current password is required')
+      setFormError('请输入当前密码')
       return
     }
     if (!password || password.length < 4) {
-      setFormError('New password must be at least 4 characters')
+      setFormError('新密码至少需要4个字符')
       return
     }
     if (password !== confirmPassword) {
-      setFormError('Passwords do not match')
+      setFormError('两次输入的密码不一致')
       return
     }
     if (!authUser) return
@@ -146,12 +142,12 @@ export default function UsersPage() {
         userId: authUser.id,
         data: { newPassword: password, currentPassword },
       })
-      setFormSuccess('Password updated successfully')
+      setFormSuccess('密码修改成功')
       setCurrentPassword('')
       setPassword('')
       setConfirmPassword('')
     } catch (err: unknown) {
-      setFormError(err instanceof Error ? err.message : 'Failed to change password')
+      setFormError(err instanceof Error ? err.message : '修改密码失败')
     }
   }
 
@@ -163,7 +159,7 @@ export default function UsersPage() {
       await deleteUser.mutateAsync(modal.userId)
       closeModal()
     } catch (err: unknown) {
-      setFormError(err instanceof Error ? err.message : 'Failed to delete user')
+      setFormError(err instanceof Error ? err.message : '删除用户失败')
     }
   }
 
@@ -171,12 +167,12 @@ export default function UsersPage() {
   if (!isAdmin && modal.type === 'changeOwn') {
     return (
       <div className={styles.page}>
-        <Modal isOpen onClose={closeModal} title="Change Password" size="small">
+        <Modal isOpen onClose={closeModal} title="修改密码" size="small">
           <div className={styles.form}>
             {formError && <div className={styles.error}>{formError}</div>}
             {formSuccess && <div className={styles.success}>{formSuccess}</div>}
             <div className={styles.field}>
-              <label className={styles.label}>Current Password</label>
+              <label className={styles.label}>当前密码</label>
               <input
                 type="password"
                 className={styles.input}
@@ -186,7 +182,7 @@ export default function UsersPage() {
               />
             </div>
             <div className={styles.field}>
-              <label className={styles.label}>New Password</label>
+              <label className={styles.label}>新密码</label>
               <input
                 type="password"
                 className={styles.input}
@@ -195,7 +191,7 @@ export default function UsersPage() {
               />
             </div>
             <div className={styles.field}>
-              <label className={styles.label}>Confirm New Password</label>
+              <label className={styles.label}>确认新密码</label>
               <input
                 type="password"
                 className={styles.input}
@@ -204,13 +200,13 @@ export default function UsersPage() {
               />
             </div>
             <div className={styles.modalActions}>
-              <button className={styles.actionButton} onClick={closeModal}>Cancel</button>
+              <button className={styles.actionButton} onClick={closeModal}>取消</button>
               <button
                 className="primaryButton"
                 onClick={handleChangeOwnPassword}
                 disabled={changePasswordMutation.isPending}
               >
-                {changePasswordMutation.isPending ? 'Saving...' : 'Change Password'}
+                {changePasswordMutation.isPending ? '保存中...' : '修改密码'}
               </button>
             </div>
           </div>
@@ -224,26 +220,26 @@ export default function UsersPage() {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <h1 className={styles.title}>User Management</h1>
+        <h1 className={styles.title}>用户管理</h1>
         <button className="primaryButton" onClick={() => openModal({ type: 'create' })}>
-          Create User
+          创建用户
         </button>
       </div>
 
       {isLoading ? (
-        <div className={styles.empty}>Loading users...</div>
+        <div className={styles.empty}>加载用户中...</div>
       ) : !users || users.length === 0 ? (
-        <div className={styles.empty}>No users found</div>
+        <div className={styles.empty}>暂无用户</div>
       ) : (
         <table className={styles.table}>
           <thead>
             <tr>
-              <th className={styles.th}>Name</th>
-              <th className={styles.th}>Email</th>
-              <th className={styles.th}>Role</th>
-              <th className={styles.th}>Password</th>
-              <th className={styles.th}>Projects</th>
-              <th className={styles.th}>Actions</th>
+              <th className={styles.th}>姓名</th>
+              <th className={styles.th}>邮箱</th>
+              <th className={styles.th}>角色</th>
+              <th className={styles.th}>密码</th>
+              <th className={styles.th}>项目数</th>
+              <th className={styles.th}>操作</th>
             </tr>
           </thead>
           <tbody>
@@ -251,7 +247,7 @@ export default function UsersPage() {
               <tr key={user.id} className={styles.tr}>
                 <td className={styles.td}>
                   {user.name}
-                  {user.id === authUser?.id && <span className={styles.selfLabel}>(you)</span>}
+                  {user.id === authUser?.id && <span className={styles.selfLabel}>(我)</span>}
                 </td>
                 <td className={styles.td}>
                   <span className={styles.email}>{user.email}</span>
@@ -263,9 +259,9 @@ export default function UsersPage() {
                 </td>
                 <td className={styles.td}>
                   {user.hasPassword ? (
-                    <span className={`${styles.badge} ${styles.badgeYes}`}>Set</span>
+                    <span className={`${styles.badge} ${styles.badgeYes}`}>已设置</span>
                   ) : (
-                    <span className={styles.badgeNo}>Not set</span>
+                    <span className={styles.badgeNo}>未设置</span>
                   )}
                 </td>
                 <td className={styles.td}>{user._count?.projects ?? 0}</td>
@@ -275,14 +271,14 @@ export default function UsersPage() {
                       className={styles.actionButton}
                       onClick={() => openModal({ type: 'password', userId: user.id, userName: user.name })}
                     >
-                      Set Password
+                      设置密码
                     </button>
                     {user.id !== authUser?.id && (
                       <button
                         className={`${styles.actionButton} ${styles.deleteButton}`}
                         onClick={() => openModal({ type: 'delete', userId: user.id, userName: user.name })}
                       >
-                        Delete
+                        删除
                       </button>
                     )}
                   </div>
@@ -294,43 +290,43 @@ export default function UsersPage() {
       )}
 
       {/* Create User Modal */}
-      <Modal isOpen={modal.type === 'create'} onClose={closeModal} title="Create User">
+      <Modal isOpen={modal.type === 'create'} onClose={closeModal} title="创建用户">
         <div className={styles.form}>
           {formError && <div className={styles.error}>{formError}</div>}
           <div className={styles.field}>
-            <label className={styles.label}>Name *</label>
+            <label className={styles.label}>姓名 *</label>
             <input
               className={styles.input}
               value={name}
               onChange={e => setName(e.target.value)}
-              placeholder="John Doe"
+              placeholder="张三"
               autoFocus
             />
           </div>
           <div className={styles.field}>
-            <label className={styles.label}>Email *</label>
+            <label className={styles.label}>邮箱 *</label>
             <input
               type="email"
               className={styles.input}
               value={email}
               onChange={e => setEmail(e.target.value)}
-              placeholder="john@example.com"
+              placeholder="zhangsan@example.com"
             />
           </div>
           <div className={styles.field}>
-            <label className={styles.label}>Password</label>
+            <label className={styles.label}>密码</label>
             <input
               type="password"
               className={styles.input}
               value={password}
               onChange={e => setPassword(e.target.value)}
-              placeholder="Leave empty for passwordless user"
+              placeholder="留空则为无密码用户"
             />
-            <span className={styles.hint}>Passwordless users can only be accessed via admin switching</span>
+            <span className={styles.hint}>无密码用户只能通过管理员切换访问</span>
           </div>
           {password && (
             <div className={styles.field}>
-              <label className={styles.label}>Confirm Password</label>
+              <label className={styles.label}>确认密码</label>
               <input
                 type="password"
                 className={styles.input}
@@ -340,20 +336,20 @@ export default function UsersPage() {
             </div>
           )}
           <div className={styles.field}>
-            <label className={styles.label}>Role</label>
+            <label className={styles.label}>角色</label>
             <select className={styles.select} value={role} onChange={e => setRole(e.target.value)}>
-              <option value="standard">Standard</option>
-              <option value="admin">Admin</option>
+              <option value="standard">普通用户</option>
+              <option value="admin">管理员</option>
             </select>
           </div>
           <div className={styles.modalActions}>
-            <button className={styles.actionButton} onClick={closeModal}>Cancel</button>
+            <button className={styles.actionButton} onClick={closeModal}>取消</button>
             <button
               className="primaryButton"
               onClick={handleCreateUser}
               disabled={createUser.isPending}
             >
-              {createUser.isPending ? 'Creating...' : 'Create User'}
+              {createUser.isPending ? '创建中...' : '创建用户'}
             </button>
           </div>
         </div>
@@ -363,14 +359,14 @@ export default function UsersPage() {
       <Modal
         isOpen={modal.type === 'password'}
         onClose={closeModal}
-        title={`Set Password - ${modal.type === 'password' ? modal.userName : ''}`}
+        title={`设置密码 - ${modal.type === 'password' ? modal.userName : ''}`}
         size="small"
       >
         <div className={styles.form}>
           {formError && <div className={styles.error}>{formError}</div>}
           {formSuccess && <div className={styles.success}>{formSuccess}</div>}
           <div className={styles.field}>
-            <label className={styles.label}>New Password</label>
+            <label className={styles.label}>新密码</label>
             <input
               type="password"
               className={styles.input}
@@ -380,7 +376,7 @@ export default function UsersPage() {
             />
           </div>
           <div className={styles.field}>
-            <label className={styles.label}>Confirm Password</label>
+            <label className={styles.label}>确认密码</label>
             <input
               type="password"
               className={styles.input}
@@ -389,13 +385,13 @@ export default function UsersPage() {
             />
           </div>
           <div className={styles.modalActions}>
-            <button className={styles.actionButton} onClick={closeModal}>Cancel</button>
+            <button className={styles.actionButton} onClick={closeModal}>取消</button>
             <button
               className="primaryButton"
               onClick={handleSetPassword}
               disabled={changePasswordMutation.isPending}
             >
-              {changePasswordMutation.isPending ? 'Saving...' : 'Set Password'}
+              {changePasswordMutation.isPending ? '保存中...' : '设置密码'}
             </button>
           </div>
         </div>
@@ -405,24 +401,24 @@ export default function UsersPage() {
       <Modal
         isOpen={modal.type === 'delete'}
         onClose={closeModal}
-        title="Delete User"
+        title="删除用户"
         size="small"
       >
         <div className={styles.form}>
           {formError && <div className={styles.error}>{formError}</div>}
           <p style={{ color: 'var(--text-primary)', fontSize: 'var(--text-sm)' }}>
-            Are you sure you want to delete <strong>{modal.type === 'delete' ? modal.userName : ''}</strong>?
-            This will also delete all their projects, conversations, and settings.
+            确定要删除用户 <strong>{modal.type === 'delete' ? modal.userName : ''}</strong> 吗？
+            这将同时删除其所有项目、会话和设置。
           </p>
           <div className={styles.modalActions}>
-            <button className={styles.actionButton} onClick={closeModal}>Cancel</button>
+            <button className={styles.actionButton} onClick={closeModal}>取消</button>
             <button
               className={`${styles.actionButton} ${styles.deleteButton}`}
               onClick={handleDeleteUser}
               disabled={deleteUser.isPending}
               style={{ borderColor: 'var(--status-error)' }}
             >
-              {deleteUser.isPending ? 'Deleting...' : 'Delete User'}
+              {deleteUser.isPending ? '删除中...' : '删除用户'}
             </button>
           </div>
         </div>

@@ -151,18 +151,18 @@ export function GraphNavControls({ graphRef, is3D }: GraphNavControlsProps) {
             type="button"
             className={`${styles.btn} ${mode === 'translate' ? styles.btnActive : ''}`}
             onClick={() => setMode('translate')}
-            title="Move mode"
+            title="移动模式"
           >
             <Move size={ICON_SIZE} />
           </button>
-          <button type="button" className={styles.btn} {...onDown(() => dpad(0, 1))} title={mode === 'rotate' ? 'Tilt up' : 'Pan up'}>
+          <button type="button" className={styles.btn} {...onDown(() => dpad(0, 1))} title={mode === 'rotate' ? '向上倾斜' : '向上平移'}>
             <ChevronUp size={ICON_SIZE} />
           </button>
           <button
             type="button"
             className={`${styles.btn} ${mode === 'rotate' ? styles.btnActive : ''}`}
             onClick={() => setMode('rotate')}
-            title="Orbit mode"
+            title="旋转模式"
           >
             <RotateCcw size={ICON_SIZE} />
           </button>
@@ -172,10 +172,10 @@ export function GraphNavControls({ graphRef, is3D }: GraphNavControlsProps) {
           <button type="button" className={styles.btn} {...onDown(() => zoom(-1))} title="Zoom in">
             <ZoomIn size={ICON_SIZE} />
           </button>
-          <button type="button" className={styles.btn} {...onDown(() => dpad(0, 1))} title="Pan up">
+          <button type="button" className={styles.btn} {...onDown(() => dpad(0, 1))} title="向上平移">
             <ChevronUp size={ICON_SIZE} />
           </button>
-          <button type="button" className={styles.btn} {...onDown(() => zoom(1))} title="Zoom out">
+          <button type="button" className={styles.btn} {...onDown(() => zoom(1))} title="缩小">
             <ZoomOut size={ICON_SIZE} />
           </button>
         </div>
@@ -183,13 +183,13 @@ export function GraphNavControls({ graphRef, is3D }: GraphNavControlsProps) {
 
       {/* Row 2: left, center (reset), right */}
       <div className={styles.row}>
-        <button type="button" className={styles.btn} {...onDown(() => dpad(-1, 0))} title={is3D && mode === 'rotate' ? 'Orbit left' : 'Pan left'}>
+        <button type="button" className={styles.btn} {...onDown(() => dpad(-1, 0))} title={is3D && mode === 'rotate' ? '向左旋转' : '向左平移'}>
           <ChevronLeft size={ICON_SIZE} />
         </button>
-        <button type="button" className={styles.centerBtn} onClick={resetView} title="Fit all nodes">
+        <button type="button" className={styles.centerBtn} onClick={resetView} title="适配所有节点">
           <Crosshair size={ICON_SIZE} />
         </button>
-        <button type="button" className={styles.btn} {...onDown(() => dpad(1, 0))} title={is3D && mode === 'rotate' ? 'Orbit right' : 'Pan right'}>
+        <button type="button" className={styles.btn} {...onDown(() => dpad(1, 0))} title={is3D && mode === 'rotate' ? '向右旋转' : '向右平移'}>
           <ChevronRight size={ICON_SIZE} />
         </button>
       </div>
@@ -197,20 +197,20 @@ export function GraphNavControls({ graphRef, is3D }: GraphNavControlsProps) {
       {/* Row 3: zoom in, down, zoom out (3D) or just down (2D) */}
       {is3D ? (
         <div className={styles.row}>
-          <button type="button" className={styles.btn} {...onDown(() => zoom(-1))} title="Zoom in">
+          <button type="button" className={styles.btn} {...onDown(() => zoom(-1))} title="放大">
             <ZoomIn size={ICON_SIZE} />
           </button>
-          <button type="button" className={styles.btn} {...onDown(() => dpad(0, -1))} title={mode === 'rotate' ? 'Tilt down' : 'Pan down'}>
+          <button type="button" className={styles.btn} {...onDown(() => dpad(0, -1))} title={mode === 'rotate' ? '向下倾斜' : '向下平移'}>
             <ChevronDown size={ICON_SIZE} />
           </button>
-          <button type="button" className={styles.btn} {...onDown(() => zoom(1))} title="Zoom out">
+          <button type="button" className={styles.btn} {...onDown(() => zoom(1))} title="缩小">
             <ZoomOut size={ICON_SIZE} />
           </button>
         </div>
       ) : (
         <div className={styles.row}>
           <div className={styles.spacer} />
-          <button type="button" className={styles.btn} {...onDown(() => dpad(0, -1))} title="Pan down">
+          <button type="button" className={styles.btn} {...onDown(() => dpad(0, -1))} title="向下平移">
             <ChevronDown size={ICON_SIZE} />
           </button>
           <div className={styles.spacer} />

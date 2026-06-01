@@ -90,13 +90,13 @@ export function ToolExecutionCard({ item, isExpanded, onToggleExpand, missingApi
   const getStatusText = () => {
     switch (item.status) {
       case 'pending_approval':
-        return 'Awaiting approval'
+        return '等待批准'
       case 'running':
-        return `Running... (${duration}s)`
+        return `运行中... (${duration}秒)`
       case 'success':
-        return `Completed (${duration}s)`
+        return `已完成 (${duration}秒)`
       case 'error':
-        return 'Failed'
+        return '失败'
     }
   }
 
@@ -201,7 +201,7 @@ export function ToolExecutionCard({ item, isExpanded, onToggleExpand, missingApi
           {/* Tool Arguments (expanded view) */}
           {item.tool_args && Object.keys(item.tool_args).length > 0 && (
             <div className={styles.section}>
-              <div className={styles.sectionLabel}>Arguments</div>
+              <div className={styles.sectionLabel}>参数</div>
               <div className={styles.sectionContent}>
                 <div className={styles.argsExpanded}>
                   {Object.entries(item.tool_args).map(([key, value]) => {
@@ -224,9 +224,9 @@ export function ToolExecutionCard({ item, isExpanded, onToggleExpand, missingApi
           {item.output_chunks.length > 0 && (
             <div className={styles.section}>
               <div className={styles.sectionLabel}>
-                Raw Output
+                原始输出
                 {item.status === 'running' && (
-                  <span className={styles.streamingLabel}>(streaming)</span>
+                  <span className={styles.streamingLabel}>(流式传输)</span>
                 )}
               </div>
               <div className={styles.sectionContent}>

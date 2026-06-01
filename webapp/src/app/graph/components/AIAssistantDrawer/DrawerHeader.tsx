@@ -67,11 +67,11 @@ export function DrawerHeader({
 
   const getConnectionStatusText = () => {
     switch (status) {
-      case ConnectionStatus.CONNECTING: return 'Connecting...'
-      case ConnectionStatus.CONNECTED: return 'Connected'
-      case ConnectionStatus.RECONNECTING: return `Reconnecting... (${reconnectAttempt}/5)`
-      case ConnectionStatus.FAILED: return 'Connection failed'
-      case ConnectionStatus.DISCONNECTED: return 'Disconnected'
+      case ConnectionStatus.CONNECTING: return '连接中...'
+      case ConnectionStatus.CONNECTED: return '已连接'
+      case ConnectionStatus.RECONNECTING: return `重新连接中... (${reconnectAttempt}/5)`
+      case ConnectionStatus.FAILED: return '连接失败'
+      case ConnectionStatus.DISCONNECTED: return '已断开连接'
     }
   }
 
@@ -105,7 +105,7 @@ export function DrawerHeader({
             <Bot size={16} />
           </div>
           <div className={styles.headerText}>
-            <h2 className={styles.title}>AI Agent</h2>
+            <h2 className={styles.title}>AI 助手</h2>
             <div className={styles.connectionStatus}>
               {getConnectionStatusIcon()}
               <span className={styles.subtitle} style={{ color: getConnectionStatusColor() }}>

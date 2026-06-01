@@ -80,7 +80,7 @@ export function NodeDrawer({
 
   const drawerTitle = node
     ? showList && listCluster
-      ? `Cluster: ${listCluster.clusterChildType ?? ''}`
+      ? `集群：${listCluster.clusterChildType ?? ''}`
       : displayNode
         ? `${displayNode.type}: ${displayNode.name}`
         : undefined
@@ -102,7 +102,7 @@ export function NodeDrawer({
               onClick={onCollapseChild}
             >
               <ArrowLeft size={14} />
-              Back
+              返回
             </button>
           )}
           <ClusterNodeList
@@ -120,26 +120,26 @@ export function NodeDrawer({
               onClick={onCollapseChild}
             >
               <ArrowLeft size={14} />
-              Back to list
+              返回列表
             </button>
           )}
 
           <div className={styles.section}>
             <div className={styles.sectionHeader}>
-              <h3 className={styles.sectionTitleBasicInfo}>Basic Info</h3>
+              <h3 className={styles.sectionTitleBasicInfo}>基本信息</h3>
               {displayNode.type !== 'Domain' && displayNode.type !== 'Subdomain' && onDeleteNode && (
                 <button
                   className={styles.deleteButton}
                   onClick={handleDeleteClick}
                   disabled={isDeleting}
-                  title="Delete node"
+                  title="删除节点"
                 >
                   {isDeleting ? '...' : '\uD83D\uDDD1'}
                 </button>
               )}
             </div>
             <div className={styles.propertyRow}>
-              <span className={styles.propertyKey}>Type</span>
+              <span className={styles.propertyKey}>类型</span>
               <span
                 className={styles.propertyBadge}
                 style={{ backgroundColor: getNodeColor(displayNode) }}
@@ -152,7 +152,7 @@ export function NodeDrawer({
               <span className={styles.propertyValue}>{displayNode.id}</span>
             </div>
             <div className={styles.propertyRow}>
-              <span className={styles.propertyKey}>Name</span>
+              <span className={styles.propertyKey}>名称</span>
               <span className={styles.propertyValue}>
                 {(() => {
                   const url = getNodeUrl(displayNode)
@@ -165,7 +165,7 @@ export function NodeDrawer({
           </div>
 
           <div className={styles.section}>
-            <h3 className={styles.sectionTitleProperties}>Properties</h3>
+            <h3 className={styles.sectionTitleProperties}>属性</h3>
             {sortedProperties.map(([key, value]) => {
               const nodeUrl = key === 'name' ? getNodeUrl(displayNode) : null
               return (
@@ -180,7 +180,7 @@ export function NodeDrawer({
               )
             })}
             {sortedProperties.length === 0 && (
-              <p className={styles.emptyProperties}>No additional properties</p>
+              <p className={styles.emptyProperties}>无附加属性</p>
             )}
           </div>
 
@@ -191,28 +191,26 @@ export function NodeDrawer({
                 <div className={styles.confirmIcon}>
                   <AlertTriangle size={28} />
                 </div>
-                <h4 className={styles.confirmTitle}>Delete Node</h4>
+                <h4 className={styles.confirmTitle}>删除节点</h4>
                 <p className={styles.confirmText}>
-                  Deleting <strong>{displayNode.type}: {displayNode.name}</strong> will permanently remove
-                  this node and all its relationships from the graph.
+                  删除 <strong>{displayNode.type}: {displayNode.name}</strong> 将永久移除该节点及其所有关系。
                 </p>
                 <p className={styles.confirmWarning}>
-                  This may break the connectivity of the graph and affect
-                  the agent&apos;s ability to interpret the attack chain context.
+                  这可能破坏图谱的连通性，并影响智能体解读攻击链上下文的能力。
                 </p>
                 <div className={styles.confirmActions}>
                   <button
                     className={styles.confirmCancelBtn}
                     onClick={handleDeleteCancel}
                   >
-                    Cancel
+                    取消
                   </button>
                   <button
                     className={styles.confirmDeleteBtn}
                     onClick={handleDeleteConfirm}
                     disabled={isDeleting}
                   >
-                    {isDeleting ? 'Deleting...' : 'Delete'}
+                    {isDeleting ? '删除中...' : '删除'}
                   </button>
                 </div>
               </div>

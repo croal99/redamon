@@ -123,18 +123,19 @@ export const WebInitAccessTable = memo(function WebInitAccessTable({ projectId }
 
   return (
     <RedZoneTableShell
-      title="Web Initial-Access Panel"
+      title="Web 初始访问面板"
+
       meta={rows.length ? `${rows.length} BaseURLs with auth endpoints or header/auth findings` : undefined}
       search={search}
       onSearchChange={setSearch}
-      searchPlaceholder="Search BaseURL, subdomain, vuln, auth path..."
+      searchPlaceholder="搜索 BaseURL、子域名、漏洞、认证路径..."
       exportConfig={exportConfig}
       onRefresh={refetch}
       isLoading={isLoading}
       error={error}
       rowCount={rows.length}
       filteredRowCount={filtered.length}
-      emptyLabel="No auth endpoints or web-layer security findings yet. Run resource_enum + vuln_scan to populate."
+      emptyLabel="暂无认证端点或 Web 层安全发现。运行 resource_enum + vuln_scan 以填充。"
     >
       <table className={rowStyles.table}>
         <thead>

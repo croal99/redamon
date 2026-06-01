@@ -105,18 +105,19 @@ export const DnsDriftTable = memo(function DnsDriftTable({ projectId }: Props) {
 
   return (
     <RedZoneTableShell
-      title="Historic DNS Drift & Orphaned Asset Watch"
+      title="历史 DNS 漂移与孤立资产监控"
+
       meta={rows.length ? `${rows.length} domain${rows.length === 1 ? '' : 's'} with drift signal` : undefined}
       search={search}
       onSearchChange={setSearch}
-      searchPlaceholder="Search domain, ASN, country, external, dangling sub..."
+      searchPlaceholder="搜索域名、ASN、国家、外部、悬空子域名..."
       exportConfig={exportConfig}
       onRefresh={refetch}
       isLoading={isLoading}
       error={error}
       rowCount={rows.length}
       filteredRowCount={filtered.length}
-      emptyLabel="No historic DNS drift or external-domain sightings yet. Enable OTX / passive-DNS enrichment to populate."
+      emptyLabel="暂无历史 DNS 漂移或外部域名发现。启用 OTX / 被动 DNS 丰富化以填充。"
     >
       <table className={rowStyles.table}>
         <thead>

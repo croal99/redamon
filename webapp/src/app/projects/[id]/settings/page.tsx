@@ -43,7 +43,7 @@ export default function ProjectSettingsPage() {
       await saveProject(data)
       router.push(`/graph?project=${projectId}`)
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to update project'
+      const message = error instanceof Error ? error.message : '更新项目失败'
       if (message.toLowerCase().includes('guardrail')) {
         throw error
       }
@@ -63,7 +63,7 @@ export default function ProjectSettingsPage() {
   if (isLoading) {
     return (
       <div className={styles.container}>
-        <div className={styles.loading}>Loading project settings...</div>
+        <div className={styles.loading}>加载项目设置中...</div>
       </div>
     )
   }
@@ -72,9 +72,9 @@ export default function ProjectSettingsPage() {
     return (
       <div className={styles.container}>
         <div className={styles.error}>
-          <p>Failed to load project settings.</p>
+          <p>加载项目设置失败。</p>
           <button className="primaryButton" onClick={() => router.push('/projects')}>
-            Go to Projects
+            前往项目
           </button>
         </div>
       </div>

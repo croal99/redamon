@@ -99,18 +99,19 @@ export const SharedInfraTable = memo(function SharedInfraTable({ projectId }: Pr
 
   return (
     <RedZoneTableShell
-      title="Shared Infrastructure Cluster"
+      title="共享基础设施集群"
+
       meta={meta}
       search={search}
       onSearchChange={setSearch}
-      searchPlaceholder="Search CN, ASN, IP, hostname..."
+      searchPlaceholder="搜索 CN、ASN、IP、主机名..."
       exportConfig={exportConfig}
       onRefresh={refetch}
       isLoading={isLoading}
       error={error}
       rowCount={rows.length}
       filteredRowCount={filtered.length}
-      emptyLabel="No shared-infrastructure clusters yet. Run http_probe (certificates) + port scan (ASN enrichment)."
+      emptyLabel="暂无共享基础设施集群。运行 http_probe（证书）+ 端口扫描（ASN 丰富化）。"
     >
       <table className={rowStyles.table}>
         <thead>

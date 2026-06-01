@@ -120,18 +120,19 @@ export const ThreatIntelTable = memo(function ThreatIntelTable({ projectId }: Pr
 
   return (
     <RedZoneTableShell
-      title="OSINT Threat Intelligence Overlay"
+      title="OSINT 威胁情报叠加"
+
       meta={rows.length ? `${(data?.meta as any)?.domainCount ?? 0} domain · ${(data?.meta as any)?.ipCount ?? 0} ip flagged` : undefined}
       search={search}
       onSearchChange={setSearch}
-      searchPlaceholder="Search asset, adversary, malware, tag..."
+      searchPlaceholder="搜索资产、攻击者、恶意软件、标签..."
       exportConfig={exportConfig}
       onRefresh={refetch}
       isLoading={isLoading}
       error={error}
       rowCount={rows.length}
       filteredRowCount={filtered.length}
-      emptyLabel="No threat-intel signal on any asset. Run OSINT enrichment (OTX, VT, CriminalIP) to populate."
+      emptyLabel="任何资产上均无威胁情报信号。运行 OSINT 丰富化（OTX、VT、CriminalIP）以填充。"
     >
       <table className={rowStyles.table}>
         <thead>

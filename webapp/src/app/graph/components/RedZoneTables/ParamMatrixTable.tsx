@@ -113,18 +113,19 @@ export const ParamMatrixTable = memo(function ParamMatrixTable({ projectId }: Pr
 
   return (
     <RedZoneTableShell
-      title="Injectable & Reflected Parameter Matrix"
+      title="可注入与反射参数矩阵"
+
       meta={meta}
       search={search}
       onSearchChange={setSearch}
-      searchPlaceholder="Search parameter, endpoint, vuln type..."
+      searchPlaceholder="搜索参数、端点、漏洞类型..."
       exportConfig={exportConfig}
       onRefresh={refetch}
       isLoading={isLoading}
       error={error}
       rowCount={rows.length}
       filteredRowCount={filtered.length}
-      emptyLabel="No injectable or DAST-linked parameters yet. Run vuln_scan with fuzzing enabled to populate."
+      emptyLabel="暂无可注入或 DAST 关联参数。运行启用模糊测试的漏洞扫描以填充。"
     >
       <table className={rowStyles.table}>
         <thead>

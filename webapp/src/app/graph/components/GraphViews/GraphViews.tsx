@@ -21,48 +21,48 @@ interface GraphViewsProps {
 
 const EXAMPLE_QUERIES: { label: string; items: string[] }[] = [
   {
-    label: 'Infrastructure',
+    label: '基础设施',
     items: [
-      'All subdomains that resolve to at least 4 IPs',
-      'Subdomains with open port 443 and their technologies',
-      'All services running on non-standard ports (not 80 or 443)',
-      'IPs with SSH (port 22) open and the services running on them',
-      'Subdomains with CNAME DNS records and the IPs they resolve to',
+      '解析到至少 4 个 IP 的所有子域名',
+      '开放 443 端口的子域名及其技术',
+      '运行在非标准端口（非 80 或 443）的所有服务',
+      '开放 SSH（端口 22）的 IP 及其运行的服务',
+      '具有 CNAME DNS 记录的子域名及其解析的 IP',
     ],
   },
   {
-    label: 'Vulnerabilities & CVEs',
+    label: '漏洞与 CVE',
     items: [
-      'IPs with critical vulnerabilities and their open ports',
-      'Technologies with known CVEs and the affected subdomains',
-      'All critical and high severity vulnerabilities found by nuclei',
-      'GVM vulnerabilities with CISA KEV flag and their target IPs',
-      'CVEs with CVSS score above 9 and the technologies they affect',
+      '具有严重漏洞的 IP 及其开放端口',
+      '具有已知 CVE 的技术及受影响的子域名',
+      'nuclei 发现的所有严重和高危漏洞',
+      '具有 CISA KEV 标记的 GVM 漏洞及其目标 IP',
+      'CVSS 评分超过 9 的 CVE 及其影响的技术',
     ],
   },
   {
-    label: 'Web Application',
+    label: 'Web 应用',
     items: [
-      'All endpoints with injectable parameters',
-      'BaseURLs with expired or invalid TLS certificates',
-      'Secrets discovered in JavaScript files and their source URLs',
-      'BaseURLs missing security headers like X-Frame-Options or CSP',
+      '所有具有可注入参数的端点',
+      'TLS 证书过期或无效的 BaseURL',
+      '在 JavaScript 文件中发现的密钥及其来源 URL',
+      '缺少 X-Frame-Options 或 CSP 等安全头的 BaseURL',
     ],
   },
   {
-    label: 'Threat Intelligence',
+    label: '威胁情报',
     items: [
-      'IPs or domains appearing in OTX threat pulses with named adversaries',
-      'Malware samples associated with IPs and the related threat pulses',
-      'External domains discovered during recon and how they were found',
+      '出现在 OTX 威胁脉冲中的 IP 或域名及命名的攻击者',
+      '与 IP 关联的恶意软件样本及相关的威胁脉冲',
+      '侦察期间发现的外部域名及其发现方式',
     ],
   },
   {
-    label: 'Attack Chains',
+    label: '攻击链',
     items: [
-      'Attack chains that reached exploitation phase',
-      'Chain findings with critical severity and the steps that produced them',
-      'GVM confirmed exploits (ExploitGvm) and their target IPs and CVEs',
+      '达到漏洞利用阶段的攻击链',
+      '具有严重级别的链发现及产生它们的步骤',
+      'GVM 确认的漏洞利用（ExploitGvm）及其目标 IP 和 CVE',
     ],
   },
 ]
@@ -207,9 +207,9 @@ export function GraphViews({
         <div className={styles.leftPanel}>
           <div className={styles.header}>
             <div className={styles.headerLeft}>
-              <h2 className={styles.title}>Surface Shaper</h2>
+              <h2 className={styles.title}>攻击面塑造器</h2>
               <span className={styles.subtitle}>
-                Shape the attack surface in natural language to scope Graph Map, Data Table, and AI agent
+                用自然语言塑造攻击面，限定图谱映射、数据表和 AI 智能体的范围
               </span>
             </div>
           </div>
@@ -217,18 +217,18 @@ export function GraphViews({
           {!modelConfigured && (
             <div className={styles.noLlmBanner}>
               <Sparkles size={14} />
-              <span>Configure an AI model in project settings to shape attack surfaces with natural language.</span>
+              <span>在项目设置中配置 AI 模型，以使用自然语言塑造攻击面。</span>
             </div>
           )}
 
           <div className={styles.createForm}>
             <div className={styles.labelRow}>
-              <label className={styles.label}>Describe the attack surface you want to shape</label>
+              <label className={styles.label}>描述您想塑造的攻击面</label>
               <div className={styles.examplesDropdown} ref={dropdownRef}>
                 <button
                   className={styles.examplesToggle}
                   onClick={() => setExamplesOpen(o => !o)}
-                  title="Example queries"
+                  title="示例查询"
                   disabled={generating}
                 >
                   <ListFilter size={13} />
@@ -255,7 +255,7 @@ export function GraphViews({
             </div>
             <textarea
               className={styles.textarea}
-              placeholder="e.g., All IPs with critical vulnerabilities and their open ports"
+              placeholder="例如：所有具有严重漏洞的 IP 及其开放端口"
               value={nlQuery}
               onChange={e => setNlQuery(e.target.value)}
               rows={3}
@@ -271,12 +271,12 @@ export function GraphViews({
                 {generating ? (
                   <>
                     <Loader2 size={14} className={styles.spin} />
-                    <span>Generating...</span>
+                    <span>生成中...</span>
                   </>
                 ) : (
                   <>
                     <Sparkles size={14} />
-                    <span>Generate Cypher</span>
+                    <span>生成 Cypher</span>
                   </>
                 )}
               </button>
@@ -287,7 +287,7 @@ export function GraphViews({
                 <span>{previewError}</span>
                 <button className={styles.retryBtn} onClick={handleRegenerate}>
                   <RefreshCw size={12} />
-                  Retry
+                  重试
                 </button>
               </div>
             )}
@@ -296,10 +296,10 @@ export function GraphViews({
               <>
                 <div className={styles.cypherBlock}>
                   <div className={styles.cypherHeader}>
-                    <label className={styles.label}>Generated Cypher</label>
+                    <label className={styles.label}>已生成 Cypher</label>
                     <button className={styles.retryBtn} onClick={handleRegenerate}>
                       <RefreshCw size={12} />
-                      Regenerate
+                      重新生成
                     </button>
                   </div>
                   <pre className={styles.cypherCode}>{generatedCypher}</pre>
@@ -308,7 +308,7 @@ export function GraphViews({
                 <div className={styles.saveRow}>
                   <input
                     className={styles.nameInput}
-                    placeholder="Surface name"
+                    placeholder="攻击面名称"
                     value={viewName}
                     onChange={e => setViewName(e.target.value)}
                   />
@@ -322,7 +322,7 @@ export function GraphViews({
                     ) : (
                       <Save size={14} />
                     )}
-                    <span>{saving ? 'Saving...' : 'Save'}</span>
+                    <span>{saving ? '保存中...' : '保存'}</span>
                   </button>
                   <button
                     className={styles.saveSelectBtn}
@@ -334,10 +334,10 @@ export function GraphViews({
                     ) : (
                       <Save size={14} />
                     )}
-                    <span>{saving ? 'Saving...' : 'Save & Select'}</span>
+                    <span>{saving ? '保存中...' : '保存并选择'}</span>
                   </button>
                   <button className={styles.discardBtn} onClick={handleDiscard}>
-                    Discard
+                    丢弃
                   </button>
                 </div>
               </>
@@ -349,7 +349,7 @@ export function GraphViews({
         <div className={styles.rightPanel}>
           <div className={styles.previewHeader}>
             <span className={styles.label}>
-              Preview {nodeCount > 0 && `(${nodeCount} nodes)`}
+              预览 {nodeCount > 0 && `(${nodeCount} 个节点)`}
             </span>
           </div>
           <div ref={canvasRef} className={styles.previewCanvas}>

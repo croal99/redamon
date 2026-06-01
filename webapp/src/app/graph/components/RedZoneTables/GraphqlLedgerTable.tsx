@@ -85,18 +85,19 @@ export const GraphqlLedgerTable = memo(function GraphqlLedgerTable({ projectId }
 
   return (
     <RedZoneTableShell
-      title="GraphQL & Modern API Risk Ledger"
+      title="GraphQL 与现代 API 风险分类账"
+
       meta={meta}
       search={search}
       onSearchChange={setSearch}
-      searchPlaceholder="Search endpoint, subdomain, vuln type..."
+      searchPlaceholder="搜索端点、子域名、漏洞类型..."
       exportConfig={exportConfig}
       onRefresh={refetch}
       isLoading={isLoading}
       error={error}
       rowCount={rows.length}
       filteredRowCount={filtered.length}
-      emptyLabel="No GraphQL endpoints discovered yet. Enable GraphQL scan in project settings."
+      emptyLabel="暂未发现 GraphQL 端点。在项目设置中启用 GraphQL 扫描。"
     >
       <table className={rowStyles.table}>
         <thead>
