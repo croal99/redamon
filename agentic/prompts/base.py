@@ -1139,9 +1139,40 @@ Please provide your answer to continue.
 
 # =============================================================================
 # FINAL REPORT PROMPT
+# 生成渗透测试会话的总结报告。
+
+# ## 原始目标
+# {目标}
+
+# ## 执行摘要
+# - 总迭代次数：{iteration_count}
+# - 最终阶段：{final_phase}
+# - 完成原因：{completion_reason}
+
+# ## 执行轨迹
+# {execution_trace}
+
+# ## 收集的目标情报
+# {target_info}
+
+# ## 待办事项列表最终状态
+# {todo_list}
+
+# ---
+
+# 撰写一份简洁而全面的报告，内容包括：
+# 1. **总结**：对所完成工作的简要概述
+# 2. **关键发现**：最重要的发现
+# 3. **发现的凭证**：在暴力破解攻击过程中发现的任何有效凭证（目标主机上的用户名：密码组合）
+# 4. **已建立的会话**：成功利用漏洞后建立的任何活动会话（会话ID、类型、目标）
+# 5. **发现的漏洞**：列出已知漏洞的严重程度
+# 6. **建议**：后续步骤或补救措施建议
+# 7. **局限性**：哪些内容无法进行测试或验证
 # =============================================================================
 
-FINAL_REPORT_PROMPT = """Generate a summary report of the penetration test session.
+FINAL_REPORT_PROMPT = """You must respond in Simplified Chinese (简体中文).
+
+Generate a summary report of the penetration test session.
 
 ## Original Objective
 {objective}
@@ -1163,21 +1194,44 @@ FINAL_REPORT_PROMPT = """Generate a summary report of the penetration test sessi
 ---
 
 Generate a concise but comprehensive report including:
-1. **Summary**: Brief overview of what was accomplished
-2. **Key Findings**: Most important discoveries
-3. **Discovered Credentials**: Any valid credentials found during brute force attacks (username:password pairs with target host)
-4. **Sessions Established**: Any active sessions from successful exploitation (session ID, type, target)
-5. **Vulnerabilities Found**: List with severity if known
-6. **Recommendations**: Next steps or remediation advice
-7. **Limitations**: What couldn't be tested or verified
+1. **Summary**: Brief overview of what was accomplished (简述完成情况)
+2. **Key Findings**: Most important discoveries (关键发现)
+3. **Discovered Credentials**: Any valid credentials found during brute force attacks (username:password pairs with target host) (发现的凭证)
+4. **Sessions Established**: Any active sessions from successful exploitation (session ID, type, target) (已建立的会话)
+5. **Vulnerabilities Found**: List with severity if known (发现的漏洞)
+6. **Recommendations**: Next steps or remediation advice (后续建议)
+7. **Limitations**: What couldn't be tested or verified (测试局限性)
 """
 
 
 # =============================================================================
 # CONVERSATIONAL RESPONSE PROMPT (tier: conversational)
+# 你完成了一个信息查询请求。请直接且自然地回复。
+
+# ## 原始请求
+# {目标}
+
+# ## 完成原因
+# {completion_reason}
+
+# ## 收集的数据
+# {execution_trace}
+
+# ## 目标情报
+# {target_info}
+
+# ---
+
+# 以清晰、对话式的语气直接回应用户的请求。
+# - 清晰呈现相关数据/发现
+# - 如果数据需要，请使用Markdown格式（表格、列表）
+# - 不要使用带有编号章节的报告结构
+# - 不要包含“建议”、“局限性”或“总结”等标题
+# - 如果数据能完整回答问题，就直接展示出来
+# - 简洁明了——这是一个直接回答，而非报告
 # =============================================================================
 
-CONVERSATIONAL_RESPONSE_PROMPT = """You completed an informational request. Respond directly and naturally.
+CONVERSATIONAL_RESPONSE_PROMPT = """You completed an informational request. Respond directly and naturally in Simplified Chinese (简体中文).
 
 ## Original Request
 {objective}
@@ -1193,21 +1247,62 @@ CONVERSATIONAL_RESPONSE_PROMPT = """You completed an informational request. Resp
 
 ---
 
-Respond directly to the user's request in a clear, conversational tone.
-- Present the relevant data/findings clearly
+Respond directly to the user's request in a clear, conversational tone in Simplified Chinese.
+- Present the relevant data/findings clearly in Chinese
 - Use markdown formatting (tables, lists) if the data warrants it
 - Do NOT use a report structure with numbered sections
 - Do NOT include "Recommendations", "Limitations", or "Summary" headers
-- If the data answers the question fully, just present it
-- Be concise — this is a direct answer, not a report
+- If the data answers the question fully, just present it naturally
+- Be concise — this is a direct answer, not a formal report
 """
-
 
 # =============================================================================
 # SUMMARY RESPONSE PROMPT (tier: summary)
+# 对已完成的任务进行简要总结。
+
+# ## 原始目标
+# {目标}
+
+# ## 完成原因
+# {completion_reason}
+
+# ## 攻击技能类型
+# {攻击路径类型}
+
+# ## 执行摘要
+# - 总迭代次数：{iteration_count}
+# - 最终阶段：{final_phase}
+
+# ## 执行轨迹
+# {execution_trace}
+
+# ## 收集的目标情报
+# {target_info}
+
+# ---
+
+# 生成一个简短、重点突出的摘要。结构取决于攻击路径：
+
+# **针对网络钓鱼/社会工程攻击：**
+# 1. **Payload 详情**：生成的内容（类型、格式、文件名、位置）
+# 2. **处理器状态**：处理器是否正在运行，以及在哪个端口/有效负载上运行
+# 3. **交付方式**：如何交付工件（文件下载、电子邮件、网页交付URL）
+
+# **用于侦察/扫描：**
+# 1. **总结**：发现了什么
+# 2. **关键发现**：重要结果及详情
+
+# **对于其他攻击路径：**
+# 1. **总结**：对所完成工作的简要概述
+# 2. **关键发现**：最重要的发现
+# 3. **下一步**: 接下来可以做什么（如相关）
+
+# 保持简洁——最多2-3个小节。除非有关键部分失败，否则不要设置“局限性”一节。
 # =============================================================================
 
-SUMMARY_RESPONSE_PROMPT = """Generate a brief summary of the completed task.
+SUMMARY_RESPONSE_PROMPT = """You must respond in Simplified Chinese (简体中文).
+
+Generate a brief summary of the completed task.
 
 ## Original Objective
 {objective}
@@ -1230,25 +1325,24 @@ SUMMARY_RESPONSE_PROMPT = """Generate a brief summary of the completed task.
 
 ---
 
-Generate a brief, focused summary. Structure depends on the attack path:
+Generate a brief, focused summary in Simplified Chinese. Structure depends on the attack path:
 
-**For phishing/social engineering:**
-1. **Payload Details**: What was generated (type, format, filename, location)
-2. **Handler Status**: Whether the handler is running, which port/payload
-3. **Delivery**: How to deliver the artifact (file download, email, web delivery URL)
+**For phishing/social engineering (钓鱼/社工):**
+1. **Payload Details (载荷详情)**: What was generated (type, format, filename, location)
+2. **Handler Status (监听状态)**: Whether the handler is running, which port/payload
+3. **Delivery (投递方式)**: How to deliver the artifact (file download, email, web delivery URL)
 
-**For reconnaissance/scanning:**
-1. **Summary**: What was discovered
-2. **Key Findings**: Important results with details
+**For reconnaissance/scanning (侦察/扫描):**
+1. **Summary (概述)**: What was discovered
+2. **Key Findings (关键发现)**: Important results with details
 
-**For other attack paths:**
-1. **Summary**: Brief overview of what was accomplished
-2. **Key Findings**: Most important discoveries
-3. **Next Steps**: What could be done next (if relevant)
+**For other attack paths (其他攻击路径):**
+1. **Summary (概述)**: Brief overview of what was accomplished
+2. **Key Findings (关键发现)**: Most important discoveries
+3. **Next Steps (后续步骤)**: What could be done next (if relevant)
 
 Keep it concise — 2-3 short sections maximum. No "Limitations" section unless something critical failed.
 """
-
 
 # =============================================================================
 # RESPONSE TIER DETERMINATION
