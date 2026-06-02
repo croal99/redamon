@@ -66,18 +66,18 @@ export function TodoListWidget({ items }: TodoListWidgetProps) {
     }
 
     // Fallback
-    return 'No description'
+    return '无描述'
   }
 
   return (
     <div className={styles.todoWidget}>
       {/* Header with current task and expand button */}
       <div className={styles.todoHeader}>
-        <span className={styles.todoLabel}>Todos</span>
+        <span className={styles.todoLabel}>待办</span>
         <button
           className={styles.expandButton}
           onClick={() => setIsExpanded(!isExpanded)}
-          title={isExpanded ? 'Collapse list' : 'Expand list'}
+          title={isExpanded ? '收起列表' : '展开列表'}
         >
           {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
         </button>

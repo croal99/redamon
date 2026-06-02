@@ -71,6 +71,8 @@
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--text-primary);
+  white-space: nowrap;
+  min-width: 4em;
 }
 
 .triggerBadge {

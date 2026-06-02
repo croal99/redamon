@@ -112,20 +112,20 @@ export function DrawerHeader({
                 {getConnectionStatusText()}
               </span>
               <span className={styles.sessionCode} title={sessionId}>
-                Session: {sessionId.slice(-8)}
+                会话: {sessionId.slice(-8)}
               </span>
               {hasTokenTotal && (
-                <Tooltip content={`Session LLM usage · input ${totalInput.toLocaleString()} · output ${totalOutput.toLocaleString()}`}>
+                <Tooltip content={`会话 LLM 用量 · 输入 ${totalInput.toLocaleString()} · 输出 ${totalOutput.toLocaleString()}`}>
                   <span className={styles.tokenTotal}>
-                    in {formatTokenCount(totalInput)} · out {formatTokenCount(totalOutput)}
+                    输入 {formatTokenCount(totalInput)} · 输出 {formatTokenCount(totalOutput)}
                   </span>
                 </Tooltip>
               )}
               {!requireToolConfirmation && (
-                <Tooltip content="Tool confirmation is disabled. Dangerous tools will execute without manual approval.">
+                <Tooltip content="已关闭工具确认。危险工具将无需手动批准直接执行。">
                   <div className={styles.dangerBadge}>
                     <AlertTriangle size={12} />
-                    <span>Auto-exec</span>
+                    <span>自动执行</span>
                   </div>
                 </Tooltip>
               )}
@@ -137,8 +137,8 @@ export function DrawerHeader({
             <button
               className={`${styles.iconButton} ${isOtherChainsHidden ? styles.iconButtonActive : ''}`}
               onClick={onToggleOtherChains}
-              title={isOtherChainsHidden ? 'Show all sessions in graph' : 'Show only this session in graph'}
-              aria-label={isOtherChainsHidden ? 'Show all sessions in graph' : 'Show only this session in graph'}
+              title={isOtherChainsHidden ? '在图中显示所有会话' : '在图中仅显示此会话'}
+              aria-label={isOtherChainsHidden ? '在图中显示所有会话' : '在图中仅显示此会话'}
             >
               {isOtherChainsHidden ? <Eye size={14} /> : <EyeOff size={14} />}
             </button>
@@ -146,24 +146,24 @@ export function DrawerHeader({
           <button
             className={styles.iconButton}
             onClick={() => setShowHistory(!showHistory)}
-            title="Session history"
-            aria-label="Session history"
+            title="会话历史"
+            aria-label="会话历史"
           >
             <History size={14} />
           </button>
           <button
             className={styles.iconButton}
             onClick={handleNewChat}
-            title="New session"
-            aria-label="Start new session"
+            title="新建会话"
+            aria-label="开始新会话"
           >
             <Plus size={14} />
           </button>
           <button
             className={styles.iconButton}
             onClick={handleDownloadMarkdown}
-            title="Download chat as Markdown"
-            aria-label="Download chat as Markdown"
+            title="下载 Markdown 聊天记录"
+            aria-label="下载 Markdown 聊天记录"
             disabled={chatItems.length === 0}
           >
             <Download size={14} />
@@ -172,8 +172,8 @@ export function DrawerHeader({
             <button
               className={styles.iconButton}
               onClick={onOpenFileSystem}
-              title="Open Workspace (files + jobs)"
-              aria-label="Open Workspace"
+              title="打开工作区（文件 + 任务）"
+              aria-label="打开工作区"
             >
               <FolderOpen size={14} />
             </button>
@@ -181,7 +181,7 @@ export function DrawerHeader({
           <button
             className={styles.closeButton}
             onClick={onClose}
-            aria-label="Close assistant"
+            aria-label="关闭助手"
           >
             &times;
           </button>

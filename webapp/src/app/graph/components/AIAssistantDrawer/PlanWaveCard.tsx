@@ -62,15 +62,15 @@ export function PlanWaveCard({ item, isExpanded, onToggleExpand, missingApiKeys,
   const getStatusText = () => {
     switch (item.status) {
       case 'running':
-        return `Running ${completedCount}/${item.tool_count}`
+        return `执行中 ${completedCount}/${item.tool_count}`
       case 'pending_approval':
-        return 'Awaiting approval'
+        return '等待审批'
       case 'success':
-        return `${successCount}/${item.tool_count} completed`
+        return `${successCount}/${item.tool_count} 已完成`
       case 'partial':
-        return `${successCount}/${item.tool_count} succeeded`
+        return `${successCount}/${item.tool_count} 成功`
       case 'error':
-        return 'Failed'
+        return '失败'
       default:
         return ''
     }
@@ -104,7 +104,7 @@ export function PlanWaveCard({ item, isExpanded, onToggleExpand, missingApiKeys,
           </div>
           <div className={styles.headerInfo}>
             <span className={styles.titleText}>
-              Wave — {item.tool_count} tools
+              批处理 — {item.tool_count} 个工具
             </span>
             {!isExpanded && (
               <span className={styles.toolNamesPreview}>{toolNames}</span>
@@ -117,8 +117,8 @@ export function PlanWaveCard({ item, isExpanded, onToggleExpand, missingApiKeys,
             </div>
             {item.status === 'pending_approval' && onApprove && (
               <div className={styles.confirmActions}>
-                <button className={styles.allowBtn} onClick={(e) => { e.stopPropagation(); onApprove() }}>Allow</button>
-                <button className={styles.denyBtn} onClick={(e) => { e.stopPropagation(); onReject?.() }}>Deny</button>
+                <button className={styles.allowBtn} onClick={(e) => { e.stopPropagation(); onApprove() }}>允许</button>
+                <button className={styles.denyBtn} onClick={(e) => { e.stopPropagation(); onReject?.() }}>拒绝</button>
               </div>
             )}
             <button className={styles.expandButton}>
@@ -153,7 +153,7 @@ export function PlanWaveCard({ item, isExpanded, onToggleExpand, missingApiKeys,
           {/* Wave Analysis (from think_node) */}
           {item.interpretation && (
             <div className={styles.analysisSection}>
-              <div className={styles.analysisSectionLabel}>Analysis</div>
+              <div className={styles.analysisSectionLabel}>分析</div>
               <p className={styles.analysisText}>{item.interpretation}</p>
             </div>
           )}
@@ -161,7 +161,7 @@ export function PlanWaveCard({ item, isExpanded, onToggleExpand, missingApiKeys,
           {/* Actionable Findings */}
           {item.actionable_findings && item.actionable_findings.length > 0 && (
             <div className={styles.analysisSection}>
-              <div className={styles.analysisSectionLabel}>Actionable Findings</div>
+              <div className={styles.analysisSectionLabel}>可操作发现</div>
               <ul className={styles.findingsList}>
                 {item.actionable_findings.map((finding, index) => (
                   <li key={index} className={styles.findingItem}>{finding}</li>
@@ -173,7 +173,7 @@ export function PlanWaveCard({ item, isExpanded, onToggleExpand, missingApiKeys,
           {/* Recommended Next Steps */}
           {item.recommended_next_steps && item.recommended_next_steps.length > 0 && (
             <div className={styles.analysisSection}>
-              <div className={styles.analysisSectionLabel}>Recommended Next Steps</div>
+              <div className={styles.analysisSectionLabel}>建议下一步</div>
               <ul className={styles.stepsList}>
                 {item.recommended_next_steps.map((step, index) => (
                   <li key={index} className={styles.stepItem}>{step}</li>

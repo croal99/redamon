@@ -43,6 +43,12 @@ interface GroupedSkill {
   skills: ChatSkillSummary[]
 }
 
+function formatSkillCategoryLabel(category: string): string {
+  if (!category) return '通用'
+  if (category.toLowerCase() === 'general') return '通用'
+  return category
+}
+
 function groupByCategory(skills: ChatSkillSummary[]): GroupedSkill[] {
   const map: Record<string, ChatSkillSummary[]> = {}
   for (const s of skills) {
@@ -176,7 +182,7 @@ export function InputArea({
         const data = await res.json()
         // Refresh skills list
         setSkillsFetched(false)
-        showAlert(`Imported ${data.imported} skill${data.imported !== 1 ? 's' : ''}${data.skipped ? `, ${data.skipped} skipped (already exist)` : ''}`)
+        showAlert(`已导入 ${data.imported} 个技能${data.skipped ? `，已跳过 ${data.skipped} 个（已存在）` : ''}`)
       }
     } catch { /* silent */ }
     setImporting(false)
@@ -302,7 +308,7 @@ export function InputArea({
               disabled={importing}
             >
               <Download size={11} />
-              {importing ? 'Importing...' : 'Import from Community'}
+              {importing ? '正在导入...' : '从社区导入'}
             </button>
             <button
               className={styles.skillDropdownActionBtn}
@@ -313,7 +319,7 @@ export function InputArea({
               disabled={uploading}
             >
               <Upload size={11} />
-              {uploading ? 'Uploading...' : 'Upload .md'}
+              {uploading ? '正在上传...' : '上传 .md'}
             </button>
           </div>
         )}
@@ -321,8 +327,8 @@ export function InputArea({
         {flat.length === 0 ? (
           <div className={styles.skillDropdownEmpty}>
             {skills.length === 0
-              ? 'No Chat Skills yet. Import from community or upload a .md file above.'
-              : 'No matching skills'}
+              ? '暂无技能。可从社区导入，或在上方上传 .md 文件。'
+              : '没有匹配的技能'}
           </div>
         ) : (
           <>
@@ -330,7 +336,7 @@ export function InputArea({
               let globalIdx = 0
               return grouped.map(group => (
                 <div key={group.category}>
-                  <div className={styles.skillCategoryLabel}>{group.category}</div>
+                  <div className={styles.skillCategoryLabel}>{formatSkillCategoryLabel(group.category)}</div>
                   {group.skills.map(skill => {
                     const idx = globalIdx++
                     return (
@@ -344,7 +350,7 @@ export function InputArea({
                         onMouseEnter={() => setSelectedIndex(idx)}
                       >
                         <span className={styles.skillItemName}>{skill.name}</span>
-                        <span className={styles.skillCategoryBadge}>{skill.category}</span>
+                        <span className={styles.skillCategoryBadge}>{formatSkillCategoryLabel(skill.category)}</span>
                       </div>
                     )
                   })}
@@ -352,9 +358,9 @@ export function InputArea({
               ))
             })()}
             <div className={styles.skillDropdownHint}>
-              <span><kbd>↑↓</kbd> navigate</span>
-              <span><kbd>Enter</kbd> select</span>
-              <span><kbd>Esc</kbd> close</span>
+              <span><kbd>↑↓</kbd> 导航</span>
+              <span><kbd>Enter</kbd> 选择</span>
+              <span><kbd>Esc</kbd> 关闭</span>
             </div>
           </>
         )}
@@ -396,8 +402,8 @@ export function InputArea({
             <button
               className={styles.activeSkillRemove}
               onClick={() => setActiveSkill(null)}
-              aria-label="Remove active skill"
-              title="Remove active skill"
+              aria-label="移除当前技能"
+              title="移除当前技能"
               type="button"
             >
               <X size={10} />
@@ -422,16 +428,16 @@ export function InputArea({
             }}
             placeholder={
               !isConnected
-                ? 'Connecting to agent...'
+                ? '正在连接到智能体...'
                 : awaitingApproval
-                ? 'Respond to the approval request above...'
+                ? '请回复上方的审批请求...'
                 : awaitingQuestion
-                ? 'Answer the question above...'
+                ? '请回答上方的问题...'
                 : isStopped
-                ? 'Agent stopped. Click resume to continue...'
+                ? '智能体已停止。点击继续以恢复...'
                 : isLoading
-                ? 'Send guidance to the agent...'
-                : 'Ask a question or type /skill...'
+                ? '给智能体发送指导...'
+                : '提问，或输入 /skill...'
             }
             rows={2}
             disabled={awaitingApproval || awaitingQuestion || awaitingToolConfirmation || !isConnected || isStopped}
@@ -444,8 +450,8 @@ export function InputArea({
                 setShowAutocomplete(false)
                 setSelectedIndex(0)
               }}
-              aria-label="Browse skills"
-              title="Browse Chat Skills"
+              aria-label="浏览技能"
+              title="浏览技能"
               type="button"
             >
               <Zap size={13} />
@@ -455,8 +461,8 @@ export function InputArea({
                 className={`${styles.stopResumeButton} ${isStopped ? styles.resumeButton : styles.stopButton}`}
                 onClick={isStopped ? handleResume : handleStop}
                 disabled={isStopping}
-                aria-label={isStopping ? 'Stopping...' : isStopped ? 'Resume agent' : 'Stop agent'}
-                title={isStopping ? 'Stopping...' : isStopped ? 'Resume execution' : 'Stop execution'}
+                aria-label={isStopping ? '正在停止...' : isStopped ? '继续智能体' : '停止智能体'}
+                title={isStopping ? '正在停止...' : isStopped ? '继续执行' : '停止执行'}
               >
                 {isStopping ? <Loader2 size={13} className={styles.spinner} /> : isStopped ? <Play size={13} /> : <Square size={13} />}
               </button>
@@ -465,7 +471,7 @@ export function InputArea({
               className={styles.sendButton}
               onClick={handleSend}
               disabled={!inputValue.trim() || awaitingApproval || awaitingQuestion || awaitingToolConfirmation || !isConnected || isStopped}
-              aria-label="Send message"
+              aria-label="发送消息"
             >
               <Send size={13} />
             </button>
@@ -475,9 +481,9 @@ export function InputArea({
       <span className={styles.inputHint}>
         {isConnected
           ? isLoading
-            ? 'Send guidance or stop the agent'
-            : 'Press Enter to send, Shift+Enter for new line'
-          : 'Waiting for connection...'}
+            ? '发送指导或停止智能体'
+            : '按 Enter 发送，Shift+Enter 换行'
+          : '等待连接...'}
       </span>
     </div>
   )

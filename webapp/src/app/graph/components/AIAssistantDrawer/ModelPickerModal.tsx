@@ -4,7 +4,6 @@ import React from 'react'
 import { X, Loader2 } from 'lucide-react'
 import { formatContextLength } from './modelUtils'
 import type { ModelOption } from './modelUtils'
-import { formatModelDisplay } from './phaseConfig'
 import styles from './AIAssistantDrawer.module.css'
 
 interface ModelPickerModalProps {
@@ -40,7 +39,7 @@ export function ModelPickerModal({
     <div className={styles.settingsModalOverlay} onClick={() => setShowModelModal(false)}>
       <div className={`${styles.settingsModal} ${styles.modelModal}`} onClick={e => e.stopPropagation()}>
         <div className={styles.settingsModalHeader}>
-          <h2 className={styles.settingsModalTitle}>Change Model</h2>
+          <h2 className={styles.settingsModalTitle}>切换模型</h2>
           <button className={styles.settingsModalClose} onClick={() => setShowModelModal(false)}>
             <X size={16} />
           </button>
@@ -52,7 +51,7 @@ export function ModelPickerModal({
             type="text"
             value={modelSearch}
             onChange={(e) => setModelSearch(e.target.value)}
-            placeholder="Search models..."
+            placeholder="搜索模型..."
             onKeyDown={(e) => {
               if (e.key === 'Escape') setShowModelModal(false)
             }}
@@ -61,22 +60,22 @@ export function ModelPickerModal({
             {modelsLoading ? (
               <div className={styles.modelListEmpty}>
                 <Loader2 size={16} className={styles.spinner} />
-                <span>Loading models...</span>
+                <span>正在加载模型...</span>
               </div>
             ) : modelsError ? (
               <div className={styles.modelListEmpty}>
-                <span>Failed to load models. Type a model ID manually:</span>
+                <span>模型加载失败。请手动输入模型 ID：</span>
                 <input
                   className={styles.modelModalManualInput}
                   type="text"
                   value={modelName || ''}
                   onChange={(e) => onModelChange?.(e.target.value)}
-                  placeholder="e.g. claude-opus-4-6, gpt-5.2, openrouter/meta-llama/llama-4-maverick"
+                  placeholder="例如：claude-opus-4-6、gpt-5.2、openrouter/meta-llama/llama-4-maverick"
                 />
               </div>
             ) : Object.keys(filteredModels).length === 0 ? (
               <div className={styles.modelListEmpty}>
-                {modelSearch ? `No models matching "${modelSearch}"` : 'No providers configured'}
+                {modelSearch ? `没有匹配“${modelSearch}”的模型` : '未配置任何模型提供方'}
               </div>
             ) : (
               Object.entries(filteredModels).map(([provider, models]) => (

@@ -126,14 +126,14 @@ export function PhaseIndicatorBar({
             interactive
             content={
               <div className={styles.phaseToolsTooltip}>
-                <div className={styles.phaseToolsHeader}>Phase Tools</div>
+                <div className={styles.phaseToolsHeader}>阶段工具</div>
                 {builtInTools.map(t => (
                   <div key={t} className={styles.phaseToolsItem}>{t}</div>
                 ))}
                 {mcpTools.length > 0 && (
                   <>
                     <div className={styles.phaseToolsHeader} style={{ marginTop: 6, paddingTop: 6, borderTop: '1px solid rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', gap: 4 }}>
-                      <Server size={10} /> MCP Tool Plugins
+                      <Server size={10} /> MCP 工具插件
                     </div>
                     {mcpTools.map(t => (
                       <div key={t.name} className={styles.phaseToolsItem}>
@@ -158,12 +158,12 @@ export function PhaseIndicatorBar({
             <div className={styles.skillTooltip}>
               <div className={styles.skillTooltipHeader}>
                 <Swords size={11} />
-                Agent Skills
+                Agent 技能
               </div>
               {skillData && (
                 <>
                   <div className={styles.skillTooltipGroup}>
-                    <div className={styles.skillTooltipGroupLabel}>Built-in</div>
+                    <div className={styles.skillTooltipGroupLabel}>内置</div>
                     {skillData.builtIn.map(s => {
                       const enabled = skillData.config.builtIn[s.id] !== false
                       const isActive = attackPathType === s.id
@@ -178,7 +178,7 @@ export function PhaseIndicatorBar({
                   </div>
                   {skillData.user.length > 0 && (
                     <div className={styles.skillTooltipGroup}>
-                      <div className={styles.skillTooltipGroupLabel}>User Skills</div>
+                      <div className={styles.skillTooltipGroupLabel}>用户技能</div>
                       {skillData.user.map(s => {
                         const enabled = skillData.config.user[s.id] !== false
                         const isActive = attackPathType === `user_skill:${s.id}`
@@ -212,7 +212,7 @@ export function PhaseIndicatorBar({
       )}
 
       {iterationCount > 0 && (
-        <span className={styles.iterationCount}>Step {iterationCount}</span>
+        <span className={styles.iterationCount}>步骤 {iterationCount}</span>
       )}
 
       {onToggleStealth ? (
@@ -220,14 +220,14 @@ export function PhaseIndicatorBar({
           className={`${styles.stealthToggle} ${stealthMode ? styles.stealthToggleActive : ''}`}
           onClick={() => onToggleStealth(!stealthMode)}
           title={stealthMode
-            ? 'Stealth Mode ON — click to disable'
-            : 'Stealth Mode OFF — click to enable passive-only techniques'
+            ? '隐身模式已开启 — 点击关闭'
+            : '隐身模式已关闭 — 点击启用被动技术'
           }
         >
           <StealthIcon size={11} />
         </button>
       ) : stealthMode ? (
-        <span className={styles.stealthBadge} title="Stealth Mode — passive/low-noise techniques only">
+        <span className={styles.stealthBadge} title="隐身模式 — 仅使用被动/低噪声技术">
           <StealthIcon size={11} />
         </span>
       ) : null}
@@ -236,7 +236,7 @@ export function PhaseIndicatorBar({
         <button
           className={styles.settingsButton}
           onClick={() => setShowSettingsDropdown(prev => !prev)}
-          title="Agent settings"
+          title="Agent 设置"
         >
           <Settings size={12} />
         </button>
@@ -246,19 +246,19 @@ export function PhaseIndicatorBar({
               className={styles.settingsDropdownItem}
               onClick={() => { setSettingsModal('agent'); setShowSettingsDropdown(false) }}
             >
-              Agent Behaviour
+              Agent 行为
             </button>
             <button
               className={styles.settingsDropdownItem}
               onClick={() => { setSettingsModal('toolmatrix'); setShowSettingsDropdown(false) }}
             >
-              Tool Matrix
+              工具矩阵
             </button>
             <button
               className={styles.settingsDropdownItem}
               onClick={() => { setSettingsModal('attack'); setShowSettingsDropdown(false) }}
             >
-              Agent Skills
+              Agent 技能
             </button>
           </div>
         )}

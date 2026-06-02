@@ -32,19 +32,19 @@ export function formatModelDisplay(model: string): string {
 
 export const PHASE_CONFIG = {
   informational: {
-    label: 'Informational',
+    label: '信息收集',
     icon: Shield,
     color: '#059669',
     bgColor: 'rgba(5, 150, 105, 0.1)',
   },
   exploitation: {
-    label: 'Exploitation',
+    label: '漏洞利用',
     icon: Target,
     color: 'var(--status-warning)',
     bgColor: 'rgba(245, 158, 11, 0.1)',
   },
   post_exploitation: {
-    label: 'Post-Exploitation',
+    label: '后渗透',
     icon: Zap,
     color: 'var(--status-error)',
     bgColor: 'rgba(239, 68, 68, 0.1)',
@@ -53,55 +53,55 @@ export const PHASE_CONFIG = {
 
 export const KNOWN_ATTACK_PATH_CONFIG: Record<string, { label: string; shortLabel: string; color: string; bgColor: string }> = {
   cve_exploit: {
-    label: 'CVE (MSF)',
+    label: 'CVE 漏洞利用 (MSF)',
     shortLabel: 'CVE/MSF',
     color: 'var(--status-warning)',
     bgColor: 'rgba(245, 158, 11, 0.15)',
   },
   brute_force_credential_guess: {
-    label: 'Credential Testing',
+    label: '凭证测试',
     shortLabel: 'CRED',
     color: 'var(--accent-secondary, #8b5cf6)',
     bgColor: 'rgba(139, 92, 246, 0.15)',
   },
   phishing_social_engineering: {
-    label: 'Social Engineering Simulation',
+    label: '社会工程学模拟',
     shortLabel: 'SE',
     color: 'var(--accent-tertiary, #ec4899)',
     bgColor: 'rgba(236, 72, 153, 0.15)',
   },
   denial_of_service: {
-    label: 'Availability Testing',
+    label: '可用性测试',
     shortLabel: 'AVAIL',
     color: 'var(--status-error, #ef4444)',
     bgColor: 'rgba(239, 68, 68, 0.15)',
   },
   sql_injection: {
-    label: 'SQL Injection',
+    label: 'SQL 注入',
     shortLabel: 'SQLi',
     color: 'var(--accent-info, #06b6d4)',
     bgColor: 'rgba(6, 182, 212, 0.15)',
   },
   xss: {
-    label: 'Cross-Site Scripting',
+    label: '跨站脚本攻击',
     shortLabel: 'XSS',
     color: 'var(--accent-success, #10b981)',
     bgColor: 'rgba(16, 185, 129, 0.15)',
   },
   ssrf: {
-    label: 'Server-Side Request Forgery',
+    label: '服务端请求伪造',
     shortLabel: 'SSRF',
     color: 'var(--accent-orange, #f97316)',
     bgColor: 'rgba(249, 115, 22, 0.15)',
   },
   rce: {
-    label: 'Remote Code Execution',
+    label: '远程代码执行',
     shortLabel: 'RCE',
     color: 'var(--accent-rose, #f43f5e)',
     bgColor: 'rgba(244, 63, 94, 0.15)',
   },
   path_traversal: {
-    label: 'Path Traversal / LFI / RFI',
+    label: '路径遍历 / LFI / RFI',
     shortLabel: 'PATH',
     color: 'var(--accent-teal, #14b8a6)',
     bgColor: 'rgba(20, 184, 166, 0.15)',
@@ -115,7 +115,7 @@ export function getAttackPathConfig(type: string): { label: string; shortLabel: 
   }
   if (type.startsWith('user_skill:')) {
     return {
-      label: 'User Skill',
+      label: '用户技能',
       shortLabel: 'SKILL',
       color: 'var(--accent-primary, #3b82f6)',
       bgColor: 'rgba(59, 130, 246, 0.15)',
@@ -128,7 +128,7 @@ export function getAttackPathConfig(type: string): { label: string; shortLabel: 
     ? label.slice(0, 5).toUpperCase()
     : words.map((w: string) => w[0]).join('').toUpperCase()
   return {
-    label: `${label} (Unclassified)`,
+    label: `${label} (未分类)`,
     shortLabel,
     color: 'var(--text-secondary, #6b7280)',
     bgColor: 'rgba(107, 114, 128, 0.15)',

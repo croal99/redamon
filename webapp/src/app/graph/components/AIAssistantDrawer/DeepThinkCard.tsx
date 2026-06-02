@@ -41,7 +41,7 @@ export function DeepThinkCard({ item, isExpanded, onToggleExpand }: DeepThinkCar
             <Lightbulb size={14} className={styles.deepThinkIcon} />
           </div>
           <div className={styles.headerInfo}>
-            <span className={styles.titleText}>Deep Think</span>
+            <span className={styles.titleText}>深度思考</span>
             <span className={styles.triggerBadge}>{item.trigger_reason}</span>
           </div>
           <div className={styles.cardActions}>
@@ -51,7 +51,7 @@ export function DeepThinkCard({ item, isExpanded, onToggleExpand }: DeepThinkCar
                 e.stopPropagation()
                 handleCopy()
               }}
-              title="Copy analysis"
+              title="复制分析内容"
             >
               {copied ? <Check size={12} /> : <Copy size={12} />}
             </button>
@@ -71,31 +71,31 @@ export function DeepThinkCard({ item, isExpanded, onToggleExpand }: DeepThinkCar
         <div className={styles.cardContent}>
           {sections.situation && (
             <div className={styles.section}>
-              <div className={styles.sectionLabel}>Situation</div>
+              <div className={styles.sectionLabel}>当前情况</div>
               <p className={styles.text}>{sections.situation}</p>
             </div>
           )}
           {sections.vectors && (
             <div className={styles.section}>
-              <div className={styles.sectionLabel}>Attack Vectors</div>
+              <div className={styles.sectionLabel}>攻击向量</div>
               <p className={styles.text}>{sections.vectors}</p>
             </div>
           )}
           {sections.approach && (
             <div className={styles.section}>
-              <div className={styles.sectionLabel}>Approach</div>
+              <div className={styles.sectionLabel}>方法</div>
               <p className={styles.text}>{sections.approach}</p>
             </div>
           )}
           {sections.priority && (
             <div className={styles.section}>
-              <div className={styles.sectionLabel}>Priority</div>
+              <div className={styles.sectionLabel}>优先级</div>
               <p className={styles.text}>{sections.priority}</p>
             </div>
           )}
           {sections.risks && (
             <div className={styles.section}>
-              <div className={styles.sectionLabel}>Risks</div>
+              <div className={styles.sectionLabel}>风险</div>
               <p className={styles.text}>{sections.risks}</p>
             </div>
           )}
