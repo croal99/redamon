@@ -221,7 +221,5 @@ export function ImportModal({ isOpen, userId, onClose, onSuccess }: ImportModalP
         )}
       </div>
     </div>
-      </div>
-    </div>
   )
 }

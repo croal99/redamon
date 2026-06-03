@@ -120,7 +120,11 @@ export default function UsersPage() {
       setPassword('')
       setConfirmPassword('')
     } catch (err: unknown) {
-      setFormError(err instanceof Error ? err.message : '修改密码失败') {
+      setFormError(err instanceof Error ? err.message : '修改密码失败')
+    }
+  }
+
+  async function handleChangeOwnPassword() {
     setFormError('')
     setFormSuccess('')
     if (!currentPassword) {
