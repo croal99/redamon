@@ -7,12 +7,12 @@ function getCssVar(name: string): string {
 
 export function getSeverityPalette() {
   return {
-    critical: getCssVar('--color-crimson-500') || '#e53935',
-    high: getCssVar('--color-orange-500') || '#f97316',
-    medium: getCssVar('--color-amber-500') || '#f59e0b',
-    low: getCssVar('--color-blue-500') || '#3b82f6',
-    info: getCssVar('--color-gray-400') || '#a1a1aa',
-    unknown: getCssVar('--color-gray-500') || '#71717a',
+    critical: getCssVar('--color-cyber-red') || '#ff4757',
+    high: getCssVar('--color-cyber-orange') || '#ff6b35',
+    medium: getCssVar('--color-cyber-yellow') || '#ffd700',
+    low: getCssVar('--color-cyber-blue') || '#0a84ff',
+    info: getCssVar('--color-cyber-muted') || '#64748b',
+    unknown: getCssVar('--color-cyber-muted') || '#64748b',
   }
 }
 
@@ -31,26 +31,23 @@ export function getNodeTypePalette() {
     CVE: getCssVar('--node-cve') || '#dc2626',
     Certificate: getCssVar('--node-certificate') || '#d97706',
     Header: getCssVar('--node-header') || '#71717a',
-    DNSRecord: getCssVar('--color-cyan-600') || '#0891b2',
-    GithubSecret: getCssVar('--color-amber-500') || '#f59e0b',
-    AttackChain: getCssVar('--color-crimson-400') || '#ef5350',
-    ChainStep: getCssVar('--color-crimson-300') || '#ef9a9a',
-    ChainFinding: getCssVar('--color-orange-500') || '#f97316',
+    DNSRecord: getCssVar('--color-cyber-cyan') || '#00d4ff',
+    GithubSecret: getCssVar('--color-cyber-yellow') || '#ffd700',
+    AttackChain: getCssVar('--color-cyber-cyan') || '#00d4ff',
+    ChainStep: getCssVar('--color-cyber-blue') || '#0a84ff',
+    ChainFinding: getCssVar('--color-cyber-orange') || '#ff6b35',
   }
 }
 
 export function getChartPalette(): string[] {
   return [
-    getCssVar('--color-blue-500') || '#3b82f6',
-    getCssVar('--color-crimson-500') || '#e53935',
-    getCssVar('--color-green-500') || '#22c55e',
-    getCssVar('--color-amber-500') || '#f59e0b',
-    getCssVar('--color-purple-500') || '#a855f7',
-    getCssVar('--color-cyan-500') || '#06b6d4',
-    getCssVar('--color-orange-500') || '#f97316',
-    getCssVar('--color-indigo-500') || '#6366f1',
-    getCssVar('--color-teal-500') || '#14b8a6',
-    getCssVar('--color-pink-500') || '#ec4899',
+    getCssVar('--color-cyber-cyan') || '#00d4ff',
+    getCssVar('--color-cyber-blue') || '#0a84ff',
+    getCssVar('--color-cyber-green') || '#00ff88',
+    getCssVar('--color-cyber-yellow') || '#ffd700',
+    getCssVar('--color-cyber-orange') || '#ff6b35',
+    getCssVar('--color-cyber-red') || '#ff4757',
+    getCssVar('--color-cyber-purple') || '#7c3aed',
   ]
 }
 

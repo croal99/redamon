@@ -141,4 +141,24 @@
   /* Vulnerability severity specials */
   --color-vuln-critical: #ff3333;
   --color-cve-critical: #ff3377;
+
+  --color-cyber-bg: #0a0e1a;
+  --color-cyber-bg2: #111827;
+  --color-cyber-bg3: #1a2235;
+  --color-cyber-bg4: #1f2937;
+  --color-cyber-terminal: #000000;
+  --color-cyber-cyan: #00d4ff;
+  --color-cyber-blue: #0a84ff;
+  --color-cyber-blue-dark: #0040aa;
+  --color-cyber-green: #00ff88;
+  --color-cyber-terminal-green: #00ff41;
+  --color-cyber-red: #ff4757;
+  --color-cyber-orange: #ff6b35;
+  --color-cyber-yellow: #ffd700;
+  --color-cyber-purple: #7c3aed;
+  --color-cyber-text: #e2e8f0;
+  --color-cyber-muted: #64748b;
+  --color-cyber-border: rgba(0, 212, 255, 0.2);
+  --color-cyber-glow-cyan: rgba(0, 212, 255, 0.3);
+  --color-cyber-glow-blue: rgba(10, 132, 255, 0.3);
 }

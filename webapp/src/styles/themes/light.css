@@ -25,6 +25,7 @@
   --border-default: var(--color-gray-200);
   --border-subtle: var(--color-gray-100);
   --border-strong: var(--color-gray-300);
+  --border-focus: var(--color-blue-500);
 
   /* Shadows - lighter, more visible for light theme */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -57,7 +58,13 @@
   --status-info-text: var(--color-blue-700);
 
   /* Accent adjustments for better contrast on light */
+  --accent-primary: var(--color-blue-600);
+  --accent-primary-hover: var(--color-blue-700);
+  --accent-primary-active: var(--color-blue-800);
   --accent-primary-subtle: var(--color-blue-100);
+  --accent-secondary: var(--color-indigo-600);
+  --accent-secondary-hover: var(--color-indigo-500);
+  --accent-secondary-active: var(--color-indigo-600);
 
   color-scheme: light;
 }
@@ -86,6 +93,7 @@
     --border-default: var(--color-gray-200);
     --border-subtle: var(--color-gray-100);
     --border-strong: var(--color-gray-300);
+    --border-focus: var(--color-blue-500);
 
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -115,7 +123,13 @@
     --status-info-bg: var(--color-blue-100);
     --status-info-text: var(--color-blue-700);
 
+    --accent-primary: var(--color-blue-600);
+    --accent-primary-hover: var(--color-blue-700);
+    --accent-primary-active: var(--color-blue-800);
     --accent-primary-subtle: var(--color-blue-100);
+    --accent-secondary: var(--color-indigo-600);
+    --accent-secondary-hover: var(--color-indigo-500);
+    --accent-secondary-active: var(--color-indigo-600);
 
     color-scheme: light;
   }
