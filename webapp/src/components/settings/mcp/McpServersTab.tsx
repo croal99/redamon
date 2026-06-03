@@ -187,6 +187,7 @@ export default function McpServersTab({ userId }: Props) {
       const r = await fetch(`/api/users/${userId}/mcp`)
       if (r.ok) {
         const data = await r.json()
+        console.log('load mcp servers', data)
         setServers(Array.isArray(data.servers) ? data.servers : [])
       }
     } catch (e) {
@@ -332,8 +333,8 @@ export default function McpServersTab({ userId }: Props) {
 
   const onDelete = async (serverId: string) => {
     const confirmed = await dangerConfirm(
-      `Delete MCP Tool Plugin '${serverId}'? This cannot be undone.`,
-      'Delete MCP Tool Plugin',
+      `删除 MCP 工具插件「${serverId}」？此操作不可撤销。`,
+      '删除 MCP 工具插件',
     )
     if (!confirmed) return
     try {
@@ -344,10 +345,10 @@ export default function McpServersTab({ userId }: Props) {
         await load()
       } else {
         const data = await r.json().catch(() => ({}))
-        await alertError(data.error || `Delete failed (${r.status})`, 'Delete MCP Tool Plugin')
+        await alertError(data.error || `删除失败（${r.status}）`, '删除 MCP 工具插件')
       }
     } catch (e) {
-      await alertError(e instanceof Error ? e.message : 'Delete failed', 'Delete MCP Tool Plugin')
+      await alertError(e instanceof Error ? e.message : '删除失败', '删除 MCP 工具插件')
     }
   }
 
@@ -446,27 +447,27 @@ export default function McpServersTab({ userId }: Props) {
         <div className={styles.sectionHeader}>
           <div>
             <h2 className={styles.sectionTitle}>
-              <Server size={18} /> MCP Tool Plugins
+              <Server size={18} /> MCP 工具插件
             </h2>
             <p className={styles.sectionDescription}>
-              Plug Model-Context-Protocol (MCP) servers into the agent to extend its tool arsenal.
-              New tools auto-appear in every project&apos;s Tool Matrix with all three phases enabled by default.
+              将 Model Context Protocol（MCP）服务器接入智能体，以扩展其工具能力。
+              新工具会自动出现在每个项目的工具矩阵中，默认启用全部三个阶段。
             </p>
           </div>
           <button className={styles.primaryBtn} onClick={startNew}>
-            <Plus size={14} /> Add MCP
+            <Plus size={14} /> 添加 MCP
           </button>
         </div>
 
-        {loading && <p className={styles.muted}><Loader2 className={styles.spin} size={14} /> Loading…</p>}
+        {loading && <p className={styles.muted}><Loader2 className={styles.spin} size={14} /> 加载中…</p>}
 
         {/* Quick-Add presets — 10 publicly-available MCPs vetted for pentest workflow */}
         {!loading && (
           <div className={styles.presetsBlock}>
             <div className={styles.presetsHeader}>
-              <strong>Quick add</strong>
+              <strong>快速添加</strong>
               <span className={styles.muted} style={{ fontSize: '11px', marginLeft: 'var(--space-2)' }}>
-                click a preset → form opens prefilled (paste your API key if needed, then Save)
+                点击预设 → 自动填充表单（如需 API Key 请粘贴后保存）
               </span>
             </div>
             <div className={styles.presetsGrid}>
@@ -487,10 +488,10 @@ export default function McpServersTab({ userId }: Props) {
                     <div className={styles.presetCardFooter}>
                       <span className={styles.presetTransportTag}>{preset.template.transport}</span>
                       {preset.authRequired && (
-                        <span className={styles.presetAuthTag}>auth</span>
+                        <span className={styles.presetAuthTag}>需认证</span>
                       )}
                       {alreadyAdded && (
-                        <span className={styles.presetAddedTag}>already added</span>
+                        <span className={styles.presetAddedTag}>已添加</span>
                       )}
                     </div>
                   </button>
@@ -501,18 +502,18 @@ export default function McpServersTab({ userId }: Props) {
         )}
 
         {!loading && servers.length === 0 && (
-          <p className={styles.muted}>No saved MCP Tool Plugins yet — pick one from Quick add above, or click Add MCP to configure one manually.</p>
+          <p className={styles.muted}>尚未保存任何 MCP 工具插件 — 可从上方“快速添加”选择一个，或点击“添加 MCP”手动配置。</p>
         )}
 
         {!loading && servers.length > 0 && (
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Transport</th>
-                <th>Tools</th>
-                <th>Enabled</th>
-                <th>Actions</th>
+                <th>名称</th>
+                <th>传输方式</th>
+                <th>工具数</th>
+                <th>启用</th>
+                <th>操作</th>
               </tr>
             </thead>
             <tbody>
@@ -539,10 +540,10 @@ export default function McpServersTab({ userId }: Props) {
                     </label>
                   </td>
                   <td>
-                    <button className={styles.iconBtn} onClick={() => startEdit(srv)} title="Edit">
+                    <button className={styles.iconBtn} onClick={() => startEdit(srv)} title="编辑">
                       <Pencil size={14} />
                     </button>
-                    <button className={styles.iconBtn} onClick={() => onDelete(srv.id)} title="Delete">
+                    <button className={styles.iconBtn} onClick={() => onDelete(srv.id)} title="删除">
                       <Trash2 size={14} />
                     </button>
                   </td>
@@ -564,17 +565,17 @@ export default function McpServersTab({ userId }: Props) {
     <div className={styles.section}>
       <div className={styles.sectionHeader}>
         <h2 className={styles.sectionTitle}>
-          <Server size={18} /> {isNew ? 'Add MCP' : `Edit MCP Tool Plugin: ${editing.id}`}
+          <Server size={18} /> {isNew ? '添加 MCP' : `编辑 MCP 工具插件：${editing.id}`}
         </h2>
         <div className={styles.headerActions}>
           <button className={styles.discoverBtn} onClick={onTest} disabled={testing}>
             {testing
-              ? <><Loader2 className={styles.spin} size={14} /> Discovering…</>
-              : <><Zap size={14} /> Discover and add new tools</>}
+              ? <><Loader2 className={styles.spin} size={14} /> 正在发现…</>
+              : <><Zap size={14} /> 发现并添加新工具</>}
           </button>
-          <button className={styles.secondaryBtn} onClick={cancel} disabled={saving}>Cancel</button>
+          <button className={styles.secondaryBtn} onClick={cancel} disabled={saving}>取消</button>
           <button className={styles.primaryBtn} onClick={onSave} disabled={saving}>
-            {saving ? <><Loader2 className={styles.spin} size={14} /> Saving…</> : 'Save'}
+            {saving ? <><Loader2 className={styles.spin} size={14} /> 保存中…</> : '保存'}
           </button>
         </div>
       </div>
@@ -589,8 +590,8 @@ export default function McpServersTab({ userId }: Props) {
         <div className={testResult.ok ? styles.testOk : styles.testFail}>
           {testResult.ok ? <CheckCircle2 size={14} /> : <XCircle size={14} />}
           {testResult.ok
-            ? <span><strong>OK</strong> — {testResult.discovered_tools.length} tool(s) discovered in {testResult.elapsed_ms}ms.</span>
-            : <span><strong>Failed</strong> — {testResult.error}</span>}
+            ? <span><strong>成功</strong> — 已发现 {testResult.discovered_tools.length} 个工具（耗时 {testResult.elapsed_ms}ms）。</span>
+            : <span><strong>失败</strong> — {testResult.error}</span>}
           {testResult.warnings.length > 0 && (
             <ul className={styles.warnList}>
               {testResult.warnings.map((w, i) => (
@@ -601,29 +602,29 @@ export default function McpServersTab({ userId }: Props) {
           {testResult.ok && testResult.discovered_tools.length > 0 && (
             <div className={styles.discoveredToolsBlock}>
               <div className={styles.discoveredHeader}>
-                <strong>Discovered tools ({testResult.discovered_tools.length})</strong>
+                <strong>已发现的工具（{testResult.discovered_tools.length}）</strong>
                 <button
                   className={styles.primaryBtn}
                   onClick={() => importAllDiscoveredTools(testResult.discovered_tools)}
                   style={{ padding: '4px 10px', fontSize: '12px' }}
                 >
-                  <Plus size={12} /> Add all
+                  <Plus size={12} /> 全部添加
                 </button>
               </div>
               <div className={styles.discoveredTableWrap}>
                 <table className={styles.discoveredTable}>
                   <thead>
                     <tr>
-                      <th>Tool</th>
-                      <th>Description</th>
-                      <th style={{ width: '160px', textAlign: 'right' }}>Action</th>
+                      <th>工具</th>
+                      <th>描述</th>
+                      <th style={{ width: '160px', textAlign: 'right' }}>操作</th>
                     </tr>
                   </thead>
                   <tbody>
                     {testResult.discovered_tools.map(t => {
                       const alreadyAdded = editing.tools.some(x => x.name === t.name)
                       const reserved = BUILTIN_RESERVED_TOOL_NAMES.has(t.name)
-                      const desc = t.description || '(no description)'
+                      const desc = t.description || '（暂无描述）'
                       return (
                         <tr key={t.name}>
                           <td><code>{t.name}</code></td>
@@ -637,11 +638,11 @@ export default function McpServersTab({ userId }: Props) {
                                 onClick={() => importDiscoveredTool(t.name, t.description, t.input_schema)}
                                 style={{ padding: '3px 8px', fontSize: '11px' }}
                               >
-                                <Plus size={11} /> Add
+                                <Plus size={11} /> 添加
                               </button>
                             )}
-                            {alreadyAdded && <span className={styles.tag}>already added</span>}
-                            {reserved && <span className={styles.tagWarn}>reserved</span>}
+                            {alreadyAdded && <span className={styles.tag}>已添加</span>}
+                            {reserved && <span className={styles.tagWarn}>保留</span>}
                           </td>
                         </tr>
                       )
@@ -656,7 +657,7 @@ export default function McpServersTab({ userId }: Props) {
 
       <div className={styles.formGrid}>
         <label className={styles.field}>
-          <span>id</span>
+          <span>ID</span>
           <input
             type="text"
             value={editing.id}
@@ -665,47 +666,47 @@ export default function McpServersTab({ userId }: Props) {
             placeholder="my-mcp"
           />
           {errOf('id') && <span className={styles.fieldErr}>{errOf('id')}</span>}
-          {idLocked && <span className={styles.muted}>id is immutable after creation</span>}
+          {idLocked && <span className={styles.muted}>创建后不可修改 id</span>}
         </label>
 
         <label className={styles.field}>
-          <span>name</span>
+          <span>名称</span>
           <input
             type="text"
             value={editing.name}
             onChange={e => updateField('name', e.target.value)}
-            placeholder="My MCP Tool Plugin"
+            placeholder="我的 MCP 工具插件"
           />
           {errOf('name') && <span className={styles.fieldErr}>{errOf('name')}</span>}
         </label>
 
         <label className={`${styles.field} ${styles.fieldWide}`}>
-          <span>description</span>
+          <span>描述</span>
           <input
             type="text"
             value={editing.description}
             onChange={e => updateField('description', e.target.value)}
-            placeholder="Short summary shown in the project Tool Matrix"
+            placeholder="显示在项目工具矩阵中的简短说明"
           />
         </label>
 
         <label className={styles.field}>
-          <span>transport</span>
+          <span>传输方式</span>
           <select value={editing.transport} onChange={e => updateField('transport', e.target.value as Transport)}>
             {TRANSPORTS.map(t => <option key={t} value={t}>{t}</option>)}
           </select>
         </label>
 
         <label className={styles.field}>
-          <span>enabled</span>
+          <span>启用</span>
           <select value={editing.enabled ? '1' : '0'} onChange={e => updateField('enabled', e.target.value === '1')}>
-            <option value="1">yes</option>
-            <option value="0">no</option>
+            <option value="1">是</option>
+            <option value="0">否</option>
           </select>
         </label>
 
         <label className={`${styles.field} ${styles.fieldWide}`}>
-          <span>default phases (apply to tools that don&apos;t override)</span>
+          <span>默认阶段（适用于未单独覆盖的工具）</span>
           <div className={styles.phasesRow}>
             {PHASES.map(p => (
               <label key={p} className={styles.checkInline}>
@@ -725,7 +726,7 @@ export default function McpServersTab({ userId }: Props) {
         </label>
 
         <label className={`${styles.field} ${styles.fieldWide}`}>
-          <span>tags (comma-separated, optional)</span>
+          <span>标签（逗号分隔，可选）</span>
           <input
             type="text"
             value={(editing.tags || []).join(', ')}
@@ -735,14 +736,14 @@ export default function McpServersTab({ userId }: Props) {
             placeholder="osint, recon, threat-intel"
           />
           <span className={styles.muted} style={{ fontSize: '11px' }}>
-            Cosmetic labels shown on the server card. No functional effect.
+            仅用于显示的标签，不影响功能。
           </span>
         </label>
 
         {isHttp && (
           <>
             <label className={`${styles.field} ${styles.fieldWide}`}>
-              <span>url</span>
+              <span>URL</span>
               <input
                 type="text"
                 value={editing.url || ''}
@@ -752,7 +753,7 @@ export default function McpServersTab({ userId }: Props) {
               {errOf('url') && <span className={styles.fieldErr}>{errOf('url')}</span>}
             </label>
             <label className={styles.field}>
-              <span>connect_timeout (s)</span>
+              <span>连接超时（秒）</span>
               <input
                 type="number"
                 value={editing.connect_timeout}
@@ -760,7 +761,7 @@ export default function McpServersTab({ userId }: Props) {
               />
             </label>
             <label className={styles.field}>
-              <span>read_timeout (s)</span>
+              <span>读取超时（秒）</span>
               <input
                 type="number"
                 value={editing.read_timeout}
@@ -768,7 +769,7 @@ export default function McpServersTab({ userId }: Props) {
               />
             </label>
             <div className={`${styles.field} ${styles.fieldWide}`}>
-              <span>auth (bearer token, optional)</span>
+              <span>认证（Bearer Token，可选）</span>
               <div className={styles.tokenInputRow}>
                 <input
                   type={tokenVisible ? 'text' : 'password'}
@@ -776,7 +777,7 @@ export default function McpServersTab({ userId }: Props) {
                   onChange={e => updateField('auth', e.target.value
                     ? { type: 'bearer', token: e.target.value }
                     : undefined)}
-                  placeholder="paste token here (e.g. ghp_...) — stored in DB, masked on display"
+                  placeholder="在此粘贴 Token（例如 ghp_...）— 将保存到数据库，显示时会遮蔽"
                   autoComplete="off"
                   spellCheck={false}
                 />
@@ -784,17 +785,17 @@ export default function McpServersTab({ userId }: Props) {
                   type="button"
                   className={styles.iconBtn}
                   onClick={() => setTokenVisible(v => !v)}
-                  title={tokenVisible ? 'Hide token' : 'Show token'}
+                  title={tokenVisible ? '隐藏 Token' : '显示 Token'}
                 >
                   {tokenVisible ? <EyeOff size={14} /> : <Eye size={14} />}
                 </button>
               </div>
               <span className={styles.muted} style={{ fontSize: '11px' }}>
-                Sent as <code>Authorization: Bearer …</code> on every MCP request.
+                每次 MCP 请求都会携带 <code>Authorization: Bearer …</code>。
               </span>
             </div>
             <label className={`${styles.field} ${styles.fieldWide}`}>
-              <span>custom headers (one per line, <code>Header-Name: value</code>)</span>
+              <span>自定义 Header（每行一个：<code>Header-Name: value</code>）</span>
               <textarea
                 rows={3}
                 value={Object.entries(editing.headers || {}).map(([k, v]) => `${k}: ${v}`).join('\n')}
@@ -814,7 +815,7 @@ export default function McpServersTab({ userId }: Props) {
                 placeholder="X-Organization-ID: abc-123&#10;X-Custom-Tenant: my-team"
               />
               <span className={styles.muted} style={{ fontSize: '11px' }}>
-                Sent verbatim on every MCP request alongside the bearer token. Used by multi-tenant APIs (e.g. Censys requires <code>X-Organization-ID</code>).
+                每次 MCP 请求都会原样携带这些 Header（与 Bearer Token 一起）。用于多租户 API（例如 Censys 需要 <code>X-Organization-ID</code>）。
               </span>
             </label>
           </>
@@ -823,7 +824,7 @@ export default function McpServersTab({ userId }: Props) {
         {!isHttp && (
           <>
             <label className={`${styles.field} ${styles.fieldWide}`}>
-              <span>command</span>
+              <span>命令</span>
               <input
                 type="text"
                 value={editing.command || ''}
@@ -833,7 +834,7 @@ export default function McpServersTab({ userId }: Props) {
               {errOf('command') && <span className={styles.fieldErr}>{errOf('command')}</span>}
             </label>
             <label className={`${styles.field} ${styles.fieldWide}`}>
-              <span>args (one per line)</span>
+              <span>参数（每行一个）</span>
               <textarea
                 rows={3}
                 value={(editing.args || []).join('\n')}
@@ -842,16 +843,16 @@ export default function McpServersTab({ userId }: Props) {
               />
             </label>
             <label className={styles.field}>
-              <span>cwd</span>
+              <span>工作目录（cwd）</span>
               <input
                 type="text"
                 value={editing.cwd || ''}
                 onChange={e => updateField('cwd', e.target.value)}
-                placeholder="/tmp (optional)"
+                placeholder="/tmp（可选）"
               />
             </label>
             <label className={`${styles.field} ${styles.fieldWide}`}>
-              <span>env vars (one per line, <code>KEY=VALUE</code>)</span>
+              <span>环境变量（每行一个：<code>KEY=VALUE</code>）</span>
               <textarea
                 rows={4}
                 value={Object.entries(editing.env || {}).map(([k, v]) => `${k}=${v}`).join('\n')}
@@ -873,7 +874,7 @@ export default function McpServersTab({ userId }: Props) {
                 spellCheck={false}
               />
               <span className={styles.muted} style={{ fontSize: '11px' }}>
-                Passed to the spawned process as environment variables. Used by stdio MCPs that read API keys from env (Shodan, VirusTotal, Snyk, etc.). Stored as plaintext in the DB.
+                作为环境变量传递给启动的进程。用于从环境变量读取 API Key 的 stdio MCP（如 Shodan、VirusTotal、Snyk 等）。以明文存储在数据库中。
               </span>
             </label>
           </>
@@ -881,28 +882,28 @@ export default function McpServersTab({ userId }: Props) {
       </div>
 
       <h3 className={styles.subTitle}>
-        Tools <span className={styles.muted}>({editing.tools.length})</span>
+        工具 <span className={styles.muted}>（{editing.tools.length}）</span>
         <button
           className={styles.secondaryBtn}
           onClick={addTool}
           style={{ marginLeft: 'auto', padding: '4px 10px', fontSize: '12px' }}
         >
-          <Plus size={12} /> Add Tool Manually
+          <Plus size={12} /> 手动添加工具
         </button>
       </h3>
       <p className={styles.sectionDescription}>
-        Each tool needs all four strategic fields filled. Use <strong>Discover and add new tools</strong> to import live tools from the server, or add them manually.
+        每个工具都需要填写全部四个“策略字段”。可使用 <strong>发现并添加新工具</strong> 从服务器导入工具，或手动添加。
       </p>
 
       {editing.tools.length === 0 && (
-        <p className={styles.muted}>No tools yet. Click &ldquo;Discover and add new tools&rdquo; (top of page) or &ldquo;Add Tool Manually&rdquo; above.</p>
+        <p className={styles.muted}>暂无工具。点击页面顶部的“发现并添加新工具”，或点击上方“手动添加工具”。</p>
       )}
 
       {editing.tools.map((t, i) => (
         <div key={i} className={styles.toolBlock}>
           <div className={styles.toolHeader}>
-            <strong>Tool #{i + 1}</strong>
-            <button className={styles.iconBtn} onClick={() => removeTool(i)} title="Remove tool">
+            <strong>工具 #{i + 1}</strong>
+            <button className={styles.iconBtn} onClick={() => removeTool(i)} title="移除工具">
               <Trash2 size={14} />
             </button>
           </div>
@@ -910,8 +911,8 @@ export default function McpServersTab({ userId }: Props) {
             <label className={styles.field}>
               <span>
                 name
-                <span className={styles.injectedBadge} title="Injected into the LLM system prompt's tool_name enum (every iteration)">
-                  → injected in LLM prompt
+                <span className={styles.injectedBadge} title="会注入到 LLM 系统提示词的 tool_name 枚举（每次迭代）">
+                  → 注入到 LLM 提示词
                 </span>
               </span>
               <input
@@ -925,38 +926,38 @@ export default function McpServersTab({ userId }: Props) {
             <label className={styles.field}>
               <span>
                 purpose
-                <span className={styles.injectedBadge} title="Injected into the system prompt's tool availability table (every iteration)">
-                  → injected in LLM prompt
+                <span className={styles.injectedBadge} title="会注入到系统提示词的工具可用性表格（每次迭代）">
+                  → 注入到 LLM 提示词
                 </span>
               </span>
               <input
                 type="text"
                 value={t.purpose}
                 onChange={e => updateTool(i, { purpose: e.target.value })}
-                placeholder="One-line summary"
+                placeholder="一句话摘要"
               />
               {errOf(`tools.${i}.purpose`) && <span className={styles.fieldErr}>{errOf(`tools.${i}.purpose`)}</span>}
             </label>
             <label className={`${styles.field} ${styles.fieldWide}`}>
               <span>
                 when_to_use
-                <span className={styles.injectedBadge} title="Injected into the system prompt's tool availability table (every iteration). Strategic signal for tool selection.">
-                  → injected in LLM prompt
+                <span className={styles.injectedBadge} title="会注入到系统提示词的工具可用性表格（每次迭代）。这是工具选择的关键策略信号。">
+                  → 注入到 LLM 提示词
                 </span>
               </span>
               <input
                 type="text"
                 value={t.when_to_use}
                 onChange={e => updateTool(i, { when_to_use: e.target.value })}
-                placeholder="Strategic guidance — when should the agent pick this?"
+                placeholder="策略说明：智能体应在何时选择该工具？"
               />
               {errOf(`tools.${i}.when_to_use`) && <span className={styles.fieldErr}>{errOf(`tools.${i}.when_to_use`)}</span>}
             </label>
             <label className={`${styles.field} ${styles.fieldWide}`}>
               <span>
                 args_format
-                <span className={styles.injectedBadge} title="Injected verbatim into the system prompt's `### Tool Arguments:` section (every iteration). The LLM mimics this pattern when shaping tool_args JSON.">
-                  → injected in LLM prompt
+                <span className={styles.injectedBadge} title="会原样注入到系统提示词的 `### Tool Arguments:` 段落（每次迭代）。LLM 会模仿该模式生成 tool_args JSON。">
+                  → 注入到 LLM 提示词
                 </span>
               </span>
               <textarea
@@ -970,20 +971,20 @@ export default function McpServersTab({ userId }: Props) {
             <label className={`${styles.field} ${styles.fieldWide}`}>
               <span>
                 description
-                <span className={styles.injectedBadge} title="Injected as full multi-line guidance into the system prompt — every phase where this tool's `default_phases` allows it. The phase checkbox toggles whether the tool exists in the registry for that phase, NOT which fields render. If a tool is allowed in a phase, the LLM sees all four fields (name, purpose, when_to_use, args_format, description) in that phase.">
-                  → injected in LLM prompt
+                <span className={styles.injectedBadge} title="会以多行完整说明注入到系统提示词：在该工具 `default_phases` 允许的每个阶段都会注入。阶段勾选控制的是该阶段是否存在该工具（注册表层面），而不是控制显示哪些字段。只要该阶段允许该工具，LLM 就会看到全部字段（name、purpose、when_to_use、args_format、description）。">
+                  → 注入到 LLM 提示词
                 </span>
               </span>
               <textarea
                 rows={4}
                 value={t.description}
                 onChange={e => updateTool(i, { description: e.target.value })}
-                placeholder="Detailed guidance shown in the system prompt..."
+                placeholder="在系统提示词中展示的详细说明…"
               />
               {errOf(`tools.${i}.description`) && <span className={styles.fieldErr}>{errOf(`tools.${i}.description`)}</span>}
             </label>
             <label className={`${styles.field} ${styles.fieldWide}`}>
-              <span>default_phases for this tool (optional override of server default)</span>
+              <span>该工具的 default_phases（可选，覆盖服务器默认值）</span>
               <div className={styles.phasesRow}>
                 {PHASES.map(p => (
                   <label key={p} className={styles.checkInline}>
