@@ -16,29 +16,10 @@ export function Footer() {
       <div className={styles.content}>
         <div className={styles.left}>
           <span className={styles.copyright}>
-            © {currentYear} RedAmon. All rights reserved.
+            © {currentYear} 合盛安科. All rights reserved.
           </span>
-          <a
-            href={DISCLAIMER_GITHUB_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.legalLink}
-          >
-            <Scale size={12} />
-            法律声明与使用条款
-          </a>
         </div>
         <div className={styles.versionWrapper}>
-          {updateAvailable && latestVersion && (
-            <button
-              className={styles.updateBadge}
-              onClick={() => router.push('/settings?tab=system')}
-              title={`更新到 v${latestVersion}`}
-            >
-              <ArrowUpCircle size={12} />
-              v{latestVersion} 可更新
-            </button>
-          )}
           <span className={styles.version}>v{currentVersion}</span>
         </div>
       </div>

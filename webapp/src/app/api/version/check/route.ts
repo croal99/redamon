@@ -37,24 +37,24 @@ async function fetchGitHub(path: string): Promise<string | null> {
 export async function GET() {
   const currentVersion = readLocalVersion()
 
-  const [versionRaw, changelogRaw] = await Promise.all([
-    fetchGitHub('VERSION'),
-    fetchGitHub('CHANGELOG.md'),
-  ])
+  // const [versionRaw, changelogRaw] = await Promise.all([
+  //   fetchGitHub('VERSION'),
+  //   fetchGitHub('CHANGELOG.md'),
+  // ])
 
-  const latestVersion = versionRaw ? versionRaw.trim() : null
+  // const latestVersion = versionRaw ? versionRaw.trim() : null
 
-  let changelog: ReturnType<typeof filterChangelog> = []
-  if (latestVersion && changelogRaw) {
-    const allEntries = parseChangelog(changelogRaw)
-    changelog = filterChangelog(allEntries, currentVersion)
-  }
+  // let changelog: ReturnType<typeof filterChangelog> = []
+  // if (latestVersion && changelogRaw) {
+  //   const allEntries = parseChangelog(changelogRaw)
+  //   changelog = filterChangelog(allEntries, currentVersion)
+  // }
 
   return Response.json(
     {
       current_version: currentVersion,
-      latest_version: latestVersion,
-      changelog,
+      latest_version: currentVersion,
+      changelog: '',
     },
     {
       headers: { 'Cache-Control': 'no-store' },
