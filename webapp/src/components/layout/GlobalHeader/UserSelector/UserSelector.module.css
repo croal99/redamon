@@ -2,22 +2,25 @@
   position: relative;
 }
 
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-wrap: nowrap;
+}
+
 .trigger {
   display: flex;
   align-items: center;
   gap: var(--space-1-5);
+  min-width: 0;
   padding: var(--space-0-5) var(--space-1-5);
   border-radius: var(--radius-sm);
   color: var(--text-secondary);
   transition: var(--transition-all);
-  cursor: pointer;
+  cursor: default;
   background: transparent;
   border: none;
-}
-
-.trigger:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
 }
 
 .avatar {
@@ -41,17 +44,41 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 120px;
+  max-width: 96px;
 }
 
 .iconOpen {
   transform: rotate(180deg);
 }
 
-.trigger svg:last-child {
+.quickAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: var(--radius-sm);
   color: var(--text-tertiary);
+  transition: var(--transition-all);
+  cursor: pointer;
+  background: transparent;
+  border: none;
   flex-shrink: 0;
-  transition: transform var(--transition-default);
+}
+
+.quickAction:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.quickLogout {
+  color: var(--status-error);
+}
+
+.quickLogout:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--status-error);
 }
 
 .dropdown {
