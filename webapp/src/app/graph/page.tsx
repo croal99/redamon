@@ -35,7 +35,6 @@ import { ActiveSessions } from './components/ActiveSessions'
 import { RoeViewer } from './components/RoeViewer'
 import { KaliTerminal } from './components/KaliTerminal'
 import { GraphViews } from './components/GraphViews'
-import { GitHubStarBanner } from './components/GitHubStarBanner'
 import { useGraphData, useDimensions, useNodeSelection, useTableData, useGraphViews } from './hooks'
 import { useStableGraphData } from './hooks/useStableGraphData'
 import { exportToCsv, exportToJson, exportToMarkdown } from './utils/exportCsv'
@@ -1544,8 +1543,6 @@ export default function GraphPage() {
         isLoading={isGvmLoading}
         error={gvmError}
       />
-
-      <GitHubStarBanner hasAttackChain={(graphStats?.nodesByType?.['AttackChain'] ?? 0) > 0} />
 
       <PageBottomBar
         data={effectiveBarData ?? undefined}
