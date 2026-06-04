@@ -27,7 +27,7 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
     (s) => s !== '.' && s.replace(/\.$/, '').length > 0
   )
   const lockReason = hasExplicitPrefixes
-    ? 'Subdomain Discovery is disabled because explicit Subdomain Prefixes are set in Target Configuration. The pipeline runs in FILTERED mode and only resolves the prefixes you listed. Clear the prefixes to re-enable discovery.'
+    ? '由于在「目标配置」中设置了明确的子域名前缀，子域名发现已被禁用。流水线将以「过滤模式」运行，仅解析你列出的前缀。清空前缀即可重新启用发现。'
     : ''
 
   const includesRootDomain = (data.subdomainList ?? []).includes('.')
@@ -39,10 +39,9 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
   const handleMasterToggle = async (checked: boolean) => {
     if (!checked && !hasExplicitPrefixes && !includesRootDomain) {
       const ok = await confirm(
-        'You are turning off Subdomain Discovery while no Subdomain Prefixes are set. ' +
-        'To keep the pipeline runnable, "Include Root Domain" will be automatically ' +
-        'enabled and locked ON — the root domain becomes the only scan target. Continue?',
-        'Disable Subdomain Discovery?'
+        '你正在关闭「子域名发现」，但当前未设置任何子域名前缀。' +
+        '为了确保流水线仍可运行，「包含根域名」将自动开启并锁定为开启状态——根域名将成为唯一的扫描目标。是否继续？',
+        '禁用子域名发现？'
       )
       if (!ok) return
     }
@@ -54,7 +53,7 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Search size={16} />
-          Subdomain Discovery
+          子域名发现
           <NodeInfoTooltip section="SubdomainDiscovery" />
           <WikiInfoButton target="SubdomainDiscovery" />
         </h2>
@@ -76,9 +75,9 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
                 fontSize: '11px',
                 fontWeight: 500,
               }}
-              title="Run Subdomain Discovery"
+              title="运行子域名发现"
             >
-              <Play size={10} /> Run partial recon
+              <Play size={10} /> 运行部分侦察
             </button>
           )}
           <div
@@ -102,25 +101,24 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Configure which subdomain discovery sources to use. Passive sources query external
-            databases without touching the target. Active discovery sends DNS queries directly.
+            配置要使用的子域名发现来源。被动来源查询外部数据库，不会触碰目标；主动发现会直接向目标发起 DNS 查询。
           </p>
 
           {data.subdomainDiscoveryEnabled && (
           <>
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Sources <span className={styles.badgePassive}>Passive</span></h3>
+            <h3 className={styles.subSectionTitle}>来源 <span className={styles.badgePassive}>被动</span></h3>
 
             <div className={styles.toggleRowCompact}>
               <div className={styles.toggleRowCompactInfo}>
                 <span className={styles.toggleLabelLg}>crt.sh</span>
                 <p className={styles.toggleDescription}>
-                  Certificate transparency logs — discovers subdomains from SSL/TLS certificates
+                  证书透明度日志 —— 从 SSL/TLS 证书中发现子域名
                 </p>
               </div>
               {data.crtshEnabled && (
                 <>
-                  <span className={styles.toggleRowCompactLabel}>Max</span>
+                  <span className={styles.toggleRowCompactLabel}>上限</span>
                   <input
                     type="number"
                     className={`textInput ${styles.toggleRowCompactInput}`}
@@ -141,12 +139,12 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
               <div className={styles.toggleRowCompactInfo}>
                 <span className={styles.toggleLabelLg}>HackerTarget</span>
                 <p className={styles.toggleDescription}>
-                  DNS lookup database — discovers subdomains from HackerTarget&apos;s host search API
+                  DNS 查询数据库 —— 通过 HackerTarget 的 host search API 发现子域名
                 </p>
               </div>
               {data.hackerTargetEnabled && (
                 <>
-                  <span className={styles.toggleRowCompactLabel}>Max</span>
+                  <span className={styles.toggleRowCompactLabel}>上限</span>
                   <input
                     type="number"
                     className={`textInput ${styles.toggleRowCompactInput}`}
@@ -167,12 +165,12 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
               <div className={styles.toggleRowCompactInfo}>
                 <span className={styles.toggleLabelLg}>Subfinder</span>
                 <p className={styles.toggleDescription}>
-                  Passive subdomain enumeration using 50+ online sources (certificate logs, DNS databases, web archives)
+                  通过 50+ 在线来源进行被动子域名枚举（证书日志、DNS 数据库、Web 归档等）
                 </p>
               </div>
               {data.subfinderEnabled && (
                 <>
-                  <span className={styles.toggleRowCompactLabel}>Max</span>
+                  <span className={styles.toggleRowCompactLabel}>上限</span>
                   <input
                     type="number"
                     className={`textInput ${styles.toggleRowCompactInput}`}
@@ -193,12 +191,12 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
               <div className={styles.toggleRowCompactInfo}>
                 <span className={styles.toggleLabelLg}>Knockpy Recon</span>
                 <p className={styles.toggleDescription}>
-                  Passive wordlist-based subdomain enumeration using Knockpy&apos;s recon mode
+                  使用 Knockpy 的 recon 模式进行被动字典子域名枚举
                 </p>
               </div>
               {data.knockpyReconEnabled && (
                 <>
-                  <span className={styles.toggleRowCompactLabel}>Max</span>
+                  <span className={styles.toggleRowCompactLabel}>上限</span>
                   <input
                     type="number"
                     className={`textInput ${styles.toggleRowCompactInput}`}
@@ -219,12 +217,12 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
               <div className={styles.toggleRowCompactInfo}>
                 <span className={styles.toggleLabelLg}>Amass</span>
                 <p className={styles.toggleDescription}>
-                  OWASP Amass — subdomain enumeration using 50+ data sources (certificate logs, DNS databases, web archives, WHOIS)
+                  OWASP Amass —— 通过 50+ 数据源进行子域名枚举（证书日志、DNS 数据库、Web 归档、WHOIS 等）
                 </p>
               </div>
               {data.amassEnabled && (
                 <>
-                  <span className={styles.toggleRowCompactLabel}>Max</span>
+                  <span className={styles.toggleRowCompactLabel}>上限</span>
                   <input
                     type="number"
                     className={`textInput ${styles.toggleRowCompactInput}`}
@@ -246,7 +244,7 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
             <div className={styles.subSection}>
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Amass Timeout (minutes)</label>
+                  <label className={styles.fieldLabel}>Amass 超时（分钟）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -261,15 +259,15 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
           )}
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Discovery <span className={styles.badgeActive}>Active</span></h3>
+            <h3 className={styles.subSectionTitle}>发现 <span className={styles.badgeActive}>主动</span></h3>
 
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Knockpy Bruteforce Mode</span>
+                <span className={styles.toggleLabel}>Knockpy 暴力枚举模式</span>
                 <p className={styles.toggleDescription}>
-                  Use wordlist-based subdomain bruteforcing — sends thousands of DNS queries
+                  使用字典进行子域名暴力枚举 —— 会发送成千上万条 DNS 查询
                 </p>
-                <TimeEstimate estimate="+5-30 min depending on wordlist size" />
+                <TimeEstimate estimate="预计增加 5–30 分钟（取决于字典大小）" />
               </div>
               <Toggle
                 checked={data.useBruteforceForSubdomains}
@@ -279,9 +277,9 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
 
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Amass Active Mode</span>
+                <span className={styles.toggleLabel}>Amass 主动模式</span>
                 <p className={styles.toggleDescription}>
-                  Enable zone transfers and certificate name grabs — sends DNS queries directly to target
+                  启用区域传送与证书名称抓取 —— 直接向目标发起 DNS 查询
                 </p>
               </div>
               <Toggle
@@ -293,11 +291,11 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
 
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Amass Bruteforce</span>
+                <span className={styles.toggleLabel}>Amass 暴力枚举</span>
                 <p className={styles.toggleDescription}>
-                  DNS brute forcing after passive enumeration — significantly increases scan time
+                  在被动枚举后进行 DNS 暴力枚举 —— 会显著增加扫描时间
                 </p>
-                <TimeEstimate estimate="+10-60 min depending on target size" />
+                <TimeEstimate estimate="预计增加 10–60 分钟（取决于目标规模）" />
               </div>
               <Toggle
                 checked={data.amassBrute}
@@ -308,15 +306,15 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
 
             {data.amassBrute && data.amassEnabled && (
               <div style={{ marginLeft: 'var(--space-6)', marginTop: 'var(--space-2)', marginBottom: 'var(--space-3)' }}>
-                <span className={styles.toggleLabel}>Brute Force Wordlists</span>
+                <span className={styles.toggleLabel}>暴力枚举字典</span>
                 <p className={styles.toggleDescription}>
-                  Select which wordlists to use. Amass Default is always active.
+                  选择要使用的字典。Amass Default 始终启用。
                 </p>
 
                 <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginTop: 'var(--space-2)', opacity: 0.6 }}>
                   <input type="checkbox" checked disabled />
                   <span>Amass Default (~8K entries)</span>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-tertiary)' }}>always active</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-tertiary)' }}>始终启用</span>
                 </label>
 
                 <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginTop: 'var(--space-2)' }}>
@@ -332,20 +330,19 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
                   />
                   <span>jhaddix all.txt (~2.18M entries)</span>
                 </label>
-                <TimeEstimate estimate="+30-60 min extra scan time" />
+                <TimeEstimate estimate="预计额外增加 30–60 分钟" />
               </div>
             )}
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Wildcard Filtering <span className={styles.badgeActive}>Active</span></h3>
+            <h3 className={styles.subSectionTitle}>通配符过滤 <span className={styles.badgeActive}>主动</span></h3>
 
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Puredns Wildcard Filtering</span>
+                <span className={styles.toggleLabel}>Puredns 通配符过滤</span>
                 <p className={styles.toggleDescription}>
-                  Validates discovered subdomains against public DNS resolvers and removes wildcard
-                  entries and DNS-poisoned results &mdash; runs after all discovery tools complete
+                  通过公共 DNS 解析器校验已发现的子域名，并移除通配符条目与 DNS 污染结果 —— 在所有发现工具完成后运行
                 </p>
               </div>
               <Toggle
@@ -357,7 +354,7 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
             {data.purednsEnabled && (
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Threads (0 = auto)</label>
+                  <label className={styles.fieldLabel}>线程数（0 = 自动）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -368,7 +365,7 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
                   />
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Rate Limit (0 = unlimited)</label>
+                  <label className={styles.fieldLabel}>速率限制（0 = 不限制）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -382,11 +379,11 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>DNS Performance</h3>
+            <h3 className={styles.subSectionTitle}>DNS 性能</h3>
 
             <div className={styles.fieldRow}>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>DNS Max Workers</label>
+                <label className={styles.fieldLabel}>DNS 最大并发</label>
                 <input
                   type="number"
                   className="textInput"
@@ -395,14 +392,14 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
                   min={1}
                   max={200}
                 />
-                <span className={styles.fieldHint}>Parallel DNS resolution workers</span>
+                <span className={styles.fieldHint}>并行 DNS 解析 worker 数</span>
               </div>
             </div>
 
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>DNS Record Parallelism</span>
-                <p className={styles.toggleDescription}>Query all DNS record types in parallel per hostname</p>
+                <span className={styles.toggleLabel}>DNS 记录并行查询</span>
+                <p className={styles.toggleDescription}>对每个 hostname 并行查询所有 DNS 记录类型</p>
               </div>
               <Toggle
                 checked={data.dnsRecordParallelism ?? true}
@@ -412,18 +409,18 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>DNS &amp; WHOIS <span className={styles.badgePassive}>Passive</span></h3>
+            <h3 className={styles.subSectionTitle}>DNS 与 WHOIS <span className={styles.badgePassive}>被动</span></h3>
 
             <div className={styles.toggleRowCompact}>
               <div className={styles.toggleRowCompactInfo}>
-                <span className={styles.toggleLabelLg}>WHOIS Lookup</span>
+                <span className={styles.toggleLabelLg}>WHOIS 查询</span>
                 <p className={styles.toggleDescription}>
-                  Query public WHOIS databases for domain registration info (registrar, dates, contacts)
+                  查询公开 WHOIS 数据库获取域名注册信息（注册商、日期、联系人等）
                 </p>
               </div>
               {data.whoisEnabled && (
                 <>
-                  <span className={styles.toggleRowCompactLabel}>Retries</span>
+                  <span className={styles.toggleRowCompactLabel}>重试</span>
                   <input
                     type="number"
                     className={`textInput ${styles.toggleRowCompactInput}`}
@@ -442,14 +439,14 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
 
             <div className={styles.toggleRowCompact}>
               <div className={styles.toggleRowCompactInfo}>
-                <span className={styles.toggleLabelLg}>DNS Resolution</span>
+                <span className={styles.toggleLabelLg}>DNS 解析</span>
                 <p className={styles.toggleDescription}>
-                  Resolve DNS records (A, AAAA, MX, NS, TXT) and reverse DNS for discovered hosts
+                  解析已发现主机的 DNS 记录（A、AAAA、MX、NS、TXT）并执行反向 DNS
                 </p>
               </div>
               {data.dnsEnabled && (
                 <>
-                  <span className={styles.toggleRowCompactLabel}>Retries</span>
+                  <span className={styles.toggleRowCompactLabel}>重试</span>
                   <input
                     type="number"
                     className={`textInput ${styles.toggleRowCompactInput}`}
@@ -468,9 +465,9 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
 
             <div className={styles.toggleRowCompact}>
               <div className={styles.toggleRowCompactInfo}>
-                <span className={styles.toggleLabelLg}>AI TXT/SPF/DKIM Hint</span>
+                <span className={styles.toggleLabelLg}>AI TXT/SPF/DKIM 提示</span>
                 <p className={styles.toggleDescription}>
-                  Regex captured TXT records (incl. SPF, DKIM, DMARC) for AI vendor domains: anthropic.com, openai.com, huggingface.co, replicate.com, langchain.com, langfuse.com, cohere.com, together.ai, groq.com, mistral.ai. On match, sets Subdomain.ai_service_hint.
+                  使用正则匹配捕获的 TXT 记录（含 SPF、DKIM、DMARC）中的 AI 厂商域名：anthropic.com、openai.com、huggingface.co、replicate.com、langchain.com、langfuse.com、cohere.com、together.ai、groq.com、mistral.ai。命中后设置 Subdomain.ai_service_hint。
                 </p>
               </div>
               <Toggle
@@ -481,9 +478,9 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
 
             <div className={styles.toggleRowCompact}>
               <div className={styles.toggleRowCompactInfo}>
-                <span className={styles.toggleLabelLg}>AI NS Hint</span>
+                <span className={styles.toggleLabelLg}>AI NS 提示</span>
                 <p className={styles.toggleDescription}>
-                  Weak signal: tag Subdomain.ai_service_hint = "ai-hosting-candidate" when NS records point at AI-friendly hosts (Vercel, Netlify, Replit, Modal, HuggingFace Spaces). Never overrides a stronger TXT hint.
+                  弱信号：当 NS 记录指向更可能承载 AI 服务的托管商（Vercel、Netlify、Replit、Modal、HuggingFace Spaces）时，标记 Subdomain.ai_service_hint = "ai-hosting-candidate"。不会覆盖更强的 TXT 提示信号。
                 </p>
               </div>
               <Toggle

@@ -40,10 +40,10 @@ export function UrlscanSection({ data, updateField, onRun }: UrlscanSectionProps
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Globe size={16} />
-          URLScan.io Enrichment
+          URLScan.io 增强
           <NodeInfoTooltip section="Urlscan" />
           <WikiInfoButton target="Urlscan" />
-          <span className={styles.badgePassive}>Passive</span>
+          <span className={styles.badgePassive}>被动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           {onRun && data.urlscanEnabled && (
@@ -57,9 +57,9 @@ export function UrlscanSection({ data, updateField, onRun }: UrlscanSectionProps
                 backgroundColor: 'rgba(34, 197, 94, 0.1)',
                 color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
               }}
-              title="Run URLScan"
+              title="运行 URLScan"
             >
-              <Play size={10} /> Run partial recon
+              <Play size={10} /> 运行部分侦察
             </button>
           )}
           <div onClick={(e) => e.stopPropagation()}>
@@ -78,23 +78,21 @@ export function UrlscanSection({ data, updateField, onRun }: UrlscanSectionProps
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Passive OSINT enrichment using URLScan.io historical scan data. Discovers additional
-            subdomains, IPs, ASN info, domain age, TLS certificates, server technologies, and
-            screenshots — all without touching the target directly. Runs after domain discovery,
-            before port scanning.
+            使用 URLScan.io 的历史扫描数据进行被动 OSINT 增强。可发现更多子域名、IP、ASN 信息、域名年龄、
+            TLS 证书、服务端技术栈与截图等内容——全程不直接触碰目标。运行在域名发现之后、端口扫描之前。
           </p>
 
           <div className={styles.shodanWarning} style={{ borderColor: 'var(--color-info, #3b82f6)' }}>
             <Info size={14} />
             {hasApiKey
-              ? 'URLScan API key configured — higher rate limits enabled.'
-              : 'Works without API key (public results only). Add a key in Global Settings for higher rate limits.'}
+              ? '已配置 URLScan API key —— 可使用更高的速率限制。'
+              : '无需 API key 也可使用（仅公共结果）。如需更高速率限制，请在全局设置中添加 key。'}
           </div>
 
           {data.urlscanEnabled && (
             <div className={styles.fieldRow}>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Max Results</label>
+                <label className={styles.fieldLabel}>最大结果数</label>
                 <input
                   type="number"
                   className="textInput"
@@ -103,7 +101,7 @@ export function UrlscanSection({ data, updateField, onRun }: UrlscanSectionProps
                   min={1}
                   max={50000}
                 />
-                <span className={styles.fieldHint}>Maximum scan results to fetch from URLScan API</span>
+                <span className={styles.fieldHint}>从 URLScan API 拉取的最大扫描结果数量</span>
               </div>
             </div>
           )}

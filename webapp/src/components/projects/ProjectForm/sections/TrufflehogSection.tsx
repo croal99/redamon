@@ -27,9 +27,9 @@ export function TrufflehogSection({ data, updateField, hasGithubToken = false }:
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Search size={16} />
-          TruffleHog Secret Scanner
+          TruffleHog 密钥扫描
           <WikiInfoButton target="Trufflehog" />
-          <span className={styles.badgePassive}>Passive</span>
+          <span className={styles.badgePassive}>被动</span>
         </h2>
         <ChevronDown
           size={16}
@@ -40,7 +40,7 @@ export function TrufflehogSection({ data, updateField, hasGithubToken = false }:
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Deep secret scanning with 700+ detectors and optional verification against live APIs.
+            使用 700+ 探测器进行深度密钥扫描，并可选对真实 API 执行有效性验证。
           </p>
 
           {!hasGithubToken && (
@@ -56,28 +56,28 @@ export function TrufflehogSection({ data, updateField, hasGithubToken = false }:
             }}>
               <AlertTriangle size={16} style={{ color: '#f59e0b', flexShrink: 0 }} />
               <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-                GitHub Access Token required.{' '}
+                需要 GitHub Access Token。{' '}
                 <Link href="/settings" style={{ color: 'var(--accent-primary)', fontWeight: 500 }}>
-                  Configure it in Global Settings
+                  去全局设置中配置
                 </Link>
               </span>
             </div>
           )}
 
           <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel}>GitHub Organization</label>
+            <label className={styles.fieldLabel}>GitHub 组织</label>
             <input
               type="text"
               className="textInput"
               value={(data as any).trufflehogGithubOrg ?? ''}
               onChange={(e) => updateField('trufflehogGithubOrg' as any, e.target.value)}
-              placeholder="organization-name"
+              placeholder="organization-name（组织名）"
               disabled={!hasGithubToken}
             />
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel}>GitHub Repositories</label>
+            <label className={styles.fieldLabel}>GitHub 仓库</label>
             <input
               type="text"
               className="textInput"
@@ -87,7 +87,7 @@ export function TrufflehogSection({ data, updateField, hasGithubToken = false }:
               disabled={!hasGithubToken}
             />
             <span className={styles.fieldHint}>
-              Comma-separated. Full URLs or org/repo format.
+              逗号分隔。支持完整 URL 或 org/repo 格式。
             </span>
           </div>
 
@@ -95,8 +95,8 @@ export function TrufflehogSection({ data, updateField, hasGithubToken = false }:
             <>
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>Only Verified Secrets</span>
-                  <p className={styles.toggleDescription}>Only output secrets verified as active against live APIs</p>
+                  <span className={styles.toggleLabel}>仅输出已验证的密钥</span>
+                  <p className={styles.toggleDescription}>仅输出已通过真实 API 验证为有效的密钥</p>
                 </div>
                 <Toggle
                   checked={(data as any).trufflehogOnlyVerified ?? false}
@@ -106,8 +106,8 @@ export function TrufflehogSection({ data, updateField, hasGithubToken = false }:
 
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>Skip Verification</span>
-                  <p className={styles.toggleDescription}>Skip API verification for faster scanning</p>
+                  <span className={styles.toggleLabel}>跳过验证</span>
+                  <p className={styles.toggleDescription}>跳过 API 验证以加快扫描速度</p>
                 </div>
                 <Toggle
                   checked={(data as any).trufflehogNoVerification ?? false}
@@ -116,7 +116,7 @@ export function TrufflehogSection({ data, updateField, hasGithubToken = false }:
               </div>
 
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Concurrency</label>
+                <label className={styles.fieldLabel}>并发数</label>
                 <input
                   type="number"
                   className="textInput"
@@ -128,7 +128,7 @@ export function TrufflehogSection({ data, updateField, hasGithubToken = false }:
               </div>
 
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Include Detectors</label>
+                <label className={styles.fieldLabel}>包含探测器</label>
                 <input
                   type="text"
                   className="textInput"
@@ -137,12 +137,12 @@ export function TrufflehogSection({ data, updateField, hasGithubToken = false }:
                   placeholder="AWS,GitHub,Slack"
                 />
                 <span className={styles.fieldHint}>
-                  Comma-separated, e.g. AWS,GitHub,Slack. Leave empty for all.
+                  逗号分隔，例如：AWS,GitHub,Slack。留空表示全部启用。
                 </span>
               </div>
 
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Exclude Detectors</label>
+                <label className={styles.fieldLabel}>排除探测器</label>
                 <input
                   type="text"
                   className="textInput"
@@ -151,7 +151,7 @@ export function TrufflehogSection({ data, updateField, hasGithubToken = false }:
                   placeholder="DetectorName1,DetectorName2"
                 />
                 <span className={styles.fieldHint}>
-                  Comma-separated detectors to skip
+                  逗号分隔，需要跳过的探测器名称
                 </span>
               </div>
             </>

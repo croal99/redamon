@@ -15,17 +15,16 @@ export function PhishingSection({ data, updateField }: PhishingSectionProps) {
   return (
     <div style={{ padding: 'var(--space-3) var(--space-4)', position: 'relative' }}>
       <div style={{ position: 'absolute', top: 8, right: 16 }}>
-        <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Project-Settings-Reference#social-engineering-simulation" title="Open Social Engineering wiki section" />
+        <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Project-Settings-Reference#social-engineering-simulation" title="打开社工演练 Wiki 章节" />
       </div>
       <p className={styles.sectionDescription}>
-        Configure SMTP settings for social engineering simulation email delivery. The agent uses these when sending
-        payloads or documents via email. Leave empty to be asked at runtime.
+        配置用于社工演练邮件投递的 SMTP 设置。智能体在通过邮件发送 Payload 或文档时会使用这些配置。留空则在运行时询问。
       </p>
 
       {/* SMTP Configuration Textarea */}
       <div className={styles.fieldRow}>
         <div className={styles.fieldGroup} style={{ flex: 1 }}>
-          <label className={styles.fieldLabel}>SMTP Configuration (optional)</label>
+          <label className={styles.fieldLabel}>SMTP 配置（可选）</label>
           <textarea
             className="textInput"
             value={data.phishingSmtpConfig ?? ''}
@@ -35,8 +34,7 @@ export function PhishingSection({ data, updateField }: PhishingSectionProps) {
             style={{ fontFamily: 'monospace', fontSize: '13px', resize: 'vertical' }}
           />
           <span className={styles.fieldHint}>
-            Free-text SMTP settings injected into the agent prompt for social engineering email delivery.
-            The agent reads this as-is when the social engineering simulation skill is active.
+            以纯文本形式注入到智能体提示词中的 SMTP 设置，用于社工演练邮件投递。启用社工演练技能时，智能体会按原样读取。
           </span>
         </div>
       </div>

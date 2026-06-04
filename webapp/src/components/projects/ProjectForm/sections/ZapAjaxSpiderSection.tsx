@@ -28,7 +28,7 @@ export function ZapAjaxSpiderSection({ data, updateField, onRun }: ZapAjaxSpider
           ZAP Ajax Spider
           <NodeInfoTooltip section="ZapAjaxSpider" />
           <WikiInfoButton target="ZapAjaxSpider" />
-          <span className={styles.badgeActive}>Active</span>
+          <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           {onRun && data.zapAjaxSpiderEnabled && (
@@ -42,9 +42,9 @@ export function ZapAjaxSpiderSection({ data, updateField, onRun }: ZapAjaxSpider
                 backgroundColor: 'rgba(34, 197, 94, 0.1)',
                 color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
               }}
-              title="Run ZAP Ajax Spider"
+              title="运行 ZAP Ajax Spider"
             >
-              <Play size={10} /> Run partial recon
+              <Play size={10} /> 运行部分侦察
             </button>
           )}
           <div onClick={(e) => e.stopPropagation()}>
@@ -63,26 +63,26 @@ export function ZapAjaxSpiderSection({ data, updateField, onRun }: ZapAjaxSpider
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Browser-driven Ajax Spider crawling using OWASP ZAP. Discovers API endpoints that only appear after JavaScript execution, SPA route changes, and authenticated browser requests.
+            使用 OWASP ZAP 的浏览器驱动 Ajax Spider 进行爬取。可发现仅在执行 JavaScript、SPA 路由变化以及认证态浏览器请求之后才出现的 API 端点。
           </p>
 
           {data.zapAjaxSpiderEnabled && (
             <>
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Seed Mode</label>
+                  <label className={styles.fieldLabel}>种子模式</label>
                   <select
                     className="select"
                     value={data.zapAjaxSpiderSeedMode}
                     onChange={(e) => updateField('zapAjaxSpiderSeedMode', e.target.value)}
                   >
-                    <option value="base_urls">BaseURLs only</option>
-                    <option value="base_urls_and_endpoints">BaseURLs and Endpoints</option>
+                    <option value="base_urls">仅 BaseURL</option>
+                    <option value="base_urls_and_endpoints">BaseURL + Endpoint</option>
                   </select>
-                  <span className={styles.fieldHint}>Endpoint seeding can improve SPA/API coverage when prior crawlers found routes</span>
+                  <span className={styles.fieldHint}>若前置爬虫已发现路由，启用 Endpoint 作为种子可提升 SPA/API 覆盖率</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Browser</label>
+                  <label className={styles.fieldLabel}>浏览器</label>
                   <select
                     className="select"
                     value={data.zapAjaxSpiderBrowserId}
@@ -92,13 +92,13 @@ export function ZapAjaxSpiderSection({ data, updateField, onRun }: ZapAjaxSpider
                     <option value="chrome-headless">chrome-headless</option>
                     <option value="firefox">firefox</option>
                   </select>
-                  <span className={styles.fieldHint}>Headless browsers are recommended for containerized recon</span>
+                  <span className={styles.fieldHint}>容器化侦察建议使用 headless 浏览器</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Max Duration (minutes)</label>
+                  <label className={styles.fieldLabel}>最大时长（分钟）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -106,11 +106,11 @@ export function ZapAjaxSpiderSection({ data, updateField, onRun }: ZapAjaxSpider
                     onChange={(e) => updateField('zapAjaxSpiderMaxDuration', parseInt(e.target.value) || 10)}
                     min={1}
                   />
-                  <span className={styles.fieldHint}>Maximum Ajax Spider runtime per seed URL</span>
-                  <TimeEstimate estimate="10 min/seed is a practical default for SPAs; authenticated apps often need longer" />
+                  <span className={styles.fieldHint}>每个种子 URL 的 Ajax Spider 最大运行时间</span>
+                  <TimeEstimate estimate="对 SPA 而言，10 分钟/种子是常用默认值；认证应用通常需要更久" />
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Parallelism</label>
+                  <label className={styles.fieldLabel}>并行度</label>
                   <input
                     type="number"
                     className="textInput"
@@ -119,13 +119,13 @@ export function ZapAjaxSpiderSection({ data, updateField, onRun }: ZapAjaxSpider
                     min={1}
                     max={10}
                   />
-                  <span className={styles.fieldHint}>Number of seed URLs crawled simultaneously</span>
+                  <span className={styles.fieldHint}>同时爬取的种子 URL 数量</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Max Crawl Depth</label>
+                  <label className={styles.fieldLabel}>最大爬取深度</label>
                   <input
                     type="number"
                     className="textInput"
@@ -133,10 +133,10 @@ export function ZapAjaxSpiderSection({ data, updateField, onRun }: ZapAjaxSpider
                     onChange={(e) => updateField('zapAjaxSpiderMaxCrawlDepth', parseInt(e.target.value) || 5)}
                     min={1}
                   />
-                  <span className={styles.fieldHint}>How far ZAP follows browser interaction paths from each seed</span>
+                  <span className={styles.fieldHint}>ZAP 从每个种子出发沿浏览器交互路径跟随的深度</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Max Crawl States</label>
+                  <label className={styles.fieldLabel}>最大爬取状态数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -144,13 +144,13 @@ export function ZapAjaxSpiderSection({ data, updateField, onRun }: ZapAjaxSpider
                     onChange={(e) => updateField('zapAjaxSpiderMaxCrawlStates', parseInt(e.target.value) || 0)}
                     min={0}
                   />
-                  <span className={styles.fieldHint}>Maximum discovered browser states per seed (0 = unlimited)</span>
+                  <span className={styles.fieldHint}>每个种子最多发现的浏览器状态数（0 = 不限制）</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Number of Browsers</label>
+                  <label className={styles.fieldLabel}>浏览器数量</label>
                   <input
                     type="number"
                     className="textInput"
@@ -159,10 +159,10 @@ export function ZapAjaxSpiderSection({ data, updateField, onRun }: ZapAjaxSpider
                     min={1}
                     max={10}
                   />
-                  <span className={styles.fieldHint}>Concurrent browser instances inside ZAP</span>
+                  <span className={styles.fieldHint}>ZAP 内部并行运行的浏览器实例数</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Max URLs</label>
+                  <label className={styles.fieldLabel}>最大 URL 数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -170,13 +170,13 @@ export function ZapAjaxSpiderSection({ data, updateField, onRun }: ZapAjaxSpider
                     onChange={(e) => updateField('zapAjaxSpiderMaxUrls', parseInt(e.target.value) || 5000)}
                     min={1}
                   />
-                  <span className={styles.fieldHint}>Maximum in-scope URLs to ingest into the graph</span>
+                  <span className={styles.fieldHint}>写入图谱的最大范围内 URL 数量</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Event Wait (ms)</label>
+                  <label className={styles.fieldLabel}>事件等待（ms）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -184,10 +184,10 @@ export function ZapAjaxSpiderSection({ data, updateField, onRun }: ZapAjaxSpider
                     onChange={(e) => updateField('zapAjaxSpiderEventWait', parseInt(e.target.value) || 1000)}
                     min={0}
                   />
-                  <span className={styles.fieldHint}>Wait after browser events so JavaScript requests can finish</span>
+                  <span className={styles.fieldHint}>浏览器事件后等待，以便 JavaScript 请求完成</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Reload Wait (ms)</label>
+                  <label className={styles.fieldLabel}>刷新等待（ms）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -195,29 +195,29 @@ export function ZapAjaxSpiderSection({ data, updateField, onRun }: ZapAjaxSpider
                     onChange={(e) => updateField('zapAjaxSpiderReloadWait', parseInt(e.target.value) || 1000)}
                     min={0}
                   />
-                  <span className={styles.fieldHint}>Wait after page reloads and navigation changes</span>
+                  <span className={styles.fieldHint}>页面刷新与导航切换后等待</span>
                 </div>
               </div>
 
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Scope Check</label>
+                <label className={styles.fieldLabel}>范围检查</label>
                 <select
                   className="select"
                   value={data.zapAjaxSpiderScopeCheck}
                   onChange={(e) => updateField('zapAjaxSpiderScopeCheck', e.target.value)}
                 >
-                  <option value="Strict">Strict</option>
-                  <option value="Flexible">Flexible</option>
+                  <option value="Strict">严格</option>
+                  <option value="Flexible">灵活</option>
                 </select>
-                <span className={styles.fieldHint}>Strict keeps crawling close to configured BaseURLs; Flexible allows broader in-scope navigation</span>
+                <span className={styles.fieldHint}>严格：尽量贴近配置的 BaseURL；灵活：允许更广的范围内跳转</span>
               </div>
 
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Browser Interaction</h3>
+                <h3 className={styles.subSectionTitle}>浏览器交互</h3>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Click Default Elements</span>
-                    <p className={styles.toggleDescription}>Click common links, buttons, and interactive controls during browser crawling</p>
+                    <span className={styles.toggleLabel}>点击默认元素</span>
+                    <p className={styles.toggleDescription}>在浏览器爬取过程中点击常见链接、按钮与交互控件</p>
                   </div>
                   <Toggle
                     checked={data.zapAjaxSpiderClickDefaultElems}
@@ -226,8 +226,8 @@ export function ZapAjaxSpiderSection({ data, updateField, onRun }: ZapAjaxSpider
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Click Elements Once</span>
-                    <p className={styles.toggleDescription}>Avoid repeated clicks on the same element to reduce loops and duplicate traffic</p>
+                    <span className={styles.toggleLabel}>元素仅点击一次</span>
+                    <p className={styles.toggleDescription}>避免重复点击同一元素，减少循环与重复流量</p>
                   </div>
                   <Toggle
                     checked={data.zapAjaxSpiderClickElemsOnce}
@@ -236,8 +236,8 @@ export function ZapAjaxSpiderSection({ data, updateField, onRun }: ZapAjaxSpider
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Random Inputs</span>
-                    <p className={styles.toggleDescription}>Fill basic form inputs with generated values to expose request paths</p>
+                    <span className={styles.toggleLabel}>随机输入</span>
+                    <p className={styles.toggleDescription}>为基础表单输入填充生成值，以暴露更多请求路径</p>
                   </div>
                   <Toggle
                     checked={data.zapAjaxSpiderRandomInputs}
@@ -246,8 +246,8 @@ export function ZapAjaxSpiderSection({ data, updateField, onRun }: ZapAjaxSpider
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Logout Avoidance</span>
-                    <p className={styles.toggleDescription}>Avoid likely logout actions during authenticated browser crawling</p>
+                    <span className={styles.toggleLabel}>避免退出登录</span>
+                    <p className={styles.toggleDescription}>在认证态浏览器爬取中尽量避免触发退出登录操作</p>
                   </div>
                   <Toggle
                     checked={data.zapAjaxSpiderLogoutAvoidance}
@@ -257,9 +257,9 @@ export function ZapAjaxSpiderSection({ data, updateField, onRun }: ZapAjaxSpider
               </div>
 
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Custom Headers and Cookies</h3>
+                <h3 className={styles.subSectionTitle}>自定义 Header 与 Cookie</h3>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Request Header Lines</label>
+                  <label className={styles.fieldLabel}>请求 Header 行</label>
                   <div className={styles.fileImportWrap}>
                     <textarea
                       className="textarea"
@@ -274,14 +274,14 @@ export function ZapAjaxSpiderSection({ data, updateField, onRun }: ZapAjaxSpider
                       onImport={(values) => updateField('zapAjaxSpiderCustomHeaders', values)}
                     />
                   </div>
-                  <span className={styles.fieldHint}>One raw header per line. Values are only shown here and sent to ZAP for authenticated crawling.</span>
+                  <span className={styles.fieldHint}>每行一个原始 header。内容仅在此显示，并会发送给 ZAP 用于认证态爬取。</span>
                 </div>
               </div>
 
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Exclude Patterns</h3>
+                <h3 className={styles.subSectionTitle}>排除模式</h3>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>URL Patterns to Exclude</label>
+                  <label className={styles.fieldLabel}>要排除的 URL 模式</label>
                   <div className={styles.fileImportWrap}>
                     <textarea
                       className="textarea"
@@ -296,12 +296,12 @@ export function ZapAjaxSpiderSection({ data, updateField, onRun }: ZapAjaxSpider
                       onImport={(values) => updateField('zapAjaxSpiderExcludePatterns', values)}
                     />
                   </div>
-                  <span className={styles.fieldHint}>Regexes for logout routes, static assets, and noisy browser paths</span>
+                  <span className={styles.fieldHint}>用于排除登出路由、静态资源与噪声较大的浏览器路径的正则</span>
                 </div>
               </div>
 
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Docker Image</label>
+                <label className={styles.fieldLabel}>Docker 镜像</label>
                 <input
                   type="text"
                   className="textInput"

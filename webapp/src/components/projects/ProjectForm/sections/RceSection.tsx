@@ -40,14 +40,13 @@ export function RceSection({ data, updateField }: RceSectionProps) {
   return (
     <div style={{ padding: 'var(--space-3) var(--space-4)', position: 'relative' }}>
       <div style={{ position: 'absolute', top: 8, right: 16 }}>
-        <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Agent-Skills" title="Open Agent Skills wiki page" />
+        <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Agent-Skills" title="打开智能体技能 Wiki 页面" />
       </div>
       <p className={styles.sectionDescription} style={{ marginBottom: 'var(--space-4)' }}>
-        Configure how the agent tests for RCE / command injection. Disable sub-workflows you don&apos;t want
-        injected into the prompt and gate destructive payloads behind the explicit aggressive toggle.
+        配置智能体如何测试 RCE / 命令注入。可关闭不希望注入到提示词中的子工作流，并通过“激进模式”开关对破坏性 Payload 进行显式门禁控制。
       </p>
 
-      <h3 style={FIRST_GROUP_HEADER_STYLE}>Sub-workflow injection</h3>
+      <h3 style={FIRST_GROUP_HEADER_STYLE}>子工作流注入</h3>
 
       <div className={styles.fieldRow} style={ROW_STYLE}>
         <div className={styles.fieldGroup}>
@@ -57,11 +56,10 @@ export function RceSection({ data, updateField }: RceSectionProps) {
               checked={data.rceOobCallbackEnabled ?? true}
               onChange={(e) => updateField('rceOobCallbackEnabled', e.target.checked)}
             />
-            OOB callback workflow (interactsh)
+            OOB 回连工作流（interactsh）
           </label>
           <span className={styles.fieldHint}>
-            Adds the blind-RCE / OOB sub-prompt. The agent registers an oast.fun domain and uses DNS or HTTP
-            callbacks as a quiet oracle for command execution. Disable when external OOB providers are off-limits.
+            添加盲 RCE / OOB 子提示词。智能体会注册 oast.fun 域名，并将 DNS 或 HTTP 回连作为命令执行的“静默判据”。若外部 OOB 提供方不可使用，请关闭。
           </span>
         </div>
       </div>
@@ -74,12 +72,10 @@ export function RceSection({ data, updateField }: RceSectionProps) {
               checked={data.rceDeserializationEnabled ?? true}
               onChange={(e) => updateField('rceDeserializationEnabled', e.target.checked)}
             />
-            Deserialization gadget workflow (ysoserial)
+            反序列化 Gadget 工作流（ysoserial）
           </label>
           <span className={styles.fieldHint}>
-            Adds the Java / PHP / Python / Ruby / .NET deserialization sub-prompt with ysoserial gadget-chain
-            guidance (URLDNS, CommonsCollections, Spring, etc.). Disable when the target stack does not deserialize
-            untrusted input or when you want a leaner prompt.
+            添加 Java / PHP / Python / Ruby / .NET 反序列化子提示词，并提供 ysoserial Gadget 链指导（URLDNS、CommonsCollections、Spring 等）。当目标技术栈不存在对不可信输入的反序列化，或你希望提示词更精简时可关闭。
           </span>
         </div>
       </div>
@@ -92,13 +88,10 @@ export function RceSection({ data, updateField }: RceSectionProps) {
               checked={data.rceAggressivePayloads ?? false}
               onChange={(e) => updateField('rceAggressivePayloads', e.target.checked)}
             />
-            Aggressive payloads (file write, web shells, container escape)
+            激进 Payload（写文件 / WebShell / 容器逃逸）
           </label>
           <span className={styles.fieldHint}>
-            <strong>Default OFF.</strong> When enabled, Step 7 of the workflow permits file writes outside /tmp,
-            persistent web shells / cron / systemd hooks, reverse-shell handlers, and container / Kubernetes escape
-            probes. Leave OFF for read-only proofs (id, whoami, /etc/passwd) which already produce a Level 3 finding.
-            Only enable for engagements where critical-impact (Level 4) demonstration is explicitly authorised.
+            <strong>默认关闭。</strong>开启后，工作流的第 7 步允许在 /tmp 之外写文件、持久化 WebShell / cron / systemd hook、反弹 shell handler，以及容器 / Kubernetes 逃逸探测。若仅需只读证明（id、whoami、/etc/passwd）即可产出 Level 3 结论，请保持关闭。仅在明确授权演示关键影响（Level 4）时开启。
           </span>
         </div>
       </div>

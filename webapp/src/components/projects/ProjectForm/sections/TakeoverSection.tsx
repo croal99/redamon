@@ -25,6 +25,13 @@ const codeStyle: CSSProperties = {
 }
 
 const SEVERITY_OPTIONS = ['critical', 'high', 'medium', 'low', 'info']
+const SEVERITY_LABELS: Record<string, string> = {
+  critical: '严重',
+  high: '高',
+  medium: '中',
+  low: '低',
+  info: '信息',
+}
 
 const SEVERITY_COLORS: Record<string, string> = {
   critical: '#e53e3e',
@@ -51,16 +58,16 @@ const BADDNS_MODULE_OPTIONS = [
 ] as const
 
 const BADDNS_MODULE_DESCRIPTIONS: Record<string, string> = {
-  cname: 'Dangling CNAME records + takeover potential',
-  ns: 'Dangling NS records (expired nameservers, cloud DNS delegations)',
-  mx: 'Dangling MX records + base-domain availability',
-  txt: 'TXT record takeover opportunities',
-  spf: 'SPF include/redirect chain to dangling domains',
-  dmarc: 'Missing or misconfigured DMARC',
-  wildcard: 'Wildcard DNS enabling broad takeovers',
-  nsec: 'Subdomain enumeration via NSEC-walking (slow)',
-  references: 'HTML links pointing to hijackable domains',
-  zonetransfer: 'DNS zone-transfer attempts (AXFR, slow)',
+  cname: '悬空 CNAME 记录 + 潜在接管风险',
+  ns: '悬空 NS 记录（过期 nameserver、云 DNS 委派残留）',
+  mx: '悬空 MX 记录 + 根域可用性',
+  txt: 'TXT 记录接管机会',
+  spf: 'SPF include/redirect 链指向悬空域名',
+  dmarc: 'DMARC 缺失或配置错误',
+  wildcard: '通配符 DNS 导致大范围接管风险',
+  nsec: '通过 NSEC-walking 进行子域名枚举（较慢）',
+  references: 'HTML 引用指向可劫持域名',
+  zonetransfer: 'DNS 区域传送尝试（AXFR，较慢）',
 }
 
 export function TakeoverSection({ data, updateField, onRun }: TakeoverSectionProps) {
@@ -80,10 +87,10 @@ export function TakeoverSection({ data, updateField, onRun }: TakeoverSectionPro
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <ShieldAlert size={16} />
-          Subdomain Takeover
+          子域名接管
           <NodeInfoTooltip section="SubdomainTakeover" />
           <WikiInfoButton target="SubdomainTakeover" />
-          <span className={styles.badgeActive}>Active</span>
+          <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           {onRun && data.subdomainTakeoverEnabled && (
@@ -97,9 +104,9 @@ export function TakeoverSection({ data, updateField, onRun }: TakeoverSectionPro
                 backgroundColor: 'rgba(34, 197, 94, 0.1)',
                 color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
               }}
-              title="Run Subdomain Takeover"
+              title="运行子域名接管检测"
             >
-              <Play size={10} /> Run partial recon
+              <Play size={10} /> 运行部分侦察
             </button>
           )}
           <div onClick={(e) => e.stopPropagation()}>
@@ -118,24 +125,23 @@ export function TakeoverSection({ data, updateField, onRun }: TakeoverSectionPro
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Layered subdomain takeover detection. <strong>Subjack</strong> (DNS-first, high precision)
-            validates candidates by resolving CNAME/NS/MX records; <strong>Nuclei takeover templates</strong>
-            (<code style={codeStyle}>http/takeovers/</code> + <code style={codeStyle}>dns/</code>) add HTTP fingerprint coverage against alive URLs.
-            Findings are deduplicated across tools, scored, and written as <code style={codeStyle}>Vulnerability</code> nodes
-            with <code style={codeStyle}>source=&quot;takeover_scan&quot;</code>.
+            多层子域名接管检测：<strong>Subjack</strong>（DNS 优先、精度高）通过解析 CNAME/NS/MX 记录校验候选项；
+            <strong>Nuclei 接管模板</strong>（<code style={codeStyle}>http/takeovers/</code> + <code style={codeStyle}>dns/</code>）
+            为存活 URL 补充 HTTP 指纹覆盖。结果会跨工具去重、打分，并写入为 <code style={codeStyle}>Vulnerability</code> 节点，
+            同时标记 <code style={codeStyle}>source=&quot;takeover_scan&quot;</code>。
           </p>
 
           {data.subdomainTakeoverEnabled && (
             <>
               {/* Scanner toggles */}
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Scanners</label>
+                <label className={styles.fieldLabel}>扫描器</label>
 
                 <div className={styles.toggleRow}>
                   <div>
                     <div className={styles.toggleLabel}>Subjack (DNS-first)</div>
                     <div className={styles.toggleDescription}>
-                      Resolves CNAME chains, checks service fingerprints. Apache-2.0 Go binary baked into the recon image.
+                      解析 CNAME 链并检查服务指纹。Apache-2.0 的 Go 二进制已内置到 recon 镜像中。
                     </div>
                   </div>
                   <Toggle
@@ -146,9 +152,9 @@ export function TakeoverSection({ data, updateField, onRun }: TakeoverSectionPro
 
                 <div className={styles.toggleRow}>
                   <div>
-                    <div className={styles.toggleLabel}>Nuclei takeover templates</div>
+                    <div className={styles.toggleLabel}>Nuclei 接管模板</div>
                     <div className={styles.toggleDescription}>
-                      Runs <code style={codeStyle}>-t http/takeovers/ -t dns/</code> against alive URLs from httpx. Reuses the existing Nuclei Docker image.
+                      对 httpx 产出的存活 URL 执行 <code style={codeStyle}>-t http/takeovers/ -t dns/</code>。复用现有 Nuclei Docker 镜像。
                     </div>
                   </div>
                   <Toggle
@@ -161,7 +167,9 @@ export function TakeoverSection({ data, updateField, onRun }: TakeoverSectionPro
                   <div>
                     <div className={styles.toggleLabel}>BadDNS</div>
                     <div className={styles.toggleDescription}>
-                      Deep DNS analysis across CNAME / NS / MX / TXT / SPF / DMARC / wildcard / NSEC / zone-transfer modules. Runs in its own isolated Docker image (<code style={codeStyle}>redamon-baddns:latest</code>). Build once with <code style={codeStyle}>docker compose --profile tools build baddns-scanner</code>.
+                      覆盖 CNAME / NS / MX / TXT / SPF / DMARC / wildcard / NSEC / zone-transfer 等模块的深度 DNS 分析。
+                      运行在隔离的 Docker 镜像中（<code style={codeStyle}>redamon-baddns:latest</code>）。首次使用可通过
+                      <code style={codeStyle}>docker compose --profile tools build baddns-scanner</code> 构建。
                     </div>
                   </div>
                   <Toggle
@@ -172,16 +180,12 @@ export function TakeoverSection({ data, updateField, onRun }: TakeoverSectionPro
 
                 <div className={styles.toggleRow} style={{ alignItems: 'center' }}>
                   <AiToggleLabel
-                    label='Use AI to Disambiguate WAF "No-Host" Pages'
+                    label='使用 AI 区分 WAF “No-Host” 页面'
                     tooltip={
-                      'Subjack/Nuclei body fingerprints collide with WAF block pages ' +
-                      "for hostnames the WAF doesn't recognize. When on, each " +
-                      'takeover candidate is probed; if no third-party vendor token ' +
-                      '(Heroku-Request-Id, x-amz-bucket-region, etc.) is present, ' +
-                      'the LLM classifies the body as real unclaimed page or WAF ' +
-                      'block. AI-flagged collisions get a -40 score penalty and land ' +
-                      'in manual_review instead of confirmed/likely. ' +
-                      (!data.aiInPipeline ? 'Enable "AI in Pipeline" in the Target tab to use this.' : '')
+                      'Subjack/Nuclei 的 body 指纹可能与 WAF 对“未知主机名”返回的拦截页发生碰撞。' +
+                      '启用后，会对每个接管候选进行探测；若响应中不包含第三方厂商 token（Heroku-Request-Id、x-amz-bucket-region 等），' +
+                      '则由 LLM 判定 body 是真实未认领服务页还是 WAF 拦截页。被 AI 判定为碰撞的候选会额外扣 40 分，进入 manual_review 而非 confirmed/likely。' +
+                      (!data.aiInPipeline ? '要使用此功能，请先在 Target 页启用「流水线 AI」。' : '')
                     }
                   />
                   <Toggle
@@ -194,7 +198,7 @@ export function TakeoverSection({ data, updateField, onRun }: TakeoverSectionPro
 
               {data.baddnsEnabled && (
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>BadDNS modules</label>
+                  <label className={styles.fieldLabel}>BadDNS 模块</label>
                   <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                     {BADDNS_MODULE_OPTIONS.map(mod => {
                       const active = (data.baddnsModules ?? []).includes(mod)
@@ -228,7 +232,8 @@ export function TakeoverSection({ data, updateField, onRun }: TakeoverSectionPro
                     })}
                   </div>
                   <div className={styles.fieldHint}>
-                    Module list is passed to <code style={codeStyle}>baddns -m</code>. Hover each for its purpose. Heavy modules like <code style={codeStyle}>nsec</code> and <code style={codeStyle}>zonetransfer</code> can be slow on large targets.
+                    模块列表会传给 <code style={codeStyle}>baddns -m</code>。鼠标悬停可查看用途说明。
+                    <code style={codeStyle}>nsec</code>、<code style={codeStyle}>zonetransfer</code> 等重模块在大型目标上可能较慢。
                   </div>
                 </div>
               )}
@@ -236,44 +241,44 @@ export function TakeoverSection({ data, updateField, onRun }: TakeoverSectionPro
               {/* Subjack extras */}
               {data.subjackEnabled && (
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Subjack checks</label>
+                  <label className={styles.fieldLabel}>Subjack 检查项</label>
 
                   <div className={styles.toggleRow}>
                     <div>
-                      <div className={styles.toggleLabel}>Force HTTPS (-ssl)</div>
-                      <div className={styles.toggleDescription}>Probe targets over HTTPS -- improves accuracy.</div>
+                      <div className={styles.toggleLabel}>强制 HTTPS（-ssl）</div>
+                      <div className={styles.toggleDescription}>使用 HTTPS 探测目标，可提升准确性。</div>
                     </div>
                     <Toggle checked={data.subjackSsl} onChange={(c) => updateField('subjackSsl', c)} />
                   </div>
 
                   <div className={styles.toggleRow}>
                     <div>
-                      <div className={styles.toggleLabel}>Test every URL (-a)</div>
-                      <div className={styles.toggleDescription}>Probe subdomains without an obvious CNAME. Slower but more thorough.</div>
+                      <div className={styles.toggleLabel}>测试所有 URL（-a）</div>
+                      <div className={styles.toggleDescription}>探测没有明显 CNAME 的子域名。更慢但更全面。</div>
                     </div>
                     <Toggle checked={data.subjackAll} onChange={(c) => updateField('subjackAll', c)} />
                   </div>
 
                   <div className={styles.toggleRow}>
                     <div>
-                      <div className={styles.toggleLabel}>Check NS takeovers (-ns)</div>
-                      <div className={styles.toggleDescription}>Detect expired nameserver delegations and dangling cloud DNS zones.</div>
+                      <div className={styles.toggleLabel}>检查 NS 接管（-ns）</div>
+                      <div className={styles.toggleDescription}>检测过期的 nameserver 委派与悬空的云 DNS zone。</div>
                     </div>
                     <Toggle checked={data.subjackCheckNs} onChange={(c) => updateField('subjackCheckNs', c)} />
                   </div>
 
                   <div className={styles.toggleRow}>
                     <div>
-                      <div className={styles.toggleLabel}>Check stale A records (-ar)</div>
-                      <div className={styles.toggleDescription}>Flag A records pointing to dead cloud IPs (candidates for IP reuse -- human verification required).</div>
+                      <div className={styles.toggleLabel}>检查失效 A 记录（-ar）</div>
+                      <div className={styles.toggleDescription}>标记指向失效云 IP 的 A 记录（可能存在 IP 复用风险，需人工验证）。</div>
                     </div>
                     <Toggle checked={data.subjackCheckAr} onChange={(c) => updateField('subjackCheckAr', c)} />
                   </div>
 
                   <div className={styles.toggleRow}>
                     <div>
-                      <div className={styles.toggleLabel}>Check SPF / MX takeovers (-mail)</div>
-                      <div className={styles.toggleDescription}>Audit SPF includes and MX records for references to dead infrastructure.</div>
+                      <div className={styles.toggleLabel}>检查 SPF / MX 接管（-mail）</div>
+                      <div className={styles.toggleDescription}>审计 SPF include 与 MX 记录，寻找引用失效基础设施的情况。</div>
                     </div>
                     <Toggle checked={data.subjackCheckMail} onChange={(c) => updateField('subjackCheckMail', c)} />
                   </div>
@@ -282,7 +287,7 @@ export function TakeoverSection({ data, updateField, onRun }: TakeoverSectionPro
 
               {/* Severity + scoring */}
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Severity filter (Nuclei takeover templates)</label>
+                <label className={styles.fieldLabel}>严重性过滤（Nuclei 接管模板）</label>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   {SEVERITY_OPTIONS.map(sev => {
                     const active = (data.takeoverSeverity ?? []).includes(sev)
@@ -302,7 +307,7 @@ export function TakeoverSection({ data, updateField, onRun }: TakeoverSectionPro
                           textTransform: 'capitalize',
                         }}
                       >
-                        {sev}
+                        {SEVERITY_LABELS[sev] ?? sev}
                       </button>
                     )
                   })}
@@ -311,7 +316,7 @@ export function TakeoverSection({ data, updateField, onRun }: TakeoverSectionPro
 
               <div className={styles.fieldGroup}>
                 <label className={styles.fieldLabel}>
-                  Confidence threshold ({data.takeoverConfidenceThreshold ?? 60})
+                  置信度阈值（{data.takeoverConfidenceThreshold ?? 60}）
                 </label>
                 <input
                   type="range"
@@ -325,13 +330,14 @@ export function TakeoverSection({ data, updateField, onRun }: TakeoverSectionPro
                   style={{ width: '100%' }}
                 />
                 <div className={styles.fieldHint}>
-                  Findings at or above this score become <strong>confirmed</strong>. 10 points below become <strong>likely</strong>. Lower scores go to <strong>manual_review</strong>.
+                  分数达到或超过该阈值的结果标记为 <strong>confirmed</strong>；低 10 分标记为 <strong>likely</strong>；
+                  更低则进入 <strong>manual_review</strong>。
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Nuclei rate limit (req/s)</label>
+                  <label className={styles.fieldLabel}>Nuclei 速率限制（req/s）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -340,10 +346,10 @@ export function TakeoverSection({ data, updateField, onRun }: TakeoverSectionPro
                     min={1}
                     max={500}
                   />
-                  <span className={styles.fieldHint}>Cap for Nuclei takeover pass. Actual peak can burst ~15% above (token-bucket).</span>
+                  <span className={styles.fieldHint}>Nuclei 接管检测的速率上限。实际峰值可能会比设置值高约 15%（token-bucket）。</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Subjack threads</label>
+                  <label className={styles.fieldLabel}>Subjack 线程数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -352,15 +358,15 @@ export function TakeoverSection({ data, updateField, onRun }: TakeoverSectionPro
                     min={1}
                     max={100}
                   />
-                  <span className={styles.fieldHint}>Parallel DNS probes. Safe to raise — no target-facing HTTP load.</span>
+                  <span className={styles.fieldHint}>并行 DNS 探测线程。可安全提高 —— 不会给目标带来 HTTP 负载。</span>
                 </div>
               </div>
 
               <div className={styles.toggleRow}>
                 <div>
-                  <div className={styles.toggleLabel}>Auto-publish manual-review findings</div>
+                  <div className={styles.toggleLabel}>自动发布 manual_review 结果</div>
                   <div className={styles.toggleDescription}>
-                    Publish <code style={codeStyle}>manual_review</code> findings to the main findings table (default: kept in a separate review queue with <code style={codeStyle}>severity=&quot;info&quot;</code>).
+                    将 <code style={codeStyle}>manual_review</code> 结果发布到主 Findings 表（默认：保留在单独的审核队列中，并标记 <code style={codeStyle}>severity=&quot;info&quot;</code>）。
                   </div>
                 </div>
                 <Toggle

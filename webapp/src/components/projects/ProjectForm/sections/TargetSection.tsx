@@ -129,7 +129,7 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Target size={16} />
-          Target Configuration
+          目标配置
           <WikiInfoButton target="Target" />
         </h2>
         <ChevronDown
@@ -141,17 +141,15 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Define the primary target for your security assessment. Choose between domain-based
-            or IP-based targeting mode.
+            定义本次安全评估的主要目标，可在域名模式与 IP 模式之间切换。
           </p>
 
           {/* IP Mode Toggle - locked in edit mode */}
           <div className={styles.toggleRow}>
             <div>
-              <span className={styles.toggleLabel}>Start from IP</span>
+              <span className={styles.toggleLabel}>从 IP 开始</span>
               <p className={styles.toggleDescription}>
-                Target IP addresses or CIDR ranges instead of a domain. The pipeline will
-                attempt reverse DNS to discover hostnames.
+                使用 IP 地址或 CIDR 段作为目标，而不是域名。流水线将尝试执行反向 DNS 以发现主机名。
               </p>
             </div>
             <Toggle
@@ -164,21 +162,21 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
           <div className={styles.fieldRow}>
             <div className={styles.fieldGroup}>
               <label className={`${styles.fieldLabel} ${styles.fieldLabelRequired}`}>
-                Project Name
+                项目名称
               </label>
               <input
                 type="text"
                 className="textInput"
                 value={data.name}
                 onChange={(e) => updateField('name', e.target.value)}
-                placeholder="My Security Project"
+                placeholder="我的安全项目"
               />
             </div>
 
             {!ipMode && (
               <div className={styles.fieldGroup}>
                 <label className={`${styles.fieldLabel} ${styles.fieldLabelRequired}`}>
-                  Target Domain
+                  目标域名
                 </label>
                 <input
                   type="text"
@@ -187,7 +185,7 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
                   onChange={(e) => updateField('targetDomain', e.target.value)}
                   placeholder="example.com"
                   disabled={isLocked}
-                  title={isLocked ? 'Target domain cannot be changed after creation. Create a new project instead.' : undefined}
+                  title={isLocked ? '目标域名在创建后不可更改。如需修改，请创建新项目。' : undefined}
                 />
               </div>
             )}
@@ -198,9 +196,8 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
             <div className={styles.shodanWarning} style={{ borderColor: 'rgba(239, 68, 68, 0.4)', background: 'rgba(239, 68, 68, 0.08)' }}>
               <ShieldAlert size={14} style={{ color: '#ef4444' }} />
               <span>
-                <strong>Target permanently blocked:</strong> Government, military, educational, and international
-                organization websites (.gov, .mil, .edu, .int, etc.) are always blocked and cannot be used as targets,
-                regardless of guardrail settings. This restriction cannot be disabled.
+                <strong>目标已被永久拦截：</strong>政府、军方、教育机构与国际组织网站（.gov、.mil、.edu、.int 等）
+                始终被禁止作为目标，与护栏设置无关，且无法关闭此限制。
               </span>
             </div>
           )}
@@ -209,7 +206,7 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
           {ipMode && (
             <div className={styles.fieldGroup}>
               <label className={`${styles.fieldLabel} ${styles.fieldLabelRequired}`}>
-                Target IPs / CIDRs
+                目标 IP / CIDR
               </label>
               <div className={styles.fileImportWrap}>
                 <textarea
@@ -219,31 +216,31 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
                   placeholder={"192.168.1.1\n10.0.0.0/24\n2001:db8::1"}
                   rows={4}
                   disabled={isLocked}
-                  title={isLocked ? 'Target IPs cannot be changed after creation.' : undefined}
+                  title={isLocked ? '目标 IP 在创建后不可更改。' : undefined}
                 />
                 {!isLocked && (
                   <FileImportButton
                     variant="textarea"
-                    fieldName="target IPs / CIDRs"
+                    fieldName="目标 IP / CIDR"
                     onImport={(values) => updateField('targetIps', values)}
                   />
                 )}
               </div>
               <span className={styles.fieldHint}>
                 {isLocked
-                  ? 'Target IPs are locked after project creation. Create a new project to change them.'
-                  : 'Enter one IP or CIDR per line, or comma-separated. IPv4, IPv6, and CIDR ranges supported. Max /24 (256 hosts).'}
+                  ? '项目创建后目标 IP 会被锁定。如需修改，请创建新项目。'
+                  : '每行一个 IP 或 CIDR，也可使用逗号分隔。支持 IPv4、IPv6 与 CIDR 段。最大 /24（256 主机）。'}
               </span>
             </div>
           )}
 
           <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel}>Description</label>
+            <label className={styles.fieldLabel}>描述</label>
             <textarea
               className="textarea"
               value={data.description || ''}
               onChange={(e) => updateField('description', e.target.value)}
-              placeholder="Project description (optional)"
+              placeholder="项目描述（可选）"
               rows={2}
             />
           </div>
@@ -252,28 +249,28 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
           {!ipMode && (
             <>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Subdomain Prefixes</label>
+                <label className={styles.fieldLabel}>子域名前缀</label>
                 <div className={styles.fileImportWrap}>
                   <input
                     type="text"
                     className="textInput"
                     value={displayPrefixes}
                     onChange={(e) => handlePrefixesChange(e.target.value)}
-                    placeholder="www, api, admin (comma-separated)"
+                    placeholder="www, api, admin（逗号分隔）"
                     disabled={isLocked}
-                    title={isLocked ? 'Subdomain list cannot be changed after creation. Create a new project instead.' : undefined}
+                    title={isLocked ? '子域名列表在创建后不可更改。如需修改，请创建新项目。' : undefined}
                   />
                   {!isLocked && (
                     <FileImportButton
-                      fieldName="subdomain prefixes"
+                      fieldName="子域名前缀"
                       onImport={(values) => handlePrefixesChange(values.join(', '))}
                     />
                   )}
                 </div>
                 <span className={styles.fieldHint}>
                   {isLocked
-                    ? 'Target domain and subdomains are locked after project creation to keep graph data consistent. To change them, create a new project.'
-                    : 'Leave empty to discover all subdomains. Enter prefixes without dots (e.g., "www, api, admin").'}
+                    ? '为保持图数据一致性，项目创建后目标域名与子域名范围将被锁定。如需修改，请创建新项目。'
+                    : '留空则枚举所有子域名。请输入不带点的前缀（例如：www、api、admin）。'}
                 </span>
                 {!isLocked && displayPrefixes.trim().length === 0 && (
                   <div
@@ -291,10 +288,8 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
                   >
                     <AlertTriangle size={22} style={{ color: '#fb923c' }} />
                     <span>
-                      <strong>Heads up:</strong> Leaving Subdomain Prefixes empty starts full
-                      subdomain enumeration across the entire domain. This will take
-                      <strong> much, much longer </strong>
-                      than scanning a specific set of prefixes.
+                      <strong>提示：</strong>子域名前缀留空会对整个域进行完整子域名枚举。
+                      相比只扫描指定前缀，耗时会<strong>显著更长</strong>。
                     </span>
                   </div>
                 )}
@@ -314,11 +309,9 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
                   >
                     <AlertTriangle size={22} style={{ color: '#60a5fa' }} />
                     <span>
-                      <strong>Filtered mode:</strong> with explicit prefixes the pipeline scans
-                      only the subdomains you listed. <strong>Subdomain Discovery has been
-                      automatically turned off</strong> and locked (Subfinder, Amass, crt.sh,
-                      HackerTarget, Knockpy, puredns will not run). Clear the prefixes if you
-                      want full enumeration.
+                      <strong>过滤模式：</strong>设置明确前缀后，流水线仅扫描你列出的子域名。
+                      <strong>子域名发现已自动关闭并锁定</strong>（Subfinder、Amass、crt.sh、HackerTarget、Knockpy、puredns 将不会运行）。
+                      若需全量枚举，请清空前缀。
                     </span>
                   </div>
                 )}
@@ -326,13 +319,13 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
 
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>Include Root Domain</span>
+                  <span className={styles.toggleLabel}>包含根域名</span>
                   <p className={styles.toggleDescription}>
-                    Also scan the root domain (e.g., example.com without subdomain)
+                    同时扫描根域名（例如不带子域名的 example.com）
                     {forceIncludeRootDomain && (
                       <>
                         {' '}
-                        <strong>Locked ON: Subdomain Discovery is disabled and no prefixes are set, so the root domain is the only valid target.</strong>
+                        <strong>已锁定为开启：子域名发现已关闭且未设置前缀，因此根域名是唯一有效目标。</strong>
                       </>
                     )}
                   </p>
@@ -348,14 +341,11 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
               <div className={styles.subSection}>
                 <div className={styles.toggleRow} style={{ gap: 'var(--space-4)', alignItems: 'center' }}>
                   <AiToggleLabel
-                    label="Enable AI in Pipeline"
+                    label="启用流水线 AI"
                     tooltip={
-                      'Master switch that unlocks every per-tool AI toggle below. ' +
-                      'When OFF, all per-tool AI flags are forced OFF and disabled, ' +
-                      'no LLM calls are made by the recon pipeline. When ON, each ' +
-                      'per-tool toggle becomes editable and individual AI hooks can ' +
-                      'be turned on or off independently. Pick the model used by ' +
-                      'every hook just below.'
+                      '主开关：解锁下方所有按工具划分的 AI 开关。关闭时，所有工具级 AI 标记会被强制关闭并禁用，' +
+                      '侦察流水线不会进行任何 LLM 调用；开启后，每个工具的 AI hook 可独立启用/停用。' +
+                      '下方可选择该流水线 AI hook 使用的模型。'
                     }
                   />
                   <Toggle
@@ -376,16 +366,15 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
                   <>
                     <div className={styles.fieldRow} style={{ marginTop: 'var(--space-3)' }}>
                       <div className={styles.fieldGroup}>
-                        <label className={styles.fieldLabel}>AI Model</label>
+                        <label className={styles.fieldLabel}>AI 模型</label>
                         <ModelPicker
                           userId={userId}
                           value={data.aiPipelineModel}
                           onChange={(id) => updateField('aiPipelineModel', id)}
                         />
                         <span className={styles.fieldHint}>
-                          Model used by every AI hook in recon. Independent of the
-                          agent&apos;s own model selection. Pick a cheaper model here
-                          if cost matters more than peak quality.
+                          侦察阶段所有 AI hook 使用的模型，与 Agent 自身的模型选择相互独立。
+                          若更关注成本，可在此选择更便宜的模型。
                         </span>
                       </div>
                     </div>
@@ -407,28 +396,28 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
                       }> = [
                         {
                           field: 'ffufAiExtensions',
-                          label: 'FFuf: Use AI for Extensions',
-                          description: 'For each fuzz target, FFuf first sends a single HEAD request and asks the configured model to suggest the most likely file extensions based on the response headers (Server, X-Powered-By, X-AspNet-Version). The static FFuf extensions list in the FFuf module is ignored when this is on. Same toggle as in the FFuf module: flipping it here flips it there. A per-fingerprint cache means N hosts behind the same stack collapse to one LLM call.',
+                          label: 'FFuf：用 AI 推断后缀',
+                          description: '对每个 fuzz 目标，FFuf 会先发送一次 HEAD 请求，并基于响应头（Server、X-Powered-By、X-AspNet-Version）让所选模型推断最可能的文件后缀。开启后，FFuf 模块中的静态后缀列表将被忽略。该开关与 FFuf 模块中的同名开关共享同一字段：这里切换会同步到那里。按指纹缓存会将相同技术栈后的多个 Host 折叠为一次 LLM 调用。',
                         },
                         {
                           field: 'nucleiAiTags',
-                          label: 'Nuclei: Use AI for Tag Selection',
-                          description: 'Once per scan, Nuclei aggregates the detected tech stack from http_probe (Wappalyzer + Server headers) and asks the configured model to prune its include-tags list to ones matching the stack. Drops irrelevant tags like wordpress on Node sites, adds tech-specific ones like apache or wp-plugin when detected. The static Include Tags list in the Nuclei module is ignored when this is on. Same toggle as in the Nuclei module: flipping it here flips it there. Candidate tag pool is built from the live nuclei-templates volume (count >= 50, ~125 broad-category tags).',
+                          label: 'Nuclei：用 AI 选择标签',
+                          description: '每次扫描仅执行一次：Nuclei 汇总 http_probe 检测到的技术栈（Wappalyzer + Server headers），并让所选模型将 include-tags 精简为匹配技术栈的标签。例如在 Node 站点上去掉 wordpress 之类无关标签，检测到 Apache 或 WordPress 插件时补充对应标签。开启后，Nuclei 模块中的静态 Include Tags 列表将被忽略。该开关与 Nuclei 模块中的同名开关共享同一字段。候选标签池来自运行时 nuclei-templates 卷（数量 >= 50，约 125 个大类标签）。',
                         },
                         {
                           field: 'wafAiClassifier',
-                          label: 'Security Checks: Use AI for WAF Classification',
-                          description: 'Augments the static WAF/CDN header-token check used by the Direct IP and WAF Bypass checks. When the static list misses (modern WAFs strip or rebrand their headers), the response gets a second pass through the configured model, which scores WAF presence 0-100 from headers, body fingerprints, cookies, and latency. Same toggle as in the Security Checks module: flipping it here flips it there. A per-response fingerprint cache collapses identical responses to one LLM call.',
+                          label: '安全检查：用 AI 识别 WAF',
+                          description: '增强“直接 IP / WAF 绕过”检查中使用的静态 WAF/CDN 头部 token 检测。当静态列表漏检（现代 WAF 可能移除或重塑其头部标识）时，会将响应交给所选模型二次分析，基于 headers、body 指纹、cookies 与延迟对 WAF 存在性打分 0–100。该开关与「安全检查」模块中的同名开关共享同一字段。按响应指纹缓存会将相同响应折叠为一次 LLM 调用。',
                         },
                         {
                           field: 'nucleiAiResponseFilter',
-                          label: 'Nuclei: Use AI to Filter False-Positive Block Pages',
-                          description: "Augments the keyword-based WAF/rate-limit detection inside Nuclei's false-positive filter. When the static list misses (rebranded WAF blocks, AWS WAF JSON errors, custom Fortinet pages) but the response still looks like a block (suspicious status code on an injection finding), the LLM classifies the body as block-page or real hit. Suppresses fake findings and exposes real ones the keyword filter wrongly hides. Same toggle as in the Nuclei module: flipping it here flips it there. Per-response fingerprint cache keeps cost bounded.",
+                          label: 'Nuclei：用 AI 过滤误报拦截页',
+                          description: '增强 Nuclei 误报过滤器内的基于关键词的 WAF/限流识别。当静态列表漏检（改版的 WAF 拦截页、AWS WAF JSON 错误页、自定义 Fortinet 页面等）但响应仍像拦截（例如注入类发现出现可疑状态码）时，LLM 会将 body 判定为拦截页或真实命中，从而抑制误报，并暴露被关键词过滤器误隐藏的真实发现。该开关与 Nuclei 模块中的同名开关共享同一字段。按响应指纹缓存用于控制成本。',
                         },
                         {
                           field: 'takeoverAiClassifier',
-                          label: 'Takeover: Use AI to Disambiguate WAF "No-Host" Pages',
-                          description: "Subjack/Nuclei takeover fingerprints can collide with WAF block pages that say \"not found\" for a hostname the WAF doesn't recognize. When AI is on, each takeover candidate is probed; if the response carries no third-party vendor token (Heroku-Request-Id, x-amz-bucket-region, etc.), the LLM classifies the body as a real unclaimed-service page or a WAF block. AI-flagged collisions get a -40 score penalty so they land in manual_review instead of being shipped as criticals. Same toggle as in the Subdomain Takeover module: flipping it here flips it there.",
+                          label: '接管检测：用 AI 区分 WAF “No-Host” 页面',
+                          description: 'Subjack/Nuclei 的接管指纹可能与 WAF 对“未知主机名”返回的拦截页产生碰撞。开启后，会对每个接管候选进行探测；若响应不包含第三方厂商 token（Heroku-Request-Id、x-amz-bucket-region 等），则由 LLM 将 body 判定为真实未认领服务页或 WAF 拦截页。AI 判定为碰撞的结果会额外扣 40 分，从而进入 manual_review 而非作为高危直接发布。该开关与「子域名接管」模块中的同名开关共享同一字段。',
                         },
                       ]
                       return (
@@ -473,12 +462,12 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
               </div>
 
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Domain Verification</h3>
+                <h3 className={styles.subSectionTitle}>域名验证</h3>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Verify Domain Ownership</span>
+                    <span className={styles.toggleLabel}>验证域名所有权</span>
                     <p className={styles.toggleDescription}>
-                      Require DNS TXT record verification before scanning
+                      扫描前需要通过 DNS TXT 记录验证
                     </p>
                   </div>
                   <Toggle
@@ -490,7 +479,7 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
                 {data.verifyDomainOwnership && (
                   <div className={styles.fieldRow}>
                     <div className={styles.fieldGroup}>
-                      <label className={styles.fieldLabel}>Ownership Token</label>
+                      <label className={styles.fieldLabel}>所有权令牌</label>
                       <input
                         type="text"
                         className="textInput"
@@ -499,7 +488,7 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
                       />
                     </div>
                     <div className={styles.fieldGroup}>
-                      <label className={styles.fieldLabel}>TXT Record Prefix</label>
+                      <label className={styles.fieldLabel}>TXT 记录前缀</label>
                       <input
                         type="text"
                         className="textInput"
@@ -514,16 +503,14 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
           )}
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Stealth Mode</h3>
+            <h3 className={styles.subSectionTitle}>隐身模式</h3>
             <div className={styles.toggleRow} style={{ gap: 'var(--space-4)' }}>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <span className={styles.toggleLabel}>Enable Stealth Mode</span>
+                <span className={styles.toggleLabel}>启用隐身模式</span>
                 <p className={styles.toggleDescription}>
-                  Force the entire pipeline to use only passive and low-noise techniques.
-                  Active scanners (Kiterunner, banner grabbing) are disabled. Port scanning
-                  switches to passive mode. Nuclei disables DAST and interactsh. The AI agent
-                  uses only stealthy methods and will stop if stealth is impossible for a
-                  requested action.
+                  强制整条流水线仅使用被动与低噪声技术。会禁用主动扫描器（Kiterunner、banner 抓取等），
+                  端口扫描切换为被动模式；Nuclei 禁用 DAST 与 interactsh。AI Agent 仅使用隐蔽方法，
+                  若某个请求动作无法在隐身约束下执行，将停止继续推进。
                 </p>
               </div>
               <Toggle
@@ -535,16 +522,13 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
 
           {/* Target Guardrail */}
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Target Guardrail</h3>
+            <h3 className={styles.subSectionTitle}>目标护栏</h3>
             <div className={styles.toggleRow} style={{ gap: 'var(--space-4)' }}>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <span className={styles.toggleLabel}>Enable Target Guardrail</span>
+                <span className={styles.toggleLabel}>启用目标护栏</span>
                 <p className={styles.toggleDescription}>
-                  Block well-known public targets (major tech companies,
-                  cloud providers, financial institutions, etc.) when saving the project.
-                  Prevents accidental scanning of unauthorized domains.
-                  Government, military, educational, and international organization domains
-                  (.gov, .mil, .edu, .int) are always blocked regardless of this setting.
+                  在保存项目时拦截知名公共目标（大型科技公司、云服务商、金融机构等），避免误扫未授权域名。
+                  政府、军方、教育机构与国际组织域名（.gov、.mil、.edu、.int）无论此开关如何设置都会被拦截。
                 </p>
               </div>
               <Toggle

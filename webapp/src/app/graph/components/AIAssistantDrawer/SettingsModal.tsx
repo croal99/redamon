@@ -28,7 +28,7 @@ export function SettingsModal({
       <div className={styles.settingsModal} onClick={e => e.stopPropagation()}>
         <div className={styles.settingsModalHeader}>
           <h2 className={styles.settingsModalTitle}>
-            {settingsModal === 'agent' ? 'Agent Behaviour' : settingsModal === 'toolmatrix' ? 'Tool Matrix' : 'Agent Skills'}
+            {settingsModal === 'agent' ? 'Agent 行为' : settingsModal === 'toolmatrix' ? '工具配置' : 'Agent 技能'}
           </h2>
           <button className={styles.settingsModalClose} onClick={() => setSettingsModal(null)}>
             <X size={16} />

@@ -42,55 +42,55 @@ const BUILT_IN_SKILLS: BuiltInSkillDef[] = [
   {
     id: 'cve_exploit',
     name: 'CVE (MSF)',
-    description: 'Exploit known CVEs using Metasploit Framework modules against target services',
+    description: '使用 Metasploit Framework 模块针对目标服务利用已知 CVE',
     icon: <Bug size={16} />,
   },
   {
     id: 'sql_injection',
-    name: 'SQL Injection',
-    description: 'SQL injection testing with SQLMap, WAF bypass, blind injection, and OOB DNS exfiltration',
+    name: 'SQL 注入',
+    description: '使用 SQLMap 进行 SQL 注入测试，包含 WAF 绕过、盲注与 OOB DNS 外带',
     icon: <Database size={16} />,
   },
   {
     id: 'xss',
-    name: 'Cross-Site Scripting',
-    description: 'Reflected, stored, DOM-based, and blind XSS testing with dalfox, kxss, Playwright, and CSP-bypass guidance',
+    name: '跨站脚本（XSS）',
+    description: '使用 dalfox、kxss、Playwright 进行反射型/存储型/DOM 型/盲 XSS 测试，并提供 CSP 绕过指导',
     icon: <Code2 size={16} />,
   },
   {
     id: 'ssrf',
-    name: 'Server-Side Request Forgery',
-    description: 'SSRF detection, internal-network probing, cloud-metadata pivots, protocol smuggling, DNS rebinding, and Redis/FastCGI/Docker RCE chains',
+    name: '服务端请求伪造（SSRF）',
+    description: 'SSRF 检测、内网探测、云元数据跳板、协议走私、DNS Rebinding，以及 Redis/FastCGI/Docker 的 RCE 链',
     icon: <Globe size={16} />,
   },
   {
     id: 'rce',
-    name: 'Remote Code Execution',
-    description: 'RCE / command injection across six primitives: shell-metachar injection (commix), SSTI (sstimap), Java/PHP/Python deserialization (ysoserial), eval / OGNL / SpEL, media-pipeline RCE, and SSRF-to-RCE chains',
+    name: '远程代码执行（RCE）',
+    description: '覆盖 6 类 RCE/命令注入：Shell 元字符注入（commix）、SSTI（sstimap）、Java/PHP/Python 反序列化（ysoserial）、eval/OGNL/SpEL、媒体处理链 RCE，以及 SSRF→RCE 链',
     icon: <Terminal size={16} />,
   },
   {
     id: 'path_traversal',
-    name: 'Path Traversal / LFI / RFI',
-    description: 'Arbitrary file read via path traversal, Local File Inclusion, Remote File Inclusion, PHP wrapper chains (php://filter, data://, expect://), log poisoning, and Zip Slip archive-extraction tests',
+    name: '路径穿越 / LFI / RFI',
+    description: '通过路径穿越、LFI、RFI 进行任意文件读取；PHP wrapper 链（php://filter、data://、expect://）、日志投毒，以及 Zip Slip 解压测试',
     icon: <FolderTree size={16} />,
   },
   {
     id: 'brute_force_credential_guess',
-    name: 'Credential Testing',
-    description: 'Credential policy validation using Hydra against login services',
+    name: '口令测试',
+    description: '使用 Hydra 针对登录服务进行口令策略验证',
     icon: <KeyRound size={16} />,
   },
   {
     id: 'phishing_social_engineering',
-    name: 'Social Engineering Simulation',
-    description: 'Payload generation, document crafting, and email delivery for authorized awareness testing',
+    name: '社工演练',
+    description: '用于已授权的安全意识测试：生成 Payload、制作文档与邮件投递',
     icon: <Mail size={16} />,
   },
   {
     id: 'denial_of_service',
-    name: 'Availability Testing',
-    description: 'Assess service resilience using flooding, resource exhaustion, and crash vectors',
+    name: '可用性测试（DoS）',
+    description: '通过洪泛、资源耗尽与崩溃向量评估服务韧性',
     icon: <Zap size={16} />,
   },
 ]
@@ -235,13 +235,13 @@ export function AttackSkillsSection({ data, updateField }: AttackSkillsSectionPr
       }
 
       showAlert(
-        `Imported ${result.imported ?? 0} community skill(s)` +
-        (result.skipped ? `, skipped ${result.skipped} duplicate(s)` : '') +
-        '. New skills are enabled for this project.'
+        `已导入 ${result.imported ?? 0} 个社区技能` +
+        (result.skipped ? `，跳过 ${result.skipped} 个重复项` : '') +
+        '。新技能已为当前项目启用。'
       )
     } catch (err) {
       console.error('Failed to import community skills:', err)
-      alertError('Failed to import community skills')
+      alertError('导入社区技能失败')
     } finally {
       setImporting(false)
     }
@@ -254,9 +254,9 @@ export function AttackSkillsSection({ data, updateField }: AttackSkillsSectionPr
         <div className={styles.sectionHeader} onClick={() => setBuiltInOpen(!builtInOpen)}>
           <h2 className={styles.sectionTitle}>
             <Bug size={16} />
-            Built-in Agent Skills
+            内置智能体技能
             <WikiInfoButton target="AttackSkills" />
-            <span className={styles.badgeActive}>Active</span>
+            <span className={styles.badgeActive}>已启用</span>
           </h2>
           <ChevronDown
             size={16}
@@ -267,8 +267,7 @@ export function AttackSkillsSection({ data, updateField }: AttackSkillsSectionPr
         {builtInOpen && (
           <div className={styles.sectionContent}>
             <p className={styles.sectionDescription}>
-              Core agent skills with specialized workflows. Disable a skill to prevent the agent
-              from classifying requests into that skill type and using its prompts.
+              具有专用工作流的核心智能体技能。关闭某个技能可阻止智能体将请求归类到该技能类型并使用其提示词。
             </p>
 
             {BUILT_IN_SKILLS.map(skill => {
@@ -308,7 +307,7 @@ export function AttackSkillsSection({ data, updateField }: AttackSkillsSectionPr
                       }}>
                         {skill.icon}
                         {skill.name}
-                        <span className={styles.badgeActive}>Active</span>
+                        <span className={styles.badgeActive}>已启用</span>
                       </div>
                       <div style={{
                         fontSize: 'var(--text-xs)',
@@ -354,8 +353,8 @@ export function AttackSkillsSection({ data, updateField }: AttackSkillsSectionPr
         <div className={styles.sectionHeader} onClick={() => setUserOpen(!userOpen)}>
           <h2 className={styles.sectionTitle}>
             <Swords size={16} />
-            User Agent Skills
-            <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Agent-Skills#community-skills" title="Open Community Agent Skills wiki section" />
+            用户智能体技能
+            <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Agent-Skills#community-skills" title="打开社区智能体技能 Wiki 章节" />
           </h2>
           <div style={{ display: 'flex', gap: 'var(--space-2)', alignItems: 'center' }}>
             <button
@@ -363,12 +362,12 @@ export function AttackSkillsSection({ data, updateField }: AttackSkillsSectionPr
               className="secondaryButton"
               onClick={(e) => { e.stopPropagation(); importCommunityAgentSkills() }}
               disabled={importing || !userId}
-              title="Import all community attack skills into your library and enable them for this project"
+              title="将全部社区攻击技能导入到你的技能库，并为本项目启用"
             >
               {importing
                 ? <Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} />
                 : <Download size={14} />}
-              Import from Community
+              从社区导入
             </button>
             <ChevronDown
               size={16}
@@ -380,15 +379,13 @@ export function AttackSkillsSection({ data, updateField }: AttackSkillsSectionPr
         {userOpen && (
           <div className={styles.sectionContent}>
             <p className={styles.sectionDescription}>
-              Custom agent skills uploaded from Global Settings. Enable a skill to let the agent
-              classify requests into it and use its workflow. Newly imported skills default to off
-              for new projects; use the Import shortcut above to bulk-import community templates and
-              auto-enable them for this project.
+              从“全局设置”上传的自定义智能体技能。启用某个技能后，智能体可以将请求归类到该技能并使用其工作流。
+              新项目默认不启用新导入的技能；可使用上方的“从社区导入”快捷操作批量导入模板并自动为本项目启用。
             </p>
 
             {loading ? (
               <div style={{ textAlign: 'center', padding: 'var(--space-4)', color: 'var(--text-tertiary)' }}>
-                <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> Loading...
+                <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> 加载中…
               </div>
             ) : userSkills.length === 0 ? (
               <div style={{
@@ -398,7 +395,7 @@ export function AttackSkillsSection({ data, updateField }: AttackSkillsSectionPr
                 fontSize: 'var(--text-sm)',
               }}>
                 <p style={{ marginBottom: 'var(--space-3)' }}>
-                  No user skills uploaded yet. Upload <code>.md</code> skill files from Global Settings to create custom attack workflows.
+                  暂无已上传的用户技能。请在“全局设置”中上传 <code>.md</code> 技能文件以创建自定义攻击工作流。
                 </p>
                 <Link
                   href="/settings"
@@ -418,7 +415,7 @@ export function AttackSkillsSection({ data, updateField }: AttackSkillsSectionPr
                   }}
                 >
                   <Settings size={13} />
-                  Go to Global Settings
+                  前往全局设置
                 </Link>
               </div>
             ) : (
@@ -463,7 +460,7 @@ export function AttackSkillsSection({ data, updateField }: AttackSkillsSectionPr
                         marginTop: '2px',
                       }}>
                         {skill.description || (
-                          <span style={{ opacity: 0.5, fontStyle: 'italic' }}>No description</span>
+                          <span style={{ opacity: 0.5, fontStyle: 'italic' }}>暂无描述</span>
                         )}
                       </div>
                       <div style={{
@@ -471,13 +468,13 @@ export function AttackSkillsSection({ data, updateField }: AttackSkillsSectionPr
                         color: 'var(--text-tertiary)',
                         marginTop: '2px',
                       }}>
-                        Uploaded {new Date(skill.createdAt).toLocaleDateString()}
+                        上传于 {new Date(skill.createdAt).toLocaleDateString()}
                       </div>
                     </div>
                     <button
                       type="button"
                       className="iconButton"
-                      title="Download .md"
+                      title="下载 .md"
                       onClick={() => downloadSkill(skill.id, skill.name)}
                     >
                       <Download size={14} />

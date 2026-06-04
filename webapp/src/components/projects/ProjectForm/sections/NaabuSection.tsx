@@ -25,11 +25,11 @@ export function NaabuSection({ data, updateField, onRun }: NaabuSectionProps) {
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Radio size={16} />
-          Naabu Port Scanner
+          Naabu 端口扫描器
           <NodeInfoTooltip section="Naabu" />
           <WikiInfoButton target="Naabu" />
-          <span className={styles.badgeActive}>Active</span>
-          {data.naabuPassiveMode && <span className={styles.badgePassive}>Passive</span>}
+          <span className={styles.badgeActive}>已启用</span>
+          {data.naabuPassiveMode && <span className={styles.badgePassive}>被动</span>}
         </h2>
         <div className={styles.sectionHeaderRight}>
           {onRun && data.naabuEnabled && (
@@ -43,9 +43,9 @@ export function NaabuSection({ data, updateField, onRun }: NaabuSectionProps) {
                 backgroundColor: 'rgba(34, 197, 94, 0.1)',
                 color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
               }}
-              title="Run Naabu Port Scanner"
+              title="运行 Naabu 端口扫描器"
             >
-              <Play size={10} /> Run partial recon
+              <Play size={10} /> 运行局部侦察
             </button>
           )}
           <div onClick={(e) => e.stopPropagation()}>
@@ -64,14 +64,14 @@ export function NaabuSection({ data, updateField, onRun }: NaabuSectionProps) {
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Fast port scanning using Naabu from ProjectDiscovery. Identifies open ports and services across discovered hosts, enabling targeted HTTP probing and vulnerability assessment on active endpoints.
+            使用 ProjectDiscovery 的 Naabu 进行快速端口扫描。识别已发现主机的开放端口与服务，从而对活动端点进行定向 HTTP 探测与漏洞评估。
           </p>
 
           {data.naabuEnabled && (
             <>
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Top Ports</label>
+                  <label className={styles.fieldLabel}>常用端口</label>
                   <input
                     type="text"
                     className="textInput"
@@ -79,11 +79,11 @@ export function NaabuSection({ data, updateField, onRun }: NaabuSectionProps) {
                     onChange={(e) => updateField('naabuTopPorts', e.target.value)}
                     placeholder="1000"
                   />
-                  <span className={styles.fieldHint}>Use &ldquo;100&rdquo;, &ldquo;1000&rdquo;, or &ldquo;full&rdquo; for all 65535 ports</span>
-                  <TimeEstimate estimate="100: seconds | 1000: ~15 sec/host | full: minutes to hours" />
+                  <span className={styles.fieldHint}>可用 &ldquo;100&rdquo;、&ldquo;1000&rdquo;，或 &ldquo;full&rdquo; 扫描全部 65535 端口</span>
+                  <TimeEstimate estimate="100：秒级 | 1000：约 15 秒/主机 | full：分钟到数小时" />
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Custom Ports</label>
+                  <label className={styles.fieldLabel}>自定义端口</label>
                   <div className={styles.fileImportWrap}>
                     <input
                       type="text"
@@ -93,17 +93,17 @@ export function NaabuSection({ data, updateField, onRun }: NaabuSectionProps) {
                       placeholder="80,443,8080-8090"
                     />
                     <FileImportButton
-                      fieldName="custom ports"
+                      fieldName="自定义端口"
                       onImport={(values) => updateField('naabuCustomPorts', values.join(','))}
                     />
                   </div>
-                  <span className={styles.fieldHint}>Overrides Top Ports if set. Use ranges: 8080-8090</span>
+                  <span className={styles.fieldHint}>设置后将覆盖“常用端口”。支持范围：8080-8090</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Rate Limit</label>
+                  <label className={styles.fieldLabel}>速率限制</label>
                   <input
                     type="number"
                     className="textInput"
@@ -111,10 +111,10 @@ export function NaabuSection({ data, updateField, onRun }: NaabuSectionProps) {
                     onChange={(e) => updateField('naabuRateLimit', parseInt(e.target.value) || 1000)}
                     min={1}
                   />
-                  <span className={styles.fieldHint}>Packets/sec. Higher = faster but may trigger rate limiting</span>
+                  <span className={styles.fieldHint}>每秒发包数。越高越快，但可能触发限流</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Threads</label>
+                  <label className={styles.fieldLabel}>线程数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -123,13 +123,13 @@ export function NaabuSection({ data, updateField, onRun }: NaabuSectionProps) {
                     min={1}
                     max={100}
                   />
-                  <span className={styles.fieldHint}>Concurrent scanning threads</span>
+                  <span className={styles.fieldHint}>并发扫描线程数</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Timeout (ms)</label>
+                  <label className={styles.fieldLabel}>超时（毫秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -137,10 +137,10 @@ export function NaabuSection({ data, updateField, onRun }: NaabuSectionProps) {
                     onChange={(e) => updateField('naabuTimeout', parseInt(e.target.value) || 10000)}
                     min={1000}
                   />
-                  <span className={styles.fieldHint}>Time to wait for port response (milliseconds)</span>
+                  <span className={styles.fieldHint}>等待端口响应的时间（毫秒）</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Retries</label>
+                  <label className={styles.fieldLabel}>重试次数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -149,29 +149,29 @@ export function NaabuSection({ data, updateField, onRun }: NaabuSectionProps) {
                     min={0}
                     max={10}
                   />
-                  <span className={styles.fieldHint}>Retry attempts for failed port probes</span>
+                  <span className={styles.fieldHint}>端口探测失败时的重试次数</span>
                 </div>
               </div>
 
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Scan Type</label>
+                <label className={styles.fieldLabel}>扫描类型</label>
                 <select
                   className="select"
                   value={data.naabuScanType}
                   onChange={(e) => updateField('naabuScanType', e.target.value)}
                 >
-                  <option value="s">SYN Scan (s) - Faster, requires root</option>
-                  <option value="c">Connect Scan (c) - No root needed</option>
+                  <option value="s">SYN 扫描（s）- 更快，需要 root 权限</option>
+                  <option value="c">Connect 扫描（c）- 无需 root 权限</option>
                 </select>
-                <span className={styles.fieldHint}>SYN is stealthier and faster but requires elevated privileges</span>
+                <span className={styles.fieldHint}>SYN 更隐蔽且更快，但需要更高权限</span>
               </div>
 
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Options</h3>
+                <h3 className={styles.subSectionTitle}>选项</h3>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Exclude CDN</span>
-                    <p className={styles.toggleDescription}>Only scan ports 80/443 on CDN hosts. Disable for cloud-hosted targets</p>
+                    <span className={styles.toggleLabel}>排除 CDN</span>
+                    <p className={styles.toggleDescription}>对 CDN 主机仅扫描 80/443。若目标托管在云上，建议关闭</p>
                   </div>
                   <Toggle
                     checked={data.naabuExcludeCdn}
@@ -180,8 +180,8 @@ export function NaabuSection({ data, updateField, onRun }: NaabuSectionProps) {
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Display CDN</span>
-                    <p className={styles.toggleDescription}>Include CDN provider info (Cloudflare, Akamai, etc.) in results</p>
+                    <span className={styles.toggleLabel}>显示 CDN</span>
+                    <p className={styles.toggleDescription}>在结果中包含 CDN 提供商信息（Cloudflare、Akamai 等）</p>
                   </div>
                   <Toggle
                     checked={data.naabuDisplayCdn}
@@ -190,8 +190,8 @@ export function NaabuSection({ data, updateField, onRun }: NaabuSectionProps) {
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Skip Host Discovery</span>
-                    <p className={styles.toggleDescription}>Assume all hosts are up. Recommended for web targets</p>
+                    <span className={styles.toggleLabel}>跳过主机存活探测</span>
+                    <p className={styles.toggleDescription}>假设所有主机都存活。对 Web 目标推荐</p>
                   </div>
                   <Toggle
                     checked={data.naabuSkipHostDiscovery}
@@ -200,9 +200,9 @@ export function NaabuSection({ data, updateField, onRun }: NaabuSectionProps) {
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Verify Ports</span>
-                    <p className={styles.toggleDescription}>Extra TCP handshake to confirm ports are truly open</p>
-                    <TimeEstimate estimate="+10-20% scan time" />
+                    <span className={styles.toggleLabel}>校验端口</span>
+                    <p className={styles.toggleDescription}>额外进行一次 TCP 握手以确认端口确实开放</p>
+                    <TimeEstimate estimate="扫描时间约 +10-20%" />
                   </div>
                   <Toggle
                     checked={data.naabuVerifyPorts}
@@ -211,9 +211,9 @@ export function NaabuSection({ data, updateField, onRun }: NaabuSectionProps) {
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Passive Mode</span>
-                    <p className={styles.toggleDescription}>Query Shodan InternetDB instead of active scanning. Stealthier but may be outdated</p>
-                    <TimeEstimate estimate="Passive (Shodan): near-instant | Active: minutes per host" />
+                    <span className={styles.toggleLabel}>被动模式</span>
+                    <p className={styles.toggleDescription}>使用 Shodan InternetDB 查询替代主动扫描。更隐蔽但可能过时</p>
+                    <TimeEstimate estimate="被动（Shodan）：几乎即时 | 主动：每主机数分钟" />
                   </div>
                   <Toggle
                     checked={data.naabuPassiveMode}
@@ -222,8 +222,8 @@ export function NaabuSection({ data, updateField, onRun }: NaabuSectionProps) {
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>AI Port Catalog</span>
-                    <p className={styles.toggleDescription}>Annotate AI-bearing ports (Ollama 11434, Qdrant 6333, Open WebUI 8080, vLLM, LiteLLM, Triton, Milvus, Gradio, ComfyUI, …) — emits Technology nodes with category=ai-* linked to the Service</p>
+                    <span className={styles.toggleLabel}>AI 端口目录</span>
+                    <p className={styles.toggleDescription}>标注 AI 相关端口（Ollama 11434、Qdrant 6333、Open WebUI 8080、vLLM、LiteLLM、Triton、Milvus、Gradio、ComfyUI…），并生成 category=ai-* 的 Technology 节点关联到 Service</p>
                   </div>
                   <Toggle
                     checked={data.portScanAiPortCatalogEnabled ?? true}
@@ -233,7 +233,7 @@ export function NaabuSection({ data, updateField, onRun }: NaabuSectionProps) {
               </div>
 
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Docker Image</label>
+                <label className={styles.fieldLabel}>Docker 镜像</label>
                 <input
                   type="text"
                   className="textInput"

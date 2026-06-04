@@ -23,10 +23,10 @@ export function ParamSpiderSection({ data, updateField, onRun }: ParamSpiderSect
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Search size={16} />
-          ParamSpider Parameter Discovery
+          ParamSpider 参数发现
           <NodeInfoTooltip section="ParamSpider" />
           <WikiInfoButton target="ParamSpider" />
-          <span className={styles.badgePassive}>Passive</span>
+          <span className={styles.badgePassive}>被动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           {onRun && data.paramspiderEnabled && (
@@ -40,9 +40,9 @@ export function ParamSpiderSection({ data, updateField, onRun }: ParamSpiderSect
                 backgroundColor: 'rgba(34, 197, 94, 0.1)',
                 color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
               }}
-              title="Run ParamSpider"
+              title="运行 ParamSpider"
             >
-              <Play size={10} /> Run partial recon
+              <Play size={10} /> 运行局部侦察
             </button>
           )}
           <div onClick={(e) => e.stopPropagation()}>
@@ -61,24 +61,24 @@ export function ParamSpiderSection({ data, updateField, onRun }: ParamSpiderSect
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Passive URL parameter discovery using ParamSpider. Queries the Wayback Machine for historically-documented URLs containing query parameters. Only returns parameterized URLs (with ?key=value), making results directly useful for fuzzing and vulnerability testing. Complements GAU by focusing specifically on parameter-bearing endpoints. No API keys required.
+            使用 ParamSpider 进行被动 URL 参数发现。查询 Wayback Machine 获取历史记录中包含查询参数的 URL。只返回带参数的 URL（?key=value），可直接用于 fuzz 与漏洞测试。与 GAU 互补，专注于“带参数”的端点。无需 API Key。
           </p>
 
           {data.paramspiderEnabled && (
             <>
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Placeholder</label>
+                  <label className={styles.fieldLabel}>占位符</label>
                   <input
                     type="text"
                     className="textInput"
                     value={data.paramspiderPlaceholder}
                     onChange={(e) => updateField('paramspiderPlaceholder', e.target.value || 'FUZZ')}
                   />
-                  <span className={styles.fieldHint}>Replacement value for parameter values (e.g., FUZZ for fuzzing tools)</span>
+                  <span className={styles.fieldHint}>用于替换参数值的内容（例如给 fuzz 工具用的 FUZZ）</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Timeout (seconds)</label>
+                  <label className={styles.fieldLabel}>超时（秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -86,13 +86,13 @@ export function ParamSpiderSection({ data, updateField, onRun }: ParamSpiderSect
                     onChange={(e) => updateField('paramspiderTimeout', parseInt(e.target.value) || 120)}
                     min={10}
                   />
-                  <span className={styles.fieldHint}>Per-domain query timeout</span>
+                  <span className={styles.fieldHint}>每个域名的查询超时时间</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Workers</label>
+                  <label className={styles.fieldLabel}>Worker 数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -101,7 +101,7 @@ export function ParamSpiderSection({ data, updateField, onRun }: ParamSpiderSect
                     min={1}
                     max={10}
                   />
-                  <span className={styles.fieldHint}>Parallel domain workers</span>
+                  <span className={styles.fieldHint}>并行处理的域名 worker 数</span>
                 </div>
               </div>
             </>

@@ -35,10 +35,10 @@ export function VhostSniSection({ data, updateField, onRun }: VhostSniSectionPro
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Network size={16} />
-          VHost & SNI Enumeration
+          VHost 与 SNI 枚举
           <NodeInfoTooltip section="VhostSni" />
           <WikiInfoButton target="VhostSni" />
-          <span className={styles.badgeActive}>Active</span>
+          <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           {onRun && data.vhostSniEnabled && (
@@ -52,9 +52,9 @@ export function VhostSniSection({ data, updateField, onRun }: VhostSniSectionPro
                 backgroundColor: 'rgba(34, 197, 94, 0.1)',
                 color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
               }}
-              title="Run VHost & SNI Enumeration"
+              title="运行 VHost 与 SNI 枚举"
             >
-              <Play size={10} /> Run partial recon
+              <Play size={10} /> 运行部分侦察
             </button>
           )}
           <div onClick={(e) => e.stopPropagation()}>
@@ -73,25 +73,23 @@ export function VhostSniSection({ data, updateField, onRun }: VhostSniSectionPro
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Discovers <strong>hidden virtual hosts</strong> on every target IP by probing each candidate
-            hostname with two crafted curl requests: an <strong>L7 test</strong> (overrides the HTTP <code style={codeStyle}>Host:</code> header)
-            and an <strong>L4 test</strong> (forces the TLS SNI via <code style={codeStyle}>--resolve</code>).
-            Anomalies versus the bare-IP baseline are emitted as <code style={codeStyle}>Vulnerability</code> nodes
-            with <code style={codeStyle}>source=&quot;vhost_sni_enum&quot;</code>. L7 catches classic Apache/Nginx vhosts.
-            L4 catches modern reverse proxies (k8s ingress, Traefik, Cloudflare) that route at the TLS layer.
+            通过对每个候选 hostname 发送两种构造的 curl 请求，在每个目标 IP 上发现<strong>隐藏虚拟主机</strong>：
+            <strong>L7 测试</strong>（覆盖 HTTP <code style={codeStyle}>Host:</code> 头）与 <strong>L4 测试</strong>（通过 <code style={codeStyle}>--resolve</code> 强制 TLS SNI）。
+            与裸 IP 基线相比的异常会被写入为 <code style={codeStyle}>Vulnerability</code> 节点，并标记 <code style={codeStyle}>source=&quot;vhost_sni_enum&quot;</code>。
+            L7 可捕获传统 Apache/Nginx vhost；L4 可捕获在 TLS 层路由的现代反向代理（k8s ingress、Traefik、Cloudflare 等）。
           </p>
 
           {data.vhostSniEnabled && (
             <>
               {/* Layer toggles */}
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Test layers</label>
+                <label className={styles.fieldLabel}>测试层</label>
 
                 <div className={styles.toggleRow}>
                   <div>
-                    <div className={styles.toggleLabel}>L7 test (HTTP Host header)</div>
+                    <div className={styles.toggleLabel}>L7 测试（HTTP Host 头）</div>
                     <div className={styles.toggleDescription}>
-                      Sends <code style={codeStyle}>curl -H &quot;Host: candidate&quot; https://IP</code>. Catches classic vhost routing.
+                      发送 <code style={codeStyle}>curl -H &quot;Host: candidate&quot; https://IP</code>，捕获传统 vhost 路由。
                     </div>
                   </div>
                   <Toggle
@@ -102,9 +100,9 @@ export function VhostSniSection({ data, updateField, onRun }: VhostSniSectionPro
 
                 <div className={styles.toggleRow}>
                   <div>
-                    <div className={styles.toggleLabel}>L4 test (TLS SNI)</div>
+                    <div className={styles.toggleLabel}>L4 测试（TLS SNI）</div>
                     <div className={styles.toggleDescription}>
-                      Sends <code style={codeStyle}>curl --resolve candidate:port:IP https://candidate</code>. Catches ingress/CDN routing.
+                      发送 <code style={codeStyle}>curl --resolve candidate:port:IP https://candidate</code>，捕获 ingress/CDN 路由。
                     </div>
                   </div>
                   <Toggle
@@ -116,13 +114,13 @@ export function VhostSniSection({ data, updateField, onRun }: VhostSniSectionPro
 
               {/* Candidate sources */}
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Candidate sources</label>
+                <label className={styles.fieldLabel}>候选来源</label>
 
                 <div className={styles.toggleRow}>
                   <div>
-                    <div className={styles.toggleLabel}>Use graph candidates (recommended)</div>
+                    <div className={styles.toggleLabel}>使用图谱候选（推荐）</div>
                     <div className={styles.toggleDescription}>
-                      Pulls hostnames from existing Subdomain, ExternalDomain, TLS SAN list, CNAME targets and reverse-DNS PTR records resolving to each target IP. Highest signal source.
+                      从已有的 Subdomain、ExternalDomain、TLS SAN 列表、CNAME 目标以及解析到目标 IP 的反向 DNS PTR 记录中提取 hostname。信号强度最高。
                     </div>
                   </div>
                   <Toggle
@@ -133,9 +131,9 @@ export function VhostSniSection({ data, updateField, onRun }: VhostSniSectionPro
 
                 <div className={styles.toggleRow}>
                   <div>
-                    <div className={styles.toggleLabel}>Use default wordlist</div>
+                    <div className={styles.toggleLabel}>使用默认字典</div>
                     <div className={styles.toggleDescription}>
-                      ~2,300 curated admin / dev / staging / internal / modern-stack prefixes from <code style={codeStyle}>recon/wordlists/vhost-common.txt</code>. Each prefix expands as <code style={codeStyle}>{`{prefix}.{target_apex}`}</code>.
+                      使用 <code style={codeStyle}>recon/wordlists/vhost-common.txt</code> 中约 2,300 个精选前缀（admin/dev/staging/internal/现代技术栈等）。每个前缀会扩展为 <code style={codeStyle}>{`{prefix}.{target_apex}`}</code>。
                     </div>
                   </div>
                   <Toggle
@@ -148,25 +146,26 @@ export function VhostSniSection({ data, updateField, onRun }: VhostSniSectionPro
               {/* Custom wordlist upload */}
               <div className={styles.fieldGroup}>
                 <label className={styles.fieldLabel}>
-                  Custom wordlist (one entry per line, {customWordlistLines} entries)
+                  自定义字典（每行一条，共 {customWordlistLines} 条）
                 </label>
                 <textarea
                   className="textInput"
                   rows={8}
-                  placeholder={'# One prefix or full hostname per line.\n# Lines starting with # are ignored.\nadmin\nstaging\nhidden.acme.com'}
+                  placeholder={'# 每行一个前缀或完整 hostname。\n# 以 # 开头的行会被忽略。\nadmin\nstaging\nhidden.acme.com'}
                   value={data.vhostSniCustomWordlist || ''}
                   onChange={(e) => updateField('vhostSniCustomWordlist', e.target.value)}
                   style={{ width: '100%', minHeight: '160px', fontFamily: 'monospace', fontSize: '12px' }}
                 />
                 <div className={styles.fieldHint}>
-                  Bare prefixes (<code style={codeStyle}>admin</code>) are expanded as <code style={codeStyle}>{`admin.{target_apex}`}</code>. Full hostnames (containing a dot) are used as-is. Combined with graph candidates and the default wordlist, then deduped.
+                  仅前缀（如 <code style={codeStyle}>admin</code>）会扩展为 <code style={codeStyle}>{`admin.{target_apex}`}</code>；包含点的完整 hostname 会原样使用。
+                  最终会与图谱候选及默认字典合并并去重。
                 </div>
               </div>
 
               {/* Performance / behavior */}
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Per-request timeout (s)</label>
+                  <label className={styles.fieldLabel}>单请求超时（秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -175,10 +174,10 @@ export function VhostSniSection({ data, updateField, onRun }: VhostSniSectionPro
                     min={1}
                     max={30}
                   />
-                  <span className={styles.fieldHint}>curl <code style={codeStyle}>--connect-timeout</code>. Total per-request budget is 3x this.</span>
+                  <span className={styles.fieldHint}>对应 curl <code style={codeStyle}>--connect-timeout</code>。单请求总预算约为该值的 3 倍。</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Concurrency</label>
+                  <label className={styles.fieldLabel}>并发数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -187,13 +186,13 @@ export function VhostSniSection({ data, updateField, onRun }: VhostSniSectionPro
                     min={1}
                     max={100}
                   />
-                  <span className={styles.fieldHint}>Parallel curl probes per IP/port. Higher = faster, but louder for the target.</span>
+                  <span className={styles.fieldHint}>每个 IP/端口并行执行的 curl 探测数。越高越快，但对目标越“吵”。</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Baseline size tolerance (bytes)</label>
+                  <label className={styles.fieldLabel}>基线大小容差（字节）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -202,10 +201,10 @@ export function VhostSniSection({ data, updateField, onRun }: VhostSniSectionPro
                     min={0}
                     max={10000}
                   />
-                  <span className={styles.fieldHint}>Body size deltas within this many bytes are not flagged (suppresses Set-Cookie / timestamp jitter).</span>
+                  <span className={styles.fieldHint}>Body 大小差异在该字节数以内不标记异常（用于抑制 Set-Cookie/时间戳抖动）。</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Max candidates per IP</label>
+                  <label className={styles.fieldLabel}>每个 IP 最大候选数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -214,15 +213,15 @@ export function VhostSniSection({ data, updateField, onRun }: VhostSniSectionPro
                     min={10}
                     max={50000}
                   />
-                  <span className={styles.fieldHint}>Hard cap to bound run time. Default wordlist + graph candidates rarely exceed 2,500 per IP.</span>
+                  <span className={styles.fieldHint}>用于限制运行时间的硬上限。默认字典 + 图谱候选通常每个 IP 不会超过 2,500。</span>
                 </div>
               </div>
 
               <div className={styles.toggleRow}>
                 <div>
-                  <div className={styles.toggleLabel}>Inject discovered hidden vhosts as BaseURLs</div>
+                  <div className={styles.toggleLabel}>将发现的隐藏 vhost 注入为 BaseURL</div>
                   <div className={styles.toggleDescription}>
-                    When a hidden vhost is confirmed, create a <code style={codeStyle}>BaseURL</code> node so a follow-up partial recon (Katana, Nuclei) can scan it. Recommended.
+                    当确认隐藏 vhost 后，创建对应的 <code style={codeStyle}>BaseURL</code> 节点，方便后续部分侦察（Katana、Nuclei）继续扫描。推荐开启。
                   </div>
                 </div>
                 <Toggle

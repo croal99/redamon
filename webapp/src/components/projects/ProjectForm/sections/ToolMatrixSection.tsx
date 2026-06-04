@@ -308,7 +308,7 @@ export function ToolMatrixSection({ data, updateField }: ToolMatrixSectionProps)
               用户安装的 MCP 工具插件 — 可在{' '}
               <a href="/settings?tab=mcp" style={{ color: 'var(--accent-primary)' }}>
                 全局设置 → MCP 工具插件
-              </a>.
+              </a>。
             </p>
           </div>
 

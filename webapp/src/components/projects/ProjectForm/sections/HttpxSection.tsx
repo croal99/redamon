@@ -25,10 +25,10 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Globe size={16} />
-          httpx HTTP Probing
+          httpx HTTP 探测
           <NodeInfoTooltip section="Httpx" />
           <WikiInfoButton target="Httpx" />
-          <span className={styles.badgeActive}>Active</span>
+          <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           {onRun && data.httpxEnabled && (
@@ -42,9 +42,9 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
                 backgroundColor: 'rgba(34, 197, 94, 0.1)',
                 color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
               }}
-              title="Run httpx HTTP Probing"
+              title="运行 httpx HTTP 探测"
             >
-              <Play size={10} /> Run partial recon
+              <Play size={10} /> 运行部分侦察
             </button>
           )}
           <div onClick={(e) => e.stopPropagation()}>
@@ -63,13 +63,13 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            HTTP probing and fingerprinting using httpx. Validates live web services, extracts metadata like server headers, technologies, and TLS certificates. Integrates Wappalyzer for comprehensive technology detection.
+            使用 httpx 进行 HTTP 探测与指纹识别：验证存活的 Web 服务，提取 Server Header、技术栈、TLS 证书等元数据，并集成 Wappalyzer 做更全面的技术识别。
           </p>
           {data.httpxEnabled && (
           <>
           <div className={styles.fieldRow}>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Threads</label>
+              <label className={styles.fieldLabel}>线程数</label>
               <input
                 type="number"
                 className="textInput"
@@ -78,10 +78,10 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
                 min={1}
                 max={200}
               />
-              <span className={styles.fieldHint}>Concurrent HTTP probing threads</span>
+              <span className={styles.fieldHint}>并发 HTTP 探测线程数</span>
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Timeout (seconds)</label>
+              <label className={styles.fieldLabel}>超时（秒）</label>
               <input
                 type="number"
                 className="textInput"
@@ -89,13 +89,13 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
                 onChange={(e) => updateField('httpxTimeout', parseInt(e.target.value) || 10)}
                 min={1}
               />
-              <span className={styles.fieldHint}>Request timeout per URL</span>
+              <span className={styles.fieldHint}>每个 URL 的请求超时</span>
             </div>
           </div>
 
           <div className={styles.fieldRow}>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Rate Limit</label>
+              <label className={styles.fieldLabel}>速率限制</label>
               <input
                 type="number"
                 className="textInput"
@@ -103,10 +103,10 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
                 onChange={(e) => updateField('httpxRateLimit', parseInt(e.target.value) || 50)}
                 min={1}
               />
-              <span className={styles.fieldHint}>Requests/sec. Lower (10-50) avoids WAF detection</span>
+              <span className={styles.fieldHint}>请求/秒。降低到 10-50 可减少 WAF 识别风险</span>
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Retries</label>
+              <label className={styles.fieldLabel}>重试次数</label>
               <input
                 type="number"
                 className="textInput"
@@ -115,16 +115,16 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
                 min={0}
                 max={10}
               />
-              <span className={styles.fieldHint}>Retry attempts for failed requests</span>
+              <span className={styles.fieldHint}>失败请求的重试次数</span>
             </div>
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Redirects</h3>
+            <h3 className={styles.subSectionTitle}>重定向</h3>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Follow Redirects</span>
-                <p className={styles.toggleDescription}>Follow 301/302/307 redirects to final destination</p>
+                <span className={styles.toggleLabel}>跟随重定向</span>
+                <p className={styles.toggleDescription}>跟随 301/302/307 重定向直到最终地址</p>
               </div>
               <Toggle
                 checked={data.httpxFollowRedirects}
@@ -133,7 +133,7 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
             </div>
             {data.httpxFollowRedirects && (
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Max Redirects</label>
+                <label className={styles.fieldLabel}>最大重定向次数</label>
                 <input
                   type="number"
                   className="textInput"
@@ -142,18 +142,18 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
                   min={1}
                   max={50}
                 />
-                <span className={styles.fieldHint}>Maximum redirect chain depth to prevent loops</span>
+                <span className={styles.fieldHint}>重定向链最大深度，防止循环</span>
               </div>
             )}
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Response Probe Options</h3>
-            <p className={styles.fieldHint} style={{ marginBottom: '0.5rem' }}>Extract data from HTTP responses for analysis</p>
+            <h3 className={styles.subSectionTitle}>响应探测选项</h3>
+            <p className={styles.fieldHint} style={{ marginBottom: '0.5rem' }}>从 HTTP 响应中提取数据用于分析</p>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Status Code</span>
-                <p className={styles.toggleDescription}>HTTP status (200, 404, 500, etc.)</p>
+                <span className={styles.toggleLabel}>状态码</span>
+                <p className={styles.toggleDescription}>HTTP 状态（200、404、500 等）</p>
               </div>
               <Toggle
                 checked={data.httpxProbeStatusCode}
@@ -162,8 +162,8 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Content Length</span>
-                <p className={styles.toggleDescription}>Response body size in bytes</p>
+                <span className={styles.toggleLabel}>内容长度</span>
+                <p className={styles.toggleDescription}>响应体大小（字节）</p>
               </div>
               <Toggle
                 checked={data.httpxProbeContentLength}
@@ -172,8 +172,8 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Content Type</span>
-                <p className={styles.toggleDescription}>MIME type (text/html, application/json, etc.)</p>
+                <span className={styles.toggleLabel}>内容类型</span>
+                <p className={styles.toggleDescription}>MIME 类型（text/html、application/json 等）</p>
               </div>
               <Toggle
                 checked={data.httpxProbeContentType}
@@ -182,8 +182,8 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Page Title</span>
-                <p className={styles.toggleDescription}>HTML title tag content</p>
+                <span className={styles.toggleLabel}>页面标题</span>
+                <p className={styles.toggleDescription}>HTML title 标签内容</p>
               </div>
               <Toggle
                 checked={data.httpxProbeTitle}
@@ -193,7 +193,7 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
             <div className={styles.toggleRow}>
               <div>
                 <span className={styles.toggleLabel}>Server Header</span>
-                <p className={styles.toggleDescription}>Web server software (nginx, Apache, IIS, etc.)</p>
+                <p className={styles.toggleDescription}>Web 服务器软件（nginx、Apache、IIS 等）</p>
               </div>
               <Toggle
                 checked={data.httpxProbeServer}
@@ -202,8 +202,8 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Response Time</span>
-                <p className={styles.toggleDescription}>Server response latency in milliseconds</p>
+                <span className={styles.toggleLabel}>响应时间</span>
+                <p className={styles.toggleDescription}>服务端响应延迟（毫秒）</p>
               </div>
               <Toggle
                 checked={data.httpxProbeResponseTime}
@@ -212,8 +212,8 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Word Count</span>
-                <p className={styles.toggleDescription}>Number of words in response body</p>
+                <span className={styles.toggleLabel}>词数</span>
+                <p className={styles.toggleDescription}>响应体中的词数</p>
               </div>
               <Toggle
                 checked={data.httpxProbeWordCount}
@@ -222,8 +222,8 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Line Count</span>
-                <p className={styles.toggleDescription}>Number of lines in response body</p>
+                <span className={styles.toggleLabel}>行数</span>
+                <p className={styles.toggleDescription}>响应体中的行数</p>
               </div>
               <Toggle
                 checked={data.httpxProbeLineCount}
@@ -232,9 +232,9 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Technology Detection</span>
-                <p className={styles.toggleDescription}>Detect frameworks, CMS, and libraries (Wappalyzer-based)</p>
-                <TimeEstimate estimate="+10-30% probing time" />
+                <span className={styles.toggleLabel}>技术识别</span>
+                <p className={styles.toggleDescription}>识别框架、CMS 与依赖库（基于 Wappalyzer）</p>
+                <TimeEstimate estimate="探测耗时 +10-30%" />
               </div>
               <Toggle
                 checked={data.httpxProbeTechDetect}
@@ -244,11 +244,11 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Network Information</h3>
+            <h3 className={styles.subSectionTitle}>网络信息</h3>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>IP Address</span>
-                <p className={styles.toggleDescription}>Resolved IPv4/IPv6 address</p>
+                <span className={styles.toggleLabel}>IP 地址</span>
+                <p className={styles.toggleDescription}>解析得到的 IPv4/IPv6 地址</p>
               </div>
               <Toggle
                 checked={data.httpxProbeIp}
@@ -257,8 +257,8 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>CNAME Records</span>
-                <p className={styles.toggleDescription}>DNS canonical name aliases (reveals CDN/hosting)</p>
+                <span className={styles.toggleLabel}>CNAME 记录</span>
+                <p className={styles.toggleDescription}>DNS CNAME 别名（可推断 CDN/托管）</p>
               </div>
               <Toggle
                 checked={data.httpxProbeCname}
@@ -267,8 +267,8 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>ASN Information</span>
-                <p className={styles.toggleDescription}>Autonomous System Number and network owner</p>
+                <span className={styles.toggleLabel}>ASN 信息</span>
+                <p className={styles.toggleDescription}>自治系统号与网络归属方</p>
               </div>
               <Toggle
                 checked={data.httpxProbeAsn}
@@ -277,8 +277,8 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>CDN Detection</span>
-                <p className={styles.toggleDescription}>Identify CDN provider (Cloudflare, Akamai, AWS CloudFront)</p>
+                <span className={styles.toggleLabel}>CDN 识别</span>
+                <p className={styles.toggleDescription}>识别 CDN 提供商（Cloudflare、Akamai、AWS CloudFront）</p>
               </div>
               <Toggle
                 checked={data.httpxProbeCdn}
@@ -288,11 +288,11 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>TLS/SSL Information</h3>
+            <h3 className={styles.subSectionTitle}>TLS/SSL 信息</h3>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>TLS Information</span>
-                <p className={styles.toggleDescription}>Certificate issuer, expiry, and cipher suite details</p>
+                <span className={styles.toggleLabel}>TLS 信息</span>
+                <p className={styles.toggleDescription}>证书签发方、到期时间与加密套件详情</p>
               </div>
               <Toggle
                 checked={data.httpxProbeTlsInfo}
@@ -301,8 +301,8 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>TLS Certificate Grab</span>
-                <p className={styles.toggleDescription}>Extract full certificate data including SANs and chain</p>
+                <span className={styles.toggleLabel}>抓取 TLS 证书</span>
+                <p className={styles.toggleDescription}>提取完整证书数据（含 SAN 与证书链）</p>
               </div>
               <Toggle
                 checked={data.httpxProbeTlsGrab}
@@ -312,12 +312,12 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Fingerprinting</h3>
-            <p className={styles.fieldHint} style={{ marginBottom: '0.5rem' }}>Unique identifiers for matching similar servers/services</p>
+            <h3 className={styles.subSectionTitle}>指纹识别</h3>
+            <p className={styles.fieldHint} style={{ marginBottom: '0.5rem' }}>用于匹配相似服务器/服务的唯一标识</p>
             <div className={styles.toggleRow}>
               <div>
                 <span className={styles.toggleLabel}>Favicon Hash</span>
-                <p className={styles.toggleDescription}>MMH3 hash for Shodan/Censys correlation</p>
+                <p className={styles.toggleDescription}>用于 Shodan/Censys 关联的 MMH3 hash</p>
               </div>
               <Toggle
                 checked={data.httpxProbeFavicon}
@@ -326,9 +326,9 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>JARM Fingerprint</span>
-                <p className={styles.toggleDescription}>TLS server fingerprint for C2/malware detection</p>
-                <TimeEstimate estimate="+10-50 ms per URL (adds up with many hosts)" />
+                <span className={styles.toggleLabel}>JARM 指纹</span>
+                <p className={styles.toggleDescription}>用于 C2/恶意软件识别的 TLS 服务端指纹</p>
+                <TimeEstimate estimate="每个 URL +10-50 ms（主机多时会累积）" />
               </div>
               <Toggle
                 checked={data.httpxProbeJarm}
@@ -336,7 +336,7 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
               />
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Response Hash Algorithm</label>
+              <label className={styles.fieldLabel}>响应哈希算法</label>
               <select
                 className="select"
                 value={data.httpxProbeHash}
@@ -347,19 +347,19 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
                 <option value="sha1">SHA-1</option>
                 <option value="sha512">SHA-512</option>
               </select>
-              <span className={styles.fieldHint}>Hash algorithm for response body fingerprinting</span>
+              <span className={styles.fieldHint}>用于响应体指纹的哈希算法</span>
             </div>
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>AI Surface Recon</h3>
+            <h3 className={styles.subSectionTitle}>AI 暴露面侦察</h3>
             <p className={styles.fieldHint} style={{ marginBottom: '0.5rem' }}>
-              Annotate captured response data against AI vendor catalogues. All hooks are passive (no extra HTTP traffic) and write to BaseURL.is_ai_framework_detected / ai_framework_name / ai_frontend_product_guess.
+              将捕获到的响应数据与 AI 厂商目录进行对照标注。所有钩子均为被动模式（不产生额外 HTTP 流量），并写入 BaseURL.is_ai_framework_detected / ai_framework_name / ai_frontend_product_guess。
             </p>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>AI Header Signatures</span>
-                <p className={styles.toggleDescription}>Regex response headers for AI runtime / framework / proxy / SDK-client markers (x-vllm-*, anthropic-ratelimit-*, x-langchain-*, x-litellm-*, cf-aig-*, x-mcp-*, …).</p>
+                <span className={styles.toggleLabel}>AI Header 特征</span>
+                <p className={styles.toggleDescription}>对响应头做正则匹配，识别 AI runtime / framework / proxy / SDK-client 标识（x-vllm-*、anthropic-ratelimit-*、x-langchain-*、x-litellm-*、cf-aig-*、x-mcp-*…）。</p>
               </div>
               <Toggle
                 checked={data.httpProbeAiHeaderScanEnabled ?? true}
@@ -368,8 +368,8 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>AI Favicon Hash Lookup</span>
-                <p className={styles.toggleDescription}>Match captured favicon MMH3 hash against the AI frontend catalogue (Open WebUI, LibreChat, Flowise, Dify, Gradio, Streamlit, ComfyUI, …). Requires Favicon Hash above to be enabled.</p>
+                <span className={styles.toggleLabel}>AI Favicon Hash 对照</span>
+                <p className={styles.toggleDescription}>将 favicon 的 MMH3 hash 与 AI 前端目录对照（Open WebUI、LibreChat、Flowise、Dify、Gradio、Streamlit、ComfyUI…）。需要先启用上方的 Favicon Hash。</p>
               </div>
               <Toggle
                 checked={data.httpProbeAiFaviconHashEnabled ?? true}
@@ -378,8 +378,8 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>AI Title Regex</span>
-                <p className={styles.toggleDescription}>Match page title against AI frontend product names. Same products as the favicon catalogue; the title hit fills ai_frontend_product_guess when the favicon hash is unknown.</p>
+                <span className={styles.toggleLabel}>AI 标题正则</span>
+                <p className={styles.toggleDescription}>将页面标题与 AI 前端产品名做匹配。产品集与 favicon 目录一致；当 favicon hash 未知时，标题命中会填充 ai_frontend_product_guess。</p>
               </div>
               <Toggle
                 checked={data.httpProbeAiTitleDetectionEnabled ?? true}
@@ -388,8 +388,8 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>AI Wappalyzer Fingerprints</span>
-                <p className={styles.toggleDescription}>Local fingerprint additions for AI frameworks (LangChain JS marker, vLLM cookie, TGI route, …). Rides the existing Wappalyzer pass; no extra requests.</p>
+                <span className={styles.toggleLabel}>AI Wappalyzer 指纹</span>
+                <p className={styles.toggleDescription}>为 AI 框架添加本地指纹（LangChain JS 标记、vLLM cookie、TGI 路由等）。复用现有 Wappalyzer 流程，不增加额外请求。</p>
               </div>
               <Toggle
                 checked={data.httpProbeAiWappalyzerEnabled ?? true}
@@ -399,11 +399,11 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Response Data</h3>
+            <h3 className={styles.subSectionTitle}>响应数据</h3>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Include Response Body</span>
-                <p className={styles.toggleDescription}>Store full HTML/JSON body. Required for Wappalyzer. Increases output size</p>
+                <span className={styles.toggleLabel}>包含响应体</span>
+                <p className={styles.toggleDescription}>保存完整 HTML/JSON 响应体。Wappalyzer 需要该数据，但会增加输出体积</p>
               </div>
               <Toggle
                 checked={data.httpxIncludeResponse}
@@ -412,8 +412,8 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Include Response Headers</span>
-                <p className={styles.toggleDescription}>Store all headers for security header analysis</p>
+                <span className={styles.toggleLabel}>包含响应头</span>
+                <p className={styles.toggleDescription}>保存全部响应头用于安全头分析</p>
               </div>
               <Toggle
                 checked={data.httpxIncludeResponseHeaders}
@@ -423,9 +423,9 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Custom Paths & Headers</h3>
+            <h3 className={styles.subSectionTitle}>自定义路径与请求头</h3>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Additional Paths to Probe</label>
+              <label className={styles.fieldLabel}>额外探测路径</label>
               <div className={styles.fileImportWrap}>
                 <textarea
                   className="textarea"
@@ -436,14 +436,14 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
                 />
                 <FileImportButton
                   variant="textarea"
-                  fieldName="paths"
+                  fieldName="路径"
                   onImport={(values) => updateField('httpxPaths', values)}
                 />
               </div>
-              <span className={styles.fieldHint}>Probe these paths on each host (in addition to root)</span>
+              <span className={styles.fieldHint}>在每个主机上探测这些路径（除根路径外）</span>
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Custom Headers</label>
+              <label className={styles.fieldLabel}>自定义请求头</label>
               <div className={styles.fileImportWrap}>
                 <textarea
                   className="textarea"
@@ -454,18 +454,18 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
                 />
                 <FileImportButton
                   variant="textarea"
-                  fieldName="headers"
+                  fieldName="请求头"
                   onImport={(values) => updateField('httpxCustomHeaders', values)}
                 />
               </div>
-              <span className={styles.fieldHint}>Browser-like headers help avoid WAF/bot detection</span>
+              <span className={styles.fieldHint}>模拟浏览器的请求头有助于规避 WAF/机器人检测</span>
             </div>
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Status Code Filters</h3>
+            <h3 className={styles.subSectionTitle}>状态码过滤</h3>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Match Status Codes</label>
+              <label className={styles.fieldLabel}>匹配状态码</label>
               <div className={styles.fileImportWrap}>
                 <input
                   type="text"
@@ -475,15 +475,15 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
                   placeholder="200, 301, 302 (empty = all)"
                 />
                 <FileImportButton
-                  fieldName="status codes"
+                  fieldName="状态码"
                   validator={(t) => /^\d+$/.test(t)}
                   onImport={(values) => updateField('httpxMatchCodes', values)}
                 />
               </div>
-              <span className={styles.fieldHint}>Whitelist: only include hosts returning these codes</span>
+              <span className={styles.fieldHint}>白名单：仅包含返回这些状态码的主机</span>
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Filter Status Codes</label>
+              <label className={styles.fieldLabel}>过滤状态码</label>
               <div className={styles.fileImportWrap}>
                 <input
                   type="text"
@@ -493,22 +493,22 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
                   placeholder="404, 503"
                 />
                 <FileImportButton
-                  fieldName="status codes"
+                  fieldName="状态码"
                   validator={(t) => /^\d+$/.test(t)}
                   onImport={(values) => updateField('httpxFilterCodes', values)}
                 />
               </div>
-              <span className={styles.fieldHint}>Blacklist: exclude hosts returning these codes</span>
+              <span className={styles.fieldHint}>黑名单：排除返回这些状态码的主机</span>
             </div>
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Wappalyzer Technology Detection</h3>
+            <h3 className={styles.subSectionTitle}>Wappalyzer 技术识别</h3>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Enable Wappalyzer</span>
-                <p className={styles.toggleDescription}>Detect CMS plugins, analytics, security tools, and frameworks from HTML</p>
-                <TimeEstimate estimate="+30-50% probing time" />
+                <span className={styles.toggleLabel}>启用 Wappalyzer</span>
+                <p className={styles.toggleDescription}>从 HTML 中识别 CMS 插件、统计、安防工具与框架</p>
+                <TimeEstimate estimate="探测耗时 +30-50%" />
               </div>
               <Toggle
                 checked={data.wappalyzerEnabled}
@@ -519,7 +519,7 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
               <>
                 <div className={styles.fieldRow}>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Min Confidence (%)</label>
+                    <label className={styles.fieldLabel}>最小置信度（%）</label>
                     <input
                       type="number"
                       className="textInput"
@@ -528,10 +528,10 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
                       min={0}
                       max={100}
                     />
-                    <span className={styles.fieldHint}>Lower = more detections, more false positives</span>
+                    <span className={styles.fieldHint}>越低 = 命中更多，但误报也更多</span>
                   </div>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Cache TTL (hours)</label>
+                    <label className={styles.fieldLabel}>缓存 TTL（小时）</label>
                     <input
                       type="number"
                       className="textInput"
@@ -539,13 +539,13 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
                       onChange={(e) => updateField('wappalyzerCacheTtlHours', parseInt(e.target.value) || 24)}
                       min={1}
                     />
-                    <span className={styles.fieldHint}>How long to cache tech database (0 = always fresh)</span>
+                    <span className={styles.fieldHint}>技术库缓存时长（0 = 始终拉取最新）</span>
                   </div>
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Require HTML Body</span>
-                    <p className={styles.toggleDescription}>Skip non-HTML responses. Recommended for accuracy</p>
+                    <span className={styles.toggleLabel}>要求 HTML 响应体</span>
+                    <p className={styles.toggleDescription}>跳过非 HTML 响应，建议开启以提升准确性</p>
                   </div>
                   <Toggle
                     checked={data.wappalyzerRequireHtml}
@@ -554,8 +554,8 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Auto Update Database</span>
-                    <p className={styles.toggleDescription}>Download latest tech signatures from npm (recommended)</p>
+                    <span className={styles.toggleLabel}>自动更新数据库</span>
+                    <p className={styles.toggleDescription}>从 npm 下载最新技术特征（推荐）</p>
                   </div>
                   <Toggle
                     checked={data.wappalyzerAutoUpdate}
@@ -563,25 +563,25 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
                   />
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>NPM Version</label>
+                  <label className={styles.fieldLabel}>NPM 版本</label>
                   <input
                     type="text"
                     className="textInput"
                     value={data.wappalyzerNpmVersion}
                     disabled
                   />
-                  <span className={styles.fieldHint}>Wappalyzer package version for tech database</span>
+                  <span className={styles.fieldHint}>技术库对应的 Wappalyzer 包版本</span>
                 </div>
               </>
             )}
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Banner Grabbing</h3>
+            <h3 className={styles.subSectionTitle}>Banner 抓取</h3>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Enable Banner Grabbing</span>
-                <p className={styles.toggleDescription}>Detect service versions on non-HTTP ports (SSH, FTP, MySQL, SMTP)</p>
+                <span className={styles.toggleLabel}>启用 Banner 抓取</span>
+                <p className={styles.toggleDescription}>在非 HTTP 端口（SSH、FTP、MySQL、SMTP）探测服务版本</p>
               </div>
               <Toggle
                 checked={data.bannerGrabEnabled}
@@ -591,7 +591,7 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
             {data.bannerGrabEnabled && (
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Timeout (seconds)</label>
+                  <label className={styles.fieldLabel}>超时（秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -599,10 +599,10 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
                     onChange={(e) => updateField('bannerGrabTimeout', parseInt(e.target.value) || 5)}
                     min={1}
                   />
-                  <span className={styles.fieldHint}>Connection timeout per port</span>
+                  <span className={styles.fieldHint}>每个端口的连接超时</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Threads</label>
+                  <label className={styles.fieldLabel}>线程数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -610,10 +610,10 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
                     onChange={(e) => updateField('bannerGrabThreads', parseInt(e.target.value) || 20)}
                     min={1}
                   />
-                  <span className={styles.fieldHint}>Concurrent banner grab threads</span>
+                  <span className={styles.fieldHint}>并发抓取线程数</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Max Banner Length</label>
+                  <label className={styles.fieldLabel}>最大 Banner 长度</label>
                   <input
                     type="number"
                     className="textInput"
@@ -622,14 +622,14 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
                     min={100}
                     max={5000}
                   />
-                  <span className={styles.fieldHint}>Truncate banners longer than this (chars)</span>
+                  <span className={styles.fieldHint}>截断超过该长度的 banner（字符数）</span>
                 </div>
               </div>
             )}
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel}>Docker Image</label>
+            <label className={styles.fieldLabel}>Docker 镜像</label>
             <input
               type="text"
               className="textInput"

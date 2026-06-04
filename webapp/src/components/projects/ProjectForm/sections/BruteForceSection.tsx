@@ -30,18 +30,14 @@ export function HydraSection({ data, updateField }: HydraSectionProps) {
 
   return (
     <div style={{ padding: 'var(--space-3) var(--space-4)', position: 'relative' }}>
-      <div style={{ position: 'absolute', top: 8, right: 16 }}>
-        <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Project-Settings-Reference#hydra-credential-testing" title="Open Hydra wiki section" />
-      </div>
       <p className={styles.sectionDescription}>
-        Configure THC Hydra credential testing settings. Hydra supports 50+ protocols
-        including SSH, FTP, RDP, SMB, HTTP forms, databases, and more.
+        配置 THC Hydra 的口令测试设置。Hydra 支持 50+ 种协议，包含 SSH、FTP、RDP、SMB、HTTP 表单、数据库等。
       </p>
 
       {/* Threads + Wait Between Connections */}
       <div className={styles.fieldRow}>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>Threads (-t)</label>
+          <label className={styles.fieldLabel}>线程数（-t）</label>
           <input
             type="number"
             className="textInput"
@@ -51,11 +47,11 @@ export function HydraSection({ data, updateField }: HydraSectionProps) {
             max={64}
           />
           <span className={styles.fieldHint}>
-            Parallel connections per target. SSH max 4, RDP max 1. Default: 16.
+            单目标并行连接数。SSH 最大 4，RDP 最大 1。默认：16。
           </span>
         </div>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>Wait Between Connections (-W)</label>
+          <label className={styles.fieldLabel}>连接间隔（-W）</label>
           <input
             type="number"
             className="textInput"
@@ -65,7 +61,7 @@ export function HydraSection({ data, updateField }: HydraSectionProps) {
             max={300}
           />
           <span className={styles.fieldHint}>
-            Seconds between each connection per task. 0 = no delay.
+            每个任务的连接间隔秒数。0 = 不延迟。
           </span>
         </div>
       </div>
@@ -73,7 +69,7 @@ export function HydraSection({ data, updateField }: HydraSectionProps) {
       {/* Connection Timeout + Max Wordlist Attempts */}
       <div className={styles.fieldRow}>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>Connection Timeout (-w)</label>
+          <label className={styles.fieldLabel}>连接超时（-w）</label>
           <input
             type="number"
             className="textInput"
@@ -83,11 +79,11 @@ export function HydraSection({ data, updateField }: HydraSectionProps) {
             max={120}
           />
           <span className={styles.fieldHint}>
-            Max seconds to wait for a response from the target. Default: 32.
+            等待目标响应的最大秒数。默认：32。
           </span>
         </div>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>Max Wordlist Attempts</label>
+          <label className={styles.fieldLabel}>最大字典尝试策略数</label>
           <input
             type="number"
             className="textInput"
@@ -97,7 +93,7 @@ export function HydraSection({ data, updateField }: HydraSectionProps) {
             max={10}
           />
           <span className={styles.fieldHint}>
-            How many wordlist strategies to try before giving up.
+            在放弃前最多尝试多少种字典策略。
           </span>
         </div>
       </div>
@@ -112,10 +108,10 @@ export function HydraSection({ data, updateField }: HydraSectionProps) {
               onChange={(e) => updateField('hydraStopOnFirstFound', e.target.checked)}
               style={{ marginRight: '8px' }}
             />
-            Stop On First Found (-f)
+            命中后立即停止（-f）
           </label>
           <span className={styles.fieldHint}>
-            Stop immediately when valid credentials are found.
+            一旦发现有效凭据就立刻停止。
           </span>
         </div>
         <div className={styles.fieldGroup}>
@@ -126,10 +122,10 @@ export function HydraSection({ data, updateField }: HydraSectionProps) {
               onChange={(e) => updateField('hydraVerbose', e.target.checked)}
               style={{ marginRight: '8px' }}
             />
-            Verbose Output (-V)
+            详细输出（-V）
           </label>
           <span className={styles.fieldHint}>
-            Show each login attempt in output for progress tracking.
+            输出每次登录尝试，便于跟踪进度。
           </span>
         </div>
       </div>
@@ -137,7 +133,7 @@ export function HydraSection({ data, updateField }: HydraSectionProps) {
       {/* Extra Password Checks */}
       <div className={styles.fieldRow}>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>Extra Password Checks (-e)</label>
+          <label className={styles.fieldLabel}>额外口令检查（-e）</label>
           <div style={{ display: 'flex', gap: '16px', marginTop: '4px' }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px' }}>
               <input
@@ -145,7 +141,7 @@ export function HydraSection({ data, updateField }: HydraSectionProps) {
                 checked={hasNull}
                 onChange={() => toggleExtraCheck('n')}
               />
-              Null/empty password (n)
+              空口令（n）
             </label>
             <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px' }}>
               <input
@@ -153,7 +149,7 @@ export function HydraSection({ data, updateField }: HydraSectionProps) {
                 checked={hasLoginAsPass}
                 onChange={() => toggleExtraCheck('s')}
               />
-              Username as password (s)
+              用户名当口令（s）
             </label>
             <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px' }}>
               <input
@@ -161,11 +157,11 @@ export function HydraSection({ data, updateField }: HydraSectionProps) {
                 checked={hasReversed}
                 onChange={() => toggleExtraCheck('r')}
               />
-              Reversed username (r)
+              用户名反转（r）
             </label>
           </div>
           <span className={styles.fieldHint}>
-            Additional password variations tried before the wordlist. Common quick wins.
+            在跑字典前先尝试的额外口令变体，常见快速命中项。
           </span>
         </div>
       </div>

@@ -23,10 +23,10 @@ export function NmapSection({ data, updateField, onRun }: NmapSectionProps) {
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Shield size={16} />
-          Nmap Service Detection
+          Nmap 服务识别
           <NodeInfoTooltip section="Nmap" />
           <WikiInfoButton target="Nmap" />
-          <span className={styles.badgeActive}>Active</span>
+          <span className={styles.badgeActive}>已启用</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           {onRun && data.nmapEnabled && (
@@ -40,9 +40,9 @@ export function NmapSection({ data, updateField, onRun }: NmapSectionProps) {
                 backgroundColor: 'rgba(34, 197, 94, 0.1)',
                 color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
               }}
-              title="Run Nmap Service Detection"
+              title="运行 Nmap 服务识别"
             >
-              <Play size={10} /> Run partial recon
+              <Play size={10} /> 运行局部侦察
             </button>
           )}
           <div onClick={(e) => e.stopPropagation()}>
@@ -61,16 +61,16 @@ export function NmapSection({ data, updateField, onRun }: NmapSectionProps) {
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Deep service version detection (-sV) and NSE vulnerability scripts (--script vuln).
-            Runs after port discovery to identify exact software versions and known CVEs on each open port.
+            深度服务版本识别（-sV）与 NSE 漏洞脚本（--script vuln）。
+            在端口发现之后运行，用于识别每个开放端口上的精确软件版本与已知 CVE。
           </p>
 
           {data.nmapEnabled && (
             <>
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>Version Detection (-sV)</span>
-                  <p className={styles.toggleDescription}>Probe open ports to determine service/version info. Essential for CVE matching.</p>
+                  <span className={styles.toggleLabel}>版本识别（-sV）</span>
+                  <p className={styles.toggleDescription}>探测开放端口以确定服务/版本信息，是 CVE 匹配的关键。</p>
                 </div>
                 <Toggle
                   checked={data.nmapVersionDetection}
@@ -80,8 +80,8 @@ export function NmapSection({ data, updateField, onRun }: NmapSectionProps) {
 
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>NSE Vulnerability Scripts (--script vuln)</span>
-                  <p className={styles.toggleDescription}>Run Nmap Scripting Engine vulnerability checks (vsftpd backdoor, Log4Shell, etc.). Disabled in stealth mode.</p>
+                  <span className={styles.toggleLabel}>NSE 漏洞脚本（--script vuln）</span>
+                  <p className={styles.toggleDescription}>运行 Nmap Scripting Engine 的漏洞检测（vsftpd 后门、Log4Shell 等）。隐蔽模式下会禁用。</p>
                 </div>
                 <Toggle
                   checked={data.nmapScriptScan}
@@ -91,22 +91,22 @@ export function NmapSection({ data, updateField, onRun }: NmapSectionProps) {
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Timing Template</label>
+                  <label className={styles.fieldLabel}>时序模板</label>
                   <select
                     className="textInput"
                     value={data.nmapTimingTemplate}
                     onChange={(e) => updateField('nmapTimingTemplate', e.target.value)}
                   >
-                    <option value="T1">T1 - Sneaky</option>
-                    <option value="T2">T2 - Polite</option>
-                    <option value="T3">T3 - Normal (default)</option>
-                    <option value="T4">T4 - Aggressive</option>
-                    <option value="T5">T5 - Insane</option>
+                    <option value="T1">T1 - 隐匿</option>
+                    <option value="T2">T2 - 温和</option>
+                    <option value="T3">T3 - 正常（默认）</option>
+                    <option value="T4">T4 - 激进</option>
+                    <option value="T5">T5 - 疯狂</option>
                   </select>
-                  <span className={styles.fieldHint}>Higher = faster but noisier. Stealth mode forces T2.</span>
+                  <span className={styles.fieldHint}>越高越快但噪声越大。隐蔽模式会强制使用 T2。</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Total Timeout (seconds)</label>
+                  <label className={styles.fieldLabel}>总超时（秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -114,13 +114,13 @@ export function NmapSection({ data, updateField, onRun }: NmapSectionProps) {
                     onChange={(e) => updateField('nmapTimeout', parseInt(e.target.value) || 600)}
                     min={60}
                   />
-                  <span className={styles.fieldHint}>Maximum total scan duration</span>
+                  <span className={styles.fieldHint}>扫描的最大总耗时</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Per-Host Timeout (seconds)</label>
+                  <label className={styles.fieldLabel}>单主机超时（秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -128,10 +128,10 @@ export function NmapSection({ data, updateField, onRun }: NmapSectionProps) {
                     onChange={(e) => updateField('nmapHostTimeout', parseInt(e.target.value) || 300)}
                     min={30}
                   />
-                  <span className={styles.fieldHint}>Max time per host before moving on</span>
+                  <span className={styles.fieldHint}>单个主机的最大扫描时间，超过即跳过</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Parallelism</label>
+                  <label className={styles.fieldLabel}>并行度</label>
                   <input
                     type="number"
                     className="textInput"
@@ -140,14 +140,14 @@ export function NmapSection({ data, updateField, onRun }: NmapSectionProps) {
                     min={1}
                     max={10}
                   />
-                  <span className={styles.fieldHint}>Number of IPs to scan concurrently</span>
+                  <span className={styles.fieldHint}>同时扫描的 IP 数量</span>
                 </div>
               </div>
 
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>AI Runtime Version Regex</span>
-                  <p className={styles.toggleDescription}>Regex nmap product/version strings against AI runtimes (Ollama, vLLM, LiteLLM, TGI, Triton, llama.cpp). On match, sets Service.ai_runtime_version so downstream CVE lookups can join against AI library CVE clusters.</p>
+                  <span className={styles.toggleLabel}>AI 运行时版本正则</span>
+                  <p className={styles.toggleDescription}>用正则匹配 Nmap 的 product/version 字符串与 AI 运行时（Ollama、vLLM、LiteLLM、TGI、Triton、llama.cpp 等）。命中后会设置 Service.ai_runtime_version，便于下游 CVE 查询关联到 AI 库的 CVE 集群。</p>
                 </div>
                 <Toggle
                   checked={data.nmapAiVersionRegexEnabled ?? true}

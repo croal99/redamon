@@ -24,10 +24,10 @@ export function ResourceEnumAiSection({ data, updateField, onRun }: ResourceEnum
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Brain size={16} />
-          Endpoint AI Classifier
+          端点 AI 分类器
           <NodeInfoTooltip section="EndpointAiClassifier" />
           <WikiInfoButton target="Adversarial-AI-Recon" />
-          <span className={styles.badgePassive}>Passive</span>
+          <span className={styles.badgePassive}>被动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           {onRun && masterOn && (
@@ -41,9 +41,9 @@ export function ResourceEnumAiSection({ data, updateField, onRun }: ResourceEnum
                 backgroundColor: 'rgba(34, 197, 94, 0.1)',
                 color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
               }}
-              title="Run Endpoint AI Classifier"
+              title="运行端点 AI 分类器"
             >
-              <Play size={10} /> Run partial recon
+              <Play size={10} /> 运行部分侦察
             </button>
           )}
           <div onClick={(e) => e.stopPropagation()}>
@@ -62,21 +62,21 @@ export function ResourceEnumAiSection({ data, updateField, onRun }: ResourceEnum
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Classifies every Endpoint and Parameter discovered by Katana / Hakrawler / GAU / FFuf / ParamSpider / Arjun / Kiterunner / jsluice against an AI-shape catalogue. Tags chat / completion / embedding / tool-call / SSE / MCP / GraphQL endpoints, flags RAG ingestion paths, and marks parameters likely to carry prompt-injection vectors. Pure regex over data already in the graph; no extra traffic is sent to the target.
+            基于 AI 形态特征目录，对 Katana / Hakrawler / GAU / FFuf / ParamSpider / Arjun / Kiterunner / jsluice 发现的每个 Endpoint 与 Parameter 进行分类。对 chat / completion / embedding / tool-call / SSE / MCP / GraphQL 端点打标签，标记 RAG 摄入路径，并识别可能携带提示词注入向量的参数。仅对图中已有数据做正则匹配，不会向目标发送额外流量。
           </p>
 
           {masterOn && (
             <div className={styles.subSection}>
-              <h3 className={styles.subSectionTitle}>AI Surface Classifiers</h3>
+              <h3 className={styles.subSectionTitle}>AI 攻击面分类器</h3>
               <p className={styles.fieldHint} style={{ marginBottom: '0.5rem' }}>
-                All sub-classifiers default on. Master toggle above gates the whole pass. Each sub-classifier can be flipped independently when a specific annotation produces too much noise on a given target.
+                所有子分类器默认开启。上方主开关控制整个流程；当某类标注在特定目标上噪声过高时，可单独关闭对应子分类器。
               </p>
 
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>AI Path Classifier</span>
+                  <span className={styles.toggleLabel}>AI 路径分类器</span>
                   <p className={styles.toggleDescription}>
-                    Matches the URL path against the LLM / completion / embedding / tool-call / SSE / MCP / GraphQL catalogue (OpenAI /v1/chat/completions, Anthropic /v1/messages, Ollama /api/chat, Gemini :generateContent, Cohere /v2/chat, MCP /mcp, LangServe /stream, ...) and stamps Endpoint.ai_interface_type.
+                    将 URL path 与 LLM / completion / embedding / tool-call / SSE / MCP / GraphQL 目录匹配（OpenAI /v1/chat/completions、Anthropic /v1/messages、Ollama /api/chat、Gemini :generateContent、Cohere /v2/chat、MCP /mcp、LangServe /stream 等），并写入 Endpoint.ai_interface_type。
                   </p>
                 </div>
                 <Toggle
@@ -87,9 +87,9 @@ export function ResourceEnumAiSection({ data, updateField, onRun }: ResourceEnum
 
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>AI RAG Path Flag</span>
+                  <span className={styles.toggleLabel}>AI RAG 路径标记</span>
                   <p className={styles.toggleDescription}>
-                    Flags endpoints that look like RAG ingestion or retrieval (OpenAI Vector Stores, Pinecone /vectors/upsert, Weaviate /v1/objects, Qdrant /collections/.../points). Ambiguous paths (/upload, /search, /query) only fire when the parent host is already AI-tagged, to avoid flagging every e-commerce search bar.
+                    标记看起来像 RAG 摄入或检索的端点（OpenAI Vector Stores、Pinecone /vectors/upsert、Weaviate /v1/objects、Qdrant /collections/.../points）。对歧义路径（/upload、/search、/query）仅在父 Host 已被 AI 标记时才触发，避免把电商搜索栏这类通用路径误报为 RAG。
                   </p>
                 </div>
                 <Toggle
@@ -100,9 +100,9 @@ export function ResourceEnumAiSection({ data, updateField, onRun }: ResourceEnum
 
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>AI Prompt-Injectable Param Flag</span>
+                  <span className={styles.toggleLabel}>AI 可注入参数标记</span>
                   <p className={styles.toggleDescription}>
-                    Marks Parameter nodes whose name is a known prompt-injection field (prompt, messages, system, contents, inputs, arguments, ...) when the parent Endpoint is AI-classified. Sets Parameter.is_ai_prompt_injectable=true.
+                    当父 Endpoint 已被 AI 分类时，标记名称命中常见提示词注入字段（prompt、messages、system、contents、inputs、arguments 等）的 Parameter 节点，并设置 Parameter.is_ai_prompt_injectable=true。
                   </p>
                 </div>
                 <Toggle
@@ -113,9 +113,9 @@ export function ResourceEnumAiSection({ data, updateField, onRun }: ResourceEnum
 
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>AI Tool-Arg Path Resolver</span>
+                  <span className={styles.toggleLabel}>AI 工具参数路径解析</span>
                   <p className={styles.toggleDescription}>
-                    Walks discovered OpenAPI / ai-plugin.json / MCP tools/list documents (when present in the graph from a future ai_surface_recon module) and pins each tool argument to its JSON Pointer location. No-op until the central probe module ships; the toggle is reserved here so the contract stays stable.
+                    遍历已发现的 OpenAPI / ai-plugin.json / MCP tools/list 文档（未来由 ai_surface_recon 模块写入图中）并将每个 tool argument 绑定到对应的 JSON Pointer 位置。中心探测模块上线前该选项不会产生实际行为；此处预留开关用于保持契约稳定。
                   </p>
                 </div>
                 <Toggle

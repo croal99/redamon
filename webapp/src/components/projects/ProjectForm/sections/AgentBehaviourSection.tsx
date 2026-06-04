@@ -24,7 +24,7 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Bot size={16} />
-          Agent Behaviour
+          Agent 行为
           <WikiInfoButton target="AgentBehaviour" />
         </h2>
         <ChevronDown
@@ -36,29 +36,29 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Configure the AI agent orchestrator that performs autonomous pentesting. Controls LLM model, phase transitions, payload settings, and safety gates. Tool access per phase is configured in the Tool Matrix tab.
+            配置用于执行自主渗透测试的 AI 智能体编排器。可控制 LLM 模型、阶段切换、Payload 设置与安全闸门。各阶段的工具权限请在“工具矩阵”标签页中配置。
           </p>
 
           {/* LLM & Phase Configuration */}
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>LLM & Phase Configuration</h3>
+            <h3 className={styles.subSectionTitle}>LLM 与阶段配置</h3>
             <div className={styles.fieldRow}>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>LLM Model</label>
+                <label className={styles.fieldLabel}>LLM 模型</label>
                 <ModelPicker
                   userId={userId}
                   value={data.agentOpenaiModel}
                   onChange={(id) => updateField('agentOpenaiModel', id)}
                 />
                 <span className={styles.fieldHint}>
-                  Model used by the agent. Configure providers in Global Settings.
+                  智能体使用的模型。请在“全局设置”中配置模型供应商。
                 </span>
               </div>
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Activate Post-Exploitation Phase</span>
-                <p className={styles.toggleDescription}>Enable post-exploitation after successful exploitation. When disabled, the agent stops after exploitation.</p>
+                <span className={styles.toggleLabel}>启用后渗透阶段</span>
+                <p className={styles.toggleDescription}>利用成功后启用后渗透。关闭时，智能体在利用阶段结束后停止。</p>
               </div>
               <Toggle
                 checked={data.agentActivatePostExplPhase}
@@ -67,61 +67,61 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
             </div>
             <div className={styles.fieldRow}>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Post-Exploitation Type</label>
+                <label className={styles.fieldLabel}>后渗透类型</label>
                 <select
                   className="select"
                   value={data.agentPostExplPhaseType}
                   onChange={(e) => updateField('agentPostExplPhaseType', e.target.value)}
                 >
-                  <option value="statefull">Stateful</option>
-                  <option value="stateless">Stateless</option>
+                  <option value="statefull">有状态（Stateful）</option>
+                  <option value="stateless">无状态（Stateless）</option>
                 </select>
-                <span className={styles.fieldHint}>Stateful keeps Meterpreter/shell sessions between turns</span>
+                <span className={styles.fieldHint}>有状态会在多轮对话之间保留 Meterpreter/shell 会话</span>
               </div>
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Informational Phase System Prompt</label>
+              <label className={styles.fieldLabel}>信息收集阶段系统提示词</label>
               <textarea
                 className="textInput"
                 value={data.agentInformationalSystemPrompt}
                 onChange={(e) => updateField('agentInformationalSystemPrompt', e.target.value)}
-                placeholder="Custom system prompt for the informational/recon phase..."
+                placeholder="为信息收集/侦察阶段自定义系统提示词…"
                 rows={2}
               />
-              <span className={styles.fieldHint}>Injected during the informational phase. Leave empty for default.</span>
+              <span className={styles.fieldHint}>在信息收集阶段注入。留空则使用默认值。</span>
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Exploitation Phase System Prompt</label>
+              <label className={styles.fieldLabel}>利用阶段系统提示词</label>
               <textarea
                 className="textInput"
                 value={data.agentExplSystemPrompt}
                 onChange={(e) => updateField('agentExplSystemPrompt', e.target.value)}
-                placeholder="Custom system prompt for the exploitation phase..."
+                placeholder="为利用阶段自定义系统提示词…"
                 rows={2}
               />
-              <span className={styles.fieldHint}>Injected during the exploitation phase. Leave empty for default.</span>
+              <span className={styles.fieldHint}>在利用阶段注入。留空则使用默认值。</span>
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Post-Exploitation Phase System Prompt</label>
+              <label className={styles.fieldLabel}>后渗透阶段系统提示词</label>
               <textarea
                 className="textInput"
                 value={data.agentPostExplSystemPrompt}
                 onChange={(e) => updateField('agentPostExplSystemPrompt', e.target.value)}
-                placeholder="Custom system prompt for the post-exploitation phase..."
+                placeholder="为后渗透阶段自定义系统提示词…"
                 rows={2}
               />
-              <span className={styles.fieldHint}>Injected during the post-exploitation phase. Leave empty for default.</span>
+              <span className={styles.fieldHint}>在后渗透阶段注入。留空则使用默认值。</span>
             </div>
           </div>
 
           {/* Payload Direction */}
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Payload Direction</h3>
+            <h3 className={styles.subSectionTitle}>Payload 方向</h3>
             <p className={styles.toggleDescription} style={{ marginBottom: 'var(--space-2)' }}>
-              <strong>Reverse</strong>: target connects back to you (LHOST + LPORT). <strong>Bind</strong>: you connect to the target (leave LPORT empty).
+              <strong>Reverse</strong>：目标回连你（LHOST + LPORT）。<strong>Bind</strong>：你连接目标（LPORT 留空）。
             </p>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Tunnel Provider</label>
+              <label className={styles.fieldLabel}>隧道提供方</label>
               <select
                 className="textInput"
                 value={data.agentNgrokTunnelEnabled ? 'ngrok' : data.agentChiselTunnelEnabled ? 'chisel' : 'none'}
@@ -131,33 +131,33 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                   updateField('agentChiselTunnelEnabled', val === 'chisel');
                 }}
               >
-                <option value="none">None (manual LHOST/LPORT)</option>
-                <option value="ngrok">ngrok (single port — free, no VPS needed)</option>
-                <option value="chisel">chisel (multi-port — requires VPS)</option>
+                <option value="none">无（手动配置 LHOST/LPORT）</option>
+                <option value="ngrok">ngrok（单端口 — 免费，无需 VPS）</option>
+                <option value="chisel">chisel（多端口 — 需要 VPS）</option>
               </select>
               <span className={styles.fieldHint}>
-                {data.agentNgrokTunnelEnabled && 'Configure ngrok auth token in Global Settings → Tunneling. Tunnels port 4444 only (handler). Stageless payloads required. Web delivery / HTA not supported.'}
-                {data.agentChiselTunnelEnabled && 'Configure chisel server URL in Global Settings → Tunneling. Requires a chisel server running on your VPS. Tunnels ports 4444 (handler) + 8080 (web delivery). Stageless payloads required.'}
-                {!data.agentNgrokTunnelEnabled && !data.agentChiselTunnelEnabled && 'No tunnel — configure LHOST/LPORT manually below.'}
+                {data.agentNgrokTunnelEnabled && '在“全局设置 → 隧道”中配置 ngrok 认证 token。仅隧道 4444 端口（handler）。需要 stageless payload。不支持 Web delivery / HTA。'}
+                {data.agentChiselTunnelEnabled && '在“全局设置 → 隧道”中配置 chisel 服务器 URL。需要你的 VPS 上运行 chisel server。隧道端口 4444（handler）+ 8080（web delivery）。需要 stageless payload。'}
+                {!data.agentNgrokTunnelEnabled && !data.agentChiselTunnelEnabled && '未启用隧道——请在下方手动配置 LHOST/LPORT。'}
               </span>
             </div>
             {(data.agentNgrokTunnelEnabled || data.agentChiselTunnelEnabled) ? (
               <p className={styles.toggleDescription} style={{ marginTop: 'var(--space-2)', padding: 'var(--space-2)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-1)' }}>
-                {data.agentNgrokTunnelEnabled && 'LHOST and LPORT are auto-detected from the ngrok tunnel. No manual configuration needed.'}
-                {data.agentChiselTunnelEnabled && 'LHOST is derived from the VPS hostname. Both handler (4444) and web delivery (8080) ports are tunneled. No manual configuration needed.'}
+                {data.agentNgrokTunnelEnabled && 'LHOST 与 LPORT 将从 ngrok 隧道自动检测，无需手动配置。'}
+                {data.agentChiselTunnelEnabled && 'LHOST 由 VPS 主机名推导。handler（4444）与 web delivery（8080）端口都会被隧道转发，无需手动配置。'}
               </p>
             ) : (
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>LHOST (Attacker IP)</label>
+                  <label className={styles.fieldLabel}>LHOST（攻击者 IP）</label>
                   <input
                     type="text"
                     className="textInput"
                     value={data.agentLhost}
                     onChange={(e) => updateField('agentLhost', e.target.value)}
-                    placeholder="e.g. 172.28.0.2"
+                    placeholder="例如 172.28.0.2"
                   />
-                  <span className={styles.fieldHint}>Leave empty for bind mode</span>
+                  <span className={styles.fieldHint}>Bind 模式请留空</span>
                 </div>
                 <div className={styles.fieldGroup}>
                   <label className={styles.fieldLabel}>LPORT</label>
@@ -168,12 +168,12 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                     onChange={(e) => updateField('agentLport', e.target.value === '' ? null : parseInt(e.target.value))}
                     min={1}
                     max={65535}
-                    placeholder="Empty = bind mode"
+                    placeholder="留空 = Bind 模式"
                   />
-                  <span className={styles.fieldHint}>Leave empty for bind mode</span>
+                  <span className={styles.fieldHint}>Bind 模式请留空</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Bind Port on Target</label>
+                  <label className={styles.fieldLabel}>目标机上的绑定端口</label>
                   <input
                     type="number"
                     className="textInput"
@@ -181,16 +181,16 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                     onChange={(e) => updateField('agentBindPortOnTarget', e.target.value === '' ? null : parseInt(e.target.value))}
                     min={1}
                     max={65535}
-                    placeholder="Empty = ask agent"
+                    placeholder="留空 = 让智能体询问"
                   />
-                  <span className={styles.fieldHint}>Leave empty if unsure (agent will ask)</span>
+                  <span className={styles.fieldHint}>不确定就留空（智能体会询问）</span>
                 </div>
               </div>
             )}
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Payload Use HTTPS</span>
-                <p className={styles.toggleDescription}>Use reverse_https instead of reverse_tcp. Only for reverse payloads.</p>
+                <span className={styles.toggleLabel}>Payload 使用 HTTPS</span>
+                <p className={styles.toggleDescription}>使用 reverse_https 替代 reverse_tcp。仅适用于 Reverse payload。</p>
               </div>
               <Toggle
                 checked={data.agentPayloadUseHttps}
@@ -211,6 +211,11 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
             const allowedPhases: string[] = Array.isArray(allowedPhasesRaw)
               ? allowedPhasesRaw
               : String(allowedPhasesRaw || '').split(',').map(s => s.trim()).filter(Boolean)
+            const phaseLabel: Record<string, string> = {
+              informational: '信息收集',
+              exploitation: '利用',
+              post_exploitation: '后渗透',
+            }
             const togglePhase = (phase: string) => {
               const next = allowedPhases.includes(phase)
                 ? allowedPhases.filter(p => p !== phase)
@@ -220,28 +225,28 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
             }
             const crossError =
               fireteamEnabled && maxConcurrent > maxMembers
-                ? 'Max concurrent cannot exceed max members'
+                ? '最大并发数不能超过最大成员数'
                 : null
             return (
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Fireteam (multi-agent)</h3>
+                <h3 className={styles.subSectionTitle}>Fireteam（多智能体）</h3>
                 <div className={styles.fieldHint} style={{ marginBottom: 8 }}>
-                  When on, the agent can deploy up to N specialist sub-agents in parallel on independent attack surfaces.
-                  Parent stays in charge of safety approvals and phase transitions.
+                  开启后，智能体可并行部署最多 N 个专家子智能体，在独立攻击面上同时工作。
+                  父智能体负责安全审批与阶段切换。
                 </div>
                 <div className={styles.toggleRow}>
                   <Toggle
                     checked={fireteamEnabled}
                     onChange={(v) => updateField('fireteamEnabled' as any, v as any)}
-                    labelOn="Fireteam enabled"
-                    labelOff="Fireteam disabled"
+                    labelOn="Fireteam 已启用"
+                    labelOff="Fireteam 已禁用"
                   />
                 </div>
                 {fireteamEnabled && (
                   <>
                     <div className={styles.fieldRow}>
                       <div className={styles.fieldGroup}>
-                        <label className={styles.fieldLabel}>Max concurrent members</label>
+                        <label className={styles.fieldLabel}>最大并发成员数</label>
                         <input
                           type="number"
                           className="textInput"
@@ -262,10 +267,10 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                             updateField('fireteamMaxConcurrent' as any, v as any)
                           }}
                         />
-                        <span className={styles.fieldHint}>1-8. Upper limit on members in-flight at once.</span>
+                        <span className={styles.fieldHint}>1-8。单次并行在途成员上限。</span>
                       </div>
                       <div className={styles.fieldGroup}>
-                        <label className={styles.fieldLabel}>Max members per fireteam</label>
+                        <label className={styles.fieldLabel}>Fireteam 最大成员数</label>
                         <input
                           type="number"
                           className="textInput"
@@ -282,12 +287,12 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                             updateField('fireteamMaxMembers' as any, v as any)
                           }}
                         />
-                        <span className={styles.fieldHint}>2-8. Hard cap on fireteam size the LLM can request.</span>
+                        <span className={styles.fieldHint}>2-8。LLM 可请求的 Fireteam 规模硬上限。</span>
                       </div>
                     </div>
                     <div className={styles.fieldRow}>
                       <div className={styles.fieldGroup}>
-                        <label className={styles.fieldLabel}>Per-member max iterations</label>
+                        <label className={styles.fieldLabel}>单成员最大迭代次数</label>
                         <input
                           type="number"
                           className="textInput"
@@ -304,10 +309,10 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                             updateField('fireteamMemberMaxIterations' as any, v as any)
                           }}
                         />
-                        <span className={styles.fieldHint}>5-50. Each member's ReAct budget before it exits.</span>
+                        <span className={styles.fieldHint}>5-50。每个成员在退出前的 ReAct 预算。</span>
                       </div>
                       <div className={styles.fieldGroup}>
-                        <label className={styles.fieldLabel}>Wave timeout (seconds)</label>
+                        <label className={styles.fieldLabel}>批处理超时（秒）</label>
                         <input
                           type="number"
                           className="textInput"
@@ -324,11 +329,11 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                             updateField('fireteamTimeoutSec' as any, v as any)
                           }}
                         />
-                        <span className={styles.fieldHint}>60-7200. Hard wall-clock ceiling for the whole fireteam.</span>
+                        <span className={styles.fieldHint}>60-7200。整个 Fireteam 的墙钟时间硬上限。</span>
                       </div>
                     </div>
                     <div className={styles.fieldGroup}>
-                      <label className={styles.fieldLabel}>Allowed phases</label>
+                      <label className={styles.fieldLabel}>允许的阶段</label>
                       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                         {(['informational', 'exploitation', 'post_exploitation'] as const).map(p => (
                           <label key={p} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -337,17 +342,17 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                               checked={allowedPhases.includes(p)}
                               onChange={() => togglePhase(p)}
                             />
-                            <span style={{ fontSize: '0.85rem' }}>{p}</span>
+                            <span style={{ fontSize: '0.85rem' }}>{phaseLabel[p] ?? p} ({p})</span>
                           </label>
                         ))}
                       </div>
                       <span className={styles.fieldHint}>
-                        Phases in which the agent may deploy fireteams. Recon (informational) is safe; exploitation/post-exploitation are deeper and usually serial.
+                        智能体可在这些阶段部署 Fireteam。侦察/信息收集较安全；利用/后渗透更深入，通常应串行。
                       </span>
                     </div>
                     <div className={styles.fieldGroup}>
                       <label className={styles.fieldLabel}>
-                        Fireteam propensity: <strong>{propensity}/5</strong>
+                        Fireteam 倾向：<strong>{propensity}/5</strong>
                       </label>
                       <input
                         type="range"
@@ -362,12 +367,12 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                         style={{ width: '100%' }}
                       />
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--text-muted, #888)', marginTop: 2 }}>
-                        <span>1 - only very complex tasks</span>
-                        <span>3 - balanced (default)</span>
-                        <span>5 - deploy aggressively</span>
+                        <span>1 - 仅在非常复杂的任务时</span>
+                        <span>3 - 均衡（默认）</span>
+                        <span>5 - 更积极部署</span>
                       </div>
                       <span className={styles.fieldHint}>
-                        How strongly the agent leans toward deploying a fireteam over single-agent or plan_tools. Injected into the system prompt as a directive the LLM must follow.
+                        智能体相对于单智能体或 plan_tools 更倾向部署 Fireteam 的程度。会作为指令注入到系统提示词中，LLM 必须遵循。
                       </span>
                     </div>
                     {crossError && (
@@ -384,10 +389,10 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
 
           {/* Agent Limits */}
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Agent Limits</h3>
+            <h3 className={styles.subSectionTitle}>智能体限制</h3>
             <div className={styles.fieldRow}>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Max Iterations</label>
+                <label className={styles.fieldLabel}>最大迭代次数</label>
                 <input
                   type="number"
                   className="textInput"
@@ -395,10 +400,10 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                   onChange={(e) => updateField('agentMaxIterations', parseInt(e.target.value) || 100)}
                   min={1}
                 />
-                <span className={styles.fieldHint}>LLM reasoning iterations limit</span>
+                <span className={styles.fieldHint}>LLM 推理迭代上限</span>
               </div>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Trace Memory Steps</label>
+                <label className={styles.fieldLabel}>轨迹记忆步数</label>
                 <input
                   type="number"
                   className="textInput"
@@ -406,10 +411,10 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                   onChange={(e) => updateField('agentExecutionTraceMemorySteps', parseInt(e.target.value) || 100)}
                   min={1}
                 />
-                <span className={styles.fieldHint}>Past steps kept in context</span>
+                <span className={styles.fieldHint}>保留在上下文中的历史步骤数</span>
               </div>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Tool Output Max Chars</label>
+                <label className={styles.fieldLabel}>工具输出最大字符数</label>
                 <input
                   type="number"
                   className="textInput"
@@ -417,10 +422,10 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                   onChange={(e) => updateField('agentToolOutputMaxChars', parseInt(e.target.value) || 20000)}
                   min={1000}
                 />
-                <span className={styles.fieldHint}>Truncation limit for tool output</span>
+                <span className={styles.fieldHint}>工具输出截断上限</span>
               </div>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Plan Max Parallel Tools</label>
+                <label className={styles.fieldLabel}>计划最大并行工具数</label>
                 <input
                   type="number"
                   className="textInput"
@@ -429,32 +434,30 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                   min={1}
                   max={50}
                 />
-                <span className={styles.fieldHint}>Concurrent tools per plan wave (root + fireteam); extras queue</span>
+                <span className={styles.fieldHint}>每个批次可并行的工具数，超出的会排队</span>
               </div>
             </div>
           </div>
 
           {/* Approval Gates */}
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Approval Gates</h3>
+            <h3 className={styles.subSectionTitle}>审批闸门</h3>
 
             {(!data.agentRequireApprovalForExploitation || !data.agentRequireApprovalForPostExploitation || !(data.agentGuardrailEnabled ?? true) || !(data.agentRequireToolConfirmation ?? true)) && (
               <div className={styles.shodanWarning} style={{ borderColor: 'rgba(239, 68, 68, 0.4)', background: 'rgba(239, 68, 68, 0.08)' }}>
                 <AlertTriangle size={14} style={{ color: '#ef4444' }} />
                 <span>
-                  <strong>Autonomous operation risk:</strong> One or more safety gates are disabled.
-                  The AI agent may perform exploitation, post-exploitation, dangerous tool executions, or out-of-scope actions without human approval.
-                  This significantly increases the risk of unintended damage to target systems.
-                  You assume full responsibility for all autonomous agent actions.
-                  See <a href="https://github.com/samugit83/redamon/blob/master/DISCLAIMER.md" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline' }}>DISCLAIMER.md</a> for details.
-                </span>
+                  <strong>自主运行风险：</strong>一个或多个安全闸门已关闭。
+                  AI 智能体可能在未获人工批准的情况下执行利用、后渗透、危险工具或越界操作。
+                  这会显著增加对目标系统造成非预期影响的风险。
+               </span>
               </div>
             )}
 
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Require Approval for Exploitation</span>
-                <p className={styles.toggleDescription}>User confirmation before transitioning to exploitation phase.</p>
+                <span className={styles.toggleLabel}>利用阶段需要审批</span>
+                <p className={styles.toggleDescription}>进入利用阶段前需要用户确认。</p>
               </div>
               <Toggle
                 checked={data.agentRequireApprovalForExploitation}
@@ -463,8 +466,8 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Require Approval for Post-Exploitation</span>
-                <p className={styles.toggleDescription}>User confirmation before transitioning to post-exploitation phase.</p>
+                <span className={styles.toggleLabel}>后渗透阶段需要审批</span>
+                <p className={styles.toggleDescription}>进入后渗透阶段前需要用户确认。</p>
               </div>
               <Toggle
                 checked={data.agentRequireApprovalForPostExploitation}
@@ -473,10 +476,9 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Require Tool Confirmation</span>
+                <span className={styles.toggleLabel}>工具执行需要确认</span>
                 <p className={styles.toggleDescription}>
-                  Manual confirmation before executing dangerous tools
-                  (nmap, nuclei, metasploit, hydra, kali shell, etc.).
+                  执行危险工具前需要人工确认（nmap、nuclei、metasploit、hydra、kali shell 等）。
                 </p>
               </div>
               <Toggle
@@ -484,31 +486,15 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                 onChange={(checked) => updateField('agentRequireToolConfirmation', checked)}
               />
             </div>
-            <div className={styles.toggleRow}>
-              <div>
-                <span className={styles.toggleLabel}>Agent Guardrail</span>
-                <p className={styles.toggleDescription}>
-                  Verify target authorization on session start and enforce scope restrictions
-                  in the agent&apos;s prompt. Blocks the agent from operating against well-known
-                  public targets and prevents out-of-scope actions.
-                  Government, military, educational, and international organization domains
-                  (.gov, .mil, .edu, .int) are always blocked regardless of this setting.
-                </p>
-              </div>
-              <Toggle
-                checked={data.agentGuardrailEnabled ?? true}
-                onChange={(checked) => updateField('agentGuardrailEnabled', checked)}
-              />
-            </div>
           </div>
 
           {/* Kali Shell — Library Installation */}
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Kali Shell — Library Installation</h3>
+            <h3 className={styles.subSectionTitle}>Kali Shell — 依赖安装</h3>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Allow Library Installation</span>
-                <p className={styles.toggleDescription}>Let the agent install packages (pip/apt) in kali_shell during a pentest. Installed packages are ephemeral — lost on container restart.</p>
+                <span className={styles.toggleLabel}>允许安装依赖</span>
+                <p className={styles.toggleDescription}>允许智能体在渗透测试过程中在 kali_shell 中安装包（pip/apt）。已安装的包为临时的——容器重启后会丢失。</p>
               </div>
               <Toggle
                 checked={data.agentKaliInstallEnabled}
@@ -518,26 +504,26 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
             {data.agentKaliInstallEnabled && (
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Authorized Packages</label>
+                  <label className={styles.fieldLabel}>允许安装的包</label>
                   <textarea
                     className="textInput"
                     value={data.agentKaliInstallAllowedPackages}
                     onChange={(e) => updateField('agentKaliInstallAllowedPackages', e.target.value)}
                     rows={2}
-                    placeholder="e.g. pyftpdlib, scapy, droopescan"
+                    placeholder="例如 pyftpdlib, scapy, droopescan"
                   />
-                  <span className={styles.fieldHint}>Comma-separated whitelist. If non-empty, ONLY these packages can be installed.</span>
+                  <span className={styles.fieldHint}>逗号分隔白名单。非空时，仅允许安装这些包。</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Forbidden Packages</label>
+                  <label className={styles.fieldLabel}>禁止安装的包</label>
                   <textarea
                     className="textInput"
                     value={data.agentKaliInstallForbiddenPackages}
                     onChange={(e) => updateField('agentKaliInstallForbiddenPackages', e.target.value)}
                     rows={2}
-                    placeholder="e.g. metasploit-framework, cobalt-strike"
+                    placeholder="例如 metasploit-framework, cobalt-strike"
                   />
-                  <span className={styles.fieldHint}>Comma-separated blacklist. These packages must NEVER be installed.</span>
+                  <span className={styles.fieldHint}>逗号分隔黑名单。这些包绝不能被安装。</span>
                 </div>
               </div>
             )}
@@ -545,10 +531,10 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
 
           {/* Retries, Logging & Debug */}
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Retries, Logging & Debug</h3>
+            <h3 className={styles.subSectionTitle}>重试、日志与调试</h3>
             <div className={styles.fieldRow}>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Cypher Max Retries</label>
+                <label className={styles.fieldLabel}>Cypher 最大重试次数</label>
                 <input
                   type="number"
                   className="textInput"
@@ -557,10 +543,10 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                   min={0}
                   max={10}
                 />
-                <span className={styles.fieldHint}>Neo4j query retries</span>
+                <span className={styles.fieldHint}>Neo4j 查询重试次数</span>
               </div>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Log Max MB</label>
+                <label className={styles.fieldLabel}>日志最大 MB</label>
                 <input
                   type="number"
                   className="textInput"
@@ -568,10 +554,10 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                   onChange={(e) => updateField('agentLogMaxMb', parseInt(e.target.value) || 10)}
                   min={1}
                 />
-                <span className={styles.fieldHint}>Max log file size</span>
+                <span className={styles.fieldHint}>单个日志文件最大大小</span>
               </div>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Log Backups</label>
+                <label className={styles.fieldLabel}>日志备份数量</label>
                 <input
                   type="number"
                   className="textInput"
@@ -579,13 +565,13 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
                   onChange={(e) => updateField('agentLogBackupCount', parseInt(e.target.value) || 5)}
                   min={0}
                 />
-                <span className={styles.fieldHint}>Rotated backups to keep</span>
+                <span className={styles.fieldHint}>保留的轮转备份数</span>
               </div>
             </div>
             <div className={styles.toggleRow}>
               <div>
-                <span className={styles.toggleLabel}>Create Graph Image on Init</span>
-                <p className={styles.toggleDescription}>Generate a LangGraph visualization when the agent starts. Useful for debugging.</p>
+                <span className={styles.toggleLabel}>启动时生成图像</span>
+                <p className={styles.toggleDescription}>智能体启动时生成 LangGraph 可视化图像，便于调试。</p>
               </div>
               <Toggle
                 checked={data.agentCreateGraphImageOnInit}

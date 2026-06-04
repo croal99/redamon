@@ -24,10 +24,10 @@ export function MasscanSection({ data, updateField, onRun }: MasscanSectionProps
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Radar size={16} />
-          Masscan Port Scanner
+          Masscan 端口扫描器
           <NodeInfoTooltip section="Masscan" />
           <WikiInfoButton target="Masscan" />
-          <span className={styles.badgeActive}>Active</span>
+          <span className={styles.badgeActive}>已启用</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           {onRun && data.masscanEnabled && (
@@ -41,9 +41,9 @@ export function MasscanSection({ data, updateField, onRun }: MasscanSectionProps
                 backgroundColor: 'rgba(34, 197, 94, 0.1)',
                 color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
               }}
-              title="Run Masscan Port Scanner"
+              title="运行 Masscan 端口扫描器"
             >
-              <Play size={10} /> Run partial recon
+              <Play size={10} /> 运行局部侦察
             </button>
           )}
           <div onClick={(e) => e.stopPropagation()}>
@@ -62,16 +62,16 @@ export function MasscanSection({ data, updateField, onRun }: MasscanSectionProps
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            High-speed SYN port scanner optimized for large networks and IP/CIDR ranges.
-            Uses raw packets for maximum speed. Requires root or CAP_NET_RAW.
-            Incompatible with Tor (raw SYN packets bypass TCP stack).
+            面向大型网络与 IP/CIDR 范围优化的高速 SYN 端口扫描器。
+            使用原始数据包以获得最高速度，需要 root 或 CAP_NET_RAW 权限。
+            与 Tor 不兼容（原始 SYN 包绕过 TCP 协议栈）。
           </p>
 
           {data.masscanEnabled && (
             <>
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Top Ports</label>
+                  <label className={styles.fieldLabel}>常用端口</label>
                   <input
                     type="text"
                     className="textInput"
@@ -79,10 +79,10 @@ export function MasscanSection({ data, updateField, onRun }: MasscanSectionProps
                     onChange={(e) => updateField('masscanTopPorts', e.target.value)}
                     placeholder="1000"
                   />
-                  <span className={styles.fieldHint}>Use &ldquo;100&rdquo;, &ldquo;1000&rdquo;, or &ldquo;full&rdquo; for all 65535 ports</span>
+                  <span className={styles.fieldHint}>可用 &ldquo;100&rdquo;、&ldquo;1000&rdquo;，或 &ldquo;full&rdquo; 扫描全部 65535 端口</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Custom Ports</label>
+                  <label className={styles.fieldLabel}>自定义端口</label>
                   <input
                     type="text"
                     className="textInput"
@@ -90,13 +90,13 @@ export function MasscanSection({ data, updateField, onRun }: MasscanSectionProps
                     onChange={(e) => updateField('masscanCustomPorts', e.target.value)}
                     placeholder="80,443,8080-8090"
                   />
-                  <span className={styles.fieldHint}>Overrides Top Ports if set. Use ranges: 8080-8090</span>
+                  <span className={styles.fieldHint}>设置后将覆盖“常用端口”。支持范围：8080-8090</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Rate (packets/sec)</label>
+                  <label className={styles.fieldLabel}>速率（包/秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -104,11 +104,11 @@ export function MasscanSection({ data, updateField, onRun }: MasscanSectionProps
                     onChange={(e) => updateField('masscanRate', parseInt(e.target.value) || 1000)}
                     min={1}
                   />
-                  <span className={styles.fieldHint}>Packets/sec. Masscan can handle very high rates (10k+)</span>
-                  <TimeEstimate estimate="1000: safe default | 10000+: fast but may overwhelm targets" />
+                  <span className={styles.fieldHint}>每秒发包数。Masscan 可支持非常高的速率（10k+）</span>
+                  <TimeEstimate estimate="1000：安全默认值 | 10000+：更快，但可能压垮目标" />
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Wait (seconds)</label>
+                  <label className={styles.fieldLabel}>等待（秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -116,13 +116,13 @@ export function MasscanSection({ data, updateField, onRun }: MasscanSectionProps
                     onChange={(e) => updateField('masscanWait', parseInt(e.target.value) || 10)}
                     min={0}
                   />
-                  <span className={styles.fieldHint}>Seconds to wait for late responses after scan completes</span>
+                  <span className={styles.fieldHint}>扫描结束后等待延迟响应的秒数</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Retries</label>
+                  <label className={styles.fieldLabel}>重试次数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -131,10 +131,10 @@ export function MasscanSection({ data, updateField, onRun }: MasscanSectionProps
                     min={0}
                     max={10}
                   />
-                  <span className={styles.fieldHint}>Retry attempts for unresponsive ports</span>
+                  <span className={styles.fieldHint}>对无响应端口的重试次数</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Exclude Targets</label>
+                  <label className={styles.fieldLabel}>排除目标</label>
                   <input
                     type="text"
                     className="textInput"
@@ -142,14 +142,14 @@ export function MasscanSection({ data, updateField, onRun }: MasscanSectionProps
                     onChange={(e) => updateField('masscanExcludeTargets', e.target.value)}
                     placeholder="10.0.0.1, 192.168.0.0/24"
                   />
-                  <span className={styles.fieldHint}>Comma-separated IPs/CIDRs to exclude from scanning</span>
+                  <span className={styles.fieldHint}>用逗号分隔要排除的 IP/CIDR</span>
                 </div>
               </div>
 
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>Banner Grabbing</span>
-                  <p className={styles.toggleDescription}>Capture service banners (SSH, HTTP, etc.). Increases scan time but provides richer data.</p>
+                  <span className={styles.toggleLabel}>Banner 抓取</span>
+                  <p className={styles.toggleDescription}>抓取服务 Banner（SSH/HTTP 等）。会增加扫描时间，但数据更丰富。</p>
                 </div>
                 <Toggle
                   checked={data.masscanBanners}
@@ -158,8 +158,8 @@ export function MasscanSection({ data, updateField, onRun }: MasscanSectionProps
               </div>
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>AI Port Catalog</span>
-                  <p className={styles.toggleDescription}>Annotate AI-bearing ports on masscan output (same catalogue used by Naabu). Emits Technology nodes with category=ai-* linked to the Service.</p>
+                  <span className={styles.toggleLabel}>AI 端口目录</span>
+                  <p className={styles.toggleDescription}>对 masscan 输出中的 AI 相关端口进行标注（与 Naabu 使用同一目录）。会生成 category=ai-* 的 Technology 节点并关联到 Service。</p>
                 </div>
                 <Toggle
                   checked={data.masscanAiPortCatalogEnabled ?? true}

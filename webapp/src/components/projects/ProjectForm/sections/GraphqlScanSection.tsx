@@ -27,10 +27,10 @@ export function GraphqlScanSection({ data, updateField, projectId, mode, onRun }
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Braces size={16} />
-          GraphQL Security Scanner
+          GraphQL 安全扫描器
           <NodeInfoTooltip section="GraphqlScan" />
           <WikiInfoButton target="GraphqlScan" />
-          <span className={styles.badgeActive}>Active</span>
+          <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           {onRun && enabled && (
@@ -44,9 +44,9 @@ export function GraphqlScanSection({ data, updateField, projectId, mode, onRun }
                 backgroundColor: 'rgba(34, 197, 94, 0.1)',
                 color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
               }}
-              title="Run GraphQL Security Scanner"
+              title="运行 GraphQL 安全扫描器"
             >
-              <Play size={10} /> Run partial recon
+              <Play size={10} /> 运行部分侦察
             </button>
           )}
           <div onClick={(e) => e.stopPropagation()}>
@@ -65,21 +65,18 @@ export function GraphqlScanSection({ data, updateField, projectId, mode, onRun }
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Active GraphQL security scanner. Discovers GraphQL endpoints from crawled BaseURLs + Endpoints,
-            tests introspection exposure, extracts schema, detects sensitive fields, and flags
-            mutation / proxy-path vulnerabilities. Enriches existing Endpoint nodes with
-            <code> is_graphql</code> + schema metadata and creates Vulnerability nodes for findings.
+            主动式 GraphQL 安全扫描器：从爬取的 BaseURLs + Endpoints 中发现 GraphQL 端点，测试 introspection 暴露、提取 schema、检测敏感字段，并标记 mutation / proxy-path 类漏洞。会为已有 Endpoint 节点补充 <code> is_graphql</code> 与 schema 元数据，并为发现创建 Vulnerability 节点。
           </p>
 
           {enabled && (
             <>
               {/* Test Modules */}
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Security Tests</h3>
+                <h3 className={styles.subSectionTitle}>安全测试</h3>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Introspection Test</span>
-                    <p className={styles.toggleDescription}>Probe <code>__schema</code> to detect exposed introspection (passive, low traffic).</p>
+                    <span className={styles.toggleLabel}>Introspection 测试</span>
+                    <p className={styles.toggleDescription}>探测 <code>__schema</code> 以检测 introspection 是否暴露（低流量、偏被动）。</p>
                   </div>
                   <Toggle
                     checked={(data as any).graphqlIntrospectionTest ?? true}
@@ -88,8 +85,8 @@ export function GraphqlScanSection({ data, updateField, projectId, mode, onRun }
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Verify SSL</span>
-                    <p className={styles.toggleDescription}>Reject invalid / self-signed TLS certs on target endpoints.</p>
+                    <span className={styles.toggleLabel}>校验 SSL</span>
+                    <p className={styles.toggleDescription}>拒绝目标端点上的无效/自签名 TLS 证书。</p>
                   </div>
                   <Toggle
                     checked={(data as any).graphqlVerifySsl ?? true}
@@ -100,10 +97,10 @@ export function GraphqlScanSection({ data, updateField, projectId, mode, onRun }
 
               {/* Execution Limits */}
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Execution Limits</h3>
+                <h3 className={styles.subSectionTitle}>执行限制</h3>
                 <div className={styles.fieldRow}>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Timeout (seconds)</label>
+                    <label className={styles.fieldLabel}>超时（秒）</label>
                     <input
                       type="number"
                       className="textInput"
@@ -112,10 +109,10 @@ export function GraphqlScanSection({ data, updateField, projectId, mode, onRun }
                       min={1}
                       max={600}
                     />
-                    <span className={styles.fieldHint}>Per-endpoint request timeout</span>
+                    <span className={styles.fieldHint}>每个端点的请求超时</span>
                   </div>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Rate Limit (req/s)</label>
+                    <label className={styles.fieldLabel}>速率限制（req/s）</label>
                     <input
                       type="number"
                       className="textInput"
@@ -124,12 +121,12 @@ export function GraphqlScanSection({ data, updateField, projectId, mode, onRun }
                       min={0}
                       max={100}
                     />
-                    <span className={styles.fieldHint}>0 = unlimited. Capped by ROE_GLOBAL_MAX_RPS.</span>
+                    <span className={styles.fieldHint}>0 = 不限。上限受 ROE_GLOBAL_MAX_RPS 约束。</span>
                   </div>
                 </div>
                 <div className={styles.fieldRow}>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Concurrency</label>
+                    <label className={styles.fieldLabel}>并发数</label>
                     <input
                       type="number"
                       className="textInput"
@@ -138,10 +135,10 @@ export function GraphqlScanSection({ data, updateField, projectId, mode, onRun }
                       min={1}
                       max={20}
                     />
-                    <span className={styles.fieldHint}>Parallel endpoint tests</span>
+                    <span className={styles.fieldHint}>并行测试的端点数量</span>
                   </div>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Query Depth Limit</label>
+                    <label className={styles.fieldLabel}>查询深度上限</label>
                     <input
                       type="number"
                       className="textInput"
@@ -150,12 +147,12 @@ export function GraphqlScanSection({ data, updateField, projectId, mode, onRun }
                       min={1}
                       max={50}
                     />
-                    <span className={styles.fieldHint}>Max introspection nesting depth</span>
+                    <span className={styles.fieldHint}>Introspection 的最大嵌套深度</span>
                   </div>
                 </div>
                 <div className={styles.fieldRow}>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Retry Count</label>
+                    <label className={styles.fieldLabel}>重试次数</label>
                     <input
                       type="number"
                       className="textInput"
@@ -164,10 +161,10 @@ export function GraphqlScanSection({ data, updateField, projectId, mode, onRun }
                       min={0}
                       max={10}
                     />
-                    <span className={styles.fieldHint}>Retries on 429/5xx and network errors (Cloudflare-friendly)</span>
+                    <span className={styles.fieldHint}>对 429/5xx 与网络错误进行重试（更适配 Cloudflare）</span>
                   </div>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Retry Backoff (seconds)</label>
+                    <label className={styles.fieldLabel}>重试退避（秒）</label>
                     <input
                       type="number"
                       step="0.1"
@@ -176,16 +173,16 @@ export function GraphqlScanSection({ data, updateField, projectId, mode, onRun }
                       onChange={(e) => updateField('graphqlRetryBackoff' as any, parseFloat(e.target.value) || 2.0)}
                       min={0}
                     />
-                    <span className={styles.fieldHint}>Exponential backoff base between retries</span>
+                    <span className={styles.fieldHint}>重试之间指数退避的基准值</span>
                   </div>
                 </div>
               </div>
 
               {/* Custom Endpoints */}
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Target Override</h3>
+                <h3 className={styles.subSectionTitle}>目标覆盖</h3>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Custom Endpoints</label>
+                  <label className={styles.fieldLabel}>自定义端点</label>
                   <textarea
                     className="textInput"
                     rows={3}
@@ -194,33 +191,33 @@ export function GraphqlScanSection({ data, updateField, projectId, mode, onRun }
                     onChange={(e) => updateField('graphqlEndpoints' as any, e.target.value)}
                   />
                   <span className={styles.fieldHint}>
-                    Comma-separated GraphQL endpoint URLs. Leave empty to auto-discover from crawled BaseURLs/Endpoints (recommended).
+                    逗号分隔的 GraphQL 端点 URL。留空则从爬取的 BaseURLs/Endpoints 自动发现（推荐）。
                   </span>
                 </div>
               </div>
 
               {/* Authentication */}
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Authentication</h3>
+                <h3 className={styles.subSectionTitle}>鉴权</h3>
                 <div className={styles.fieldRow}>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Auth Type</label>
+                    <label className={styles.fieldLabel}>鉴权类型</label>
                     <select
                       className="textInput"
                       value={authType}
                       onChange={(e) => updateField('graphqlAuthType' as any, e.target.value)}
                     >
-                      <option value="">None</option>
+                      <option value="">无</option>
                       <option value="bearer">Bearer Token</option>
-                      <option value="basic">Basic (user:pass)</option>
+                      <option value="basic">Basic（user:pass）</option>
                       <option value="cookie">Cookie</option>
-                      <option value="custom">Custom Header</option>
+                      <option value="custom">自定义 Header</option>
                     </select>
-                    <span className={styles.fieldHint}>Headers are attached to every GraphQL request</span>
+                    <span className={styles.fieldHint}>请求头会附加到每个 GraphQL 请求</span>
                   </div>
                   {authType && (
                     <div className={styles.fieldGroup}>
-                      <label className={styles.fieldLabel}>Auth Value</label>
+                      <label className={styles.fieldLabel}>鉴权值</label>
                       <input
                         type="password"
                         className="textInput"
@@ -234,8 +231,8 @@ export function GraphqlScanSection({ data, updateField, projectId, mode, onRun }
                         }
                       />
                       <span className={styles.fieldHint}>
-                        {authType === 'basic' && 'Will be base64-encoded automatically'}
-                        {authType !== 'basic' && 'Value sent verbatim in the header'}
+                        {authType === 'basic' && '将自动进行 base64 编码'}
+                        {authType !== 'basic' && '该值会按原样写入请求头'}
                       </span>
                     </div>
                   )}
@@ -243,7 +240,7 @@ export function GraphqlScanSection({ data, updateField, projectId, mode, onRun }
                 {authType === 'custom' && (
                   <div className={styles.fieldRow}>
                     <div className={styles.fieldGroup}>
-                      <label className={styles.fieldLabel}>Custom Header Name</label>
+                      <label className={styles.fieldLabel}>自定义 Header 名称</label>
                       <input
                         type="text"
                         className="textInput"
@@ -251,7 +248,7 @@ export function GraphqlScanSection({ data, updateField, projectId, mode, onRun }
                         onChange={(e) => updateField('graphqlAuthHeader' as any, e.target.value)}
                         placeholder="X-Api-Key"
                       />
-                      <span className={styles.fieldHint}>Header name for the custom auth value above</span>
+                      <span className={styles.fieldHint}>用于承载上方鉴权值的 Header 名称</span>
                     </div>
                   </div>
                 )}
@@ -287,33 +284,29 @@ function GraphqlCopSubSection({ data, updateField }: GraphqlCopSubSectionProps) 
           size={14}
           style={{ transform: expanded ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform 150ms' }}
         />
-        graphql-cop External Scanner
-        <span className={styles.badgeActive} style={{ fontSize: '9px' }}>Active</span>
+        graphql-cop 外部扫描器
+        <span className={styles.badgeActive} style={{ fontSize: '9px' }}>主动</span>
         <span style={{
           fontSize: '9px', padding: '1px 6px', borderRadius: '3px',
           backgroundColor: 'rgba(99, 102, 241, 0.15)', color: '#818cf8', fontWeight: 500,
         }}>
-          12 checks
+          12 项检查
         </span>
         {copEnabled && (
-          <span style={{ fontSize: '9px', color: '#22c55e', fontWeight: 500 }}>ENABLED</span>
+          <span style={{ fontSize: '9px', color: '#22c55e', fontWeight: 500 }}>已启用</span>
         )}
       </h3>
 
       {expanded && (
         <>
           <p className={styles.sectionDescription} style={{ marginTop: '8px' }}>
-            External Docker-based misconfig scanner (<code>dolevf/graphql-cop:1.14</code>).
-            Runs 12 checks per endpoint including alias/batch/directive DoS probes, GraphiQL
-            detection, trace/debug disclosure, GET-method CSRF, unhandled errors, and field
-            suggestions. Traffic is <strong>active</strong> &mdash; DoS probes auto-disable in
-            stealth mode. Introspection test is off by default to dedupe with the native scanner above.
+            基于 Docker 的外部配置错误扫描器（<code>dolevf/graphql-cop:1.14</code>）。对每个端点执行 12 项检查，包含 alias/batch/directive 的 DoS 探测、GraphiQL 检测、trace/debug 信息泄露、GET 方法 CSRF、未处理错误、字段建议等。流量为<strong>主动</strong> &mdash; 在 stealth 模式下会自动禁用 DoS 探测。Introspection 默认关闭，用于与上方原生扫描器去重。
           </p>
 
           <div className={styles.toggleRow}>
             <div>
-              <span className={styles.toggleLabel}>Enable graphql-cop</span>
-              <p className={styles.toggleDescription}>Docker-in-Docker invocation per endpoint. Default: off (opt-in).</p>
+              <span className={styles.toggleLabel}>启用 graphql-cop</span>
+              <p className={styles.toggleDescription}>对每个端点执行一次 Docker-in-Docker 调用。默认关闭（需手动开启）。</p>
             </div>
             <Toggle
               checked={copEnabled}
@@ -325,17 +318,17 @@ function GraphqlCopSubSection({ data, updateField }: GraphqlCopSubSectionProps) 
             <>
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Docker Image</label>
+                  <label className={styles.fieldLabel}>Docker 镜像</label>
                   <input
                     type="text"
                     className="textInput"
                     value={(data as any).graphqlCopDockerImage ?? 'dolevf/graphql-cop:1.14'}
                     onChange={(e) => updateField('graphqlCopDockerImage' as any, e.target.value)}
                   />
-                  <span className={styles.fieldHint}>Pinned to 1.14 (DockerHub tag). Override for custom forks.</span>
+                  <span className={styles.fieldHint}>默认固定为 1.14（DockerHub tag）。如使用自定义 fork 可在此覆盖。</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Timeout (seconds)</label>
+                  <label className={styles.fieldLabel}>超时（秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -344,14 +337,14 @@ function GraphqlCopSubSection({ data, updateField }: GraphqlCopSubSectionProps) 
                     min={10}
                     max={600}
                   />
-                  <span className={styles.fieldHint}>Per-endpoint timeout</span>
+                  <span className={styles.fieldHint}>每个端点的超时</span>
                 </div>
               </div>
 
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>Force Scan</span>
-                  <p className={styles.toggleDescription}>Run checks even if endpoint doesn&apos;t look GraphQL-like (graphql-cop&apos;s <code>-f</code> flag).</p>
+                  <span className={styles.toggleLabel}>强制扫描</span>
+                  <p className={styles.toggleDescription}>即使端点看起来不像 GraphQL 也执行检查（graphql-cop 的 <code>-f</code> 参数）。</p>
                 </div>
                 <Toggle
                   checked={(data as any).graphqlCopForceScan ?? false}
@@ -360,8 +353,8 @@ function GraphqlCopSubSection({ data, updateField }: GraphqlCopSubSectionProps) 
               </div>
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>Debug Mode</span>
-                  <p className={styles.toggleDescription}>Add <code>X-GraphQL-Cop-Test</code> header per request (graphql-cop&apos;s <code>-d</code> flag).</p>
+                  <span className={styles.toggleLabel}>调试模式</span>
+                  <p className={styles.toggleDescription}>每次请求添加 <code>X-GraphQL-Cop-Test</code> 请求头（graphql-cop 的 <code>-d</code> 参数）。</p>
                 </div>
                 <Toggle
                   checked={(data as any).graphqlCopDebug ?? false}
@@ -370,20 +363,19 @@ function GraphqlCopSubSection({ data, updateField }: GraphqlCopSubSectionProps) 
               </div>
 
               <h4 className={styles.subSectionTitle} style={{ marginTop: '16px', fontSize: '12px' }}>
-                Checks to Run
+                要运行的检查项
               </h4>
               <p className={styles.fieldHint} style={{ marginBottom: '8px' }}>
-                Each toggle maps to one graphql-cop test.{' '}
-                <strong>Filters findings from the report only &mdash; DoS traffic still fires</strong>{' '}
-                until graphql-cop ships <code>-e</code> support on DockerHub (patched in git main v1.15, unreleased).
-                To fully suppress a test&apos;s traffic, disable the master <em>Enable graphql-cop</em> toggle above.
+                每个开关对应 graphql-cop 的一个测试项。{' '}
+                <strong>这些开关只会过滤报告中的发现 &mdash; DoS 流量仍会发出</strong>{' '}
+                直到 graphql-cop 在 DockerHub 发布支持 <code>-e</code> 的版本（git main v1.15 已修补，尚未发布）。如需完全抑制某项测试的流量，请关闭上方的主开关 <em>启用 graphql-cop</em>。
               </p>
 
               {/* Info-leak + CSRF checks (low-noise) */}
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>Field Suggestions (LOW &mdash; info leak)</span>
-                  <p className={styles.toggleDescription}>&quot;Did you mean X?&quot; errors leak schema fields even with introspection off.</p>
+                  <span className={styles.toggleLabel}>字段建议（低 &mdash; 信息泄露）</span>
+                  <p className={styles.toggleDescription}>&quot;Did you mean X?&quot; 错误即使在关闭 introspection 时也可能泄露 schema 字段。</p>
                 </div>
                 <Toggle
                   checked={(data as any).graphqlCopTestFieldSuggestions ?? true}
@@ -392,8 +384,8 @@ function GraphqlCopSubSection({ data, updateField }: GraphqlCopSubSectionProps) 
               </div>
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>Introspection (HIGH &mdash; info leak)</span>
-                  <p className={styles.toggleDescription}>Off by default &mdash; native scanner above already tests this. Enable for dedup validation.</p>
+                  <span className={styles.toggleLabel}>Introspection（高 &mdash; 信息泄露）</span>
+                  <p className={styles.toggleDescription}>默认关闭 &mdash; 上方原生扫描器已覆盖该项。若需要去重验证可开启。</p>
                 </div>
                 <Toggle
                   checked={(data as any).graphqlCopTestIntrospection ?? false}
@@ -402,8 +394,8 @@ function GraphqlCopSubSection({ data, updateField }: GraphqlCopSubSectionProps) 
               </div>
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>GraphQL IDE / Playground (LOW)</span>
-                  <p className={styles.toggleDescription}>Detect exposed GraphiQL/Playground UI.</p>
+                  <span className={styles.toggleLabel}>GraphQL IDE / Playground（低）</span>
+                  <p className={styles.toggleDescription}>检测暴露的 GraphiQL/Playground UI。</p>
                 </div>
                 <Toggle
                   checked={(data as any).graphqlCopTestGraphiql ?? true}
@@ -412,8 +404,8 @@ function GraphqlCopSubSection({ data, updateField }: GraphqlCopSubSectionProps) 
               </div>
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>GET Method Query Support (MEDIUM &mdash; CSRF)</span>
-                  <p className={styles.toggleDescription}>Queries allowed via GET enable CSRF attacks.</p>
+                  <span className={styles.toggleLabel}>GET 查询支持（中 &mdash; CSRF）</span>
+                  <p className={styles.toggleDescription}>允许通过 GET 执行查询会带来 CSRF 风险。</p>
                 </div>
                 <Toggle
                   checked={(data as any).graphqlCopTestGetMethod ?? true}
@@ -422,8 +414,8 @@ function GraphqlCopSubSection({ data, updateField }: GraphqlCopSubSectionProps) 
               </div>
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>GET-based Mutations (MEDIUM &mdash; CSRF)</span>
-                  <p className={styles.toggleDescription}>Mutations executable via GET requests.</p>
+                  <span className={styles.toggleLabel}>GET Mutation（中 &mdash; CSRF）</span>
+                  <p className={styles.toggleDescription}>Mutation 可通过 GET 请求执行。</p>
                 </div>
                 <Toggle
                   checked={(data as any).graphqlCopTestGetMutation ?? true}
@@ -432,8 +424,8 @@ function GraphqlCopSubSection({ data, updateField }: GraphqlCopSubSectionProps) 
               </div>
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>POST url-encoded CSRF (MEDIUM)</span>
-                  <p className={styles.toggleDescription}>GraphQL accepts <code>application/x-www-form-urlencoded</code> POSTs.</p>
+                  <span className={styles.toggleLabel}>POST url-encoded CSRF（中）</span>
+                  <p className={styles.toggleDescription}>GraphQL 接受 <code>application/x-www-form-urlencoded</code> POST 请求。</p>
                 </div>
                 <Toggle
                   checked={(data as any).graphqlCopTestPostCsrf ?? true}
@@ -442,8 +434,8 @@ function GraphqlCopSubSection({ data, updateField }: GraphqlCopSubSectionProps) 
               </div>
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>Trace Mode (INFO &mdash; info leak)</span>
-                  <p className={styles.toggleDescription}>Apollo tracing extension disclosure.</p>
+                  <span className={styles.toggleLabel}>Trace Mode（信息 &mdash; 信息泄露）</span>
+                  <p className={styles.toggleDescription}>Apollo tracing 扩展信息泄露。</p>
                 </div>
                 <Toggle
                   checked={(data as any).graphqlCopTestTraceMode ?? true}
@@ -452,8 +444,8 @@ function GraphqlCopSubSection({ data, updateField }: GraphqlCopSubSectionProps) 
               </div>
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>Unhandled Errors (INFO &mdash; info leak)</span>
-                  <p className={styles.toggleDescription}>Exception stack traces returned to client.</p>
+                  <span className={styles.toggleLabel}>未处理错误（信息 &mdash; 信息泄露）</span>
+                  <p className={styles.toggleDescription}>异常堆栈回显给客户端。</p>
                 </div>
                 <Toggle
                   checked={(data as any).graphqlCopTestUnhandledError ?? true}
@@ -466,14 +458,13 @@ function GraphqlCopSubSection({ data, updateField }: GraphqlCopSubSectionProps) 
                 backgroundColor: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.2)',
                 fontSize: '11px', color: '#f87171',
               }}>
-                <strong>DoS probes below &mdash; noisy traffic.</strong> Toggling these off hides their findings
-                but the packets still fly (see note above). Auto-disabled only in stealth mode.
+                <strong>下方为 DoS 探测 &mdash; 流量噪声较大。</strong>关闭这些开关只会隐藏其发现，但探测流量仍会发出（见上方说明）。仅在 stealth 模式下会自动禁用。
               </div>
 
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>Alias Overloading (HIGH &mdash; DoS)</span>
-                  <p className={styles.toggleDescription}>Sends 101 aliases in one query to bypass rate limits.</p>
+                  <span className={styles.toggleLabel}>Alias Overloading（高 &mdash; DoS）</span>
+                  <p className={styles.toggleDescription}>单次查询发送 101 个 alias 以绕过速率限制。</p>
                 </div>
                 <Toggle
                   checked={(data as any).graphqlCopTestAliasOverloading ?? true}
@@ -482,8 +473,8 @@ function GraphqlCopSubSection({ data, updateField }: GraphqlCopSubSectionProps) 
               </div>
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>Array-based Query Batching (HIGH &mdash; DoS)</span>
-                  <p className={styles.toggleDescription}>Sends 10+ queries batched in one POST.</p>
+                  <span className={styles.toggleLabel}>数组批量查询（高 &mdash; DoS）</span>
+                  <p className={styles.toggleDescription}>在一次 POST 中批量发送 10+ 个查询。</p>
                 </div>
                 <Toggle
                   checked={(data as any).graphqlCopTestBatchQuery ?? true}
@@ -492,8 +483,8 @@ function GraphqlCopSubSection({ data, updateField }: GraphqlCopSubSectionProps) 
               </div>
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>Directive Overloading (HIGH &mdash; DoS)</span>
-                  <p className={styles.toggleDescription}>Sends 10+ repeated directives to exhaust parsing.</p>
+                  <span className={styles.toggleLabel}>Directive Overloading（高 &mdash; DoS）</span>
+                  <p className={styles.toggleDescription}>发送 10+ 个重复 directive 以耗尽解析资源。</p>
                 </div>
                 <Toggle
                   checked={(data as any).graphqlCopTestDirectiveOverloading ?? true}
@@ -502,8 +493,8 @@ function GraphqlCopSubSection({ data, updateField }: GraphqlCopSubSectionProps) 
               </div>
               <div className={styles.toggleRow}>
                 <div>
-                  <span className={styles.toggleLabel}>Introspection-based Circular Query (HIGH &mdash; DoS)</span>
-                  <p className={styles.toggleDescription}>Deeply nested introspection to trigger recursion DoS.</p>
+                  <span className={styles.toggleLabel}>Introspection 循环查询（高 &mdash; DoS）</span>
+                  <p className={styles.toggleDescription}>深度嵌套 introspection 以触发递归 DoS。</p>
                 </div>
                 <Toggle
                   checked={(data as any).graphqlCopTestCircularIntrospection ?? true}

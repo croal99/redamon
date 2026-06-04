@@ -37,7 +37,7 @@ export function UserSelector() {
             <span>{initials}</span>
           </div>
           <span className={styles.userName}>
-            {displayUser?.name || '未选择用户'}
+            {displayUser?.name || 'Loading...'}
           </span>
         </div>
 

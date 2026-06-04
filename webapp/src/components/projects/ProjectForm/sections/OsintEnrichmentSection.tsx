@@ -61,10 +61,10 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <ShieldCheck size={16} />
-          OSINT &amp; Threat Intelligence Enrichment
+          OSINT 与威胁情报富集
           <NodeInfoTooltip section="OsintEnrichment" />
           <WikiInfoButton target="OsintEnrichment" />
-          <span className={styles.badgePassive}>Passive</span>
+          <span className={styles.badgePassive}>被动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           {onRun && data.osintEnrichmentEnabled && (
@@ -78,9 +78,9 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
                 backgroundColor: 'rgba(34, 197, 94, 0.1)',
                 color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
               }}
-              title="Run OSINT Enrichment"
+              title="运行 OSINT 富集"
             >
-              <Play size={10} /> Run partial recon
+              <Play size={10} /> 运行局部侦察
             </button>
           )}
           <div onClick={(e) => e.stopPropagation()}>
@@ -99,10 +99,8 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Passive OSINT enrichment using external threat intelligence APIs. All tools run in
-            parallel after domain discovery, without sending any traffic to your targets. Each tool
-            requires an API key configured in Global Settings. Enable or disable each source
-            independently per project.
+            使用外部威胁情报 API 进行被动式 OSINT 富集。所有工具会在域名发现后并行运行，
+            不会向你的目标发送任何流量。各工具需要在全局设置中配置 API Key，可在项目级别分别启用/禁用每个数据源。
           </p>
 
           {data.osintEnrichmentEnabled && (
@@ -113,13 +111,12 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
               <div>
                 <span className={styles.toggleLabel}>Censys</span>
                 <p className={styles.toggleDescription}>
-                  Query Censys Search API v2 for host records: services, geolocation, ASN, and OS
-                  metadata for discovered IPs. Requires API ID + Secret pair.
+                  查询 Censys Search API v2 获取主机记录：服务、地理位置、ASN 与 OS 等元数据（针对已发现 IP）。需要 API ID + Secret。
                 </p>
                 {noKey('censys') && (
                   <div className={styles.shodanWarning}>
                     <Info size={13} />
-                    No Censys API credentials — add API Token &amp; Organization ID in Global Settings to enable.
+                    未配置 Censys API 凭据——请在全局设置中添加 API Token 与 Organization ID 后启用。
                   </div>
                 )}
               </div>
@@ -132,7 +129,7 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
             {data.censysEnabled && !noKey('censys') && (
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Workers</label>
+                  <label className={styles.fieldLabel}>Worker 数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -141,7 +138,7 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
                     min={1}
                     max={20}
                   />
-                  <span className={styles.fieldHint}>Parallel Censys IP enrichment workers (1-20)</span>
+                  <span className={styles.fieldHint}>并行进行 Censys IP 富集的 worker 数（1-20）</span>
                 </div>
               </div>
             )}
@@ -153,13 +150,12 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
               <div>
                 <span className={styles.toggleLabel}>FOFA</span>
                 <p className={styles.toggleDescription}>
-                  Query FOFA (Chinese internet intelligence) for hosts matching the target domain
-                  or discovered IPs. Returns banners, ports, technologies, and TLS certificates.
+                  查询 FOFA（中文互联网空间测绘）以获取匹配目标域名或已发现 IP 的主机信息。返回 Banner、端口、技术栈与 TLS 证书等数据。
                 </p>
                 {noKey('fofa') && (
                   <div className={styles.shodanWarning}>
                     <Info size={13} />
-                    No FOFA API key — add it in Global Settings to enable.
+                    未配置 FOFA API Key——请在全局设置中添加后启用。
                   </div>
                 )}
               </div>
@@ -172,7 +168,7 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
             {data.fofaEnabled && !noKey('fofa') && (
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Max Results</label>
+                  <label className={styles.fieldLabel}>最大结果数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -181,10 +177,10 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
                     min={1}
                     max={10000}
                   />
-                  <span className={styles.fieldHint}>Maximum results to fetch from FOFA API (1-10 000)</span>
+                  <span className={styles.fieldHint}>从 FOFA API 拉取的最大结果数（1-10 000）</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Workers</label>
+                  <label className={styles.fieldLabel}>Worker 数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -193,7 +189,7 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
                     min={1}
                     max={20}
                   />
-                  <span className={styles.fieldHint}>Parallel FOFA IP enrichment workers (1-20)</span>
+                  <span className={styles.fieldHint}>并行进行 FOFA IP 富集的 worker 数（1-20）</span>
                 </div>
               </div>
             )}
@@ -205,9 +201,8 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
               <div>
                 <span className={styles.toggleLabel}>AlienVault OTX</span>
                 <p className={styles.toggleDescription}>
-                  Retrieve threat intelligence pulses, passive DNS records, and reputation data for
-                  discovered IPs and the target domain from AlienVault OTX.
-                  {noKey('otx') && <em> Works with limited public data without a key; add one in Global Settings for full pulse data.</em>}
+                  从 AlienVault OTX 获取威胁情报脉冲（pulses）、被动 DNS 记录与信誉数据（针对已发现 IP 与目标域名）。
+                  {noKey('otx') && <em> 未配置 Key 也可使用有限的公开数据；如需完整 pulse 数据，请在全局设置中添加。</em>}
                 </p>
               </div>
               <Toggle
@@ -218,7 +213,7 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
             {data.otxEnabled && (
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Workers</label>
+                  <label className={styles.fieldLabel}>Worker 数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -227,7 +222,7 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
                     min={1}
                     max={20}
                   />
-                  <span className={styles.fieldHint}>Parallel OTX IP enrichment workers (1-20)</span>
+                  <span className={styles.fieldHint}>并行进行 OTX IP 富集的 worker 数（1-20）</span>
                 </div>
               </div>
             )}
@@ -239,13 +234,12 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
               <div>
                 <span className={styles.toggleLabel}>Netlas</span>
                 <p className={styles.toggleDescription}>
-                  Query Netlas internet intelligence platform for host data, open ports, and
-                  service banners on discovered IPs and the target domain.
+                  查询 Netlas 互联网情报平台，获取已发现 IP 与目标域名的主机数据、开放端口与服务 Banner。
                 </p>
                 {noKey('netlas') && (
                   <div className={styles.shodanWarning}>
                     <Info size={13} />
-                    No Netlas API key — add it in Global Settings to enable.
+                    未配置 Netlas API Key——请在全局设置中添加后启用。
                   </div>
                 )}
               </div>
@@ -258,7 +252,7 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
             {data.netlasEnabled && !noKey('netlas') && (
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Workers</label>
+                  <label className={styles.fieldLabel}>Worker 数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -267,7 +261,7 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
                     min={1}
                     max={20}
                   />
-                  <span className={styles.fieldHint}>Parallel Netlas IP enrichment workers (1-20)</span>
+                  <span className={styles.fieldHint}>并行进行 Netlas IP 富集的 worker 数（1-20）</span>
                 </div>
               </div>
             )}
@@ -279,13 +273,12 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
               <div>
                 <span className={styles.toggleLabel}>VirusTotal</span>
                 <p className={styles.toggleDescription}>
-                  Fetch multi-engine reputation scores, malicious detection counts, and category
-                  labels for the target domain and discovered IPs. Free tier: 4 req/min. Add an API key in Global Settings to enable.
+                  获取目标域名与已发现 IP 的多引擎信誉评分、恶意检测数量与分类标签。免费额度：4 次/分钟。需要在全局设置中添加 API Key 后启用。
                 </p>
                 {noKey('virusTotal') && (
                   <div className={styles.shodanWarning}>
                     <Info size={13} />
-                    No VirusTotal API key — add it in Global Settings to enable.
+                    未配置 VirusTotal API Key——请在全局设置中添加后启用。
                   </div>
                 )}
               </div>
@@ -298,7 +291,7 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
             {data.virusTotalEnabled && !noKey('virusTotal') && (
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Workers</label>
+                  <label className={styles.fieldLabel}>Worker 数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -307,7 +300,7 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
                     min={1}
                     max={10}
                   />
-                  <span className={styles.fieldHint}>Parallel VirusTotal IP enrichment workers (1-10)</span>
+                  <span className={styles.fieldHint}>并行进行 VirusTotal IP 富集的 worker 数（1-10）</span>
                 </div>
               </div>
             )}
@@ -319,13 +312,12 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
               <div>
                 <span className={styles.toggleLabel}>ZoomEye</span>
                 <p className={styles.toggleDescription}>
-                  Query ZoomEye cyberspace search engine for open ports, service banners, and
-                  technologies associated with discovered IPs and the target domain.
+                  查询 ZoomEye 空间搜索引擎，获取与已发现 IP 与目标域名相关的开放端口、服务 Banner 与技术栈信息。
                 </p>
                 {noKey('zoomEye') && (
                   <div className={styles.shodanWarning}>
                     <Info size={13} />
-                    No ZoomEye API key — add it in Global Settings to enable.
+                    未配置 ZoomEye API Key——请在全局设置中添加后启用。
                   </div>
                 )}
               </div>
@@ -338,7 +330,7 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
             {data.zoomEyeEnabled && !noKey('zoomEye') && (
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Max Results</label>
+                  <label className={styles.fieldLabel}>最大结果数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -347,10 +339,10 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
                     min={1}
                     max={10000}
                   />
-                  <span className={styles.fieldHint}>Maximum results to fetch from ZoomEye API (1-10 000)</span>
+                  <span className={styles.fieldHint}>从 ZoomEye API 拉取的最大结果数（1-10 000）</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Workers</label>
+                  <label className={styles.fieldLabel}>Worker 数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -359,7 +351,7 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
                     min={1}
                     max={20}
                   />
-                  <span className={styles.fieldHint}>Parallel ZoomEye IP enrichment workers (1-20)</span>
+                  <span className={styles.fieldHint}>并行进行 ZoomEye IP 富集的 worker 数（1-20）</span>
                 </div>
               </div>
             )}
@@ -371,13 +363,12 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
               <div>
                 <span className={styles.toggleLabel}>Criminal IP</span>
                 <p className={styles.toggleDescription}>
-                  Retrieve inbound/outbound risk scores and VPN/proxy/Tor flags for discovered IPs
-                  from Criminal IP threat intelligence platform.
+                  从 Criminal IP 威胁情报平台获取已发现 IP 的入站/出站风险评分，以及 VPN/代理/Tor 标记。
                 </p>
                 {noKey('criminalIp') && (
                   <div className={styles.shodanWarning}>
                     <Info size={13} />
-                    No Criminal IP API key — add it in Global Settings to enable.
+                    未配置 Criminal IP API Key——请在全局设置中添加后启用。
                   </div>
                 )}
               </div>
@@ -390,7 +381,7 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
             {data.criminalIpEnabled && !noKey('criminalIp') && (
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Workers</label>
+                  <label className={styles.fieldLabel}>Worker 数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -399,7 +390,7 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
                     min={1}
                     max={20}
                   />
-                  <span className={styles.fieldHint}>Parallel CriminalIP IP enrichment workers (1-20)</span>
+                  <span className={styles.fieldHint}>并行进行 CriminalIP IP 富集的 worker 数（1-20）</span>
                 </div>
               </div>
             )}
@@ -411,10 +402,9 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
               <div>
                 <span className={styles.toggleLabel}>Uncover (Multi-Engine Search)</span>
                 <p className={styles.toggleDescription}>
-                  ProjectDiscovery Uncover — searches Shodan, Censys, FOFA, ZoomEye, Netlas,
-                  CriminalIP, Quake, Hunter, and more simultaneously for target expansion.
-                  Discovers additional IPs, subdomains, and open ports before port scanning.
-                  Configure API keys for each engine in Global Settings.
+                  ProjectDiscovery Uncover —— 同时搜索 Shodan、Censys、FOFA、ZoomEye、Netlas、CriminalIP、Quake、Hunter 等多引擎以扩展目标面。
+                  在端口扫描前发现更多 IP、子域名与开放端口。
+                  需要在全局设置中为各引擎配置 API Key。
                 </p>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -429,9 +419,9 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
                       backgroundColor: 'rgba(34, 197, 94, 0.1)',
                       color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
                     }}
-                    title="Run Uncover"
+                    title="运行 Uncover"
                   >
-                    <Play size={10} /> Run partial recon
+                    <Play size={10} /> 运行局部侦察
                   </button>
                 )}
                 <Toggle
@@ -443,7 +433,7 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
             {data.uncoverEnabled && (
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Max Results</label>
+                  <label className={styles.fieldLabel}>最大结果数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -452,7 +442,7 @@ export function OsintEnrichmentSection({ data, updateField, onRun, onRunUncover 
                     min={1}
                     max={50000}
                   />
-                  <span className={styles.fieldHint}>Maximum total results across all engines (1–10 000)</span>
+                  <span className={styles.fieldHint}>跨所有引擎的最大总结果数（1–10 000）</span>
                 </div>
               </div>
             )}

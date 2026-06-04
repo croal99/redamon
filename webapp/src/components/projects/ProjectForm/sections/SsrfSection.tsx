@@ -40,16 +40,12 @@ const CHECKBOX_LABEL_STYLE: React.CSSProperties = {
 export function SsrfSection({ data, updateField }: SsrfSectionProps) {
   return (
     <div style={{ padding: 'var(--space-3) var(--space-4)', position: 'relative' }}>
-      <div style={{ position: 'absolute', top: 8, right: 16 }}>
-        <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Agent-Skills" title="Open Agent Skills wiki page" />
-      </div>
       <p className={styles.sectionDescription} style={{ marginBottom: 'var(--space-4)' }}>
-        Configure which SSRF sub-workflows to inject into the agent prompt and tune
-        probe parameters. Disable sections you don&apos;t want the agent to use for this engagement.
+        配置要注入到智能体提示词中的 SSRF 子工作流，并调整探测参数。对于本次测试不希望智能体使用的能力，可在此关闭。
       </p>
 
       {/* === Sub-workflow toggles === */}
-      <h3 style={FIRST_GROUP_HEADER_STYLE}>Sub-workflow injection</h3>
+      <h3 style={FIRST_GROUP_HEADER_STYLE}>子工作流注入</h3>
 
       <div className={styles.fieldRow} style={ROW_STYLE}>
         <div className={styles.fieldGroup}>
@@ -59,10 +55,10 @@ export function SsrfSection({ data, updateField }: SsrfSectionProps) {
               checked={data.ssrfOobCallbackEnabled ?? true}
               onChange={(e) => updateField('ssrfOobCallbackEnabled', e.target.checked)}
             />
-            OOB callback workflow (interactsh)
+            OOB 回连工作流（interactsh）
           </label>
           <span className={styles.fieldHint}>
-            Adds the blind-SSRF / OOB sub-prompt. Sends DNS and HTTP probes to the configured OOB provider.
+            添加盲 SSRF / OOB 子提示词，并向配置的 OOB 提供方发送 DNS/HTTP 探测请求。
           </span>
         </div>
       </div>
@@ -75,10 +71,10 @@ export function SsrfSection({ data, updateField }: SsrfSectionProps) {
               checked={data.ssrfCloudMetadataEnabled ?? true}
               onChange={(e) => updateField('ssrfCloudMetadataEnabled', e.target.checked)}
             />
-            Cloud metadata pivots
+            云元数据跳板
           </label>
           <span className={styles.fieldHint}>
-            Allows probing 169.254.169.254, metadata.google.internal, and equivalents. Disable for engagements where cloud-metadata access is forbidden.
+            允许探测 169.254.169.254、metadata.google.internal 等云元数据地址与其等价项。若测试规则禁止访问云元数据，请关闭。
           </span>
         </div>
       </div>
@@ -91,10 +87,10 @@ export function SsrfSection({ data, updateField }: SsrfSectionProps) {
               checked={data.ssrfGopherEnabled ?? true}
               onChange={(e) => updateField('ssrfGopherEnabled', e.target.checked)}
             />
-            Gopher / RCE-chain payloads
+            Gopher / RCE 链 Payload
           </label>
           <span className={styles.fieldHint}>
-            Adds gopher://, dict://, file:// and Redis / FastCGI / Docker RCE chain sub-prompts. Disable when RoE forbids RCE escalation.
+            添加 gopher://、dict://、file:// 以及 Redis/FastCGI/Docker 的 RCE 链子提示词。若测试规则禁止进行 RCE 升级，请关闭。
           </span>
         </div>
       </div>
@@ -107,10 +103,10 @@ export function SsrfSection({ data, updateField }: SsrfSectionProps) {
               checked={data.ssrfDnsRebindingEnabled ?? true}
               onChange={(e) => updateField('ssrfDnsRebindingEnabled', e.target.checked)}
             />
-            DNS rebinding bypasses
+            DNS Rebinding 绕过
           </label>
           <span className={styles.fieldHint}>
-            Adds bypasses via 1u.ms, nip.io, rbndr.us. Disable when external DNS-rebind services are off-limits.
+            添加通过 1u.ms、nip.io、rbndr.us 等实现的绕过方式。若外部 DNS Rebind 服务不可使用，请关闭。
           </span>
         </div>
       </div>
@@ -123,20 +119,20 @@ export function SsrfSection({ data, updateField }: SsrfSectionProps) {
               checked={data.ssrfPayloadReferenceEnabled ?? true}
               onChange={(e) => updateField('ssrfPayloadReferenceEnabled', e.target.checked)}
             />
-            Advanced payload reference + HackerOne precedents
+            高级 Payload 参考 + HackerOne 案例
           </label>
           <span className={styles.fieldHint}>
-            Injects URL parser confusion payloads, encoding variants, and a HackerOne precedent table (~3 KB extra). Disable for a leaner prompt.
+            注入 URL 解析器混淆类 Payload、编码变体，以及 HackerOne 案例表（额外约 3KB）。如需更精简的提示词可关闭。
           </span>
         </div>
       </div>
 
       {/* === Probe parameters === */}
-      <h3 style={GROUP_HEADER_STYLE}>Probe parameters</h3>
+      <h3 style={GROUP_HEADER_STYLE}>探测参数</h3>
 
       <div className={styles.fieldRow} style={ROW_STYLE}>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>Request Timeout (seconds)</label>
+          <label className={styles.fieldLabel}>请求超时（秒）</label>
           <input
             type="number"
             className="textInput"
@@ -146,11 +142,11 @@ export function SsrfSection({ data, updateField }: SsrfSectionProps) {
             max={120}
           />
           <span className={styles.fieldHint}>
-            curl --max-time / --connect-timeout for each SSRF probe. Lower values speed up port-scan loops but may miss slow internal services.
+            每次 SSRF 探测使用的 curl --max-time / --connect-timeout。较低的值可加速端口扫描循环，但可能漏掉较慢的内网服务。
           </span>
         </div>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>OOB Provider</label>
+          <label className={styles.fieldLabel}>OOB 提供方</label>
           <input
             type="text"
             className="textInput"
@@ -159,14 +155,14 @@ export function SsrfSection({ data, updateField }: SsrfSectionProps) {
             placeholder="oast.fun"
           />
           <span className={styles.fieldHint}>
-            interactsh-client server. Use a self-hosted instance if oast.fun is blocked.
+            interactsh-client 服务端地址。若 oast.fun 被屏蔽，请使用自建实例。
           </span>
         </div>
       </div>
 
       <div className={styles.fieldRow} style={ROW_STYLE}>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>Port-scan Ports</label>
+          <label className={styles.fieldLabel}>端口扫描端口列表</label>
           <div className={styles.fileImportWrap}>
             <input
               type="text"
@@ -176,20 +172,20 @@ export function SsrfSection({ data, updateField }: SsrfSectionProps) {
               placeholder="22,80,443,2375,3306,5432,6379,8080,8500,9200,27017"
             />
             <FileImportButton
-              fieldName="ports"
+              fieldName="端口"
               validator={(t) => /^\d+$/.test(t)}
               onImport={(values) => updateField('ssrfPortScanPorts', values.join(','))}
             />
           </div>
           <span className={styles.fieldHint}>
-            Comma-separated ports to probe via SSRF. Trim for quieter scans, extend for thorough coverage.
+            通过 SSRF 探测的端口（逗号分隔）。精简可降低噪声，扩充可提高覆盖度。
           </span>
         </div>
       </div>
 
       <div className={styles.fieldRow} style={ROW_STYLE}>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>Internal CIDR Ranges</label>
+          <label className={styles.fieldLabel}>内网 CIDR 范围</label>
           <div className={styles.fileImportWrap}>
             <input
               type="text"
@@ -199,19 +195,19 @@ export function SsrfSection({ data, updateField }: SsrfSectionProps) {
               placeholder="127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,169.254.0.0/16"
             />
             <FileImportButton
-              fieldName="CIDR ranges"
+              fieldName="CIDR 范围"
               onImport={(values) => updateField('ssrfInternalRanges', values.join(','))}
             />
           </div>
           <span className={styles.fieldHint}>
-            Comma-separated CIDR blocks the agent treats as internal. Adjust for orgs using non-standard internal addressing (e.g., 100.64.0.0/10 carrier-grade NAT).
+            智能体视为“内网”的 CIDR 块（逗号分隔）。如组织使用非标准内网地址（例如 100.64.0.0/10 CGNAT），请按需调整。
           </span>
         </div>
       </div>
 
       <div className={styles.fieldRow} style={ROW_STYLE}>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>Cloud Providers in Scope</label>
+          <label className={styles.fieldLabel}>纳入范围的云厂商</label>
           <div className={styles.fileImportWrap}>
             <input
               type="text"
@@ -221,22 +217,22 @@ export function SsrfSection({ data, updateField }: SsrfSectionProps) {
               placeholder="aws,gcp,azure,digitalocean,alibaba"
             />
             <FileImportButton
-              fieldName="cloud providers"
+              fieldName="云厂商"
               onImport={(values) => updateField('ssrfCloudProviders', values.join(','))}
             />
           </div>
           <span className={styles.fieldHint}>
-            Comma-separated cloud providers to include in the metadata-pivots section. Filters which provider endpoint tables ship in the prompt. Ignored when cloud metadata is disabled.
+            在“云元数据跳板”部分纳入的云厂商（逗号分隔）。用于筛选提示词中包含的厂商端点表；当禁用云元数据时会被忽略。
           </span>
         </div>
       </div>
 
       {/* === Site-specific targets === */}
-      <h3 style={GROUP_HEADER_STYLE}>Site-specific internal targets (optional)</h3>
+      <h3 style={GROUP_HEADER_STYLE}>站点内网目标（可选）</h3>
 
       <div className={styles.fieldRow} style={ROW_STYLE}>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>Custom Internal Targets</label>
+          <label className={styles.fieldLabel}>自定义内网目标</label>
           <div className={styles.fileImportWrap}>
             <textarea
               className="textInput"
@@ -248,12 +244,12 @@ export function SsrfSection({ data, updateField }: SsrfSectionProps) {
             />
             <FileImportButton
               variant="textarea"
-              fieldName="internal targets"
+              fieldName="内网目标"
               onImport={(values) => updateField('ssrfCustomInternalTargets', values.join('\n'))}
             />
           </div>
           <span className={styles.fieldHint}>
-            One hostname or IP[:port] per line. Injected into the prompt so the agent prioritizes these alongside the generic loopback / RFC1918 sweep.
+            每行一个 hostname 或 IP[:port]。会注入到提示词中，使智能体在通用的 loopback / RFC1918 扫描之外优先关注这些目标。
           </span>
         </div>
       </div>

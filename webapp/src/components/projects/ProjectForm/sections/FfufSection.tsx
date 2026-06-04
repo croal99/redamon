@@ -76,7 +76,7 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
       const result = await res.json()
 
       if (!res.ok) {
-        setUploadError(result.error || 'Upload failed')
+        setUploadError(result.error || '上传失败')
         return
       }
 
@@ -85,7 +85,7 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
         updateField('ffufWordlist', result.uploaded.path)
       }
     } catch {
-      setUploadError('Upload failed. Please try again.')
+      setUploadError('上传失败，请重试。')
     } finally {
       setIsUploading(false)
       if (fileInputRef.current) fileInputRef.current.value = ''
@@ -126,10 +126,10 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <FolderSearch size={16} />
-          FFuf Directory Fuzzer
+          FFuf 目录/路径 Fuzzer
           <NodeInfoTooltip section="Ffuf" />
           <WikiInfoButton target="Ffuf" />
-          <span className={styles.badgeActive}>Active</span>
+          <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           {onRun && data.ffufEnabled && (
@@ -143,9 +143,9 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
                 backgroundColor: 'rgba(34, 197, 94, 0.1)',
                 color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
               }}
-              title="Run FFuf"
+              title="运行 FFuf"
             >
-              <Play size={10} /> Run partial recon
+              <Play size={10} /> 运行部分侦察
             </button>
           )}
           <div onClick={(e) => e.stopPropagation()}>
@@ -164,14 +164,14 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Fast directory and endpoint fuzzer that brute-forces common paths using wordlists. Discovers hidden content (admin panels, backup files, configs, undocumented APIs) that crawlers cannot find. Runs after crawlers complete and can target discovered base paths for smart fuzzing.
+            快速目录/端点 Fuzzer：使用字典爆破常见路径，发现爬虫无法找到的隐藏内容（管理后台、备份文件、配置、未公开 API 等）。通常在爬虫结束后运行，并可基于已发现的基础路径进行智能 fuzz（例如 /api/v1/FUZZ）。
           </p>
 
           {data.ffufEnabled && (
             <>
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Threads</label>
+                  <label className={styles.fieldLabel}>线程数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -180,10 +180,10 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
                     min={1}
                     max={200}
                   />
-                  <span className={styles.fieldHint}>Concurrent request threads</span>
+                  <span className={styles.fieldHint}>并发请求线程数</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Rate Limit (req/s)</label>
+                  <label className={styles.fieldLabel}>速率限制（req/s）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -191,13 +191,13 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
                     onChange={(e) => updateField('ffufRate', parseInt(e.target.value) || 0)}
                     min={0}
                   />
-                  <span className={styles.fieldHint}>Max requests per second (0 = unlimited)</span>
+                  <span className={styles.fieldHint}>每秒最大请求数（0 = 不限）</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Parallelism</label>
+                  <label className={styles.fieldLabel}>并行度</label>
                   <input
                     type="number"
                     className="textInput"
@@ -206,13 +206,13 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
                     min={1}
                     max={50}
                   />
-                  <span className={styles.fieldHint}>Number of targets to fuzz in parallel</span>
+                  <span className={styles.fieldHint}>同时 fuzz 的目标数量</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Request Timeout (s)</label>
+                  <label className={styles.fieldLabel}>请求超时（秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -220,10 +220,10 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
                     onChange={(e) => updateField('ffufTimeout', parseInt(e.target.value) || 10)}
                     min={1}
                   />
-                  <span className={styles.fieldHint}>Per-request timeout</span>
+                  <span className={styles.fieldHint}>单次请求超时</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Max Time (s)</label>
+                  <label className={styles.fieldLabel}>最大耗时（秒）</label>
                   <input
                     type="number"
                     className="textInput"
@@ -231,13 +231,13 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
                     onChange={(e) => updateField('ffufMaxTime', parseInt(e.target.value) || 1800)}
                     min={60}
                   />
-                  <span className={styles.fieldHint}>Maximum total execution time per target</span>
+                  <span className={styles.fieldHint}>每个目标的最大总执行时长</span>
                 </div>
               </div>
 
               <div className={styles.fieldGroup}>
                 <label className={styles.fieldLabel}>
-                  Wordlist <span style={{ fontWeight: 400, color: 'var(--text-tertiary)' }}>(built-in or upload)</span>
+                  字典 <span style={{ fontWeight: 400, color: 'var(--text-tertiary)' }}>(内置或上传)</span>
                 </label>
                 <div
                   style={{
@@ -252,9 +252,9 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
                       className="select"
                       value={data.ffufWordlist}
                       onChange={(e) => updateField('ffufWordlist', e.target.value || DEFAULT_WORDLIST)}
-                      aria-label="FFuf wordlist"
+                      aria-label="FFuf 字典"
                     >
-                      <optgroup label="Built-in (SecLists in recon image)">
+                      <optgroup label="内置（recon 镜像中的 SecLists）">
                         {BUILTIN_WORDLISTS.map((wl) => (
                           <option key={wl.path} value={wl.path}>
                             {wl.name}
@@ -262,14 +262,14 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
                         ))}
                       </optgroup>
                       {canUpload && customWordlists.length === 0 && (
-                        <optgroup label="Your custom lists">
+                        <optgroup label="你的自定义字典">
                           <option disabled value="__ffuf_no_custom_yet__">
-                            (None yet — use Upload .txt →)
+                            （暂无 — 点击“上传 .txt”→）
                           </option>
                         </optgroup>
                       )}
                       {customWordlists.length > 0 && (
-                        <optgroup label="Your custom lists">
+                        <optgroup label="你的自定义字典">
                           {customWordlists.map((wl) => (
                             <option key={wl.path} value={wl.path}>
                               {wl.name} ({formatSize(wl.size)})
@@ -304,12 +304,12 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
                     disabled={isUploading || !canUpload}
                     title={
                       !canUpload
-                        ? 'Save the project first to upload custom wordlists'
-                        : 'Upload a .txt wordlist — it will appear under “Your custom lists” in the menu'
+                        ? '请先保存项目，才能上传自定义字典'
+                        : '上传 .txt 字典后，会出现在下拉菜单的“你的自定义字典”中'
                     }
                   >
                     {isUploading ? <Loader2 size={14} className={styles.spinner} /> : <Upload size={14} />}
-                    {isUploading ? 'Uploading...' : 'Upload .txt'}
+                    {isUploading ? '上传中…' : '上传 .txt'}
                   </button>
                 </div>
                 {uploadError && (
@@ -319,21 +319,19 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
                 )}
                 {!uploadError && !canUpload && (
                   <span className={styles.fieldHint}>
-                    Save the project first; then you can upload .txt payload lists (max 50MB) and select them in the menu
-                    above.
+                    请先保存项目；随后可上传 .txt 字典（最大 50MB），并在上方菜单中选择。
                   </span>
                 )}
                 {!uploadError && canUpload && (
                   <span className={styles.fieldHint}>
-                    Custom files are <strong>not</strong> listed until you upload them. Click <strong>Upload .txt</strong>,
-                    then choose your file under <strong>Your custom lists</strong> in the dropdown.
+                    自定义文件在上传前<strong>不会</strong>显示。点击 <strong>上传 .txt</strong>，然后在下拉框的 <strong>你的自定义字典</strong> 中选择。
                   </span>
                 )}
               </div>
 
               {customWordlists.length > 0 && canUpload && (
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Uploaded Wordlists</label>
+                  <label className={styles.fieldLabel}>已上传字典</label>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
                     {customWordlists.map((wl) => (
                       <div
@@ -367,7 +365,7 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
                             display: 'flex',
                             alignItems: 'center',
                           }}
-                          title={`Delete ${wl.name}`}
+                          title={`删除 ${wl.name}`}
                         >
                           <X size={14} />
                         </button>
@@ -379,7 +377,7 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Match Status Codes</label>
+                  <label className={styles.fieldLabel}>匹配状态码</label>
                   <div className={styles.fileImportWrap}>
                     <input
                       type="text"
@@ -388,15 +386,15 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
                       onChange={(e) => updateField('ffufMatchCodes', e.target.value.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n)))}
                     />
                     <FileImportButton
-                      fieldName="status codes"
+                      fieldName="状态码"
                       validator={(t) => /^\d+$/.test(t)}
                       onImport={(values) => updateField('ffufMatchCodes', values.map(v => parseInt(v)).filter(n => !isNaN(n)))}
                     />
                   </div>
-                  <span className={styles.fieldHint}>Include these HTTP status codes (comma-separated)</span>
+                  <span className={styles.fieldHint}>包含这些 HTTP 状态码（逗号分隔）</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Filter Status Codes</label>
+                  <label className={styles.fieldLabel}>过滤状态码</label>
                   <div className={styles.fileImportWrap}>
                     <input
                       type="text"
@@ -405,18 +403,18 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
                       onChange={(e) => updateField('ffufFilterCodes', e.target.value.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n)))}
                     />
                     <FileImportButton
-                      fieldName="status codes"
+                      fieldName="状态码"
                       validator={(t) => /^\d+$/.test(t)}
                       onImport={(values) => updateField('ffufFilterCodes', values.map(v => parseInt(v)).filter(n => !isNaN(n)))}
                     />
                   </div>
-                  <span className={styles.fieldHint}>Exclude these HTTP status codes (comma-separated)</span>
+                  <span className={styles.fieldHint}>排除这些 HTTP 状态码（逗号分隔）</span>
                 </div>
               </div>
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Filter Response Size</label>
+                  <label className={styles.fieldLabel}>过滤响应大小</label>
                   <input
                     type="text"
                     className="textInput"
@@ -424,20 +422,16 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
                     onChange={(e) => updateField('ffufFilterSize', e.target.value)}
                     placeholder="e.g., 0 or 4242"
                   />
-                  <span className={styles.fieldHint}>Exclude responses of this size (bytes). Useful for uniform error pages</span>
+                  <span className={styles.fieldHint}>排除指定大小（字节）的响应，适用于过滤统一的错误页</span>
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Extensions</label>
+                  <label className={styles.fieldLabel}>扩展名</label>
                   <div className={styles.toggleRow} style={{ marginBottom: 'var(--space-2)', alignItems: 'center' }}>
                     <AiToggleLabel
-                      label="Use AI for Extensions"
+                      label="使用 AI 选择扩展名"
                       tooltip={
-                        'AI picks file extensions per target based on server response headers ' +
-                        '(Server, X-Powered-By, X-AspNet-Version). When on, the static list below ' +
-                        'is ignored. Same toggle as in the Target tab AI panel: flipping it here ' +
-                        'flips it there. A per-fingerprint cache means N hosts behind the same ' +
-                        'stack collapse to one LLM call. ' +
-                        (!data.aiInPipeline ? 'Enable "AI in Pipeline" in the Target tab to use this.' : '')
+                        'AI 会根据目标的响应头（Server、X-Powered-By、X-AspNet-Version 等）为每个目标选择文件扩展名。开启后，下方静态列表会被忽略。该开关与“目标”标签页 AI 面板中的开关同步：这里切换，那边也会同步切换。按指纹缓存意味着同一技术栈背后的多个主机只需一次 LLM 调用。' +
+                        (!data.aiInPipeline ? '要使用该功能，请在“目标”标签页启用“AI in Pipeline”。' : '')
                       }
                     />
                     <Toggle
@@ -457,24 +451,24 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
                       style={data.ffufAiExtensions ? { opacity: 0.5 } : undefined}
                     />
                     <FileImportButton
-                      fieldName="extensions"
+                      fieldName="扩展名"
                       onImport={(values) => updateField('ffufExtensions', values)}
                     />
                   </div>
                   <span className={styles.fieldHint}>
                     {data.ffufAiExtensions
-                      ? 'Extensions chosen by AI per target. Static list above is ignored.'
-                      : 'File extensions to append to each word (comma-separated)'}
+                      ? '扩展名由 AI 按目标选择；上方静态列表将被忽略。'
+                      : '为每个字典词条附加的文件扩展名（逗号分隔）'}
                   </span>
                 </div>
               </div>
 
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Options</h3>
+                <h3 className={styles.subSectionTitle}>选项</h3>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Auto-Calibrate</span>
-                    <p className={styles.toggleDescription}>Automatically filter false positives based on response patterns</p>
+                    <span className={styles.toggleLabel}>自动校准</span>
+                    <p className={styles.toggleDescription}>基于响应模式自动过滤误报</p>
                   </div>
                   <Toggle
                     checked={data.ffufAutoCalibrate}
@@ -483,8 +477,8 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Smart Fuzz (Post-Crawler)</span>
-                    <p className={styles.toggleDescription}>Also fuzz under base paths discovered by crawlers (e.g., /api/v1/FUZZ)</p>
+                    <span className={styles.toggleLabel}>智能 Fuzz（爬虫之后）</span>
+                    <p className={styles.toggleDescription}>对爬虫发现的基础路径也执行 fuzz（例如 /api/v1/FUZZ）</p>
                   </div>
                   <Toggle
                     checked={data.ffufSmartFuzz}
@@ -493,8 +487,8 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Follow Redirects</span>
-                    <p className={styles.toggleDescription}>Follow HTTP redirects. May lead to out-of-scope domains (filtered post-hoc)</p>
+                    <span className={styles.toggleLabel}>跟随重定向</span>
+                    <p className={styles.toggleDescription}>跟随 HTTP 重定向，可能跳转到范围外域名（事后过滤）</p>
                   </div>
                   <Toggle
                     checked={data.ffufFollowRedirects}
@@ -503,8 +497,8 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
                 </div>
                 <div className={styles.toggleRow}>
                   <div>
-                    <span className={styles.toggleLabel}>Recursion</span>
-                    <p className={styles.toggleDescription}>Recursively fuzz discovered directories</p>
+                    <span className={styles.toggleLabel}>递归</span>
+                    <p className={styles.toggleDescription}>对已发现目录进行递归 fuzz</p>
                   </div>
                   <Toggle
                     checked={data.ffufRecursion}
@@ -513,7 +507,7 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
                 </div>
                 {data.ffufRecursion && (
                   <div className={styles.fieldGroup} style={{ marginTop: '0.5rem' }}>
-                    <label className={styles.fieldLabel}>Recursion Depth</label>
+                    <label className={styles.fieldLabel}>递归深度</label>
                     <input
                       type="number"
                       className="textInput"
@@ -527,9 +521,9 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
               </div>
 
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>Custom Headers</h3>
+                <h3 className={styles.subSectionTitle}>自定义请求头</h3>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Request Headers</label>
+                  <label className={styles.fieldLabel}>请求头</label>
                   <div className={styles.fileImportWrap}>
                     <textarea
                       className="textarea"
@@ -540,11 +534,11 @@ export function FfufSection({ data, updateField, projectId, mode, onRun }: FfufS
                     />
                     <FileImportButton
                       variant="textarea"
-                      fieldName="headers"
+                      fieldName="请求头"
                       onImport={(values) => updateField('ffufCustomHeaders', values)}
                     />
                   </div>
-                  <span className={styles.fieldHint}>One header per line. Sent with every request</span>
+                  <span className={styles.fieldHint}>每行一个请求头，每次请求都会携带</span>
                 </div>
               </div>
             </>

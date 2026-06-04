@@ -39,16 +39,12 @@ const CHECKBOX_LABEL_STYLE: React.CSSProperties = {
 export function PathTraversalSection({ data, updateField }: PathTraversalSectionProps) {
   return (
     <div style={{ padding: 'var(--space-3) var(--space-4)', position: 'relative' }}>
-      <div style={{ position: 'absolute', top: 8, right: 16 }}>
-        <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Agent-Skills" title="Open Agent Skills wiki page" />
-      </div>
       <p className={styles.sectionDescription} style={{ marginBottom: 'var(--space-4)' }}>
-        Configure which Path Traversal / LFI / RFI sub-workflows to inject into the agent
-        prompt and tune probe parameters. Disable sub-sections you don&apos;t want for this engagement.
+        配置要注入到智能体提示词中的路径穿越 / LFI / RFI 子工作流，并调整探测参数。对于本次测试不希望使用的子模块，可在此关闭。
       </p>
 
       {/* === Sub-workflow toggles === */}
-      <h3 style={FIRST_GROUP_HEADER_STYLE}>Sub-workflow injection</h3>
+      <h3 style={FIRST_GROUP_HEADER_STYLE}>子工作流注入</h3>
 
       <div className={styles.fieldRow} style={ROW_STYLE}>
         <div className={styles.fieldGroup}>
@@ -58,11 +54,10 @@ export function PathTraversalSection({ data, updateField }: PathTraversalSection
               checked={data.pathTraversalOobCallbackEnabled ?? true}
               onChange={(e) => updateField('pathTraversalOobCallbackEnabled', e.target.checked)}
             />
-            OOB callback workflow (interactsh)
+            OOB 回连工作流（interactsh）
           </label>
           <span className={styles.fieldHint}>
-            Adds the RFI / blind-LFI sub-prompt. Sends DNS and HTTP probes to the configured OOB provider.
-            Disable when external callbacks are forbidden.
+            添加 RFI / 盲 LFI 子提示词，并向配置的 OOB 提供方发送 DNS/HTTP 探测请求。若禁止外部回连，请关闭。
           </span>
         </div>
       </div>
@@ -75,11 +70,10 @@ export function PathTraversalSection({ data, updateField }: PathTraversalSection
               checked={data.pathTraversalPhpWrappersEnabled ?? true}
               onChange={(e) => updateField('pathTraversalPhpWrappersEnabled', e.target.checked)}
             />
-            PHP wrappers + log poisoning sub-section
+            PHP Wrapper + 日志投毒子模块
           </label>
           <span className={styles.fieldHint}>
-            Adds php://filter, data://, expect://, zip:// payloads and the log-poisoning chain.
-            Disable for non-PHP targets to reduce prompt bloat.
+            添加 php://filter、data://、expect://、zip:// 等 Payload 及日志投毒链。非 PHP 目标建议关闭以减少提示词体积。
           </span>
         </div>
       </div>
@@ -92,11 +86,10 @@ export function PathTraversalSection({ data, updateField }: PathTraversalSection
               checked={data.pathTraversalArchiveExtractionEnabled ?? false}
               onChange={(e) => updateField('pathTraversalArchiveExtractionEnabled', e.target.checked)}
             />
-            Archive extraction (Zip Slip) write tests
+            解压写入测试（Zip Slip）
           </label>
           <span className={styles.fieldHint}>
-            Allows the agent to upload crafted ZIP / TAR archives whose entries escape the destination
-            directory. WRITES files to the target filesystem -- enable only with explicit RoE permission.
+            允许智能体上传特制 ZIP/TAR 压缩包，使条目逃逸目标解压目录。该操作会向目标文件系统写入文件——仅在明确授权的测试规则（RoE）下启用。
           </span>
         </div>
       </div>
@@ -109,21 +102,20 @@ export function PathTraversalSection({ data, updateField }: PathTraversalSection
               checked={data.pathTraversalPayloadReferenceEnabled ?? true}
               onChange={(e) => updateField('pathTraversalPayloadReferenceEnabled', e.target.checked)}
             />
-            Bypass + encoding payload reference table
+            绕过与编码 Payload 参考表
           </label>
           <span className={styles.fieldHint}>
-            Injects the encoding / dot-trick / wrapper / parser-mismatch payload reference and the
-            real-world precedents table (~3 KB extra). Disable for a leaner prompt.
+            注入编码 / 点号技巧 / wrapper / 解析差异等 Payload 参考，以及真实案例表（额外约 3KB）。如需更精简的提示词可关闭。
           </span>
         </div>
       </div>
 
       {/* === Probe parameters === */}
-      <h3 style={GROUP_HEADER_STYLE}>Probe parameters</h3>
+      <h3 style={GROUP_HEADER_STYLE}>探测参数</h3>
 
       <div className={styles.fieldRow} style={ROW_STYLE}>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>Request Timeout (seconds)</label>
+          <label className={styles.fieldLabel}>请求超时（秒）</label>
           <input
             type="number"
             className="textInput"
@@ -133,12 +125,11 @@ export function PathTraversalSection({ data, updateField }: PathTraversalSection
             max={120}
           />
           <span className={styles.fieldHint}>
-            curl --max-time / --connect-timeout for each traversal probe. Lower values speed up
-            fuzzing loops but may miss slow file-read sinks.
+            每次路径穿越探测使用的 curl --max-time / --connect-timeout。较低的值可加速 fuzz 循环，但可能漏掉响应较慢的文件读取入口。
           </span>
         </div>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>OOB Provider</label>
+          <label className={styles.fieldLabel}>OOB 提供方</label>
           <input
             type="text"
             className="textInput"
@@ -147,8 +138,7 @@ export function PathTraversalSection({ data, updateField }: PathTraversalSection
             placeholder="oast.fun"
           />
           <span className={styles.fieldHint}>
-            interactsh-client server. Use a self-hosted instance if oast.fun is blocked. Only used
-            when the OOB callback workflow is enabled.
+            interactsh-client 服务端地址。若 oast.fun 被屏蔽，请使用自建实例。仅在启用 OOB 回连工作流时使用。
           </span>
         </div>
       </div>

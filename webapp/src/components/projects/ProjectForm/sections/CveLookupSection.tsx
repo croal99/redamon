@@ -22,10 +22,10 @@ export function CveLookupSection({ data, updateField }: CveLookupSectionProps) {
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Database size={16} />
-          CVE Lookup
+          CVE 查询
           <NodeInfoTooltip section="CveLookup" />
           <WikiInfoButton target="CveLookup" />
-          <span className={styles.badgePassive}>Passive</span>
+          <span className={styles.badgePassive}>被动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           <div onClick={(e) => e.stopPropagation()}>
@@ -44,13 +44,13 @@ export function CveLookupSection({ data, updateField }: CveLookupSectionProps) {
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Enrich vulnerability findings with detailed CVE data from NVD and other sources. Provides CVSS scores, affected versions, exploitation status, and remediation guidance for discovered vulnerabilities.
+            使用 NVD 等来源的详细 CVE 数据增强漏洞发现，提供 CVSS 分数、受影响版本、利用状态与修复建议。
           </p>
 
           {data.cveLookupEnabled && (
             <>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>CVE Source</label>
+                <label className={styles.fieldLabel}>CVE 数据源</label>
                 <select
                   className="select"
                   value={data.cveLookupSource}
@@ -63,7 +63,7 @@ export function CveLookupSection({ data, updateField }: CveLookupSectionProps) {
 
               <div className={styles.fieldRow}>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Max CVEs per Finding</label>
+                  <label className={styles.fieldLabel}>每条发现最多 CVE 数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -74,7 +74,7 @@ export function CveLookupSection({ data, updateField }: CveLookupSectionProps) {
                   />
                 </div>
                 <div className={styles.fieldGroup}>
-                  <label className={styles.fieldLabel}>Min CVSS Score</label>
+                  <label className={styles.fieldLabel}>最小 CVSS 分数</label>
                   <input
                     type="number"
                     className="textInput"
@@ -88,13 +88,13 @@ export function CveLookupSection({ data, updateField }: CveLookupSectionProps) {
               </div>
 
               <div className={styles.subSection}>
-                <h3 className={styles.subSectionTitle}>API Keys</h3>
+                <h3 className={styles.subSectionTitle}>API 密钥</h3>
                 <p className={styles.fieldHint} style={{ marginTop: 0 }}>
-                  NVD and Vulners API keys are configured in{' '}
+                  NVD 与 Vulners 的 API Key 在此处配置：{' '}
                   <a href="/settings" style={{ color: 'var(--color-accent)', textDecoration: 'underline' }}>
-                    Global Settings &rarr; Tool API Keys
+                    全局设置 &rarr; 工具 API Keys
                   </a>
-                  . Keys set there apply to all projects automatically.
+                  。在该处设置的 Key 会自动应用到所有项目。
                 </p>
               </div>
             </>

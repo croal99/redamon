@@ -42,10 +42,10 @@ export function ShodanSection({ data, updateField, onRun }: ShodanSectionProps) 
       <div className={styles.sectionHeader} onClick={() => setIsOpen(!isOpen)}>
         <h2 className={styles.sectionTitle}>
           <Radar size={16} />
-          Shodan Enrichment
+          Shodan 增强
           <NodeInfoTooltip section="Shodan" />
           <WikiInfoButton target="Shodan" />
-          <span className={styles.badgePassive}>Passive</span>
+          <span className={styles.badgePassive}>被动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
           {onRun && data.shodanEnabled && (
@@ -59,9 +59,9 @@ export function ShodanSection({ data, updateField, onRun }: ShodanSectionProps) 
                 backgroundColor: 'rgba(34, 197, 94, 0.1)',
                 color: '#22c55e', cursor: 'pointer', fontSize: '11px', fontWeight: 500,
               }}
-              title="Run Shodan Enrichment"
+              title="运行 Shodan 增强"
             >
-              <Play size={10} /> Run partial recon
+              <Play size={10} /> 运行部分侦察
             </button>
           )}
           <div onClick={(e) => e.stopPropagation()}>
@@ -80,11 +80,10 @@ export function ShodanSection({ data, updateField, onRun }: ShodanSectionProps) 
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            Passive internet-wide OSINT enrichment using the Shodan API. Runs after domain discovery,
-            before port scanning. Enriches IP nodes with geolocation, services, and known vulnerabilities
-            without sending any traffic to your targets. If no API key is configured or the key is on the
-            free tier, Host Lookup, Reverse DNS, and Passive CVEs automatically fall back to
-            Shodan&apos;s InternetDB (free, no key required) which provides ports, hostnames, CPEs, CVEs, and tags.
+            使用 Shodan API 进行被动的互联网级 OSINT 增强。流程位于域名发现之后、端口扫描之前。
+            在不向目标发送任何流量的前提下，为 IP 节点补充地理位置、服务与已知漏洞等信息。
+            若未配置 API key 或 key 为免费档位，Host Lookup、Reverse DNS 与 Passive CVEs 会自动回退到
+            Shodan 的 InternetDB（免费且无需 key），可提供 ports、hostnames、CPEs、CVEs 与 tags。
           </p>
 
           {data.shodanEnabled && (
@@ -92,13 +91,13 @@ export function ShodanSection({ data, updateField, onRun }: ShodanSectionProps) 
           {noKey && (
             <div className={styles.shodanWarning}>
               <Info size={14} />
-              No Shodan API key configured — Host Lookup, Reverse DNS, and Passive CVEs will use InternetDB (free fallback: ports, hostnames, CPEs, CVEs, tags). For full data (geolocation, banners, services) and Domain DNS, add your key in Global Settings.
+              未配置 Shodan API key —— Host Lookup、Reverse DNS 与 Passive CVEs 将使用 InternetDB（免费回退：ports、hostnames、CPEs、CVEs、tags）。若需完整数据（地理位置、banner、服务）以及 Domain DNS，请在 Global Settings 中添加 key。
             </div>
           )}
 
           <div className={styles.fieldRow}>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Workers</label>
+              <label className={styles.fieldLabel}>并发数</label>
               <input
                 type="number"
                 className="textInput"
@@ -107,19 +106,19 @@ export function ShodanSection({ data, updateField, onRun }: ShodanSectionProps) 
                 min={1}
                 max={20}
               />
-              <span className={styles.fieldHint}>Parallel IP lookup workers</span>
+              <span className={styles.fieldHint}>并行执行 IP 查询的 worker 数</span>
             </div>
           </div>
 
           <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>Pipeline Features</h3>
+            <h3 className={styles.subSectionTitle}>流水线功能</h3>
 
             <div className={styles.toggleRow}>
               <div>
                 <span className={styles.toggleLabel}>Host Lookup</span>
                 <p className={styles.toggleDescription}>
-                  Query each discovered IP for OS, ISP, organization, geolocation, open ports, service banners, and known vulnerabilities.
-                  {noKey && <em> (InternetDB fallback: ports, hostnames, CPEs, CVEs, tags — no geo/banners)</em>}
+                  查询每个已发现 IP 的 OS、ISP、组织、地理位置、开放端口、服务 banner 与已知漏洞。
+                  {noKey && <em>（InternetDB 回退：ports、hostnames、CPEs、CVEs、tags —— 不包含 geo/banner）</em>}
                 </p>
               </div>
               <Toggle
@@ -132,8 +131,8 @@ export function ShodanSection({ data, updateField, onRun }: ShodanSectionProps) 
               <div>
                 <span className={styles.toggleLabel}>Reverse DNS</span>
                 <p className={styles.toggleDescription}>
-                  Discover hostnames that resolve to known IPs. Can reveal additional subdomains not found by standard enumeration.
-                  {noKey && <em> (InternetDB fallback)</em>}
+                  发现解析到已知 IP 的 hostnames，可揭示标准枚举未找到的额外子域名。
+                  {noKey && <em>（InternetDB 回退）</em>}
                 </p>
               </div>
               <Toggle
@@ -146,7 +145,7 @@ export function ShodanSection({ data, updateField, onRun }: ShodanSectionProps) 
               <div>
                 <span className={styles.toggleLabel}>Domain DNS</span>
                 <p className={styles.toggleDescription}>
-                  Enumerate subdomains and DNS records via Shodan&apos;s DNS database. <em>(Requires paid Shodan plan + API key)</em>
+                  通过 Shodan 的 DNS 数据库枚举子域名与 DNS 记录。<em>（需要 Shodan 付费计划 + API key）</em>
                 </p>
               </div>
               <Toggle
@@ -160,8 +159,8 @@ export function ShodanSection({ data, updateField, onRun }: ShodanSectionProps) 
               <div>
                 <span className={styles.toggleLabel}>Passive CVEs</span>
                 <p className={styles.toggleDescription}>
-                  Extract known CVEs associated with discovered IPs from Shodan&apos;s vulnerability database. No active scanning required.
-                  {noKey && <em> (InternetDB fallback)</em>}
+                  从 Shodan 漏洞数据库中提取与已发现 IP 相关的已知 CVE，无需主动扫描。
+                  {noKey && <em>（InternetDB 回退）</em>}
                 </p>
               </div>
               <Toggle
