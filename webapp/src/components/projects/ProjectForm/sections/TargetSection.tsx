@@ -141,7 +141,7 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
       {isOpen && (
         <div className={styles.sectionContent}>
           <p className={styles.sectionDescription}>
-            定义本次安全评估的主要目标，可在域名模式与 IP 模式之间切换。
+            定义本次渗透测试的主要目标，可在域名模式与 IP 模式之间切换。
           </p>
 
           {/* IP Mode Toggle - locked in edit mode */}
@@ -516,24 +516,6 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
               <Toggle
                 checked={data.stealthMode}
                 onChange={(checked) => updateField('stealthMode', checked)}
-              />
-            </div>
-          </div>
-
-          {/* Target Guardrail */}
-          <div className={styles.subSection}>
-            <h3 className={styles.subSectionTitle}>目标护栏</h3>
-            <div className={styles.toggleRow} style={{ gap: 'var(--space-4)' }}>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <span className={styles.toggleLabel}>启用目标护栏</span>
-                <p className={styles.toggleDescription}>
-                  在保存项目时拦截知名公共目标（大型科技公司、云服务商、金融机构等），避免误扫未授权域名。
-                  政府、军方、教育机构与国际组织域名（.gov、.mil、.edu、.int）无论此开关如何设置都会被拦截。
-                </p>
-              </div>
-              <Toggle
-                checked={data.targetGuardrailEnabled ?? true}
-                onChange={(checked) => updateField('targetGuardrailEnabled', checked)}
               />
             </div>
           </div>
