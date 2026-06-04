@@ -187,7 +187,6 @@ export default function McpServersTab({ userId }: Props) {
       const r = await fetch(`/api/users/${userId}/mcp`)
       if (r.ok) {
         const data = await r.json()
-        console.log('load mcp servers', data)
         setServers(Array.isArray(data.servers) ? data.servers : [])
       }
     } catch (e) {
