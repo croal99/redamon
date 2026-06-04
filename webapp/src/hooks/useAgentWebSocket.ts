@@ -90,13 +90,13 @@ export function useAgentWebSocket({
     }
     // 2. Auto-detect from current browser location
     // Agent runs on the same host as the webapp, mapped to port 8090
-    if (typeof window !== 'undefined') {
-      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-      const host = window.location.hostname
-      return `${protocol}//${host}:8090/ws/agent`
-    }
+    // if (typeof window !== 'undefined') {
+    //   const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+    //   const host = window.location.hostname
+    //   return `${protocol}//${host}:8090/ws/agent`
+    // }
     // 3. Fallback for SSR
-    return 'ws://localhost:8090/ws/agent'
+    return '/ws/agent'
   }, [])
 
   // Send a message to the server

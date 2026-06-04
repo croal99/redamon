@@ -409,11 +409,18 @@ recon 容器通过挂载 `/var/run/docker.sock` 实现 Docker-in-Docker **兄弟
 ```bash
 # 1. 配置 .env — 必须设置非 'changeme' 的 INTERNAL_API_KEY
 echo "INTERNAL_API_KEY=redamon_internal_$(openssl rand -hex 16)" >> .env
+echo "AUTH_SECRET=redamon_internal_$(openssl rand -hex 16)" >> .env
+
+# 修改websocket地址
+# L15 : webapp\src\app\graph\components\KaliTerminal\KaliTerminal.tsx
+# L87 : webapp\src\hooks\useAgentWebSocket.ts
 
 # 2. 构建 tools profile 镜像 (仅打包代码，不下载工具镜像)
-docker compose --profile tools build
+# docker compose --profile tools build
+docker compose build postgres neo4j recon-orchestrator kali-sandbox agent webapp
+docker compose up -d postgres neo4j recon-orchestrator kali-sandbox agent webapp
 
-# 3. (可选) 预拉取工具镜像，避免首次运行时等待
+# 3. 预拉取工具镜像，避免首次运行时等待
 for img in \
   projectdiscovery/naabu:latest \
   projectdiscovery/httpx:latest \
@@ -435,7 +442,12 @@ docker compose up -d
 
 # 5. 验证 INTERNAL_API_KEY 一致性
 docker exec redamon-webapp env | grep INTERNAL_API_KEY
+docker exec redamon-agent env | grep INTERNAL_API_KEY
 docker exec redamon-recon-orchestrator env | grep INTERNAL_API_KEY
+docker exec redamon-kali env | grep INTERNAL_API_KEY
+
+# 6. 创建管理员账号
+ADMIN_NAME=admin ADMIN_EMAIL=admin@mail.com ADMIN_PASSWORD=oracle node scripts/create-admin.mjs
 ```
 
 ---

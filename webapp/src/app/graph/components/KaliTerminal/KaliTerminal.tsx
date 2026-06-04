@@ -14,14 +14,18 @@ const PING_INTERVAL_MS = 30000
 
 function getWsUrl(): string {
   if (process.env.NEXT_PUBLIC_AGENT_WS_URL) {
-    return process.env.NEXT_PUBLIC_AGENT_WS_URL.replace(/\/ws\/agent$/, '/ws/kali-terminal')
+    return process.env.NEXT_PUBLIC_AGENT_WS_URL
   }
-  if (typeof window !== 'undefined') {
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-    const host = window.location.hostname
-    return `${protocol}//${host}:8090/ws/kali-terminal`
-  }
-  return 'ws://localhost:8090/ws/kali-terminal'
+  return '/ws/kali-terminal'
+  // if (process.env.NEXT_PUBLIC_AGENT_WS_URL) {
+  //   return process.env.NEXT_PUBLIC_AGENT_WS_URL.replace(/\/ws\/agent$/, '/ws/kali-terminal')
+  // }
+  // if (typeof window !== 'undefined') {
+  //   const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+  //   const host = window.location.hostname
+  //   return `${protocol}//${host}:8090/ws/kali-terminal`
+  // }
+  // return 'ws://localhost:8090/ws/kali-terminal'
 }
 
 export interface KaliTerminalProps {

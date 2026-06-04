@@ -609,6 +609,20 @@ services:
     networks:
       - redamon
 
+  # ─── Nginx 统一入口 ──────────────────────────────────────────
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: bluenet
+    ports:
+      - "80:80"
+    # depends_on:
+    #   - webapp
+    networks:
+      - redamon
+    restart: unless-stopped
+
 # =============================================================================
 # Networks
 # =============================================================================
