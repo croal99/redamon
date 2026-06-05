@@ -131,15 +131,30 @@ export const KaliTerminal = memo(function KaliTerminal({ userId, projectId }: Ka
     const fitAddon = fitAddonRef.current
 
     terminal.writeln('')
-    terminal.writeln('\x1b[1;31m  ____          _    _                       \x1b[0m')
-    terminal.writeln('\x1b[1;31m |  _ \\ ___  __| |  / \\   _ __ ___   ___  _ __\x1b[0m')
-    terminal.writeln('\x1b[1;31m | |_) / _ \\/ _` | / _ \\ | \'_ ` _ \\ / _ \\| \'_ \\\x1b[0m')
-    terminal.writeln('\x1b[1;31m |  _ <  __/ (_| |/ ___ \\| | | | | | (_) | | | |\x1b[0m')
-    terminal.writeln('\x1b[1;31m |_| \\_\\___|\\__,_/_/   \\_\\_| |_| |_|\\___/|_| |_|\x1b[0m')
-    terminal.writeln('')
+    // terminal.writeln('\x1b[1;31m                      ███                                           ████   █████               \x1b[0m')
+    // terminal.writeln('\x1b[1;31m                    ██████                                          ████    ██████             \x1b[0m')
+    // terminal.writeln('\x1b[1;31m                   ████████                                         █████     ████             \x1b[0m')
+    // terminal.writeln('\x1b[1;31m                 █████  █████                      ███████████████████████████████████        \x1b[0m')
+    // terminal.writeln('\x1b[1;31m                █████     █████                    ███████████████████████████████████        \x1b[0m')
+    // terminal.writeln('\x1b[1;31m              █████         ██████                 ████              ████      ███            \x1b[0m')
+    // terminal.writeln('\x1b[1;31m           ██████             ███████              ███████████████    ████    █████           \x1b[0m')
+    // terminal.writeln('\x1b[1;31m        ███████                 █████████          ███████████████     ████ █████             \x1b[0m')
+    // terminal.writeln('\x1b[1;31m     █████████████████████████████ ████████        ████       ████      ████████              \x1b[0m')
+    // terminal.writeln('\x1b[1;31m    ██████   █████████████████████    ████        █████       ████      ██████      █         \x1b[0m')
+    // terminal.writeln('\x1b[1;31m      ██                                          ████   ████████   ████████████   █████      \x1b[0m')
+    // terminal.writeln('\x1b[1;31m           ██████████████████████████             ████     ██████ ████████   ███████████       \x1b[0m')
+    // terminal.writeln('\x1b[1;31m          ████████████████████████████           ████       ██     ███         ████████        \x1b[0m')
+    // terminal.writeln('\x1b[1;31m          ████                  █████             █ █████████████████████████████████          \x1b[0m')
+    // terminal.writeln('\x1b[1;31m          ████                   ████               ██████████████████████████████            \x1b[0m')
+    // terminal.writeln('\x1b[1;31m          ████                   ████               ████     ████    ████     ████            \x1b[0m')
+    // terminal.writeln('\x1b[1;31m          ███████████████████████████               ████     ████    ████     ████            \x1b[0m')
+    // terminal.writeln('\x1b[1;31m          ███████████████████████████               ████     ████    ████     ████            \x1b[0m')
+    // terminal.writeln('\x1b[1;31m          ████                  █████          ████████████████████████████████████████       \x1b[0m')
+    // terminal.writeln('\x1b[1;31m          ████                   ████          ████████████████████████████████████████       \x1b[0m')
+    // terminal.writeln('')
     terminal.writeln('\x1b[1;36m  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\x1b[0m')
-    terminal.writeln('\x1b[1;36m  \u2502\x1b[0m  \x1b[1;33m\u26a1 Kali 沙箱终端\x1b[0m                       \x1b[1;36m\u2502\x1b[0m')
-    terminal.writeln('\x1b[1;36m  \u2502\x1b[0m  \x1b[2;37m完全访问 Kali Linux 渗透测试工具\x1b[0m  \x1b[1;36m\u2502\x1b[0m')
+    terminal.writeln('\x1b[1;36m  \u2502\x1b[0m  \x1b[1;33m\u26a1 智核·星图 Kali 沙箱终端\x1b[0m                   \x1b[1;36m\u2502\x1b[0m')
+    terminal.writeln('\x1b[1;36m  \u2502\x1b[0m  \x1b[2;37m完全访问 Kali Linux 渗透测试工具\x1b[0m            \x1b[1;36m\u2502\x1b[0m')
     terminal.writeln('\x1b[1;36m  \u2502\x1b[0m  \x1b[2;37mmetasploit \u2022 nmap \u2022 nuclei \u2022 hydra \u2022 sqlmap\x1b[0m \x1b[1;36m\u2502\x1b[0m')
     terminal.writeln('\x1b[1;36m  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\x1b[0m')
     terminal.writeln('')
@@ -384,7 +399,7 @@ export const KaliTerminal = memo(function KaliTerminal({ userId, projectId }: Ka
       <div className={styles.toolbar}>
         <div className={styles.toolbarLeft}>
           <TerminalIcon size={14} className={styles.terminalIcon} />
-          <span className={styles.title}>RedAmon 终端</span>
+          <span className={styles.title}>Kali 终端</span>
           <span className={styles.subtitle}>kali-sandbox</span>
         </div>
         <div className={styles.toolbarRight}>
