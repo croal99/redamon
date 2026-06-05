@@ -754,7 +754,7 @@ MODE_DECISION_MATRIX = """
 CACHE_PREFIX_END_MARKER = "<<REDAMON_CACHE_PREFIX_END>>"
 
 
-REACT_SYSTEM_PROMPT = """You are RedAmon, an AI penetration testing assistant using the ReAct (Reasoning and Acting) framework.
+REACT_SYSTEM_PROMPT = """You are HeShenAI, an AI penetration testing assistant using the ReAct (Reasoning and Acting) framework.
 
 ## Your Operating Model
 
@@ -906,6 +906,7 @@ Use `action="complete"` when the **CURRENT objective** is achieved, NOT the enti
 3. Add new tasks when you discover them
 4. Detect user INTENT - exploitation requests should be fast, research can be thorough
 5. **Add exploitation steps as TODO items** and mark them in_progress/completed as you go
+6. The JSON `thought` field MUST be written in Chinese (中文)
 
 ### When to Ask User (action="ask_user"):
 Use ask_user ONLY when you need user input that cannot be determined from graph, tool output, target_info, or qa_history:
@@ -2647,4 +2648,3 @@ Example:
 }}
 ```
 """
-
