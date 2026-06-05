@@ -136,42 +136,6 @@ export default function ProjectsPage() {
         </div>
       </div>
 
-      <div className={styles.userSelector}>
-        <div className={styles.userSelectorLabel}>
-          <Users size={14} />
-          <span>用户：</span>
-        </div>
-        <select
-          className="select"
-          value={userId || ''}
-          onChange={(e) => setUserId(e.target.value || null)}
-        >
-          <option value="">选择用户</option>
-          {users?.map((user) => (
-            <option key={user.id} value={user.id}>
-              {user.name} ({user.email})
-            </option>
-          ))}
-        </select>
-        <button
-          className="secondaryButton"
-          onClick={() => setShowUserModal(true)}
-        >
-          <Plus size={12} />
-          新建用户
-        </button>
-        {userId && (
-          <button
-            className="iconButton"
-            onClick={handleDeleteUser}
-            disabled={deleteUserMutation.isPending}
-            title="删除选中用户"
-          >
-            <Trash2 size={14} />
-          </button>
-        )}
-      </div>
-
       {isLoading ? (
         <div className={styles.loading}>加载中...</div>
       ) : projects && projects.length > 0 ? (
