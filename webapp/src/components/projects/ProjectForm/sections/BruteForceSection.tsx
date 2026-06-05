@@ -1,7 +1,6 @@
 'use client'
 
 import type { Project } from '@prisma/client'
-import { WikiInfoButton } from '@/components/ui/WikiInfoButton'
 import styles from '../ProjectForm.module.css'
 
 type FormData = Omit<Project, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'user'>

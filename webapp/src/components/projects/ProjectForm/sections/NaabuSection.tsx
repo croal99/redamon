@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronDown, Play, Radio } from 'lucide-react'
-import { Toggle, WikiInfoButton } from '@/components/ui'
+import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
 import { NodeInfoTooltip } from '../NodeInfoTooltip'
@@ -27,7 +27,6 @@ export function NaabuSection({ data, updateField, onRun }: NaabuSectionProps) {
           <Radio size={16} />
           Naabu 端口扫描器
           <NodeInfoTooltip section="Naabu" />
-          <WikiInfoButton target="Naabu" />
           <span className={styles.badgeActive}>已启用</span>
           {data.naabuPassiveMode && <span className={styles.badgePassive}>被动</span>}
         </h2>

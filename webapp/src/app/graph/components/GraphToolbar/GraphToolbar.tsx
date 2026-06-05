@@ -2,7 +2,7 @@
 
 import { Bot, Play, Download, Loader2, Terminal, Shield, Github, Target, Zap, MessageSquare, Pause, Square, ShieldAlert, FolderOpen } from 'lucide-react'
 import { StealthIcon } from '@/components/icons/StealthIcon'
-import { Toggle, WikiInfoButton } from '@/components/ui'
+import { Toggle } from '@/components/ui'
 import type { ReconStatus, GvmStatus, GithubHuntStatus, TrufflehogStatus, PartialReconState } from '@/lib/recon-types'
 import { PartialReconBadges } from '@/components/PartialReconBadges'
 import styles from './GraphToolbar.module.css'
@@ -198,8 +198,6 @@ export function GraphToolbar({
 
   return (
     <div className={styles.toolbar}>
-      <WikiInfoButton target="graph" title="打开红区 Wiki 页面" />
-
       {targetDomain && (
         <>
           <div className={styles.divider} />
@@ -289,7 +287,7 @@ export function GraphToolbar({
                 ) : (
                   <Play size={14} />
                 )}
-                <span>{isReconStopping ? '停止中...' : isReconBusy ? '运行中...' : isReconPaused ? '恢复' : '启动侦察流水线'}</span>
+                <span>{isReconStopping ? '停止中...' : isReconBusy ? '运行中...' : isReconPaused ? '恢复' : '启动流水线'}</span>
               </button>
 
               {isReconBusy && (
@@ -415,7 +413,7 @@ export function GraphToolbar({
             </div>
 
             {/* Other Scans (GitHub Hunt + TruffleHog) */}
-            <div className={styles.actionGroup}>
+            {/* <div className={styles.actionGroup}>
               <button
                 className={`${styles.githubHuntButton} ${(isGithubHuntActive || isTrufflehogActive) ? styles.githubHuntButtonActive : ''}`}
                 onClick={onToggleOtherScansModal}
@@ -428,7 +426,7 @@ export function GraphToolbar({
                 )}
                 <span>{(isGithubHuntBusy || isTrufflehogBusy) ? '扫描中...' : '其他扫描'}</span>
               </button>
-            </div>
+            </div> */}
           </>
         )}
 

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronDown, Play, Radar } from 'lucide-react'
-import { Toggle, WikiInfoButton } from '@/components/ui'
+import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
 import { NodeInfoTooltip } from '../NodeInfoTooltip'
@@ -27,7 +27,6 @@ export function ZapAjaxSpiderSection({ data, updateField, onRun }: ZapAjaxSpider
           <Radar size={16} />
           ZAP Ajax Spider
           <NodeInfoTooltip section="ZapAjaxSpider" />
-          <WikiInfoButton target="ZapAjaxSpider" />
           <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>

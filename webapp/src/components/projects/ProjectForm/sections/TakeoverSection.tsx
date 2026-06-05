@@ -2,7 +2,7 @@
 
 import { useState, type CSSProperties } from 'react'
 import { ChevronDown, ShieldAlert, Play } from 'lucide-react'
-import { Toggle, WikiInfoButton } from '@/components/ui'
+import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
 import { NodeInfoTooltip } from '../NodeInfoTooltip'
@@ -89,7 +89,6 @@ export function TakeoverSection({ data, updateField, onRun }: TakeoverSectionPro
           <ShieldAlert size={16} />
           子域名接管
           <NodeInfoTooltip section="SubdomainTakeover" />
-          <WikiInfoButton target="SubdomainTakeover" />
           <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronDown, Network } from 'lucide-react'
-import { Toggle, WikiInfoButton } from '@/components/ui'
+import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
 
@@ -22,7 +22,6 @@ export function MitreSection({ data, updateField }: MitreSectionProps) {
         <h2 className={styles.sectionTitle}>
           <Network size={16} />
           MITRE ATT&CK / CWE / CAPEC
-          <WikiInfoButton target="Mitre" />
           <span className={styles.badgePassive}>被动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>

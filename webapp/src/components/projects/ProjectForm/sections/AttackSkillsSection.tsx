@@ -7,7 +7,6 @@ import type { Project } from '@prisma/client'
 import { useProject } from '@/providers/ProjectProvider'
 import { Toggle } from '@/components/ui/Toggle/Toggle'
 import { useAlertModal } from '@/components/ui/AlertModal'
-import { WikiInfoButton } from '@/components/ui/WikiInfoButton'
 import { HydraSection } from './BruteForceSection'
 import { PhishingSection } from './PhishingSection'
 import { DosSection } from './DosSection'
@@ -255,7 +254,6 @@ export function AttackSkillsSection({ data, updateField }: AttackSkillsSectionPr
           <h2 className={styles.sectionTitle}>
             <Bug size={16} />
             内置智能体技能
-            <WikiInfoButton target="AttackSkills" />
             <span className={styles.badgeActive}>已启用</span>
           </h2>
           <ChevronDown
@@ -354,7 +352,6 @@ export function AttackSkillsSection({ data, updateField }: AttackSkillsSectionPr
           <h2 className={styles.sectionTitle}>
             <Swords size={16} />
             用户智能体技能
-            <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Agent-Skills#community-skills" title="打开社区智能体技能 Wiki 章节" />
           </h2>
           <div style={{ display: 'flex', gap: 'var(--space-2)', alignItems: 'center' }}>
             <button

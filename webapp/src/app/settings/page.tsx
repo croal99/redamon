@@ -12,7 +12,7 @@ import { TradecraftResourceForm } from '@/components/settings/TradecraftResource
 import { TradecraftResourceList } from '@/components/settings/TradecraftResourceList'
 import { PROVIDER_TYPES } from '@/lib/llmProviderPresets'
 import { Modal } from '@/components/ui/Modal/Modal'
-import { useAlertModal, useToast, WikiInfoButton } from '@/components/ui'
+import { useAlertModal, useToast } from '@/components/ui'
 import styles from '@/components/settings/Settings.module.css'
 import { buildTemplate, templateToJson, validateAndParse, isValidationError } from '@/lib/apiKeysTemplate'
 import type { ParsedImport } from '@/lib/apiKeysTemplate'
@@ -889,7 +889,6 @@ export default function SettingsPage() {
       <div className={styles.page}>
         <h1 className={styles.pageTitle} style={{ display: 'inline-flex', alignItems: 'center', gap: '12px' }}>
           <span>全局设置 <span style={{ fontSize: '0.55em', fontWeight: 400, opacity: 0.5 }}>(用户级别)</span></span>
-          <WikiInfoButton target="settings" title="打开全局设置文档页面" />
         </h1>
         <div className={styles.emptyState}>请选择用户以配置设置。</div>
       </div>
@@ -932,7 +931,6 @@ export default function SettingsPage() {
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
             <span>LLM 提供商</span>
-            <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/AI-Model-Providers" title="打开 AI 模型提供商文档页面" />
           </h2>
           {!showProviderForm && !editingProvider && (
             <button className="primaryButton" onClick={() => setShowProviderForm(true)}>
@@ -1005,7 +1003,6 @@ export default function SettingsPage() {
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
             <Swords size={16} /> 智能体技能
-            <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Agent-Skills" title="打开智能体技能文档页面" />
           </h2>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             <button
@@ -1072,7 +1069,6 @@ export default function SettingsPage() {
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
             <BookOpen size={16} /> 聊天技能
-            <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Chat-Skills" title="打开聊天技能文档页面" />
           </h2>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             <button
@@ -1155,7 +1151,6 @@ export default function SettingsPage() {
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>
             战术资源
-            <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Tradecraft-Lookup" title="打开战术资源文档页面" />
           </h2>
           {!tcShowForm && !tcEditing && (
             <button className="primaryButton" onClick={() => setTcShowForm(true)}>
@@ -1192,7 +1187,6 @@ export default function SettingsPage() {
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
             <span>API 密钥</span>
-            <WikiInfoButton target="settings" title="打开全局设置文档页面" />
           </h2>
           <div className={styles.sectionHeaderActions}>
             <button className={styles.sectionHeaderBtn} onClick={downloadKeysTemplate} title="下载 JSON 模板，在本地填写 API 密钥">
@@ -1531,7 +1525,6 @@ export default function SettingsPage() {
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
             <span>隧道配置</span>
-            <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Reverse-Shells" title="打开反弹 Shell 文档页面" />
           </h2>
         </div>
         <p className={styles.sectionHint}>
@@ -1955,7 +1948,6 @@ function SystemSection() {
       <div className={styles.sectionHeader}>
         <h2 className={styles.sectionTitle} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
           <Info size={16} /> 系统
-          <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Troubleshooting" title="打开故障排查文档页面" />
         </h2>
       </div>
 

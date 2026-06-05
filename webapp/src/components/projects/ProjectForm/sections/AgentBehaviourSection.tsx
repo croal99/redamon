@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronDown, Bot, AlertTriangle } from 'lucide-react'
-import { Toggle, WikiInfoButton } from '@/components/ui'
+import { Toggle } from '@/components/ui'
 import { useProject } from '@/providers/ProjectProvider'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
@@ -25,7 +25,6 @@ export function AgentBehaviourSection({ data, updateField }: AgentBehaviourSecti
         <h2 className={styles.sectionTitle}>
           <Bot size={16} />
           Agent 行为
-          <WikiInfoButton target="AgentBehaviour" />
         </h2>
         <ChevronDown
           size={16}

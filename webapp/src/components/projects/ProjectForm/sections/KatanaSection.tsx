@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Bug, ChevronDown, Play } from 'lucide-react'
-import { Toggle, WikiInfoButton } from '@/components/ui'
+import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
 import { NodeInfoTooltip } from '../NodeInfoTooltip'
@@ -27,7 +27,6 @@ export function KatanaSection({ data, updateField, onRun }: KatanaSectionProps) 
           <Bug size={16} />
           Katana Web 爬虫（DAST）
           <NodeInfoTooltip section="Katana" />
-          <WikiInfoButton target="Katana" />
           <span className={styles.badgeActive}>已启用</span>
         </h2>
         <div className={styles.sectionHeaderRight}>

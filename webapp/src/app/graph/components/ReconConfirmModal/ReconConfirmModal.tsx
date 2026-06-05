@@ -54,18 +54,6 @@ export function ReconConfirmModal({
           </p>
         </div>
 
-        <div className={styles.disclaimer}>
-          <ShieldAlert size={18} className={styles.disclaimerIcon} />
-          <div className={styles.disclaimerContent}>
-            <p className={styles.disclaimerTitle}>需要授权</p>
-            <p className={styles.disclaimerText}>
-              侦察会主动扫描和探测目标系统。此操作可能会触发安全警报，并可被视为入侵行为。
-              继续操作即表示您确认<strong>拥有该目标</strong>或已获得所有者的<strong>明确书面授权</strong>来执行此扫描。
-              未经授权的扫描是违法的，可能会导致刑事处罚。
-            </p>
-          </div>
-        </div>
-
         {hasExistingData ? (
           <div className={styles.warning}>
             <AlertTriangle size={20} className={styles.warningIcon} />

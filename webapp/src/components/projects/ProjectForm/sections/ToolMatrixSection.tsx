@@ -5,7 +5,6 @@ import { ChevronDown, Grid3X3, AlertTriangle, Eye, EyeOff, Loader2, Server } fro
 import type { Project } from '@prisma/client'
 import { useProject } from '@/providers/ProjectProvider'
 import { Modal } from '@/components/ui/Modal/Modal'
-import { WikiInfoButton } from '@/components/ui/WikiInfoButton'
 import styles from '../ProjectForm.module.css'
 
 const ALL_PHASES = ['informational', 'exploitation', 'post_exploitation'] as const
@@ -192,7 +191,6 @@ export function ToolMatrixSection({ data, updateField }: ToolMatrixSectionProps)
         <h2 className={styles.sectionTitle}>
           <Grid3X3 size={16} />
           工具阶段限制
-          <WikiInfoButton target="ToolMatrix" />
         </h2>
         <ChevronDown
           size={16}

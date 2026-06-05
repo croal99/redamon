@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronDown, Play, ShieldCheck } from 'lucide-react'
-import { Toggle, WikiInfoButton } from '@/components/ui'
+import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
 import { NodeInfoTooltip } from '../NodeInfoTooltip'
@@ -26,7 +26,6 @@ export function SecurityChecksSection({ data, updateField, onRun }: SecurityChec
           <ShieldCheck size={16} />
           安全检查
           <NodeInfoTooltip section="SecurityChecks" />
-          <WikiInfoButton target="SecurityChecks" />
           <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>

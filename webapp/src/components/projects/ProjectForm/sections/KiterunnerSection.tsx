@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronDown, Play, Zap } from 'lucide-react'
-import { Toggle, WikiInfoButton } from '@/components/ui'
+import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
 import { NodeInfoTooltip } from '../NodeInfoTooltip'
@@ -27,7 +27,6 @@ export function KiterunnerSection({ data, updateField, onRun }: KiterunnerSectio
           <Zap size={16} />
           Kiterunner API 发现
           <NodeInfoTooltip section="Kiterunner" />
-          <WikiInfoButton target="Kiterunner" />
           <span className={styles.badgeActive}>已启用</span>
         </h2>
         <div className={styles.sectionHeaderRight}>

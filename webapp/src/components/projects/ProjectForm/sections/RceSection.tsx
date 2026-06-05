@@ -1,7 +1,6 @@
 'use client'
 
 import type { Project } from '@prisma/client'
-import { WikiInfoButton } from '@/components/ui/WikiInfoButton'
 import styles from '../ProjectForm.module.css'
 
 type FormData = Omit<Project, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'user'>
@@ -39,9 +38,6 @@ const CHECKBOX_LABEL_STYLE: React.CSSProperties = {
 export function RceSection({ data, updateField }: RceSectionProps) {
   return (
     <div style={{ padding: 'var(--space-3) var(--space-4)', position: 'relative' }}>
-      <div style={{ position: 'absolute', top: 8, right: 16 }}>
-        <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Agent-Skills" title="打开智能体技能 Wiki 页面" />
-      </div>
       <p className={styles.sectionDescription} style={{ marginBottom: 'var(--space-4)' }}>
         配置智能体如何测试 RCE / 命令注入。可关闭不希望注入到提示词中的子工作流，并通过“激进模式”开关对破坏性 Payload 进行显式门禁控制。
       </p>

@@ -11,7 +11,7 @@ import { useProject } from '@/providers/ProjectProvider'
 import useReconStatus from '@/hooks/useReconStatus'
 import { useMultiPartialReconStatus } from '@/hooks/useMultiPartialReconStatus'
 import { useMultiPartialReconSSE } from '@/hooks/useMultiPartialReconSSE'
-import { useAlertModal, useToast, WikiInfoButton } from '@/components/ui'
+import { useAlertModal, useToast } from '@/components/ui'
 import type { PartialReconParams, PartialReconState } from '@/lib/recon-types'
 import { PARTIAL_RECON_PHASE_MAP } from '@/lib/recon-types'
 import type { ReconStatus } from '@/lib/recon-types'
@@ -490,10 +490,6 @@ export function ProjectForm({
       <div className={styles.header}>
         <h1 className={styles.title}>
           {mode === 'create' ? '创建新项目' : '项目设置'}
-          <WikiInfoButton
-            target={mode === 'create' ? 'projectsNew' : 'projectSettings'}
-            title={mode === 'create' ? '打开创建项目 Wiki 页面' : '打开项目设置参考 Wiki 页面'}
-          />
           {appliedPreset && (
             <span className={styles.presetBadge}>起自预设：{appliedPreset.name}</span>
           )}
@@ -513,7 +509,7 @@ export function ProjectForm({
                 ) : (
                   <Play size={14} />
                 )}
-                {isReconRunning ? '运行中...' : isReconPaused ? '已暂停' : '启动侦察流水线'}
+                {isReconRunning ? '运行中...' : isReconPaused ? '已暂停' : '启动流水线'}
               </button>
               {/* Partial Recon Badges */}
               {activePartialRecons.length > 0 && (

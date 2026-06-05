@@ -425,9 +425,9 @@ export const ViewTabs = memo(function ViewTabs({
           onClick={() => onViewChange('terminal')}
         >
           <SquareTerminal size={14} />
-          <span>RedAmon 终端</span>
+          <span>Kali 终端</span>
         </button>
-        <button
+        {/* <button
           role="tab"
           aria-selected={activeView === 'roe'}
           className={`${styles.tab} ${activeView === 'roe' ? styles.tabActive : ''}`}
@@ -435,7 +435,7 @@ export const ViewTabs = memo(function ViewTabs({
         >
           <Shield size={14} />
           <span>RoE 授权书</span>
-        </button>
+        </button> */}
       </div>
 
       <div className={styles.rightSection}>

@@ -1,7 +1,6 @@
 'use client'
 
 import type { Project } from '@prisma/client'
-import { WikiInfoButton } from '@/components/ui/WikiInfoButton'
 import styles from '../ProjectForm.module.css'
 
 type FormData = Omit<Project, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'user'>
@@ -14,9 +13,6 @@ interface PhishingSectionProps {
 export function PhishingSection({ data, updateField }: PhishingSectionProps) {
   return (
     <div style={{ padding: 'var(--space-3) var(--space-4)', position: 'relative' }}>
-      <div style={{ position: 'absolute', top: 8, right: 16 }}>
-        <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Project-Settings-Reference#social-engineering-simulation" title="打开社工演练 Wiki 章节" />
-      </div>
       <p className={styles.sectionDescription}>
         配置用于社工演练邮件投递的 SMTP 设置。智能体在通过邮件发送 Payload 或文档时会使用这些配置。留空则在运行时询问。
       </p>

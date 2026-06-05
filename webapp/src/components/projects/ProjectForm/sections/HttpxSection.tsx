@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronDown, Globe, Play } from 'lucide-react'
-import { Toggle, WikiInfoButton } from '@/components/ui'
+import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
 import { NodeInfoTooltip } from '../NodeInfoTooltip'
@@ -27,7 +27,6 @@ export function HttpxSection({ data, updateField, onRun }: HttpxSectionProps) {
           <Globe size={16} />
           httpx HTTP 探测
           <NodeInfoTooltip section="Httpx" />
-          <WikiInfoButton target="Httpx" />
           <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>

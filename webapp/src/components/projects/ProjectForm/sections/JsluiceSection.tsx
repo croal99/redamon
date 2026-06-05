@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronDown, Code, Play } from 'lucide-react'
-import { Toggle, WikiInfoButton } from '@/components/ui'
+import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
 import { NodeInfoTooltip } from '../NodeInfoTooltip'
@@ -25,7 +25,6 @@ export function JsluiceSection({ data, updateField, onRun }: JsluiceSectionProps
           <Code size={16} />
           jsluice JS 分析器
           <NodeInfoTooltip section="Jsluice" />
-          <WikiInfoButton target="Jsluice" />
           <span className={styles.badgeActive}>已启用</span>
         </h2>
         <div className={styles.sectionHeaderRight}>

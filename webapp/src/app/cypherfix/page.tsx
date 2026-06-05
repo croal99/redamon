@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { CypherFixTab } from '@/app/graph/components/CypherFixTab/CypherFixTab'
 import { useRemediations, useCypherFixTriageWS } from '@/hooks'
 import { useProject } from '@/providers/ProjectProvider'
-import { WikiInfoButton } from '@/components/ui'
 import styles from './page.module.css'
 
 export default function CypherFixPage() {
@@ -56,9 +55,6 @@ export default function CypherFixPage() {
 
   return (
     <div className={styles.page} style={{ position: 'relative' }}>
-      <div style={{ position: 'absolute', top: 12, right: 16, zIndex: 5 }}>
-        <WikiInfoButton target="cypherfix" title="打开 CypherFix 文档页面" />
-      </div>
       <CypherFixTab
         projectId={projectId || ''}
         userId={userId || ''}

@@ -24,7 +24,7 @@ import {
   Eraser,
 } from 'lucide-react'
 import { Drawer } from '@/components/ui/Drawer'
-import { useAlertModal, WikiInfoButton } from '@/components/ui'
+import { useAlertModal } from '@/components/ui'
 import styles from './FileSystemDrawer.module.css'
 
 // =============================================================================
@@ -766,10 +766,7 @@ export function FileSystemDrawer({
       width={`${drawerWidth}px`}
       title="智能体工作区"
       headerActions={
-        <WikiInfoButton
-          target="https://github.com/samugit83/redamon/wiki/Agent-Workspace"
-          title="打开智能体工作区 Wiki 页面"
-        />
+        <></>
       }
       resizable
       minWidth={MIN_WIDTH_PX}

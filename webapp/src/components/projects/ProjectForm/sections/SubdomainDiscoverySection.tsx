@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronDown, Play, Search } from 'lucide-react'
-import { Toggle, WikiInfoButton, useAlertModal } from '@/components/ui'
+import { Toggle, useAlertModal } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
 import { NodeInfoTooltip } from '../NodeInfoTooltip'
@@ -55,7 +55,6 @@ export function SubdomainDiscoverySection({ data, updateField, onRun }: Subdomai
           <Search size={16} />
           子域名发现
           <NodeInfoTooltip section="SubdomainDiscovery" />
-          <WikiInfoButton target="SubdomainDiscovery" />
         </h2>
         <div className={styles.sectionHeaderRight}>
           {onRun && data.subdomainDiscoveryEnabled && (

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronDown, Github, AlertTriangle } from 'lucide-react'
-import { Toggle, WikiInfoButton } from '@/components/ui'
+import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
 import { NodeInfoTooltip } from '../NodeInfoTooltip'
@@ -27,7 +27,6 @@ export function GithubSection({ data, updateField, hasGithubToken = false }: Git
           <Github size={16} />
           GitHub 泄露密钥搜寻
           <NodeInfoTooltip section="Github" />
-          <WikiInfoButton target="Github" />
           <span className={styles.badgePassive}>被动</span>
         </h2>
         <ChevronDown

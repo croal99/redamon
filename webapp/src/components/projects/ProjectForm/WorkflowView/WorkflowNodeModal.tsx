@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react'
 import type { Project } from '@prisma/client'
 import { Save, Loader2 } from 'lucide-react'
-import { Modal, WikiInfoButton } from '@/components/ui'
+import { Modal } from '@/components/ui'
 import { WORKFLOW_TOOLS } from './workflowDefinition'
 
 // Section component imports
@@ -124,13 +124,7 @@ export function WorkflowNodeModal({
       closeOnEscape={false}
       headerActions={(
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-          {toolId && (
-            <WikiInfoButton
-              target={toolId}
-              title={`Open ${title} wiki page`}
-            />
-          )}
-          {onSave && (
+            {onSave && (
             <button
               type="button"
               className="primaryButton"

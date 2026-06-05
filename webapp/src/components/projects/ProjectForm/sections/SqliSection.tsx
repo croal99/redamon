@@ -1,7 +1,6 @@
 'use client'
 
 import type { Project } from '@prisma/client'
-import { WikiInfoButton } from '@/components/ui/WikiInfoButton'
 import styles from '../ProjectForm.module.css'
 
 type FormData = Omit<Project, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'user'>
@@ -14,9 +13,6 @@ interface SqliSectionProps {
 export function SqliSection({ data, updateField }: SqliSectionProps) {
   return (
     <div style={{ padding: 'var(--space-3) var(--space-4)', position: 'relative' }}>
-      <div style={{ position: 'absolute', top: 8, right: 16 }}>
-        <WikiInfoButton target="https://github.com/samugit83/redamon/wiki/Agent-Skills" title="打开智能体技能 Wiki 页面" />
-      </div>
       <p className={styles.sectionDescription}>
         配置 SQLMap 扫描强度与 WAF 绕过相关设置。
       </p>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { ChevronDown, Radar, AlertTriangle, Info, Play } from 'lucide-react'
-import { Toggle, WikiInfoButton } from '@/components/ui'
+import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import { useProject } from '@/providers/ProjectProvider'
 import styles from '../ProjectForm.module.css'
@@ -44,7 +44,6 @@ export function ShodanSection({ data, updateField, onRun }: ShodanSectionProps) 
           <Radar size={16} />
           Shodan 增强
           <NodeInfoTooltip section="Shodan" />
-          <WikiInfoButton target="Shodan" />
           <span className={styles.badgePassive}>被动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>

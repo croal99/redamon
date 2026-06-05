@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronDown, Link, Play } from 'lucide-react'
-import { Toggle, WikiInfoButton } from '@/components/ui'
+import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
 import { NodeInfoTooltip } from '../NodeInfoTooltip'
@@ -38,7 +38,6 @@ export function GauSection({ data, updateField, onRun }: GauSectionProps) {
           <Link size={16} />
           GAU（GetAllUrls）被动发现
           <NodeInfoTooltip section="Gau" />
-          <WikiInfoButton target="Gau" />
           <span className={styles.badgePassive}>被动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>

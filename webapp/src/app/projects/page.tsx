@@ -8,7 +8,7 @@ import { useProjects, useDeleteProject } from '@/hooks/useProjects'
 import { useUsers, useCreateUser, useDeleteUser } from '@/hooks/useUsers'
 import { useProject } from '@/providers/ProjectProvider'
 import { ProjectCard } from '@/components/projects/ProjectCard'
-import { useAlertModal, useToast, WikiInfoButton } from '@/components/ui'
+import { useAlertModal, useToast } from '@/components/ui'
 import { ImportModal } from './ImportModal'
 import styles from './page.module.css'
 
@@ -103,7 +103,6 @@ export default function ProjectsPage() {
         <div className={styles.headerLeft}>
           <FolderOpen size={20} />
           <h1 className={styles.title}>项目列表</h1>
-          <WikiInfoButton target="projects" title="打开创建项目 Wiki 页面" />
         </div>
         <div className={styles.headerActions}>
           <button

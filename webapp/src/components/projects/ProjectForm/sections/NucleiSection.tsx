@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { ChevronDown, Shield, Upload, Trash2, Loader2, FileText, Play, AlertTriangle } from 'lucide-react'
-import { Toggle, WikiInfoButton } from '@/components/ui'
+import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
 import { NodeInfoTooltip } from '../NodeInfoTooltip'
@@ -121,7 +121,6 @@ export function NucleiSection({ data, updateField, onRun }: NucleiSectionProps) 
           <Shield size={16} />
           Nuclei 漏洞扫描器
           <NodeInfoTooltip section="Nuclei" />
-          <WikiInfoButton target="Nuclei" />
           <span className={styles.badgeActive}>已启用</span>
         </h2>
         <div className={styles.sectionHeaderRight}>

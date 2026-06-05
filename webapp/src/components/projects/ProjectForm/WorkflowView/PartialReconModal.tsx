@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { Play, Loader2, ArrowRight, Upload, FileText, Trash2, Info } from 'lucide-react'
-import { Modal, Tooltip, WikiInfoButton } from '@/components/ui'
+import { Modal, Tooltip } from '@/components/ui'
 import type { GraphInputs, PartialReconParams, UserTargets } from '@/lib/recon-types'
 import { SECTION_INPUT_MAP, SECTION_NODE_MAP, SECTION_ENRICH_MAP } from '../nodeMapping'
 import { WORKFLOW_TOOLS } from './workflowDefinition'
@@ -599,12 +599,7 @@ export function PartialReconModal({
       size="default"
       closeOnOverlayClick={false}
       closeOnEscape={false}
-      headerActions={toolId ? (
-        <WikiInfoButton
-          target={toolId}
-          title={`Open ${WORKFLOW_TOOLS.find(t => t.id === toolId)?.label || toolId} wiki page`}
-        />
-      ) : null}
+      headerActions={null}
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {/* Input / Output flow */}

@@ -2,7 +2,7 @@
 
 import { useState, type CSSProperties } from 'react'
 import { ChevronDown, Network, Play } from 'lucide-react'
-import { Toggle, WikiInfoButton } from '@/components/ui'
+import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
 import { NodeInfoTooltip } from '../NodeInfoTooltip'
@@ -37,7 +37,6 @@ export function VhostSniSection({ data, updateField, onRun }: VhostSniSectionPro
           <Network size={16} />
           VHost 与 SNI 枚举
           <NodeInfoTooltip section="VhostSni" />
-          <WikiInfoButton target="VhostSni" />
           <span className={styles.badgeActive}>主动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>

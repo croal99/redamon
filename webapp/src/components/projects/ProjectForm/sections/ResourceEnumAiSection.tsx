@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronDown, Brain, Play } from 'lucide-react'
-import { Toggle, WikiInfoButton } from '@/components/ui'
+import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
 import { NodeInfoTooltip } from '../NodeInfoTooltip'
@@ -26,7 +26,6 @@ export function ResourceEnumAiSection({ data, updateField, onRun }: ResourceEnum
           <Brain size={16} />
           端点 AI 分类器
           <NodeInfoTooltip section="EndpointAiClassifier" />
-          <WikiInfoButton target="Adversarial-AI-Recon" />
           <span className={styles.badgePassive}>被动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>

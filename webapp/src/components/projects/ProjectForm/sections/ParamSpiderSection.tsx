@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronDown, Search, Play } from 'lucide-react'
-import { Toggle, WikiInfoButton } from '@/components/ui'
+import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
 import { NodeInfoTooltip } from '../NodeInfoTooltip'
@@ -25,7 +25,6 @@ export function ParamSpiderSection({ data, updateField, onRun }: ParamSpiderSect
           <Search size={16} />
           ParamSpider 参数发现
           <NodeInfoTooltip section="ParamSpider" />
-          <WikiInfoButton target="ParamSpider" />
           <span className={styles.badgePassive}>被动</span>
         </h2>
         <div className={styles.sectionHeaderRight}>

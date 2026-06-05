@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import { ChevronDown, Target, ShieldAlert, AlertTriangle } from 'lucide-react'
 import { AiToggleLabel } from '../AiToggleLabel'
-import { Toggle, WikiInfoButton } from '@/components/ui'
+import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import { isHardBlockedDomain } from '@/lib/hard-guardrail'
 import { FileImportButton } from '../FileImportButton'
@@ -130,7 +130,6 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
         <h2 className={styles.sectionTitle}>
           <Target size={16} />
           目标配置
-          <WikiInfoButton target="Target" />
         </h2>
         <ChevronDown
           size={16}

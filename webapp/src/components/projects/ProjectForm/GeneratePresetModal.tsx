@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Loader2, AlertTriangle, Sparkles, RotateCcw } from 'lucide-react'
 import { Modal } from '@/components/ui/Modal/Modal'
-import { useToast, WikiInfoButton } from '@/components/ui'
+import { useToast } from '@/components/ui'
 import formStyles from './ProjectForm.module.css'
 import styles from './GeneratePresetModal.module.css'
 
@@ -197,7 +197,7 @@ export function GeneratePresetModal({
         size="large"
         closeOnOverlayClick={false}
         closeOnEscape={false}
-        headerActions={<WikiInfoButton target="ReconPreset" title="Open Recon Presets wiki page" />}
+        headerActions={<></>}
         footer={
           <>
             <button type="button" className="secondaryButton" onClick={onClose} disabled={isGenerating}>
@@ -269,7 +269,7 @@ export function GeneratePresetModal({
       size="large"
       closeOnOverlayClick={false}
       closeOnEscape={false}
-      headerActions={<WikiInfoButton target="ReconPreset" title="Open Recon Presets wiki page" />}
+      headerActions={<></>}
       footer={
         <>
           <button type="button" className="secondaryButton" onClick={handleRegenerate} disabled={isSaving}>
