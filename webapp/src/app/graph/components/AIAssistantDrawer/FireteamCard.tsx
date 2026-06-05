@@ -43,15 +43,32 @@ function headerIcon(status: FireteamItem['status']) {
   }
 }
 
+function statusText(status: FireteamItem['status']) {
+  switch (status) {
+    case 'running':
+      return '运行中'
+    case 'completed':
+      return '已完成'
+    case 'timeout':
+      return '超时'
+    case 'failed':
+      return '失败'
+    case 'cancelled':
+      return '已取消'
+    default:
+      return '未知'
+  }
+}
+
 export function FireteamCard({ item, missingApiKeys, onAddApiKey, onToolConfirmation, onToolStop }: FireteamCardProps) {
   const [expanded, setExpanded] = useState(true)
   const counts = item.status_counts ?? {}
   const countStrs: string[] = []
-  if (counts.success) countStrs.push(`${counts.success} ok`)
-  if (counts.timeout) countStrs.push(`${counts.timeout} timeout`)
-  if (counts.error) countStrs.push(`${counts.error} error`)
-  if (counts.cancelled) countStrs.push(`${counts.cancelled} cancel`)
-  if (counts.needs_confirmation) countStrs.push(`${counts.needs_confirmation} approval`)
+  if (counts.success) countStrs.push(`${counts.success} 成功`)
+  if (counts.timeout) countStrs.push(`${counts.timeout} 超时`)
+  if (counts.error) countStrs.push(`${counts.error} 失败`)
+  if (counts.cancelled) countStrs.push(`${counts.cancelled} 已取消`)
+  if (counts.needs_confirmation) countStrs.push(`${counts.needs_confirmation} 待批准`)
 
   return (
     <div className={`${styles.card} ${styles[`status_${item.status}`] || ''}`}>
@@ -59,10 +76,10 @@ export function FireteamCard({ item, missingApiKeys, onAddApiKey, onToolConfirma
         {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
         <Users size={14} className={styles.teamIcon} />
         <span className={styles.title}>
-          Fireteam · step {item.iteration} · {item.members.length} specialists
+          团队协作 · 第 {item.iteration} 步 · {item.members.length} 名专家
         </span>
         {headerIcon(item.status)}
-        <span className={styles.statusLabel}>{item.status}</span>
+        <span className={styles.statusLabel}>{statusText(item.status)}</span>
         <span className={styles.meta}>
           {countStrs.join(' · ')}
           {item.wall_clock_seconds !== undefined && ` · ${item.wall_clock_seconds.toFixed(1)}s`}

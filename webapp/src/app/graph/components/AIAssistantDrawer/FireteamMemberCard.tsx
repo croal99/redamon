@@ -48,6 +48,27 @@ function statusIcon(status: FireteamMemberPanel['status']) {
   }
 }
 
+function statusText(status: FireteamMemberPanel['status']) {
+  switch (status) {
+    case 'running':
+      return '运行中'
+    case 'success':
+      return '成功'
+    case 'partial':
+      return '部分完成'
+    case 'error':
+      return '失败'
+    case 'timeout':
+      return '超时'
+    case 'cancelled':
+      return '已取消'
+    case 'needs_confirmation':
+      return '等待确认'
+    default:
+      return '未知'
+  }
+}
+
 export function FireteamMemberCard({ member, missingApiKeys, onAddApiKey, onToolConfirmation, onToolStop }: FireteamMemberCardProps) {
   const [expanded, setExpanded] = useState(false)
   const [expandedTools, setExpandedTools] = useState<Set<string>>(new Set())
@@ -82,8 +103,8 @@ export function FireteamMemberCard({ member, missingApiKeys, onAddApiKey, onTool
     ? (member.latest_iteration ?? member.iterations_used ?? 0)
     : (member.iterations_used ?? member.latest_iteration ?? 0)
   const subStepLabel = member.max_iterations
-    ? `sub-step ${subStep} (max ${member.max_iterations})`
-    : `sub-step ${subStep}`
+    ? `子步骤 ${subStep}（最多 ${member.max_iterations}）`
+    : `子步骤 ${subStep}`
 
   return (
     <div className={cls}>
@@ -91,16 +112,16 @@ export function FireteamMemberCard({ member, missingApiKeys, onAddApiKey, onTool
         {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
         <span className={styles.name}>{member.name}</span>
         {statusIcon(member.status)}
-        <span className={styles.status}>{member.status}</span>
+        <span className={styles.status}>{statusText(member.status)}</span>
         <span className={styles.meta}>
           {subStep > 0 && <>{subStepLabel} · </>}
           {(member.input_tokens_used > 0 || member.output_tokens_used > 0) ? (
-            <>in {formatTokenCount(member.input_tokens_used)} · out {formatTokenCount(member.output_tokens_used)} · </>
+            <>输入 {formatTokenCount(member.input_tokens_used)} · 输出 {formatTokenCount(member.output_tokens_used)} · </>
           ) : member.tokens_used > 0 ? (
-            <>{formatTokenCount(member.tokens_used)} tok · </>
+            <>{formatTokenCount(member.tokens_used)} Token · </>
           ) : null}
-          {toolCount} tools
-          {member.findings_count > 0 && <> · {member.findings_count} findings</>}
+          {toolCount} 个工具
+          {member.findings_count > 0 && <> · {member.findings_count} 条发现</>}
         </span>
       </button>
 
@@ -118,10 +139,10 @@ export function FireteamMemberCard({ member, missingApiKeys, onAddApiKey, onTool
             </div>
           )}
           {member.error_message && (
-            <div className={styles.error}>Error: {member.error_message}</div>
+            <div className={styles.error}>错误：{member.error_message}</div>
           )}
           {member.completion_reason && member.status !== 'success' && (
-            <div className={styles.completionReason}>Reason: {member.completion_reason}</div>
+            <div className={styles.completionReason}>原因：{member.completion_reason}</div>
           )}
           {(member.planWaves.length > 0 || member.tools.length > 0) && (
             <div className={styles.timeline}>
@@ -169,7 +190,7 @@ export function FireteamMemberCard({ member, missingApiKeys, onAddApiKey, onTool
             </div>
           )}
           {toolCount === 0 && member.status === 'running' && !member.latest_thought && (
-            <div className={styles.empty}>Deployed, reasoning…</div>
+            <div className={styles.empty}>已部署，推理中…</div>
           )}
         </div>
       )}

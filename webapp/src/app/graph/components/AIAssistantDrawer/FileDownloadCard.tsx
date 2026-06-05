@@ -25,7 +25,7 @@ export function FileDownloadCard({ filepath, filename, description, source }: Fi
 
       if (!resp.ok) {
         const text = await resp.text()
-        throw new Error(text || `Download failed (${resp.status})`)
+        throw new Error(text || `下载失败（${resp.status}）`)
       }
 
       const blob = await resp.blob()
@@ -37,7 +37,7 @@ export function FileDownloadCard({ filepath, filename, description, source }: Fi
       URL.revokeObjectURL(url)
       setDownloaded(true)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Download failed')
+      setError(err instanceof Error ? err.message : '下载失败')
     } finally {
       setDownloading(false)
     }
@@ -64,7 +64,7 @@ export function FileDownloadCard({ filepath, filename, description, source }: Fi
         className={`${styles.downloadButton} ${downloaded ? styles.downloaded : ''}`}
         onClick={handleDownload}
         disabled={downloading}
-        title={downloaded ? 'Download again' : 'Download file'}
+        title={downloaded ? '重新下载' : '下载文件'}
       >
         {downloading ? (
           <Loader2 size={16} className={styles.spinner} />
