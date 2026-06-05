@@ -5,7 +5,6 @@ import { ChevronDown, Target, ShieldAlert, AlertTriangle } from 'lucide-react'
 import { AiToggleLabel } from '../AiToggleLabel'
 import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
-import { isHardBlockedDomain } from '@/lib/hard-guardrail'
 import { FileImportButton } from '../FileImportButton'
 import { ModelPicker } from '@/components/shared/ModelPicker'
 import { useProject } from '@/providers/ProjectProvider'
@@ -65,12 +64,6 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
 
   // Display value for IP textarea
   const displayIps = useMemo(() => (data.targetIps || []).join('\n'), [data.targetIps])
-
-  // Hard guardrail: deterministic check for government/public domains (non-disableable)
-  const hardBlockResult = useMemo(
-    () => (!ipMode && data.targetDomain ? isHardBlockedDomain(data.targetDomain) : { blocked: false, reason: '' }),
-    [ipMode, data.targetDomain]
-  )
 
   const handlePrefixesChange = (value: string) => {
     updateField('subdomainList', toStoredPrefixes(value, includesRootDomain))
@@ -189,17 +182,6 @@ export function TargetSection({ data, updateField, mode = 'create' }: TargetSect
               </div>
             )}
           </div>
-
-          {/* Hard guardrail warning for government/public domains */}
-          {hardBlockResult.blocked && (
-            <div className={styles.shodanWarning} style={{ borderColor: 'rgba(239, 68, 68, 0.4)', background: 'rgba(239, 68, 68, 0.08)' }}>
-              <ShieldAlert size={14} style={{ color: '#ef4444' }} />
-              <span>
-                <strong>目标已被永久拦截：</strong>政府、军方、教育机构与国际组织网站（.gov、.mil、.edu、.int 等）
-                始终被禁止作为目标，与护栏设置无关，且无法关闭此限制。
-              </span>
-            </div>
-          )}
 
           {/* IP Mode: Target IPs textarea */}
           {ipMode && (

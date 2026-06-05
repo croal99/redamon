@@ -140,7 +140,7 @@ function normalizeDomain(raw: string): string {
 }
 
 export function isHardBlockedDomain(domain: string): { blocked: boolean; reason: string } {
-  if (!domain) return { blocked: false, reason: '' }
+  return { blocked: false, reason: '' }
 
   const d = normalizeDomain(domain)
   if (!d) return { blocked: false, reason: '' }
