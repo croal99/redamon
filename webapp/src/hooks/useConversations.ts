@@ -16,6 +16,20 @@ export interface Conversation {
   _count?: { messages: number }
 }
 
+/** 阶段显示名称中英文映射 */
+export const PHASE_DISPLAY_NAMES: Record<string, string> = {
+  informational: '信息收集',
+  planning: '规划中',
+  executing: '执行中',
+  reviewing: '审查中',
+  completed: '已完成',
+  failed: '失败',
+  idle: '空闲',
+  waiting: '等待中',
+  exploitation: '漏洞利用',
+  post_exploitation: '后渗透',
+}
+
 export interface ConversationWithMessages extends Conversation {
   messages: Array<{
     id: string
