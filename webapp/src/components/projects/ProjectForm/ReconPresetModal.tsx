@@ -99,7 +99,7 @@ export function ReconPresetModal({
         setUserPresets(presetList)
         if (!defaults) setDefaults(fetchedDefaults)
       })
-      .catch(() => toast.error('Failed to load presets'))
+      .catch(() => toast.error('加载预设失败'))
       .finally(() => setIsLoadingPresets(false))
   }, [isOpen, activeView, userId]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -143,17 +143,17 @@ export function ReconPresetModal({
       const merged = { ...(defaults || {}), ...presetSettings }
 
       onLoadUserPreset(merged)
-      toast.success(`Preset "${preset.name}" loaded`, 'Preset Loaded')
+      toast.success(`预设 "${preset.name}" 已加载`, '预设已加载')
       onClose()
     } catch {
-      toast.error('Failed to load preset')
+      toast.error('加载预设失败')
     } finally {
       setLoadingPresetId(null)
     }
   }
 
   const handleDeleteUserPreset = async (preset: PresetListItem) => {
-    if (!confirm(`Delete preset "${preset.name}"?`)) return
+    if (!confirm(`删除预设 "${preset.name}"？`)) return
 
     setDeletingPresetId(preset.id)
     try {
@@ -163,9 +163,9 @@ export function ReconPresetModal({
       if (!res.ok) throw new Error('Failed to delete preset')
 
       setUserPresets((prev) => prev.filter((p) => p.id !== preset.id))
-      toast.success(`Preset "${preset.name}" deleted`, 'Preset Deleted')
+      toast.success(`预设 "${preset.name}" 已删除`, '预设已删除')
     } catch {
-      toast.error('Failed to delete preset')
+      toast.error('删除预设失败')
     } finally {
       setDeletingPresetId(null)
     }
@@ -192,7 +192,7 @@ export function ReconPresetModal({
       <div className={styles.drawer} onClick={(e) => e.stopPropagation()}>
         <div className={styles.drawerHeader}>
           <h2 className={styles.drawerTitle} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-            Recon Presets
+            侦察预设
           </h2>
           <button
             type="button"
@@ -211,14 +211,14 @@ export function ReconPresetModal({
             className={`${styles.toggleButton} ${activeView === 'builtin' ? styles.toggleButtonActive : ''}`}
             onClick={() => setActiveView('builtin')}
           >
-            Built-in Recon Presets
+            内置侦察预设
           </button>
           <button
             type="button"
             className={`${styles.toggleButton} ${activeView === 'user' ? styles.toggleButtonActive : ''}`}
             onClick={() => setActiveView('user')}
           >
-            My Recon Presets (AI Generated)
+            我的侦察预设（AI生成）
           </button>
         </div>
 
@@ -252,7 +252,7 @@ export function ReconPresetModal({
                       onClick={() => setDetailPreset(preset)}
                     >
                       <Info size={12} />
-                      Show more
+                      显示更多
                     </button>
 
                     <button
@@ -264,10 +264,10 @@ export function ReconPresetModal({
                       {isApplied ? (
                         <>
                           <Check size={12} />
-                          Applied
+                          已应用
                         </>
                       ) : (
-                        'Select'
+                        '选择'
                       )}
                     </button>
                   </div>
@@ -287,7 +287,7 @@ export function ReconPresetModal({
               onClick={() => setIsGenerateModalOpen(true)}
             >
               <Sparkles size={16} />
-              Generate with AI
+              使用AI生成
             </button>
 
             {isLoadingPresets ? (
@@ -297,8 +297,8 @@ export function ReconPresetModal({
             ) : userPresets.length === 0 ? (
               <div className={styles.emptyState}>
                 <FolderOpen size={32} className={styles.emptyIcon} />
-                <p>No presets yet.</p>
-                <p>Generate one with AI or use &quot;Save as Preset&quot; from the form.</p>
+                <p>暂无预设</p>
+                <p>使用AI生成或从表单中"保存为预设"</p>
               </div>
             ) : (
               <div className={styles.userGrid}>
@@ -315,7 +315,7 @@ export function ReconPresetModal({
                         className={styles.deleteButton}
                         onClick={() => handleDeleteUserPreset(preset)}
                         disabled={deletingPresetId === preset.id}
-                        aria-label="Delete preset"
+                        aria-label="删除预设"
                       >
                         <Trash2 size={12} />
                       </button>
@@ -328,10 +328,10 @@ export function ReconPresetModal({
                         {loadingPresetId === preset.id ? (
                           <>
                             <Loader2 size={12} className={styles.spinner} />
-                            Loading...
+                            加载中...
                           </>
                         ) : (
-                          'Select'
+                          '选择'
                         )}
                       </button>
                     </div>

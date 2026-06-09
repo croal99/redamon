@@ -246,19 +246,19 @@ export function PhaseIndicatorBar({
               className={styles.settingsDropdownItem}
               onClick={() => { setSettingsModal('agent'); setShowSettingsDropdown(false) }}
             >
-              Agent 行为
+              行为
             </button>
             <button
               className={styles.settingsDropdownItem}
               onClick={() => { setSettingsModal('toolmatrix'); setShowSettingsDropdown(false) }}
             >
-              工具矩阵
+              工具
             </button>
             <button
               className={styles.settingsDropdownItem}
               onClick={() => { setSettingsModal('attack'); setShowSettingsDropdown(false) }}
             >
-              Agent 技能
+              技能
             </button>
           </div>
         )}

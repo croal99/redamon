@@ -106,29 +106,29 @@ const TAB_GROUPS = [
       { id: 'integrations', label: '其他扫描', wide: true },
     ],
   },
-  {
-    label: '范围',
-    style: 'tabGroupScope',
-    tabs: [
-      { id: 'roe', label: '授权书 (RoE)' },
-    ],
-  },
+  // {
+  //   label: '范围',
+  //   style: 'tabGroupScope',
+  //   tabs: [
+  //     { id: 'roe', label: '授权书 (RoE)' },
+  //   ],
+  // },
   {
     label: 'AI 智能体',
     style: 'tabGroupAgent',
     tabs: [
-      { id: 'agent', label: '智能体行为' },
-      { id: 'toolmatrix', label: '工具矩阵' },
-      { id: 'attack', label: '智能体技能' },
+      { id: 'agent', label: '行为' },
+      { id: 'toolmatrix', label: '工具' },
+      { id: 'attack', label: '技能' },
     ],
   },
-  {
-    label: '漏洞修复',
-    style: 'tabGroupRemediation',
-    tabs: [
-      { id: 'cypherfix', label: 'CypherFix 修复' },
-    ],
-  },
+  // {
+  //   label: '漏洞修复',
+  //   style: 'tabGroupRemediation',
+  //   tabs: [
+  //     { id: 'cypherfix', label: 'CypherFix 修复' },
+  //   ],
+  // },
 ] as const
 
 type TabId = typeof TAB_GROUPS[number]['tabs'][number]['id']
