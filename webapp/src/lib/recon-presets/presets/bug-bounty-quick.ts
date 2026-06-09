@@ -2,44 +2,44 @@ import type { ReconPreset } from '../types'
 
 export const BUG_BOUNTY_QUICK: ReconPreset = {
   id: 'bug-bounty-quick',
-  name: 'Bug Bounty - Quick Wins',
+  name: '漏洞赏金 - 快速收益',
   icon: '',
   image: '/preset-bug.svg',
-  shortDescription: 'Fast, lightweight scan for low-hanging fruit. Get actionable results in under 15 minutes.',
-  fullDescription: `### Pipeline Goal
-Speed over depth. Discover subdomains, probe HTTP, run a shallow crawl, and fire Nuclei at critical+high severity only. Designed to surface easy wins fast -- exposed panels, known CVEs, misconfigurations, default credentials -- before investing time in deeper analysis.
+  shortDescription: '轻量快速扫描低垂果实。15 分钟内给出可操作结果。',
+  fullDescription: `### 流程目标
+速度优先于深度。快速发现子域、探测 HTTP、执行浅层爬取，并仅对 critical/high 级别运行 Nuclei。目标是在投入更长时间前，尽快暴露管理面板、已知 CVE、错误配置与默认凭据等“低垂果实”。
 
-### Who is this for?
-Bug bounty hunters triaging a new target. You want to know if there are quick wins before committing to a multi-hour deep scan. Also useful for a fast initial sweep at the start of a pentest engagement.
+### 适用人群
+适合刚接触新目标、需要快速判断是否值得深挖的漏洞赏金猎人，也适合渗透项目开始阶段的一轮快速摸排。
 
-### What it enables
-- Full subdomain discovery (all 5 tools at default limits) for broad target coverage
-- Puredns wildcard filtering to remove junk subdomains
-- httpx probing with essential probes (status, title, tech detect, TLS info)
-- Katana shallow crawl (depth 1, 200 URLs) for basic endpoint discovery
-- jsluice on discovered JS files (capped at 50 files) for quick secret extraction
-- Nuclei with critical + high severity only, DAST mode, high rate for fast results
-- Security checks enabled for header/TLS misconfigurations
+### 启用内容
+- 全量子域发现（5 个工具默认上限）
+- Puredns 泛解析过滤，减少垃圾子域
+- httpx 启用核心探针（状态码、标题、技术识别、TLS）
+- Katana 浅层爬取（深度 1，200 URL）做基础端点发现
+- jsluice 快速分析已发现的 JS 文件（上限 50 个）提取密钥
+- Nuclei 仅跑 critical + high，启用 DAST，高速输出结果
+- Security Checks 用于发现 Header/TLS 配置问题
 
-### What it disables
-- Port scanning (Naabu, Masscan, Nmap) -- httpx uses common web ports, saves significant time
-- Hakrawler -- Katana alone is sufficient for shallow crawl
-- GAU, ParamSpider -- archive lookups add time without quick wins
-- ffuf, Kiterunner -- directory/API fuzzing is slow, not needed for quick triage
-- Arjun -- parameter discovery is slow and better suited for deep dives
-- JS Recon -- deep JS analysis takes too long for a quick scan
-- All OSINT enrichment -- passive intel adds time without direct vulnerabilities
-- CVE lookup, MITRE enrichment -- Nuclei already finds exploitable CVEs directly
-- Banner grabbing -- not needed without port scanning
-- Wappalyzer -- httpx tech detect covers this sufficiently
+### 禁用内容
+- 端口扫描（Naabu、Masscan、Nmap）：httpx 走常见 Web 端口即可，能节省大量时间
+- Hakrawler：浅层场景下 Katana 已足够
+- GAU、ParamSpider：归档检索耗时，但对快速收益帮助有限
+- ffuf、Kiterunner：目录/API 爆破更慢，不适合初筛
+- Arjun：参数发现偏慢，更适合深挖
+- JS Recon：深度 JS 分析不适合快速扫描
+- 全部 OSINT 增强：增加耗时但不直接产出漏洞
+- CVE 查询与 MITRE 增强：Nuclei 已能直接发现可利用 CVE
+- Banner 抓取：未做端口扫描时没有必要
+- Wappalyzer：httpx 的技术识别已基本覆盖
 
-### How it works
-1. Subdomain discovery enumerates all subdomains quickly using all 5 tools in parallel
-2. httpx probes discovered hosts on common web ports
-3. Katana does a shallow depth-1 crawl to find basic endpoints
-4. jsluice extracts secrets and URLs from discovered JS files
-5. Nuclei runs critical+high templates in DAST mode against all discovered URLs
-6. Security checks flag missing headers, TLS issues, and exposed services`,
+### 工作方式
+1. 子域发现工具并行枚举全部子域
+2. httpx 对已发现主机的常见 Web 端口做探测
+3. Katana 执行深度 1 的浅爬取，发现基础端点
+4. jsluice 从 JS 文件中提取密钥与 URL
+5. Nuclei 以 DAST 模式对全部已发现 URL 运行 critical/high 模板
+6. Security Checks 标记缺失 Header、TLS 问题与暴露服务`,
   parameters: {
     // Modules: domain discovery + http probe + resource enum (katana only) + vuln scan
     // No port_scan (saves time), no js_recon (too slow)

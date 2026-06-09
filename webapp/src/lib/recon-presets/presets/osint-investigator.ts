@@ -2,61 +2,51 @@ import type { ReconPreset } from '../types'
 
 export const OSINT_INVESTIGATOR: ReconPreset = {
   id: 'osint-investigator',
-  name: 'OSINT Investigator',
+  name: 'OSINT 调查员',
   icon: '',
   image: '/preset-binoculars.svg',
-  shortDescription: 'Maximum passive intelligence from all 10 OSINT providers, archives, and public databases. No active scanning.',
-  fullDescription: `### Pipeline Goal
-Extract the maximum amount of intelligence from every available passive source. This preset enables all 10 OSINT providers at their highest result limits, plus GAU archive discovery, ParamSpider historical parameters, and Arjun in passive mode. The focus is on building a complete target profile from third-party data -- not on finding exploitable vulnerabilities.
+  shortDescription: '从全部 10 个 OSINT 提供方、归档与公共数据库中获取最大化被动情报，不做主动扫描。',
+  fullDescription: `### 流程目标
+从所有可用的被动数据源中榨取尽可能多的情报。该预设启用全部 10 个 OSINT 提供方，并把结果上限尽量拉高，同时结合 GAU、ParamSpider 与 Arjun 被动模式，重点是从第三方数据构建完整目标画像，而不是直接寻找可利用漏洞。
 
-### Who is this for?
-OSINT analysts, threat intelligence teams, or red team operators building a target dossier before an engagement. Security teams wanting to understand their organization's external exposure from an attacker's perspective without touching production systems.
+### 适用人群
+适合 OSINT 分析师、威胁情报团队，以及在行动前构建目标档案的红队。也适合希望从攻击者视角了解自身外部暴露情况、但又不触碰生产系统的安全团队。
 
-### What it enables
-- Full subdomain discovery (all 5 tools at 10000 max results)
-- WHOIS domain registration and DNS resolution
-- Puredns wildcard filtering
-- Naabu passive mode (Shodan InternetDB) for known open ports
-- GAU with all 4 providers at 10000 URLs (Wayback, CommonCrawl, OTX, URLScan)
-- ParamSpider for historical parameterized URLs
-- Arjun in passive mode for parameter inference
-- All 10 OSINT providers at maximum results:
-  - Shodan: host lookup, reverse DNS, domain DNS, passive CVEs
-  - URLScan.io: 10000 results
-  - OTX AlienVault: threat pulses, passive DNS, malware samples
-  - Censys: host info, certificates, autonomous systems
-  - FOFA: 5000 results
-  - Netlas: host reconnaissance
-  - VirusTotal: domain/IP reputation, malware detection
-  - ZoomEye: 5000 results
-  - CriminalIP: IP threat intelligence
-  - Uncover: 1000 results (aggregated multi-engine)
-- CVE lookup (50 max per service) from NVD
-- MITRE CWE/CAPEC enrichment
+### 启用内容
+- 全量子域发现（5 个工具均提升到高上限）
+- WHOIS 与 DNS 解析
+- Puredns 泛解析过滤
+- Naabu 被动模式（Shodan InternetDB）
+- GAU 全部 4 个提供方，最多 10000 URL
+- ParamSpider 历史参数化 URL 提取
+- Arjun 被动模式做参数推断
+- 全部 10 个 OSINT 提供方：Shodan、URLScan、OTX、Censys、FOFA、Netlas、VirusTotal、ZoomEye、CriminalIP、Uncover
+- CVE 查询（每个服务最多 50 条）
+- MITRE CWE/CAPEC 增强
 
-### What it disables
-- httpx HTTP probing (sends requests to target)
-- All web crawlers (Katana, Hakrawler)
-- jsluice, JS Recon (download files from target)
-- ffuf, Kiterunner (brute-force target)
-- Active port scanners (Masscan, Nmap)
-- Nuclei vulnerability scanning
-- Banner grabbing
+### 禁用内容
+- httpx：会向目标发请求
+- 所有 Web 爬虫（Katana、Hakrawler）
+- jsluice 与 JS Recon：需要下载目标文件
+- ffuf 与 Kiterunner：属于暴力发现
+- 主动端口扫描器（Masscan、Nmap）
+- Nuclei：主动漏洞测试
+- Banner 抓取
 - Wappalyzer
-- Security checks (some connect to target)
-- Amass active mode and brute force
-- GAU URL verification and method detection (would send requests to target)
+- Security Checks：部分检测会直接接触目标
+- Amass 主动模式与爆破
+- GAU URL 校验与方法检测：会重新访问目标
 
-### How it works
-1. Subdomain discovery queries certificate transparency, DNS databases, and OSINT APIs
-2. DNS resolution maps subdomains to IPs via public resolvers
-3. Puredns filters wildcard domains
-4. Naabu passive mode queries Shodan InternetDB for historically known ports
-5. GAU + ParamSpider pull historical URLs and parameters from web archives
-6. Arjun passive mode infers parameters from archive data
-7. All 10 OSINT providers enrich discovered IPs and domains with threat intelligence, services, geolocation, reputation, and passive CVEs
-8. CVE lookup maps found service versions to known vulnerabilities
-9. MITRE enrichment classifies findings by CWE weakness and CAPEC attack patterns`,
+### 工作方式
+1. 子域发现通过证书透明、DNS 数据库与 OSINT API 枚举资产
+2. DNS 解析使用公共解析器把子域映射到 IP
+3. Puredns 过滤泛解析
+4. Naabu 被动模式查询 Shodan InternetDB 中的历史开放端口
+5. GAU 与 ParamSpider 从归档中提取历史 URL 与参数
+6. Arjun 被动模式从归档数据中推断参数
+7. 10 个 OSINT 提供方为资产补充服务、地理位置、信誉、威胁情报与被动 CVE
+8. CVE 查询将识别到的服务版本映射到已知漏洞
+9. MITRE 增强按 CWE 与 CAPEC 分类`,
   parameters: {
     // Modules: domain_discovery + port_scan (passive) + resource_enum (GAU/ParamSpider/Arjun passive)
     //        + vuln_scan (needed for CVE lookup + MITRE enrichment -- Nuclei itself is

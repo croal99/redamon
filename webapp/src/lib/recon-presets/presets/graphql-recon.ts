@@ -2,61 +2,56 @@ import type { ReconPreset } from '../types'
 
 export const GRAPHQL_RECON: ReconPreset = {
   id: 'graphql-recon',
-  name: 'GraphQL Recon',
+  name: 'GraphQL 侦察',
   icon: '',
   image: '/preset-graphql.svg',
-  shortDescription: 'Laser-focused on GraphQL endpoints. Native scanner + graphql-cop (12 checks), JsRecon for JS-extracted endpoints, introspection + mutation + DoS probes.',
-  fullDescription: `### Pipeline Goal
-Find every GraphQL endpoint exposed by the target, extract its schema, and test it end-to-end for the full GraphQL-specific attack surface: introspection exposure, sensitive field disclosure, alias / batch / directive / circular DoS, GraphiQL IDE exposure, GET-method CSRF, field suggestion leaks, and unhandled error disclosure. Pairs the native RedAmon GraphQL scanner with graphql-cop's 12 external checks for defense-in-depth cross-validation.
+  shortDescription: '专注 GraphQL 端点。原生扫描器 + graphql-cop（12 项检查），结合 JS Recon 提取端点，并覆盖 introspection、mutation 与 DoS 探测。',
+  fullDescription: `### 流程目标
+找出目标暴露的每一个 GraphQL 端点，提取其 Schema，并围绕 GraphQL 特有攻击面做端到端测试：Introspection 暴露、敏感字段泄露、别名/批处理/指令/循环型 DoS、GraphiQL IDE 暴露、GET 方法 CSRF、字段建议泄露，以及错误信息暴露。该预设把 RedAmon 原生 GraphQL 扫描器与 graphql-cop 的 12 项外部检查组合使用，做交叉验证。
 
-### Who is this for?
-Pentesters and security engineers whose target is a GraphQL API (standalone or embedded in a web/mobile backend). Apollo / Hasura / graphql-yoga / Ruby-graphql / Python-graphene / any framework where GraphQL is the primary attack surface. Works equally well for:
-- Pure GraphQL APIs (one endpoint, rich schema)
-- Hybrid apps with a GraphQL sub-path alongside REST
-- SPAs that route all data through a single GraphQL gateway
-- Mobile backends whose client code references graphql endpoints in JS bundles
+### 适用人群
+适合以 GraphQL API 为主要目标的渗透测试人员与安全工程师，无论是独立 GraphQL 服务还是嵌入在 Web/移动端后端中的 GraphQL 接口。可用于纯 GraphQL API、REST + GraphQL 混合应用、单 GraphQL 网关 SPA，以及客户端代码中引用 GraphQL 端点的移动后端。
 
-Use \`API Security Audit\` if you also need heavy REST endpoint discovery via Kiterunner + Arjun. Use this preset when GraphQL specifically is the target.
+如果你还需要更重的 REST 端点发现能力，请使用“API 安全审计”；当 GraphQL 本身是目标时，这个预设更合适。
 
-### What it enables
-- Passive subdomain discovery (crt.sh + Subfinder + Amass + HackerTarget + PureDNS) finds \`api.*\`, \`graphql.*\`, \`gql.*\`, \`v1.*\`, \`v2.*\`, \`playground.*\`, \`admin-api.*\`
-- **Naabu port scan** scoped to ~50 API ports (80/443 + 3000-3005 + 4000-4005 + 5000-5013 + 8000-8010 + 8080-8090 + 8443 + 9000-9010) -- catches Apollo Server (4000), graphql-yoga (4000), Hasura (8080), Flask-GraphQL (5000), Spring Boot (8080), DVGA (5013)
-- httpx with Content-Type + response capture to detect \`application/graphql\` endpoints
-- Wappalyzer for Apollo / Hasura / graphql-yoga / Relay framework detection (feeds Nuclei tag targeting)
-- Katana depth 3 with JS crawl + Hakrawler to crawl frontend code for embedded GraphQL URLs
-- jsluice + **JS Recon** to extract GraphQL endpoint references from JavaScript bundles (critical for SPAs / modern frameworks)
-- GAU + ParamSpider for historical URL discovery -- often reveals old \`/graphql\`, \`/graphiql\` paths. GAU verify + method detection + dead-endpoint filtering enabled so results are live POSTable endpoints
-- Arjun to detect GraphQL-like parameters (\`query\`, \`mutation\`, \`variables\`, \`operationName\`)
-- **Native GraphQL scanner**: introspection extraction, schema fingerprinting, sensitive-field detection, mutation + proxy-path testing -- full coverage, safe mode off
-- **graphql-cop** (external 12-check scanner): field suggestions, GraphiQL detection, GET-method CSRF, trace/debug disclosure, alias / array-batching / directive / circular DoS probes, unhandled-error leakage, introspection cross-validation
-- Nuclei with GraphQL + CSRF + injection tags (apollo, hasura, graphql, csrf, injection) for framework CVEs + GraphQL-specific CSRF/injection vectors
-- **MITRE enrichment** maps Nuclei-found CVEs (e.g. Apollo SSRF CVE-2023-37478) to ATT&CK techniques + CAPEC patterns
-- Minimal security checks (HTTPS / TLS / basic headers) to catch transport-layer issues
+### 启用内容
+- 被动子域发现，用于寻找 api.*、graphql.*、gql.*、v1.*、playground.* 等模式
+- Naabu 扫描常见 API/GraphQL 端口，覆盖 Apollo、Hasura、graphql-yoga、Flask、Spring Boot 等部署习惯
+- httpx 抓取 Content-Type 与响应内容，用于识别 application/graphql 端点
+- Wappalyzer 识别 Apollo、Hasura、Relay 等框架
+- Katana 深度 3 + Hakrawler，爬取前端中嵌入的 GraphQL URL
+- jsluice + JS Recon，从 JS Bundle 中提取 GraphQL 端点、密钥与框架线索
+- GAU + ParamSpider，用于发现历史的 /graphql、/graphiql 等路径
+- Arjun 探测 query、mutation、variables、operationName 等 GraphQL 风格参数
+- 原生 GraphQL 扫描器：Introspection、Schema 指纹、敏感字段、Mutation 与代理路径测试
+- graphql-cop 全 12 项检查：字段建议、GraphiQL、GET CSRF、Trace/Debug、错误泄露、DoS 探测等
+- Nuclei GraphQL/CSRF/Injection 标签模板
+- MITRE 增强与基础传输层安全检查
 
-### What it disables
-- Knockpy (brute-force subdomain discovery) -- standard GraphQL subdomain names are already in Subfinder/crt.sh indexes; Knockpy adds 2-5 min for marginal gain
-- Masscan, Nmap -- Naabu's scoped API-port scan is sufficient
-- Kiterunner & ffuf -- GraphQL paths are well-known patterns our scanner already probes (\`/graphql\`, \`/api/graphql\`, \`/v1/graphql\`, \`/query\`, \`/graphiql\`, \`/playground\`, etc.); brute-forcing is redundant and noisy
-- OSINT enrichment (Shodan, Censys, FOFA, OTX, Netlas, VirusTotal, ZoomEye, CriminalIP) -- not relevant for GraphQL-specific work
-- Banner grabbing -- port banners aren't GraphQL signals (Wappalyzer covers framework detection instead)
-- CVE lookup -- Nuclei + graphql-cop report framework CVEs directly
-- URLScan, Uncover -- subdomain discovery is already comprehensive
+### 禁用内容
+- Knockpy：对标准 GraphQL 子域模式增益有限，但会多耗时
+- Masscan、Nmap：Naabu 的定向端口扫描已足够
+- Kiterunner 与 ffuf：GraphQL 路径通常是常见模式，不值得再做高噪音爆破
+- OSINT 增强：与 GraphQL 专项测试关联较弱
+- Banner 抓取：端口 Banner 不是 GraphQL 信号
+- CVE 查询：框架 CVE 主要由 Nuclei 与 graphql-cop 直接发现
+- URLScan、Uncover：子域发现已足够完整
 
-### How it works
-1. Subdomain discovery surfaces GraphQL-subdomain patterns (\`api.*\`, \`graphql.*\`, \`gql.*\`, \`admin.*\`, \`internal-api.*\`)
-2. httpx probes every discovered host, captures response headers + body; \`Content-Type: application/graphql\` or GraphQL-shaped JSON responses are immediate candidates
-3. Katana + Hakrawler crawl the frontend, discovering URLs referenced in HTML/JS/source maps
-4. JS Recon + jsluice parse JavaScript bundles -- modern SPAs typically reference \`/graphql\` endpoints via Apollo Client / urql / Relay configs embedded in compiled JS
-5. GAU + ParamSpider pull historical URLs from Wayback Machine -- catches \`/graphql\` paths from old deploys
-6. Arjun tests for parameter names matching GraphQL signatures (\`query\`, \`mutation\`, \`variables\`, \`operationName\`) on discovered endpoints
-7. Native GraphQL scanner runs against every confirmed + candidate endpoint: introspection query, full schema extraction (capped at 10 MB), operation enumeration (up to 50 queries / 50 mutations / 50 subscriptions), sensitive-field keyword match, optional mutation + REST-proxy testing
-8. graphql-cop runs 12 external checks against each endpoint; findings dedupe against the native scanner via deterministic MERGE ids (same \`vulnerability_type\` on the same endpoint collapses to one Vulnerability node)
-9. Nuclei runs with \`graphql\`, \`apollo\`, \`hasura\` tags to catch framework CVEs
+### 工作方式
+1. 子域发现阶段找出可能承载 GraphQL 的主机名模式
+2. httpx 对每个主机做响应头与响应体探测，识别 GraphQL 特征
+3. Katana 与 Hakrawler 爬取前端，发现 HTML、JS 与 Source Map 中的 URL 线索
+4. JS Recon 与 jsluice 分析 JS Bundle，提取 Apollo/urql/Relay 中嵌入的 /graphql 端点
+5. GAU 与 ParamSpider 从归档中拉取历史 GraphQL 路径
+6. Arjun 测试 GraphQL 风格参数名
+7. 原生 GraphQL 扫描器对所有候选端点做 Schema 抽取、操作枚举与敏感字段识别
+8. graphql-cop 对每个端点执行 12 项外部检查，并与原生结果去重合并
+9. Nuclei 用 graphql、apollo、hasura 等标签补充框架 CVE 与注入/CSRF 检测
 
-### Expected findings (severity class)
-- **Critical/High**: Alias overloading, array-based query batching, directive overloading, circular introspection DoS, sensitive-field exposure
-- **Medium**: GET-method CSRF, POST url-encoded CSRF, GET-based mutations, graphql introspection enabled (in production)
-- **Low/Info**: GraphiQL IDE exposed, field suggestions enabled, trace/debug mode, unhandled-error disclosure`,
+### 预期发现（按严重性）
+- Critical/High：别名过载、批量查询、指令过载、循环 Introspection DoS、敏感字段暴露
+- Medium：GET 方法 CSRF、GET 变更操作、POST URL 编码 CSRF、生产环境启用 Introspection
+- Low/Info：GraphiQL 暴露、字段建议开启、Trace/Debug 模式、未处理错误泄露`,
   parameters: {
     // Modules: 5 phases. port_scan included to discover non-standard API ports
     // (Apollo=4000, graphql-yoga=4000, Hasura=8080, Flask=5000, dev=3000/5013/etc.)

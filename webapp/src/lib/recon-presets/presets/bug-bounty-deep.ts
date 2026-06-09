@@ -2,51 +2,49 @@ import type { ReconPreset } from '../types'
 
 export const BUG_BOUNTY_DEEP: ReconPreset = {
   id: 'bug-bounty-deep',
-  name: 'Bug Bounty - Deep Dive',
+  name: '漏洞赏金 - 深度挖掘',
   icon: '',
   image: '/preset-submarine.svg',
-  shortDescription: 'Thorough single-target assessment. Deep crawling with bounded ZAP Ajax Spider, JS analysis, all Nuclei severities, balanced to avoid IP bans.',
-  fullDescription: `### Pipeline Goal
-Go deep on a single target without getting blocked. This preset balances thoroughness with responsible rate limiting -- deep crawling including bounded browser crawling, JS secret extraction, full Nuclei coverage, and parameter discovery, all with moderate concurrency to stay under WAF thresholds.
+  shortDescription: '面向单目标的深入评估。深度爬取、受控的 ZAP Ajax Spider、JS 分析、全等级 Nuclei，并通过限速降低被封禁风险。',
+  fullDescription: `### 流程目标
+在尽量不被拦截的前提下，对单个目标做深入分析。该预设在全面性与责任限速之间做平衡：包含深度爬取、受限浏览器爬取、JS 密钥提取、全量 Nuclei 覆盖与参数发现，同时保持中等并发，尽量低于 WAF 阈值。
 
-### Who is this for?
-Bug bounty hunters who have already triaged a target (perhaps with the Quick Wins preset) and want to go deeper. Pentesters doing a thorough web application assessment on a specific scope. You are willing to wait 1-2 hours for comprehensive results.
+### 适用人群
+适合已经完成初筛、准备进一步深挖的漏洞赏金猎人，也适合对特定范围执行细致 Web 应用评估的渗透测试人员。你愿意等待 1 到 2 小时，以换取更完整的结果。
 
-### What it enables
-- Full subdomain discovery (all 5 tools at max results) for maximum subdomain coverage
-- Puredns wildcard filtering
-- httpx probing with all probes enabled for full fingerprinting
-- Wappalyzer technology detection
-- Katana depth 3 with JS crawl + 1500 URLs for deep endpoint discovery
-- ZAP Ajax Spider with bounded browser crawling seeded from base URLs and endpoints
-- Hakrawler depth 3 for complementary crawl coverage
-- GAU with all providers for historical endpoint discovery
-- jsluice on 300 JS files for secret and URL extraction
-- JS Recon with full analysis (source maps, DOM sinks, dependency checks, key validation)
-- Arjun parameter discovery on GET/POST methods
-- Nuclei with all severity levels + DAST mode + Interactsh OOB detection
-- Security checks for comprehensive header/TLS/infrastructure validation
-- CVE lookup and MITRE enrichment
+### 启用内容
+- 全量子域发现（全部 5 个工具，高结果上限）
+- Puredns 泛解析过滤
+- httpx 全探针启用，用于完整指纹识别
+- Katana 深度 3，开启 JS 爬取，最多 1500 个 URL
+- ZAP Ajax Spider 使用受限浏览器爬取，并以基础 URL 和端点为种子
+- Hakrawler 深度 3，补充爬取覆盖
+- GAU 使用全部提供方做历史端点发现
+- jsluice 分析 300 个 JS 文件，提取密钥与 URL
+- JS Recon 开启完整分析：Source Map、DOM Sink、依赖检查、Key 校验等
+- Arjun 对 GET/POST 做参数发现
+- Nuclei 启用全部严重级别、DAST 与 Interactsh OOB 检测
+- Security Checks、CVE 查询与 MITRE 增强
 
-### What it disables
-- Port scanning (Naabu, Masscan, Nmap) -- not needed for web-focused bounty hunting, httpx handles web ports
-- ffuf directory fuzzing -- too noisy for bug bounty, risk of IP ban
-- Kiterunner API brute-force -- too noisy, risk of IP ban
-- ParamSpider -- Arjun + GAU cover parameter discovery better
-- Nuclei headless mode -- slow and resource-intensive, not worth the tradeoff
-- Banner grabbing -- not needed without port scanning
-- All OSINT enrichment -- passive intel rarely leads to bounty-eligible findings
+### 禁用内容
+- 端口扫描（Naabu、Masscan、Nmap）：漏洞赏金更聚焦 Web，httpx 足够处理常见 Web 端口
+- ffuf 目录爆破：噪音较大，容易导致封禁
+- Kiterunner API 爆破：同样噪音偏大
+- ParamSpider：参数发现由 Arjun + GAU 更好覆盖
+- Nuclei Headless：速度慢且占资源，收益有限
+- Banner 抓取：未做端口扫描时价值不高
+- 全部 OSINT 增强：通常难以直接转化为赏金有效发现
 
-### How it works
-1. All subdomain discovery tools run in parallel with high result limits
-2. httpx probes all discovered hosts with full technology fingerprinting
-3. Katana + ZAP Ajax Spider + Hakrawler crawl deeply in parallel, GAU adds historical URLs
-4. jsluice extracts secrets and endpoints from all discovered JS files
-5. JS Recon performs deep analysis: source maps, DOM XSS sinks, dependency confusion, key validation
-6. Arjun discovers hidden parameters on found endpoints
-7. Nuclei runs all templates in DAST mode using crawled URLs with OOB detection
-8. Security checks validate headers, TLS, cookies, and infrastructure exposure
-9. CVE lookup and MITRE enrichment map findings to known vulnerabilities`,
+### 工作方式
+1. 所有子域发现工具并行运行，并使用较高结果上限
+2. httpx 对全部已发现主机执行完整技术指纹识别
+3. Katana、ZAP Ajax Spider 与 Hakrawler 深度并行爬取，GAU 补充历史 URL
+4. jsluice 从发现的 JS 文件中提取密钥与端点
+5. JS Recon 深入分析 Source Map、DOM XSS Sink、依赖混淆与 Key 有效性
+6. Arjun 在已发现端点上寻找隐藏参数
+7. Nuclei 以 DAST 模式基于爬取得到的 URL 执行全模板检测并做 OOB 验证
+8. Security Checks 校验 Header、TLS、Cookie 与基础设施暴露
+9. CVE 查询与 MITRE 增强将结果映射到已知漏洞体系`,
   parameters: {
     // Modules: all except port_scan (web-focused) and js_recon handled via tool toggle
     scanModules: ['domain_discovery', 'http_probe', 'resource_enum', 'vuln_scan', 'js_recon'],

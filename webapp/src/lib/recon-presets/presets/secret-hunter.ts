@@ -2,41 +2,41 @@ import type { ReconPreset } from '../types'
 
 export const SECRET_HUNTER: ReconPreset = {
   id: 'secret-hunter',
-  name: 'Secret & Credential Hunter',
+  name: '密钥与凭据猎手',
   icon: '',
   image: '/preset-key.svg',
-  shortDescription: 'Go beyond JS -- find secrets everywhere. Deep JS analysis, GAU for historical files, ffuf with sensitive extensions, and Nuclei exposure/token detection.',
-  fullDescription: `### Pipeline Goal
-Hunt for secrets, credentials, and sensitive configuration files across every reachable surface of the target. This preset combines deep JavaScript analysis with directory fuzzing for sensitive extensions, historical URL mining, and Nuclei templates targeting exposed tokens and config files.
+  shortDescription: '不只看 JS，还要到处找密钥。深度 JS 分析、GAU 历史文件、带敏感扩展的 ffuf，以及 Nuclei 的 token/config 暴露模板。',
+  fullDescription: `### 流程目标
+在目标所有可达表面上搜寻密钥、凭据与敏感配置文件。该预设结合深度 JavaScript 分析、针对敏感扩展的目录爆破、历史 URL 挖掘，以及用于检测暴露 Token 与配置文件的 Nuclei 模板。
 
-### Who is this for?
-Bug bounty hunters and red teamers who want to maximize credential and secret discovery. Ideal when the target has a large web footprint and you suspect leaked API keys, database credentials, or exposed configuration files.
+### 适用人群
+适合希望尽可能发现 API Key、数据库凭据与暴露配置文件的漏洞赏金猎人和红队人员，尤其适用于 Web 面较大、怀疑存在历史泄露或前端泄密的目标。
 
-### What it enables
-- JS Recon fully enabled with all analysis modules, 2000 max files, and key validation
-- jsluice at 1000 files with full secret and URL extraction
-- GAU enabled to pull historical files from Wayback Machine, Common Crawl, and other archives
-- ffuf with sensitive extensions (.env, .config, .yml, .yaml, .json, .bak, .old, .sql, .log, .key, .pem)
-- Katana depth 3 with JS crawl for thorough discovery of dynamically loaded scripts
-- Hakrawler for complementary crawl coverage
-- Nuclei with exposure, token, secret, and config tags for targeted vulnerability detection
+### 启用内容
+- JS Recon 全功能启用，最大文件数 2000，并开启 Key 校验
+- jsluice 最多分析 1000 个文件，提取密钥与 URL
+- GAU 从 Wayback、CommonCrawl 及其他归档拉取历史文件
+- ffuf 针对 .env、.config、.yml、.yaml、.json、.bak、.old、.sql、.log、.key、.pem 等敏感扩展
+- Katana 深度 3，并开启 JS 爬取
+- Hakrawler 补充爬取覆盖
+- Nuclei 使用 exposure、token、secret、config 标签模板
 
-### What it disables
-- Port scanning (Naabu, Nmap, Masscan) -- not needed, httpx handles port detection
-- Parameter discovery (Arjun, ParamSpider) -- not relevant to secret hunting
-- Kiterunner -- replaced by targeted ffuf with sensitive extensions
-- Banner grabbing and Wappalyzer -- not useful for credential discovery
-- OSINT enrichment -- disabled to keep focus on technical secret extraction
-- CVE lookup, MITRE, and security checks -- disabled to reduce noise
+### 禁用内容
+- 端口扫描（Naabu、Nmap、Masscan）：不需要，httpx 足够处理常见 Web 端口
+- 参数发现（Arjun、ParamSpider）：与密钥狩猎关联不大
+- Kiterunner：由更针对敏感扩展的 ffuf 替代
+- Banner 抓取与 Wappalyzer：对凭据发现价值有限
+- OSINT 增强：关闭以聚焦技术性密钥提取
+- CVE 查询、MITRE 与 Security Checks：关闭以减少噪音
 
-### How it works
-1. Subdomain discovery finds all subdomains using multiple tools
-2. HTTP probing identifies live web servers with technology detection
-3. Katana + Hakrawler + GAU aggressively crawl and mine historical URLs
-4. ffuf fuzzes for sensitive file extensions (.env, .bak, .key, .pem, etc.)
-5. jsluice extracts secrets and URLs from discovered JS files
-6. JS Recon runs deep analysis: source maps, key validation, regex patterns, DOM sinks, and more
-7. Nuclei scans with exposure/token/secret/config templates to catch anything else`,
+### 工作方式
+1. 子域发现枚举全部子域
+2. httpx 识别在线 Web 服务与技术栈
+3. Katana、Hakrawler 与 GAU 联合深爬并补足历史 URL
+4. ffuf 针对敏感文件扩展名做模糊测试
+5. jsluice 从 JS 文件中提取密钥与 URL
+6. JS Recon 深入分析 Source Map、Key 校验、正则模式、DOM Sink 等
+7. Nuclei 使用暴露类模板，补捉 Token、Secret 与配置文件问题`,
   parameters: {
     // Pipeline modules
     scanModules: ['domain_discovery', 'http_probe', 'resource_enum', 'vuln_scan', 'js_recon'],

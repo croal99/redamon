@@ -2,73 +2,61 @@ import type { ReconPreset } from '../types'
 
 export const SUBDOMAIN_TAKEOVER: ReconPreset = {
   id: 'subdomain-takeover',
-  name: 'Subdomain Takeover Hunter',
+  name: '子域接管猎手',
   icon: '',
   image: '/preset-capture.svg',
-  shortDescription: 'Maximum-aggression takeover hunt. Widest subdomain net feeds Subjack (all DNS checks), Nuclei takeover templates, and BadDNS. Lowered confidence threshold surfaces manual-review candidates.',
-  fullDescription: `### Pipeline Goal
-Discover every subdomain that exists and squeeze every possible takeover finding out of them. This is the one-preset-to-rule-them-all for subdomain takeover hunting: maximum discovery breadth + maximum detection depth + lowest feasible confidence threshold.
+  shortDescription: '高强度接管狩猎。最广子域发现范围，联动 Subjack、Nuclei takeover 模板与 BadDNS，并降低置信阈值以暴露更多人工复核候选。',
+  fullDescription: `### 流程目标
+尽可能发现每一个子域，并从中榨出所有潜在接管结果。这是用于子域接管狩猎的一站式预设：最大化发现广度 + 最大化检测深度 + 尽量低的置信阈值。
 
-### Who is this for?
-- Bug bounty hunters chasing the full spectrum of takeover primitives (CNAME, NS, stale A, SPF/MX).
-- DNS hygiene audits during M&A, org restructures, or cloud migrations where dangling records are common.
-- Asset inventory teams auditing DNS across large domain estates.
+### 适用人群
+- 追踪 CNAME、NS、陈旧 A、SPF/MX 等多种接管路径的漏洞赏金猎人
+- 在并购、组织调整、云迁移等场景中做 DNS 卫生审计的团队
+- 需要审计大型域名资产的资产盘点团队
 
-### What it enables -- Discovery layer
-- **All 5 subdomain tools at 10000 max**: crt.sh, HackerTarget, Knockpy, Subfinder, Amass -- every passive source + brute force.
-- **Amass active mode** + brute-force for deeper enumeration than pure passive sources.
-- **Puredns** for DNS-based resolution and wildcard filtering.
-- **Bruteforce wordlist** (jhaddix-all.txt) for fuzz-discovery of subdomains.
-- **WHOIS** + **DNS** lookups for ownership and record context.
-- **GAU** historical URL mining from Wayback/CommonCrawl/OTX/URLScan archives -- catches subdomains that existed in the past but not in live DNS today.
+### 启用内容 - 发现层
+- 全部 5 个子域工具都拉到高上限，配合主动 Amass 与爆破，尽量提升覆盖率
+- Puredns 做解析与泛解析过滤
+- 启用子域爆破字典（jhaddix-all.txt）
+- WHOIS 与 DNS 查询补充归属与记录上下文
+- GAU 从 Wayback、CommonCrawl、OTX、URLScan 中挖掘历史 URL，补抓历史存在但当前 DNS 中已不明显的子域
 
-### What it enables -- Takeover detection layer
-- **httpx** with CNAME, status code, title, IP, tech-detect, TLS-info probes -- the alive-URL list feeds the Nuclei takeover pass.
-- **BadDNS (AGPL-3.0 isolated sidecar)** with 7 modules:
-  - \`cname\`, \`ns\`, \`mx\`, \`txt\`, \`spf\` (same coverage as Subjack, different detection logic -- runs both for belt-and-suspenders)
-  - \`dmarc\` (missing / misconfigured DMARC)
-  - \`wildcard\` (wildcard DNS enabling broad takeovers)
-  - Runs in its own Docker image (\`redamon-baddns:latest\`), zero license contagion.
-- **Subjack with EVERY optional check**:
-  - Default CNAME takeover
-  - \`-a\` probe every URL, not just identified CNAMEs
-  - \`-ns\` NS takeover (expired nameservers, dangling cloud DNS delegations)
-  - \`-ar\` stale A records (dead cloud IPs, manual-review candidates)
-  - \`-mail\` SPF include + MX takeover (email-vector attacks)
-  - \`-ssl\` force HTTPS for accuracy
-  - 20 threads, 30s timeout, 30-min hard cap
-- **Nuclei takeover templates** (\`-t http/takeovers/ -t dns/\`) across all 4 severity levels (critical/high/medium/low).
-- **Confidence threshold 40** (default is 60) -- more candidates surface as \`likely\` or \`confirmed\`.
-- **Auto-publish manual-review findings** -- stale-A and uncertain-fingerprint candidates are promoted from \`severity: info\` to \`severity: medium\` so they appear in the main Vulnerability table instead of being hidden.
-- **Rate limit 100 req/s** (default 50) for faster Nuclei pass.
+### 启用内容 - 接管检测层
+- httpx 启用 CNAME、状态码、标题、IP、技术识别、TLS 信息，用于喂给接管检测流程
+- BadDNS（隔离 sidecar）启用 cname、ns、mx、txt、spf、dmarc、wildcard 模块
+- Subjack 开启全部可选检查：CNAME、NS、陈旧 A、SPF include、MX、强制 HTTPS 等
+- Nuclei 接管模板（http/takeovers/ 与 dns/），覆盖 4 个严重级别
+- 置信阈值降到 40，暴露更多 likely / manual_review 候选
+- 自动发布人工复核结果，让低置信度接管候选也能进入主表
+- 提高 takeover 流程限速，加快扫描完成时间
 
-### What it disables
-- **Full Nuclei scan** -- the dedicated takeover module already runs Nuclei with takeover-only templates. Running the full scanner in addition would duplicate work without adding coverage.
-- Port scanning (Naabu, Nmap, Masscan) -- irrelevant to takeover detection.
-- Web crawlers (Katana, Hakrawler) and directory fuzzing (ffuf, Kiterunner, Arjun, ParamSpider) -- not on the takeover path.
-- JS analysis (jsluice, JS Recon) -- not relevant.
-- Wappalyzer, banner grabbing, heavy httpx probes (JARM, favicon, ASN, CDN, response body) -- unnecessary overhead.
-- CVE lookup, MITRE enrichment -- focus stays on takeover.
-- SecurityChecks -- no header/TLS/WAF noise mixed in.
-- OSINT enrichment providers -- would duplicate subdomain work with worse signal-to-noise.
-- GraphQL scan -- unrelated.
+### 禁用内容
+- 完整 Nuclei 漏洞扫描：接管模块本身已运行专用 takeover 模板，无需重复
+- 端口扫描（Naabu、Nmap、Masscan）：与接管无关
+- Web 爬虫、目录爆破、参数发现（Katana、Hakrawler、ffuf、Kiterunner、Arjun、ParamSpider）
+- JS 分析（jsluice、JS Recon）
+- Wappalyzer、Banner 抓取与较重的 httpx 探针
+- CVE 查询与 MITRE 增强：重点只放在接管
+- Security Checks：避免混入无关 Header/TLS/WAF 噪音
+- 全部 OSINT 增强：信噪比不高且容易重复工作
+- GraphQL：完全无关
 
-### How the layered scanner works
-1. **Subdomain discovery** fans out across 5 parallel sources + active Amass + brute-force + Puredns filtering + GAU historical mining.
-2. **DNS resolution** builds the full subdomain → IP map.
-3. **httpx** identifies alive URLs.
-4. **GROUP 6 Phase A** runs Subjack + Nuclei takeover templates in parallel on the alive set.
-   - Subjack inspects CNAME/NS/MX chains against its built-in fingerprint database.
-   - Nuclei fires only \`http/takeovers/\` and \`dns/\` templates against httpx-alive URLs.
-5. **Dedup** merges findings by \`(hostname, provider, method)\`; findings confirmed by both tools get a higher \`confirmation_count\` and therefore a higher \`confidence\` score.
-6. **Scoring** at threshold 40 classifies: \`confirmed\` (>=50), \`likely\` (>=40), \`manual_review\` (<40).
-7. **Auto-publish** elevates manual-review findings from severity \`info\` to \`medium\` so they surface in the findings table.
-8. **Graph write**: every finding becomes a \`Vulnerability\` node with \`source="takeover_scan"\`, linked to its Subdomain via \`HAS_VULNERABILITY\`.
+### 分层扫描如何工作
+1. 子域发现阶段通过 5 个被动来源 + Amass 主动模式 + 爆破 + Puredns + GAU 历史数据尽可能扩展目标集合
+2. DNS 解析构建完整的子域到 IP 映射
+3. httpx 找出存活 URL
+4. 第 6 组 A 阶段并行运行 Subjack 与 Nuclei 接管模板
+   - Subjack 根据内置指纹库检查 CNAME/NS/MX 链
+   - Nuclei 仅对 http/takeovers/ 与 dns/ 模板做定向扫描
+5. 去重逻辑按 (hostname, provider, method) 合并结果；双工具共同确认会提升 confirmation_count 与 confidence
+6. 阈值 40 下，结果会被分为 confirmed、likely、manual_review
+7. 自动发布会把 manual_review 从 info 提升为 medium，确保显示在结果表中
+8. 每条发现最终都会写入图谱，作为与子域关联的 Vulnerability 节点
 
-### What to watch out for
-- **\`subjackCheckAr\`** (stale A record detection) probes cloud IP ranges and historically needed root/ICMP. RedAmon's recon container runs with the right privileges so this is fine, but expect some false positives -- those are exactly the findings the manual-review queue is for.
-- **High discovery breadth** can produce thousands of subdomains on large targets. Puredns filters wildcards but the downstream Nuclei pass can still take 30+ minutes. Run timeouts are set to 30 min (Subjack) and 40 min (Nuclei takeover pass).
-- **Manual-review noise**: auto-publish is ON, so stale-A and low-confidence findings appear as \`severity: medium\`. Filter by \`verdict\` in the Findings table to triage -- \`confirmed\` first, then \`likely\`, then \`manual_review\`.`,
+### 注意事项
+- stale A 检测会探测云 IP 范围，可能带来一些误报，因此人工复核非常重要
+- 当发现范围很广时，下游 Nuclei takeover 流程可能需要 30 分钟以上
+- 由于自动发布已开启，低置信度结果也会进入主结果列表，建议先按 verdict 过滤 confirmed，再看 likely 与 manual_review`,
   parameters: {
     // Pipeline modules: discovery + http_probe + resource_enum (for GAU only) + vuln_scan.
     // resource_enum is present so GAU runs; all other resource_enum tools are

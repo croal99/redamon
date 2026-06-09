@@ -2,56 +2,51 @@ import type { ReconPreset } from '../types'
 
 export const FULL_MAXIMUM_SCAN: ReconPreset = {
   id: 'full-maximum-scan',
-  name: 'Full Pipeline - Maximum',
+  name: '全流程 - 最大强度',
   icon: '',
   image: '/preset-bolt.svg',
-  shortDescription: 'Every tool enabled with every parameter pushed to the limit. The longest, most thorough scan possible.',
-  fullDescription: `### Pipeline Goal
-Enable every single tool in the pipeline and push every parameter to its maximum useful value. Active scanning, passive OSINT, JS analysis, directory fuzzing, API discovery, vulnerability scanning -- all running with the highest depth, concurrency, and result limits. This is the "leave no stone unturned" preset.
+  shortDescription: '所有工具全部启用，参数推到极限。耗时最长、覆盖最彻底。',
+  fullDescription: `### 流程目标
+启用流水线中的每一个工具，并把参数调到最大且仍有意义的水平。主动扫描、被动 OSINT、JS 分析、目录爆破、API 发现、漏洞扫描同时进行，深度、并发与结果上限全部拉满。这是“不放过任何角落”的预设。
 
-### Who is this for?
-Pentesters running a final comprehensive sweep on a target they have full authorization to test, or security teams doing a thorough baseline assessment of their own infrastructure. Expect this scan to take several hours on large targets.
+### 适用人群
+适合已获得完整授权、准备对目标做最后一次全量覆盖扫描的渗透测试人员，也适合对自有基础设施做最彻底基线盘点的安全团队。大目标通常需要数小时才能跑完。
 
-### What it enables
-- All 6 scan modules: domain_discovery, port_scan, http_probe, resource_enum, vuln_scan, js_recon
-- Subdomain discovery: all 5 tools at 10000 max results + Amass active + brute force + Puredns validation
-- Port scanning: Naabu SYN (top 1000) + Masscan (10000 pps) + Nmap T4 with version detection and NSE scripts
-- httpx: all 20 probes enabled, response body capture, high concurrency
-- Wappalyzer: low confidence threshold (20%) to catch more technologies
-- Banner grabbing: 40 threads, 2000 byte max length
-- Katana: depth 5, 5000 URLs, JS crawl, rate 150/s
-- Hakrawler: depth 5, 2000 URLs, 15 threads
-- GAU: all 4 providers, 10000 URLs, with verification and method detection
-- ParamSpider: enabled with extended timeout
-- jsluice: 1000 files, 15 concurrency
-- JS Recon: 2000 files, all analysis modules, crawl depth 5, key validation
-- ffuf: recursion depth 3, 60 threads, smart fuzz, auto-calibrate
-- Kiterunner: routes-large, 200 connections, method detection
-- Arjun: all 5 HTTP methods, 200 max endpoints, 10 threads
-- Nuclei: all severities + DAST + headless + Interactsh + scan all IPs, 200 rate, 75 concurrency
-- All 28 security checks with 20 workers
-- CVE lookup: 50 max CVEs per service, min CVSS 0
-- MITRE: full CWE + CAPEC enrichment
-- All 10 OSINT providers at maximum results (Shodan, URLScan 10000, OTX, Censys, FOFA 5000, Netlas, VirusTotal, ZoomEye 5000, CriminalIP, Uncover 1000)
+### 启用内容
+- 6 个扫描模块全部启用：domain_discovery、port_scan、http_probe、resource_enum、vuln_scan、js_recon
+- 子域发现：全部工具 10000 上限，Amass 主动模式 + 爆破 + Puredns 校验
+- 端口扫描：Naabu SYN + Masscan 10000 pps + Nmap T4
+- httpx：全部探针 + 响应体抓取 + 高并发
+- Wappalyzer：较低置信度阈值，尽量多识别技术栈
+- Banner 抓取：40 线程，2KB 缓冲
+- Katana：深度 5、5000 URL、JS 爬取、150/s
+- Hakrawler：深度 5、2000 URL、15 线程
+- GAU：全部 4 个提供方，10000 URL，带校验与方法检测
+- ParamSpider、jsluice、JS Recon、ffuf、Kiterunner、Arjun 全部高强度启用
+- Nuclei：全部严重级别 + DAST + Headless + Interactsh + Scan All IPs
+- 全部 28 项安全检查
+- CVE 查询：每个服务最多 50 条，不设 CVSS 下限
+- MITRE 全量 CWE/CAPEC 增强
+- 10 个 OSINT 提供方全部启用并提高结果上限
 
-### What it disables
-- Nothing. Every tool is enabled.
-- Stealth mode is OFF (contradicts maximum scanning)
-- Tor routing is OFF (would throttle throughput)
+### 禁用内容
+- 无。所有工具都已启用。
+- Stealth Mode 关闭，因为与“最大扫描”目标冲突
+- Tor 关闭，因为会显著限制吞吐
 
-### How it works
-1. All subdomain discovery tools run in parallel with Amass active brute forcing
-2. Puredns filters wildcards, DNS resolves all subdomains
-3. Naabu + Masscan scan ports in parallel, Nmap enriches with service versions and NSE scripts
-4. httpx probes all host:port combos with complete fingerprinting
-5. Banner grabbing identifies non-HTTP services
-6. Katana + Hakrawler + GAU + ParamSpider discover every reachable endpoint
-7. jsluice + JS Recon perform deep JavaScript analysis (endpoints, secrets, source maps, DOM sinks)
-8. ffuf fuzzes directories recursively, Kiterunner discovers API routes
-9. Arjun discovers hidden parameters on all found endpoints
-10. Nuclei runs all templates in DAST mode with headless browser and OOB detection
-11. All OSINT providers enrich IPs with threat intelligence
-12. CVE lookup + MITRE enrichment map everything to known vulnerabilities and attack patterns`,
+### 工作方式
+1. 全部子域发现工具并行运行，同时启用 Amass 主动爆破
+2. Puredns 过滤泛解析，DNS 解析所有子域
+3. Naabu 与 Masscan 并行做端口发现，Nmap 补充版本与 NSE
+4. httpx 对所有 host:port 组合执行完整指纹识别
+5. Banner 抓取识别非 HTTP 服务
+6. Katana、Hakrawler、GAU、ParamSpider 联合发现全部可达端点
+7. jsluice 与 JS Recon 深入分析 JavaScript，提取端点、密钥、Source Map 与 DOM Sink
+8. ffuf 递归爆目录，Kiterunner 发现 API 路由
+9. Arjun 在全部发现端点上挖掘隐藏参数
+10. Nuclei 以 DAST 模式结合 Headless 与 OOB 跑全模板
+11. 全部 OSINT 提供方为 IP 与域名补充情报
+12. CVE 查询与 MITRE 增强把所有发现映射到已知漏洞与攻击模式`,
   parameters: {
     // All 6 scan modules
     scanModules: ['domain_discovery', 'port_scan', 'http_probe', 'resource_enum', 'vuln_scan', 'js_recon'],

@@ -2,53 +2,52 @@ import type { ReconPreset } from '../types'
 
 export const FULL_ACTIVE_SCAN: ReconPreset = {
   id: 'full-active-scan',
-  name: 'Full Pipeline - Active Only',
+  name: '全流程 - 仅主动扫描',
   icon: '',
   image: '/preset-radar.svg',
-  shortDescription: 'Every active tool maxed out, all passive sources disabled. Maximum noise, maximum coverage.',
-  fullDescription: `### Pipeline Goal
-Unleash every active reconnaissance tool at maximum intensity. This preset sends packets directly to the target across all attack surfaces: ports, HTTP, crawling, fuzzing, API discovery, and vulnerability scanning. No passive OSINT, no archive lookups -- pure active probing.
+  shortDescription: '所有主动工具全开并拉满，被动来源全部关闭。最高噪音，最高覆盖。',
+  fullDescription: `### 流程目标
+以最大强度启用所有主动侦察工具。该预设会直接向目标发送探测流量，覆盖端口、HTTP、爬取、模糊测试、API 发现与漏洞扫描。无被动 OSINT、无归档检索，纯主动探测。
 
-### Who is this for?
-Pentesters with full authorization on an engagement where stealth is irrelevant. Internal network assessments, lab environments, or authorized external pentests where the goal is to find everything as fast as possible regardless of detection.
+### 适用人群
+适合已获得充分授权、且无需隐蔽性的渗透测试人员。可用于内网评估、实验环境，或明确授权的外网测试场景，目标是不计是否会被发现，尽快找全问题。
 
-### What it enables
-- Full port scanning: Naabu SYN scan (top 1000) + Masscan (high rate) + Nmap with version detection and NSE vuln scripts (T4 aggressive timing)
-- Banner grabbing on all non-HTTP services (SSH, FTP, SMTP, MySQL, Redis, etc.)
-- httpx with every probe enabled (tech detect, TLS, JARM, favicon, ASN, CDN, response body)
-- Wappalyzer technology fingerprinting
-- Katana depth 4 with JS crawl + 2000 max URLs
-- ZAP Ajax Spider with bounded browser crawling seeded from base URLs and endpoints
-- Hakrawler depth 4 with subdomain inclusion
-- ffuf directory fuzzing with recursion depth 2 and auto-calibration
-- Kiterunner API endpoint discovery with routes-large wordlist
-- Arjun parameter discovery on GET/POST/PUT/DELETE/PATCH methods
-- Nuclei with all severity levels + DAST mode + headless browser + Interactsh OOB detection
-- All 28 security checks enabled
-- CVE lookup and MITRE CWE/CAPEC enrichment
-- Amass in active mode with DNS brute forcing
-- JS Recon with standalone crawl depth 4, source map analysis, DOM sinks, dependency checks, key validation
+### 启用内容
+- 全量端口扫描：Naabu SYN + Masscan + Nmap 版本识别/NSE
+- 对所有非 HTTP 服务做 Banner 抓取
+- httpx 启用全部探针，包括技术识别、TLS、JARM、favicon、ASN、CDN 与响应体
+- Wappalyzer 技术指纹识别
+- Katana 深度 4，开启 JS 爬取，最多 2000 URL
+- ZAP Ajax Spider 做受限浏览器爬取
+- Hakrawler 深度 4，包含子域
+- ffuf 目录递归爆破
+- Kiterunner API 路由发现
+- Arjun 对全部 HTTP 方法做参数发现
+- Nuclei 启用全部严重级别、DAST、Headless、Interactsh
+- 全部 28 项安全检查
+- CVE 查询与 MITRE 增强
+- Amass 主动模式 + DNS 爆破
+- JS Recon 深度分析 Source Map、DOM Sink、依赖与 Key
 
-### What it disables
-- GAU (Wayback Machine / archive lookups) - passive source
-- ParamSpider (Wayback parameter mining) - passive source
-- All OSINT enrichment (Shodan, URLScan, OTX, Censys, FOFA, Netlas, VirusTotal, ZoomEye, CriminalIP, Uncover) - passive sources
-- jsReconIncludeArchivedJs disabled (Wayback archived JS is a passive source)
-- Stealth mode and Tor routing - contradicts active scanning goal
-- Naabu passive mode (InternetDB) - we want real SYN scanning
+### 禁用内容
+- GAU 与 ParamSpider：属于被动归档数据源
+- 全部 OSINT 增强：属于被动来源
+- jsReconIncludeArchivedJs：Wayback 归档 JS 属于被动来源
+- Stealth Mode 与 Tor：与主动扫描目标冲突
+- Naabu 被动模式：这里追求真实 SYN 扫描
 
-### How it works
-1. Subdomain discovery (all tools + Amass active + DNS brute forcing) finds all subdomains
-2. Naabu SYN scans top 1000 ports, Masscan adds speed, Nmap enriches with service versions and NSE scripts
-3. httpx probes all discovered host:port combos with full fingerprinting
-4. Banner grabbing identifies non-HTTP services
-5. Katana + ZAP Ajax Spider + Hakrawler aggressively crawl all live web apps
-6. ffuf fuzzes directories with recursion, Kiterunner discovers API routes
-7. Arjun discovers hidden parameters on found endpoints
-8. Nuclei runs all templates in DAST mode using crawled URLs, with headless browser for JS-rendered pages
-9. JS Recon crawls and downloads JS files, extracts endpoints, secrets, source maps, and DOM XSS sinks
-10. CVE lookup maps service versions to known vulnerabilities
-11. Security checks validate headers, TLS, DNS, and infrastructure exposure`,
+### 工作方式
+1. 子域发现阶段使用全部工具，并启用 Amass 主动爆破
+2. Naabu 扫 Top 1000 端口，Masscan 提速，Nmap 补充版本与 NSE
+3. httpx 对所有 host:port 组合做完整指纹识别
+4. Banner 抓取识别非 HTTP 服务
+5. Katana、ZAP Ajax Spider 与 Hakrawler 激进爬取所有在线 Web 应用
+6. ffuf 爆目录，Kiterunner 发现 API 路由
+7. Arjun 对发现的端点执行隐藏参数挖掘
+8. Nuclei 以 DAST 模式结合 Headless 与 OOB 检测跑全模板
+9. JS Recon 抓取并分析 JS 文件，提取端点、密钥、Source Map 与 DOM XSS Sink
+10. CVE 查询映射服务版本到已知漏洞
+11. Security Checks 验证 Header、TLS、DNS 与基础设施暴露`,
   parameters: {
     // All scan modules enabled including js_recon (actively crawls and downloads JS files)
     scanModules: ['domain_discovery', 'port_scan', 'http_probe', 'resource_enum', 'vuln_scan', 'js_recon'],

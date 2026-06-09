@@ -2,44 +2,43 @@ import type { ReconPreset } from '../types'
 
 export const COMPLIANCE_AUDIT: ReconPreset = {
   id: 'compliance-audit',
-  name: 'Compliance & Header Audit',
+  name: '合规与请求头审计',
   icon: '',
   image: '/preset-certificate.svg',
-  shortDescription: 'Security posture validation. httpx with all header probes, TLS analysis, SPF/DMARC/DNSSEC checks, Wappalyzer tech detection, and Nuclei misconfig/exposure scanning.',
-  fullDescription: `### Pipeline Goal
-Validate the security posture of your targets by auditing HTTP headers, TLS certificates, DNS security records, and common misconfigurations. This preset focuses on compliance-relevant checks -- missing security headers, expiring certificates, absent SPF/DMARC/DNSSEC, and exposed services -- without aggressive crawling or fuzzing.
+  shortDescription: '验证安全基线。启用完整 Header/TLS 探针、SPF/DMARC/DNSSEC 检查、Wappalyzer 技术识别，以及 Nuclei 配置错误扫描。',
+  fullDescription: `### 流程目标
+通过审计 HTTP Header、TLS 证书、DNS 安全记录与常见错误配置来验证目标的安全基线。该预设聚焦于合规相关检查，例如缺失安全 Header、证书即将过期、SPF/DMARC/DNSSEC 缺失，以及暴露服务，而不会做激进爬取或模糊测试。
 
-### Who is this for?
-Security teams running compliance audits, blue teamers validating hardening baselines, and consultants producing posture reports. Ideal for periodic checks against frameworks like OWASP Secure Headers, CIS benchmarks, or internal security policies.
+### 适用人群
+适合做合规审计的安全团队、校验加固基线的蓝队，以及产出安全态势报告的顾问。可用于周期性检查 OWASP Secure Headers、CIS Benchmark 或内部安全策略落实情况。
 
-### What it enables
-- Full subdomain discovery (all tools, default limits) to enumerate the audit surface
-- WHOIS and DNS lookups for domain context
-- httpx with every header and fingerprinting probe enabled -- status codes, content types, server banners, response times, TLS info, TLS grab, JARM fingerprints, ASN, CDN detection, favicons, and tech detection
-- Response headers captured (includeResponseHeaders) for offline header analysis
-- Wappalyzer technology detection to identify frameworks, CMS, and server software
-- All 27 security checks enabled -- SPF/DMARC/DNSSEC validation, TLS expiry, missing security headers (Referrer-Policy, Permissions-Policy, COOP, CORP, COEP, Cache-Control, CSP unsafe-inline), session cookie flags, basic auth over plain HTTP, admin ports, exposed databases, open relays, and more
-- Nuclei with misconfig and exposure tags only -- no DAST, no interactsh, no headless
+### 启用内容
+- 全量子域发现（全部工具，默认上限）
+- WHOIS 与 DNS 查询，用于补充域名上下文
+- httpx 开启全部 Header 与指纹探针，包括状态码、内容类型、Server、响应时间、TLS、JARM、ASN、CDN、favicon 与技术识别
+- 捕获响应 Header，便于离线分析
+- Wappalyzer 识别框架、CMS 与服务器软件
+- 启用全部 27 项安全检查，包括 SPF/DMARC/DNSSEC、TLS 过期、缺失安全 Header、Cookie 标志、明文 Basic Auth、暴露管理端口、开放数据库、邮件中继等
+- Nuclei 仅使用 misconfig 与 exposure 标签，不启用 DAST、Interactsh 或 Headless
 
-### What it disables
-- Port scanning (Naabu, Masscan, Nmap) -- not mapping ports, auditing web posture
-- Web crawlers (Katana, Hakrawler) -- no deep crawling needed
-- Archive/passive URL discovery (GAU, ParamSpider) -- not collecting URLs
-- JavaScript analysis (jsluice, JS Recon) -- not hunting secrets in JS
-- Directory and API fuzzing (ffuf, Kiterunner, Arjun) -- no brute-force discovery
-- Banner grabbing -- not probing raw sockets
-- CVE lookup -- compliance focus, not vulnerability enumeration
-- MITRE CWE/CAPEC enrichment -- not classifying CVEs
-- All OSINT providers (Shodan, Censys, URLScan, etc.) -- passive enrichment not needed
+### 禁用内容
+- 端口扫描（Naabu、Masscan、Nmap）：重点不是端口测绘，而是 Web 安全姿态
+- Web 爬虫（Katana、Hakrawler）：无需深度爬取
+- 归档与被动 URL 发现（GAU、ParamSpider）：不以 URL 收集为目标
+- JavaScript 分析（jsluice、JS Recon）：不做前端密钥/逻辑挖掘
+- 目录与 API 爆破（ffuf、Kiterunner、Arjun）：不进行暴力发现
+- Banner 抓取：不探测原始 socket
+- CVE 查询与 MITRE 增强：重点不在漏洞枚举
+- 全部 OSINT 提供方：被动增强在这里不是核心需求
 
-### How it works
-1. Subdomain discovery enumerates all hostnames under the target domain
-2. DNS and WHOIS lookups gather domain registration and resolver data
-3. httpx probes every discovered host with all fingerprinting options -- headers, TLS details, JARM, ASN, CDN, tech detection
-4. Wappalyzer identifies technologies running on each host
-5. The 27 security checks validate headers, TLS, DNS security records, cookie flags, and exposed services
-6. Nuclei runs misconfig and exposure templates to catch common server misconfigurations
-7. Results feed into the graph for a comprehensive compliance posture view`,
+### 工作方式
+1. 子域发现枚举目标域下的全部主机名
+2. DNS 与 WHOIS 收集注册信息与解析数据
+3. httpx 对每个主机启用全部指纹能力，收集 Header、TLS、JARM、ASN、CDN 与技术信息
+4. Wappalyzer 识别各主机运行的技术栈
+5. 27 项安全检查验证 Header、TLS、DNS 安全记录、Cookie 标志与暴露服务
+6. Nuclei 执行配置错误与暴露类模板
+7. 所有结果进入图谱，用于展示完整的合规安全态势`,
   parameters: {
     // Modules: domain_discovery + http_probe + vuln_scan (nuclei misconfig)
     scanModules: ['domain_discovery', 'http_probe', 'vuln_scan'],

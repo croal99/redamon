@@ -2,50 +2,49 @@ import type { ReconPreset } from '../types'
 
 export const LARGE_NETWORK: ReconPreset = {
   id: 'large-network',
-  name: 'Network Perimeter - Large Scale',
+  name: '网络边界 - 大规模扫描',
   icon: '',
   image: '/preset-radar-2.svg',
-  shortDescription: 'Large-scale network perimeter scanning. Masscan at 10k pps for fast port discovery, Naabu verification, Nmap T4 service detection, banner grabbing, Shodan + Censys enrichment, CVE lookup.',
-  fullDescription: `### Pipeline Goal
-Scan large IP ranges and CIDR blocks at high speed. This preset is built for IP-mode reconnaissance -- Masscan blasts through port discovery at 10,000 packets per second, Naabu verifies open ports with SYN scanning, and Nmap identifies services with aggressive T4 timing. Banner grabbing captures protocol banners on non-HTTP ports, while Shodan and Censys provide passive enrichment. No web crawling, no fuzzing, no JavaScript analysis -- pure network-layer reconnaissance at scale.
+  shortDescription: '面向大规模 IP 边界的扫描。Masscan 10k pps、Naabu 校验、Nmap T4 服务识别、Banner 抓取、Shodan/Censys 增强与 CVE 查询。',
+  fullDescription: `### 流程目标
+以高速度扫描大范围 IP 段与 CIDR。该预设为 IP 模式侦察而设计：Masscan 以 10000 pps 做高速端口发现，Naabu 以 SYN 方式复核开放端口，Nmap 用激进 T4 时序识别服务版本，Banner 抓取识别非 HTTP 协议服务，Shodan 与 Censys 提供被动增强。不做 Web 爬取、不做爆破，也不做 JavaScript 分析，专注大规模网络层侦察。
 
-### Who is this for?
-Network security teams and pentesters who need to map large external perimeters (Class B/C networks, multiple CIDR blocks). Ideal for initial reconnaissance of enterprise networks, ISP ranges, or cloud provider IP blocks where speed matters more than stealth.
+### 适用人群
+适合需要绘制大规模外网边界的网络安全团队与渗透测试人员，例如企业网段、多个 CIDR、云厂商 IP 段等，以速度优先于隐蔽性的场景。
 
-### What it enables
-- Subdomain discovery (all tools enabled for reverse DNS and hostname resolution)
-- WHOIS and DNS lookups for IP attribution
-- Naabu SYN scan (top 1000 ports) with high rate (1500) and 50 threads for port verification
-- Masscan at 10,000 pps with banner capture for rapid initial port discovery
-- Nmap with version detection (-sV), NSE scripts, T4 timing, and extended timeouts (1200s scan, 600s host)
-- httpx with 75 threads and full fingerprinting probes (ASN, CDN, JARM, TLS info) -- response headers captured, response body and favicon skipped
-- Wappalyzer technology detection
-- Banner grabbing with 40 threads and large buffer (1500 bytes) for high-throughput service identification
-- Shodan enrichment (host lookup, reverse DNS, passive CVEs) and Censys for additional IP context
-- CVE lookup (40 max, all CVSS scores) for comprehensive vulnerability mapping
-- MITRE CWE/CAPEC enrichment for vulnerability classification
-- All 27 security checks with 20 max workers for infrastructure exposure detection
+### 启用内容
+- 子域发现（用于反向 DNS 与主机名归属补充）
+- WHOIS 与 DNS 查询，用于 IP 归属分析
+- Naabu SYN 扫描 Top 1000 端口，高速复核开放端口
+- Masscan 10000 pps，并启用 Banner 捕获
+- Nmap 版本识别、NSE 脚本、T4 时序与更长超时
+- httpx 75 线程，启用 ASN/CDN/JARM/TLS 等完整指纹探针
+- Wappalyzer 技术识别
+- Banner 抓取 40 线程、大缓冲
+- Shodan 与 Censys 做 IP 画像增强
+- CVE 查询与 MITRE 增强
+- 全部 27 项安全检查
 
-### What it disables
-- Web crawlers (Katana, Hakrawler) -- not crawling websites, scanning network ports
-- Directory fuzzing (ffuf), API discovery (Kiterunner) -- web-layer tools not relevant at network scale
-- Parameter discovery (Arjun, ParamSpider) -- not applicable to IP-mode scanning
-- GAU archive lookups -- not relevant to network infrastructure
-- jsluice, JS Recon -- JavaScript analysis not applicable
-- Nuclei -- this preset discovers and maps; vulnerability scanning comes after
-- Most OSINT providers except Shodan and Censys (the most relevant for IP/infrastructure data)
+### 禁用内容
+- Web 爬虫（Katana、Hakrawler）：不是网站内容发现，而是端口层扫描
+- 目录爆破与 API 发现（ffuf、Kiterunner）：对大规模网络边界意义不大
+- 参数发现（Arjun、ParamSpider）：不适用于 IP 模式扫描
+- GAU：历史 URL 与网络基础设施关系不大
+- jsluice、JS Recon：不适用
+- Nuclei：此预设更适合先建图，再做专项漏洞检测
+- 除 Shodan 与 Censys 外的大多数 OSINT：对 IP/基础设施价值较低
 
-### How it works
-1. Subdomain discovery resolves hostnames and builds an IP inventory (useful even in IP mode for reverse DNS)
-2. Masscan sweeps all target IPs at 10,000 pps for rapid port discovery with banner capture
-3. Naabu re-scans with SYN probes to verify open ports and filter false positives
-4. Nmap enriches confirmed ports with service version detection and NSE vulnerability scripts
-5. httpx probes all web-port combinations with full fingerprinting (ASN, CDN, JARM, TLS)
-6. Banner grabbing connects to non-HTTP ports at high concurrency to identify services
-7. Shodan + Censys enrich IPs with geolocation, ISP, historical data, and known CVEs
-8. CVE lookup maps detected service versions to known vulnerabilities
-9. MITRE enrichment classifies findings by CWE and attack patterns
-10. Security checks flag exposed admin ports, databases, open relays, and misconfigurations`,
+### 工作方式
+1. 子域发现用于解析主机名并补充 IP 清单
+2. Masscan 先以 10000 pps 快速扫出开放端口与 Banner
+3. Naabu 再次用 SYN 探测验证开放端口，过滤误报
+4. Nmap 对确认端口做版本与 NSE 脚本探测
+5. httpx 对所有 Web 端口组合做完整指纹识别
+6. Banner 抓取高并发连接非 HTTP 端口并识别服务
+7. Shodan 与 Censys 为 IP 增强地理位置、ISP、历史数据与已知 CVE
+8. CVE 查询把检测到的服务版本映射到已知漏洞
+9. MITRE 增强按 CWE 与攻击模式归类
+10. Security Checks 标记暴露管理端口、数据库、中继与错误配置`,
   parameters: {
     // Modules: domain_discovery + port_scan + http_probe + vuln_scan
     // vuln_scan is required for CVE lookup, MITRE enrichment, and security checks

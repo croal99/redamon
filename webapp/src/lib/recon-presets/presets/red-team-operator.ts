@@ -2,60 +2,58 @@ import type { ReconPreset } from '../types'
 
 export const RED_TEAM_OPERATOR: ReconPreset = {
   id: 'red-team-operator',
-  name: 'Red Team Operator',
+  name: '红队行动模式',
   icon: '',
   image: '/preset-skull.svg',
-  shortDescription: 'Balanced stealth with targeted active validation. Connect scan, throttled httpx/Katana, critical-only Nuclei, Tor routing, and full OSINT enrichment -- controlled aggression for authorized red team engagements.',
-  fullDescription: `### Pipeline Goal
-Perform reconnaissance that balances stealth with actionable results. Instead of going fully passive, this preset uses carefully throttled active probes -- connect scans instead of SYN, low-concurrency Nuclei limited to critical findings, and rate-limited crawling. All traffic routes through Tor. The goal is to build a comprehensive attack surface map while keeping noise low enough to avoid triggering most detection systems.
+  shortDescription: '在隐蔽性与主动验证之间做平衡。Connect 扫描、低速 httpx/Katana、仅 critical 的 Nuclei、Tor 路由与精选 OSINT，适合授权红队行动。',
+  fullDescription: `### 流程目标
+在隐蔽性与可执行结果之间取得平衡。该预设不会完全被动，而是使用经过严格限速的主动探测：使用 Connect Scan 代替 SYN、Nuclei 仅保留 critical 级别且低并发、爬取也做速率限制，所有主动流量统一走 Tor。目标是在尽量降低告警概率的前提下，建立可落地的攻击面图谱。
 
-### Who is this for?
-Red team operators running authorized engagements where some active probing is acceptable but detection avoidance still matters. Penetration testers who need more signal than a passive-only scan but cannot afford to trip IDS/IPS or WAF rules. Useful during the initial phases of a red team operation when you need to identify critical entry points without burning your access.
+### 适用人群
+适合已获授权、允许一定主动探测但仍需规避检测的红队人员，也适合不能轻易触发 IDS/IPS/WAF 规则、却又需要比纯被动扫描更多信号的渗透测试人员。
 
-### What it enables
-- Full subdomain discovery via passive sources (crt.sh, HackerTarget, Knockpy, Subfinder, Amass passive) -- no brute force
-- Naabu with TCP connect scan (type 'c') at rate 50, 5 threads -- avoids raw SYN packets that trigger alerts
-- httpx with essential probes (status, content length, content type, title, server, response time, tech detect, IP, CNAME, TLS) at 3 threads, rate 5/s
-- Katana shallow crawl (depth 1, 100 URLs, rate 5/s) -- just enough to map immediate endpoints
-- GAU with all archive providers for passive URL discovery (3000 max URLs)
-- ParamSpider for passive parameter mining from Wayback CDX
-- jsluice on up to 30 JS files for endpoint and secret extraction
-- Arjun in passive mode -- parameter discovery without sending requests
-- Nuclei limited to critical severity only, 5 req/s, concurrency 3, excludes dos/fuzz/intrusive tags
-- CVE lookup and MITRE enrichment for vulnerability context
-- OSINT enrichment via Shodan (host lookup, reverse DNS, passive CVEs), URLScan, OTX, and Censys
-- Tor routing for all active probes
+### 启用内容
+- 通过被动源做全量子域发现，不启用爆破
+- Naabu 使用 TCP Connect Scan，速率 50，线程 5，避免裸 SYN 流量
+- httpx 仅保留关键探针，3 线程、5 req/s
+- Katana 浅层爬取（深度 1，100 URL，5 req/s）
+- GAU 使用全部归档提供方，最多 3000 URL
+- ParamSpider 从 Wayback CDX 被动挖掘参数
+- jsluice 最多分析 30 个 JS 文件，提取端点与密钥
+- Arjun 被动模式
+- Nuclei 仅 critical，5 req/s、并发 3，排除 dos/fuzz/intrusive 标签
+- CVE 查询与 MITRE 增强
+- 启用 Shodan、URLScan、OTX、Censys 做精选 OSINT 增强
+- 所有主动探测均经 Tor 路由
 
-### What it disables
-- Masscan (generates massive packet volume, easily detected)
-- Nmap (service detection and NSE scripts are noisy and leave extensive logs)
-- Hakrawler (aggressive crawling pattern)
-- ffuf directory fuzzing (high request volume, trivially detected by WAFs)
-- Kiterunner API discovery (brute-force approach with distinctive traffic patterns)
-- JS Recon (downloads many files directly from target)
-- Banner grabbing (direct service connections leave connection logs)
-- Wappalyzer (requires full HTTP responses, adds unnecessary traffic)
-- Security checks (some probes connect directly to target services)
-- httpx JARM fingerprinting (generates distinctive TLS probe patterns)
-- httpx favicon hashing (additional requests for minimal value during red teaming)
-- httpx ASN/CDN detection (not needed when Shodan provides this passively)
-- Nuclei DAST mode, Interactsh callbacks, headless browser probes
-- FOFA, Netlas, VirusTotal, ZoomEye, CriminalIP, Uncover (reduced OSINT surface to minimize API trace)
+### 禁用内容
+- Masscan：包量过大，极易被发现
+- Nmap：服务识别与 NSE 噪音较高
+- Hakrawler：爬取模式更激进
+- ffuf：高请求量，容易被 WAF 识别
+- Kiterunner：流量特征明显的 API 爆破
+- JS Recon：需要从目标下载大量文件
+- Banner 抓取：会留下明确连接日志
+- Wappalyzer：需要完整 HTTP 响应，增加流量
+- Security Checks：部分检测会直接连接目标服务
+- httpx 的 JARM、favicon、ASN/CDN 等额外探针
+- Nuclei DAST、Interactsh 与 Headless
+- FOFA、Netlas、VirusTotal、ZoomEye、CriminalIP、Uncover：缩小 OSINT 足迹
 
-### How it works
-1. Subdomain discovery runs entirely through passive sources -- certificate logs, DNS databases, and OSINT APIs
-2. DNS resolution and Puredns filtering use public resolvers
-3. Naabu performs TCP connect scans at rate 50 with 5 threads -- connect scans complete the TCP handshake, avoiding the half-open SYN pattern that many IDS systems flag
-4. httpx probes discovered hosts through Tor at 3 threads and rate 5/s, collecting status codes, titles, tech stack, IPs, CNAMEs, and TLS info
-5. Katana performs a shallow crawl (depth 1, 100 URLs) through Tor to discover immediate endpoints without deep spidering
-6. GAU pulls up to 3000 historical URLs from Wayback, CommonCrawl, OTX, and URLScan -- zero target contact
-7. ParamSpider mines parameters from Wayback CDX archives
-8. jsluice extracts endpoints and secrets from up to 30 JS files found during crawling
-9. Arjun discovers parameters passively from archived responses
-10. Nuclei runs only critical templates at rate 5/s with concurrency 3 through Tor, excluding dos/fuzz/intrusive tags entirely
-11. CVE lookup maps discovered services to known vulnerabilities (up to 20 CVEs per service)
-12. MITRE enrichment adds ATT&CK context to findings
-13. Shodan, URLScan, OTX, and Censys enrich all discovered assets through third-party APIs`,
+### 工作方式
+1. 子域发现完全依赖被动来源：证书日志、DNS 数据库与 OSINT API
+2. DNS 解析与 Puredns 使用公共解析器
+3. Naabu 以 TCP Connect Scan 低速运行，避免半开 SYN 特征
+4. httpx 通过 Tor 低速探测主机，收集状态、标题、技术栈、IP、CNAME 与 TLS 信息
+5. Katana 通过 Tor 做深度 1 浅爬取，只发现最直接的端点
+6. GAU 从归档中拉取历史 URL，不接触目标
+7. ParamSpider 从归档中挖参数
+8. jsluice 从爬取发现的少量 JS 文件中提取端点与密钥
+9. Arjun 基于归档响应做被动参数发现
+10. Nuclei 仅执行 critical 模板，低速低并发，经 Tor 运行，并完全排除侵入性标签
+11. CVE 查询为已发现服务补充已知漏洞上下文
+12. MITRE 为结果加入 ATT&CK 语境
+13. Shodan、URLScan、OTX 与 Censys 通过第三方 API 增强资产画像`,
   parameters: {
     // Modules: vuln_scan included for critical-only Nuclei
     scanModules: ['domain_discovery', 'port_scan', 'http_probe', 'resource_enum', 'vuln_scan'],

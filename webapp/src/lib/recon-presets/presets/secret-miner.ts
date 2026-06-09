@@ -2,38 +2,38 @@ import type { ReconPreset } from '../types'
 
 export const SECRET_MINER: ReconPreset = {
   id: 'secret-miner',
-  name: 'JS Secret Miner',
+  name: 'JS 密钥挖掘',
   icon: 'FileCode2',
   image: '/preset-file-js.svg',
-  shortDescription: 'Deep JS analysis pipeline. Maximize JS file discovery, extract secrets, endpoints, and source maps.',
-  fullDescription: `### Pipeline Goal
-Laser-focused JavaScript reconnaissance. This preset builds a minimal pipeline that discovers subdomains, probes HTTP, then crawls aggressively for JS files and analyzes them in depth.
+  shortDescription: '深度 JavaScript 分析流水线。最大化发现 JS 文件，并提取密钥、端点与 Source Map。',
+  fullDescription: `### 流程目标
+高度聚焦 JavaScript 侦察。该预设用最小但足够的流水线先发现子域、探测 HTTP，再高强度爬取 JS 文件并做深度分析。
 
-### Who is this for?
-Bug bounty hunters and pentesters targeting modern web applications built with React, Angular, Vue, or similar frameworks where business logic lives in the client-side JavaScript.
+### 适用人群
+适合面向现代 Web 应用的漏洞赏金猎人和渗透测试人员，尤其是 React、Angular、Vue 等前端框架占主要业务逻辑的目标。
 
-### What it enables
-- JS Recon module (disabled by default) with all analysis features maxed out
-- Katana with depth 3 and JS crawl enabled for discovering dynamically loaded scripts
-- Hakrawler with depth 3 for complementary crawl coverage
-- GAU enabled to pull historical JS files from Wayback Machine and other archives
-- jsluice with 500 file limit and full secret/URL extraction
-- JS Recon max files raised to 1000 for thorough analysis
+### 启用内容
+- JS Recon 模块全量开启，所有分析能力拉满
+- Katana 深度 3，并开启 JS 爬取，用于发现动态加载脚本
+- Hakrawler 深度 3，补充爬取覆盖
+- GAU 启用，用于从 Wayback 等归档拉取历史 JS 文件
+- jsluice 最多处理 500 个文件，完整提取密钥与 URL
+- JS Recon 最大文件数提升到 1000
 
-### What it disables
-- Port scanning (Naabu, Nmap, Masscan) - not needed, httpx falls back to common web ports
-- Directory fuzzing (ffuf, Kiterunner) - noise for this use case
-- Parameter discovery (Arjun, ParamSpider) - not relevant to JS hunting
-- Vulnerability scanning (Nuclei) - removed from pipeline modules
-- Security checks and MITRE enrichment - disabled to reduce noise
-- OSINT enrichment - disabled for faster focused scans
+### 禁用内容
+- 端口扫描（Naabu、Nmap、Masscan）：不需要，httpx 会回退到常见 Web 端口
+- 目录爆破（ffuf、Kiterunner）：对这个场景噪音过大
+- 参数发现（Arjun、ParamSpider）：与 JS 狩猎关系不大
+- 漏洞扫描（Nuclei）：从模块层移除
+- Security Checks 与 MITRE：关闭以减少噪音
+- OSINT 增强：关闭以加快聚焦扫描
 
-### How it works
-1. Subdomain discovery finds all subdomains
-2. HTTP probing identifies live web servers (uses DNS fallback for port detection)
-3. Katana + Hakrawler + GAU aggressively crawl for JS files
-4. jsluice extracts secrets and URLs from discovered JS files
-5. JS Recon runs deep analysis: source maps, dependency confusion, DOM sinks, framework detection, regex patterns, and key validation`,
+### 工作方式
+1. 子域发现找出全部子域
+2. HTTP 探测识别在线 Web 服务
+3. Katana、Hakrawler 与 GAU 主动/被动结合，尽可能发现 JS 文件
+4. jsluice 从已发现 JS 文件中提取密钥与 URL
+5. JS Recon 深入分析 Source Map、依赖混淆、DOM Sink、框架识别、正则模式与 Key 校验`,
   parameters: {
     // Pipeline modules: skip port_scan and vuln_scan
     scanModules: ['domain_discovery', 'http_probe', 'resource_enum', 'js_recon'],

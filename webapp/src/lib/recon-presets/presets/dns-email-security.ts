@@ -2,45 +2,45 @@ import type { ReconPreset } from '../types'
 
 export const DNS_EMAIL_SECURITY: ReconPreset = {
   id: 'dns-email-security',
-  name: 'DNS & Email Security',
+  name: 'DNS 与邮件安全',
   icon: '',
   image: '/preset-mail-search.svg',
-  shortDescription: 'DNS infrastructure and email security audit. Full subdomain enumeration, DNS resolution with all record types, WHOIS, SPF/DMARC/DNSSEC checks, zone transfer detection, SMTP open relay testing.',
-  fullDescription: `### Pipeline Goal
-Audit DNS infrastructure and email security posture for a target domain. This preset maximizes subdomain discovery to map the full DNS footprint, resolves all record types (A, AAAA, MX, TXT, NS, SOA, CNAME), performs WHOIS lookups, and runs targeted security checks for email spoofing defenses and DNS misconfigurations. Shodan DNS enrichment adds passive context. No port scanning, no web crawling, no vulnerability scanning -- pure DNS and email security reconnaissance.
+  shortDescription: '面向 DNS 基础设施和邮件安全的审计。全量子域发现、全记录类型解析、WHOIS、SPF/DMARC/DNSSEC、区域传送与 SMTP Open Relay 检测。',
+  fullDescription: `### 流程目标
+审计目标域名的 DNS 基础设施与邮件安全态势。该预设会尽可能发现全部子域、解析 A/AAAA/MX/TXT/NS/SOA/CNAME 等记录、执行 WHOIS 查询，并针对邮件伪造防护与 DNS 错误配置执行定向安全检查。Shodan 的 DNS 增强用于补充被动上下文。不做端口扫描、不做 Web 爬取，也不做漏洞扫描，专注 DNS 与邮件安全侦察。
 
-### Who is this for?
-Security teams auditing email spoofing defenses (SPF, DMARC, DKIM), DNS administrators verifying DNSSEC deployment, compliance teams checking domain hygiene, and red teamers looking for zone transfer leaks or open SMTP relays before phishing engagements.
+### 适用人群
+适合检查 SPF、DMARC、DKIM 防护的安全团队，验证 DNSSEC 部署的 DNS 管理员，做域名卫生检查的合规团队，以及在钓鱼演练前寻找区域传送与开放邮件中继问题的红队。
 
-### What it enables
-- Full subdomain discovery with ALL tools enabled at high limits (10000 max results each)
-- Amass active DNS probing + brute-force for maximum subdomain coverage
-- PureDNS for DNS resolution and wildcard filtering
-- Brute-force subdomain enumeration for discovering hidden subdomains
-- WHOIS lookup with retries for registrar and registrant intelligence
-- DNS resolution with retries for complete record enumeration
-- Security checks focused on DNS and email: SPF missing, DMARC missing, DNSSEC missing, zone transfer, SMTP open relay
-- Shodan OSINT with reverse DNS and domain DNS enrichment
+### 启用内容
+- 全量子域发现，全部工具开启并提高结果上限
+- Amass 主动探测与爆破，提高子域覆盖率
+- PureDNS 做解析与泛解析过滤
+- 启用子域爆破，寻找隐藏子域
+- WHOIS 查询带重试，用于获取注册商与注册人信息
+- DNS 解析带重试，用于完整枚举记录
+- 针对 DNS 与邮件的安全检查：SPF 缺失、DMARC 缺失、DNSSEC 缺失、区域传送、SMTP Open Relay
+- Shodan DNS 增强：反向 DNS 与 Domain DNS 信息
 
-### What it disables
-- All port scanners (Naabu, Masscan, Nmap) -- not scanning ports, auditing DNS
-- httpx and Wappalyzer -- no web service fingerprinting needed
-- Banner grabbing -- no service banner collection
-- All web crawlers (Katana, Hakrawler) -- not crawling web content
-- GAU, ParamSpider -- no passive URL discovery
-- jsluice, JS Recon -- no JavaScript analysis
-- Directory fuzzing (ffuf), API discovery (Kiterunner), parameter discovery (Arjun)
-- Nuclei vulnerability scanner -- not testing web vulnerabilities
-- CVE lookup and MITRE enrichment -- not relevant to DNS/email checks
-- All HTTP/web security checks (WAF bypass, TLS expiry, CSP, session security, etc.)
-- Most OSINT providers (Censys, URLScan, OTX, etc.) -- Shodan DNS features are sufficient
+### 禁用内容
+- 所有端口扫描器（Naabu、Masscan、Nmap）：重点不是端口，而是 DNS
+- httpx 与 Wappalyzer：无需 Web 服务指纹识别
+- Banner 抓取：不收集服务 Banner
+- Web 爬虫（Katana、Hakrawler）：不抓取网页内容
+- GAU、ParamSpider：不做被动 URL 发现
+- jsluice、JS Recon：不做 JavaScript 分析
+- 目录爆破/API 发现/参数发现（ffuf、Kiterunner、Arjun）
+- Nuclei：不做 Web 漏洞检测
+- CVE 查询与 MITRE 增强：与 DNS/邮件检查无关
+- 所有 HTTP/Web 安全检查（WAF、TLS、CSP、Session 等）
+- 除 Shodan 外的大多数 OSINT 提供方：DNS 场景下收益有限
 
-### How it works
-1. Subdomain discovery runs all tools (crt.sh, HackerTarget, Knockpy, Subfinder, Amass, PureDNS) with brute-force to enumerate every hostname
-2. DNS resolution collects A, AAAA, MX, TXT, NS, SOA, and CNAME records for all discovered subdomains
-3. WHOIS queries retrieve registrar, registrant, and expiry information
-4. Security checks test for missing SPF records (email spoofing risk), missing DMARC policies (no email authentication enforcement), missing DNSSEC (DNS spoofing risk), zone transfer misconfiguration (full zone disclosure), and SMTP open relay (spam/phishing relay)
-5. Shodan reverse DNS and domain DNS enrichment adds passive DNS intelligence and historical records`,
+### 工作方式
+1. 子域发现阶段结合 crt.sh、HackerTarget、Knockpy、Subfinder、Amass 与 PureDNS，尽量枚举所有主机名
+2. DNS 解析收集全部已发现子域的 A、AAAA、MX、TXT、NS、SOA、CNAME 记录
+3. WHOIS 查询拉取注册商、注册人和到期信息
+4. Security Checks 检查 SPF 缺失、DMARC 缺失、DNSSEC 缺失、区域传送错误配置与开放邮件中继
+5. Shodan 的反向 DNS 与域名 DNS 增强补充被动 DNS 情报与历史记录`,
   parameters: {
     // Modules: domain_discovery + vuln_scan (SPF/DMARC/DNSSEC/zone-transfer/SMTP
     // security checks all live inside vuln_scan). No port scanning, no web probing.

@@ -2,63 +2,50 @@ import type { ReconPreset } from '../types'
 
 export const FULL_PASSIVE_SCAN: ReconPreset = {
   id: 'full-passive-scan',
-  name: 'Full Pipeline - Passive Only',
+  name: '全流程 - 仅被动扫描',
   icon: '',
   image: '/preset-spy.svg',
-  shortDescription: 'Zero packets to target. Maximum intelligence from third-party sources, archives, and passive databases only.',
-  fullDescription: `### Pipeline Goal
-Gather the maximum amount of intelligence about a target without sending a single packet to it. Every tool in this preset queries third-party APIs, public databases, certificate transparency logs, and web archives -- never the target itself.
+  shortDescription: '不向目标发送任何数据包。仅从第三方来源、归档与被动数据库中提取最大情报。',
+  fullDescription: `### 流程目标
+在不向目标发送任何一个数据包的前提下，尽可能多地收集目标情报。该预设中的所有工具只查询第三方 API、公共数据库、证书透明日志和 Web 归档，不会直接接触目标。
 
-### Who is this for?
-Red team operators in the pre-engagement phase, OSINT analysts building target profiles, or anyone who needs to understand an attack surface before authorization is granted. Also useful when you want to assess exposure without alerting the target's SOC or WAF.
+### 适用人群
+适合前期准备阶段的红队、OSINT 分析师，或任何在授权尚未到位前需要先了解攻击面的人员。也适合希望在不惊动目标 SOC 或 WAF 的情况下评估外部暴露面的场景。
 
-### What it enables
-- Full subdomain discovery: crt.sh, HackerTarget, Knockpy, Subfinder, Amass (passive mode only, no active probing or brute force)
-- WHOIS domain registration lookups
-- DNS resolution (A, AAAA, MX, NS, TXT, SOA, CNAME records via public resolvers)
-- Puredns wildcard filtering (validates via public DNS, not target nameservers)
-- Naabu in passive mode (queries Shodan InternetDB for known open ports -- zero scanning)
-- GAU with all 4 providers (Wayback Machine, CommonCrawl, OTX, URLScan) at 10000 URL limit
-- ParamSpider for historical parameterized URLs from Wayback CDX
-- All 10 OSINT enrichment providers at maximum results:
-  - Shodan (host lookup, reverse DNS, passive CVEs)
-  - URLScan.io (10000 results)
-  - OTX AlienVault (threat intelligence, passive DNS, malware)
-  - Censys (host info, certificates, autonomous systems)
-  - FOFA (5000 results)
-  - Netlas (host reconnaissance)
-  - VirusTotal (domain/IP reputation, malware detection)
-  - ZoomEye (5000 results)
-  - CriminalIP (IP threat intelligence)
-  - Uncover (aggregated multi-engine search, 1000 results)
-- CVE lookup from NVD for any service versions found via passive sources
-- MITRE CWE/CAPEC enrichment for discovered CVEs
+### 启用内容
+- 全量子域发现：crt.sh、HackerTarget、Knockpy、Subfinder、Amass（仅被动模式）
+- WHOIS 与 DNS 解析（使用公共解析器）
+- Puredns 泛解析过滤
+- Naabu 被动模式（查询 Shodan InternetDB）
+- GAU 使用全部 4 个提供方，最多 10000 URL
+- ParamSpider 从 Wayback CDX 提取历史参数化 URL
+- Arjun 被动模式，无需向目标发请求
+- 全部 10 个 OSINT 提供方
+- 若被动来源识别出服务版本，则启用 CVE 查询与 MITRE 增强
 
-### What it disables
-- httpx HTTP probing (sends requests to target)
-- All web crawlers: Katana, Hakrawler (actively crawl target)
-- jsluice (downloads JS files from target)
-- JS Recon (crawls and downloads from target)
-- ffuf directory fuzzing (brute-forces target)
-- Kiterunner API discovery (brute-forces target)
-- Arjun active mode (passive mode is enabled instead)
-- Nuclei vulnerability scanning (actively tests target)
-- Masscan and Nmap (send packets to target)
-- Banner grabbing (connects to target services)
-- Wappalyzer (requires HTTP responses from target)
-- Security checks (some connect to target directly)
-- Amass active mode and brute force (DNS brute-forcing touches target nameservers)
-- Stealth mode (not needed -- we never touch the target at all)
+### 禁用内容
+- httpx：会主动向目标发 HTTP 请求
+- 所有 Web 爬虫（Katana、Hakrawler）
+- jsluice 与 JS Recon：需要从目标下载文件
+- ffuf 与 Kiterunner：会对目标做爆破
+- Arjun 主动模式
+- Nuclei：属于主动漏洞测试
+- Masscan 与 Nmap：会向目标发包
+- Banner 抓取：会直接连接目标服务
+- Wappalyzer：依赖目标 HTTP 响应
+- Security Checks：部分检测会直接触达目标
+- Amass 主动模式与爆破
+- Stealth Mode：没有必要，因为完全不接触目标
 
-### How it works
-1. Subdomain discovery queries certificate transparency logs, DNS databases, and OSINT APIs to enumerate all known subdomains
-2. DNS resolution uses public resolvers to map subdomains to IPs
-3. Puredns filters out wildcard domains via public DNS validation
-4. Naabu passive mode queries Shodan InternetDB for historically known open ports on discovered IPs
-5. GAU + ParamSpider pull historical URLs and parameters from Wayback Machine, CommonCrawl, OTX, and URLScan archives
-6. Arjun in passive mode discovers parameters without sending requests to the target
-7. All 10 OSINT providers enrich discovered IPs with geolocation, services, banners, threat intelligence, and passive CVEs
-8. CVE lookup and MITRE enrichment map found service versions to known vulnerabilities and attack patterns`,
+### 工作方式
+1. 子域发现通过证书透明、DNS 数据库与 OSINT API 枚举已知子域
+2. DNS 解析使用公共解析器将子域映射到 IP
+3. Puredns 过滤泛解析域名
+4. Naabu 被动模式查询 Shodan InternetDB 中已知开放端口
+5. GAU 与 ParamSpider 从 Wayback、CommonCrawl、OTX、URLScan 拉取历史 URL 与参数
+6. Arjun 被动模式从历史数据中推断参数
+7. 10 个 OSINT 提供方为资产补充地理位置、服务、Banner、威胁情报与被动 CVE
+8. CVE 查询与 MITRE 增强将识别出的服务版本映射到已知漏洞与攻击模式`,
   parameters: {
     // Modules: domain_discovery + port_scan (passive) + resource_enum (GAU/ParamSpider only)
     //        + vuln_scan (needed for CVE lookup + MITRE enrichment -- Nuclei itself is

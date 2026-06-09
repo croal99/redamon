@@ -2,46 +2,46 @@ import type { ReconPreset } from '../types'
 
 export const CLOUD_EXPOSURE: ReconPreset = {
   id: 'cloud-exposure',
-  name: 'Cloud & External Exposure',
+  name: '云与外网暴露',
   icon: '',
   image: '/preset-cloud-lock.svg',
-  shortDescription: 'Cloud-focused security assessment. OSINT providers for cloud-exposed services, httpx with ASN/CDN/TLS probes, security checks for cloud misconfigs, Nuclei with cloud templates.',
-  fullDescription: `### Pipeline Goal
-Identify cloud-exposed services, misconfigurations, and shadow infrastructure across your external attack surface. This preset combines all OSINT providers for maximum cloud asset discovery, httpx with full fingerprinting including ASN and CDN detection, port scanning focused on cloud-common ports (Kubernetes API, databases, admin panels), Nuclei with cloud/misconfig templates, and all security checks for infrastructure exposure.
+  shortDescription: '聚焦云环境安全评估。启用 OSINT、ASN/CDN/TLS 探针、云配置安全检查，以及带云模板的 Nuclei。',
+  fullDescription: `### 流程目标
+识别外部攻击面中的云暴露服务、错误配置与影子基础设施。该预设组合了全部 OSINT 数据源、带 ASN/CDN 检测的 httpx、针对云常见端口的扫描、云与配置错误相关的 Nuclei 模板，以及完整的基础设施暴露检查。
 
-### Who is this for?
-Cloud security engineers, red teams targeting cloud-hosted organizations, and security teams auditing their external cloud footprint. Ideal when you suspect services are exposed through misconfigured cloud environments -- Kubernetes dashboards, open databases, unprotected admin panels, or forgotten development instances.
+### 适用人群
+适合云安全工程师、针对云托管组织的红队，以及审计外部云资产暴露面的安全团队。尤其适用于怀疑目标存在 Kubernetes 控制面、开放数据库、未保护管理面板或遗留开发实例等云侧问题的场景。
 
-### What it enables
-- Full subdomain discovery (all tools, 10000 max) to find cloud-hosted hostnames
-- Naabu SYN scan on cloud-common ports (K8s API 6443/10250, databases 5432/6379/9200/27017, admin 8080/8443/8888, Docker 2376)
-- Nmap with version detection and NSE scripts for service fingerprinting
-- httpx with ALL probes -- ASN, CDN detection, TLS info, JARM fingerprinting, favicon hashing
-- Wappalyzer technology detection for identifying cloud platforms
-- Banner grabbing for non-HTTP cloud services
-- Nuclei scanning for critical/high/medium vulnerabilities with interactsh for OOB detection
-- CVE lookup (30 max per service) and MITRE CWE/CAPEC enrichment
-- All 10 OSINT providers enabled -- Shodan, Censys, URLScan, OTX, FOFA, Netlas, VirusTotal, ZoomEye, CriminalIP, Uncover
-- All 28 security checks -- especially Kubernetes API exposed, database exposed, admin port exposed, Redis no auth
+### 启用内容
+- 全量子域发现（全部工具，10000 上限）以寻找云托管主机名
+- Naabu 对云常见端口做 SYN 扫描（K8s API、数据库、管理面板、Docker 等）
+- Nmap 进行服务版本识别与 NSE 脚本探测
+- httpx 开启全部探针，包括 ASN、CDN、TLS、JARM、favicon 哈希等
+- Wappalyzer 识别云平台与技术栈
+- Banner 抓取非 HTTP 云服务
+- Nuclei 扫描 critical/high/medium，并使用 Interactsh 做 OOB 检测
+- CVE 查询与 MITRE CWE/CAPEC 增强
+- 全部 10 个 OSINT 提供方
+- 全部 28 项安全检查，重点覆盖 Kubernetes API、数据库、管理端口与 Redis 无认证
 
-### What it disables
-- Web crawlers (Katana, Hakrawler) -- not crawling web content, scanning cloud infrastructure
-- Directory fuzzing (ffuf), API discovery (Kiterunner) -- web-layer tools not relevant here
-- Parameter discovery (Arjun, ParamSpider) -- not testing web app parameters
-- GAU archive lookups -- not relevant to live cloud exposure
-- jsluice, JS Recon -- JavaScript analysis not relevant to cloud infrastructure
-- Masscan -- using Naabu with targeted cloud ports instead of broad sweeps
+### 禁用内容
+- Web 爬虫（Katana、Hakrawler）：目标不是页面内容，而是云基础设施
+- 目录爆破与 API 路由发现（ffuf、Kiterunner）：Web 层工具，此处不重点使用
+- 参数发现（Arjun、ParamSpider）：不针对 Web 参数测试
+- GAU：历史 URL 对实时云暴露帮助较小
+- jsluice、JS Recon：JS 分析与云基础设施关联不大
+- Masscan：改用更聚焦云端口的 Naabu
 
-### How it works
-1. Subdomain discovery enumerates all hostnames including cloud-hosted subdomains
-2. Naabu scans cloud-relevant ports (K8s, databases, admin panels, Docker API)
-3. Nmap enriches discovered ports with version detection and vulnerability scripts
-4. httpx probes all web endpoints with ASN/CDN/TLS fingerprinting to identify cloud providers
-5. All 10 OSINT providers query external databases for cloud-exposed assets and historical data
-6. Nuclei runs cloud/misconfig templates against discovered services with OOB detection
-7. CVE lookup maps service versions to known cloud-related vulnerabilities
-8. MITRE enrichment classifies findings by CWE weakness type and CAPEC attack pattern
-9. Security checks flag Kubernetes API exposure, open databases, admin panels, and cloud misconfigs`,
+### 工作方式
+1. 子域发现枚举所有可能的云托管主机名
+2. Naabu 扫描与云相关的常见端口
+3. Nmap 对已发现端口补充版本与脚本信息
+4. httpx 对 Web 端点做 ASN/CDN/TLS 指纹识别，判断云供应商线索
+5. 全部 OSINT 提供方查询外部数据库，补充云暴露资产与历史信息
+6. Nuclei 对已发现服务执行云/配置错误模板并进行 OOB 检测
+7. CVE 查询将服务版本映射到已知漏洞
+8. MITRE 增强将发现归类到 CWE 与 CAPEC
+9. Security Checks 标记 Kubernetes API、开放数据库、管理面板与云配置错误`,
   parameters: {
     // Modules: domain_discovery + port_scan + http_probe + vuln_scan
     // No resource_enum, no js_recon
