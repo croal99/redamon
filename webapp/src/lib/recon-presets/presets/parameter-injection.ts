@@ -147,6 +147,7 @@ export const PARAMETER_INJECTION: ReconPreset = {
     // --- DISABLE JS Recon ---
     jsReconEnabled: false,
 
+    aiSurfaceReconEnabled: false,
     // --- DISABLE ffuf ---
     ffufEnabled: false,
 

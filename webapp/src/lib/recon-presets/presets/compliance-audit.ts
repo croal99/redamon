@@ -130,6 +130,7 @@ export const COMPLIANCE_AUDIT: ReconPreset = {
     jsluiceEnabled: false,
     jsReconEnabled: false,
 
+    aiSurfaceReconEnabled: false,
     // --- DISABLE directory/API fuzzing ---
     ffufEnabled: false,
     kiterunnerEnabled: false,

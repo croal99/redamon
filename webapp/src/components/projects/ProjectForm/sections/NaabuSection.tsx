@@ -96,7 +96,13 @@ export function NaabuSection({ data, updateField, onRun }: NaabuSectionProps) {
                       onImport={(values) => updateField('naabuCustomPorts', values.join(','))}
                     />
                   </div>
-                  <span className={styles.fieldHint}>设置后将覆盖“常用端口”。支持范围：8080-8090</span>
+                  {data.naabuCustomPorts ? (
+                    <span className={styles.fieldHintWarning}>
+                      Custom Ports set &mdash; Top Ports is ignored. Only these ports are scanned and probed.
+                    </span>
+                  ) : (
+                    <span className={styles.fieldHint}>设置后将覆盖“常用端口”。支持范围：8080-8090</span>
+                  )}
                 </div>
               </div>
 

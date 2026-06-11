@@ -132,6 +132,7 @@ export const SUBDOMAIN_TAKEOVER: ReconPreset = {
     paramspiderEnabled: false,
     jsluiceEnabled: false,
     jsReconEnabled: false,
+    aiSurfaceReconEnabled: false,
     ffufEnabled: false,
     kiterunnerEnabled: false,
     arjunEnabled: false,

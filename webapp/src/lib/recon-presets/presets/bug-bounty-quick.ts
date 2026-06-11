@@ -147,6 +147,7 @@ export const BUG_BOUNTY_QUICK: ReconPreset = {
     // --- DISABLE JS Recon (too slow for quick scan) ---
     jsReconEnabled: false,
 
+    aiSurfaceReconEnabled: false,
     // --- DISABLE directory fuzzing ---
     ffufEnabled: false,
     ffufParallelism: 4,

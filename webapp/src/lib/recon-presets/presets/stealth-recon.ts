@@ -157,6 +157,7 @@ export const STEALTH_RECON: ReconPreset = {
     // --- DISABLE JS Recon ---
     jsReconEnabled: false,
 
+    aiSurfaceReconEnabled: false,
     // --- DISABLE directory fuzzing ---
     ffufEnabled: false,
 

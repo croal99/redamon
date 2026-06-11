@@ -110,6 +110,7 @@ export const FULL_PASSIVE_SCAN: ReconPreset = {
     // --- DISABLE JS Recon (crawls and downloads from target) ---
     jsReconEnabled: false,
 
+    aiSurfaceReconEnabled: false,
     // --- DISABLE directory fuzzing ---
     ffufEnabled: false,
 

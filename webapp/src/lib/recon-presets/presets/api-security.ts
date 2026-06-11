@@ -160,6 +160,7 @@ export const API_SECURITY: ReconPreset = {
     // --- DISABLE JS Recon (jsluice covers endpoint extraction) ---
     jsReconEnabled: false,
 
+    aiSurfaceReconEnabled: false,
     // --- ffuf: API-specific extensions, smart fuzz ---
     ffufEnabled: true,
     ffufThreads: 40,

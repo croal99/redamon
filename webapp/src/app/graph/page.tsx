@@ -30,6 +30,8 @@ import {
   ThreatIntelTable,
   SupplyChainTable,
   DnsDriftTable,
+  AiSurfaceTable,
+  AiRiskTable,
 } from './components/RedZoneTables'
 import { ActiveSessions } from './components/ActiveSessions'
 import { RoeViewer } from './components/RoeViewer'
@@ -1349,6 +1351,10 @@ export default function GraphPage() {
               />
             ) : tableViewMode === 'jsRecon' ? (
               <JsReconTable projectId={projectId} search={jsReconSearch} onDataLoaded={setJsReconData} />
+            ) : tableViewMode === 'aiSurface' ? (
+              <AiSurfaceTable projectId={projectId} />
+            ) : tableViewMode === 'aiRisk' ? (
+              <AiRiskTable projectId={projectId} />
             ) : tableViewMode === 'killChain' ? (
               <KillChainTable projectId={projectId} />
             ) : tableViewMode === 'blastRadius' ? (

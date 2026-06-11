@@ -100,6 +100,7 @@ export const DNS_EMAIL_SECURITY: ReconPreset = {
     jsluiceEnabled: false,
     jsReconEnabled: false,
 
+    aiSurfaceReconEnabled: false,
     // --- Directory/API/Parameter fuzzing: disabled ---
     ffufEnabled: false,
     kiterunnerEnabled: false,

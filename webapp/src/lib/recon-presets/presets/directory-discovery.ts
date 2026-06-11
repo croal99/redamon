@@ -153,6 +153,7 @@ export const DIRECTORY_DISCOVERY: ReconPreset = {
     // --- DISABLE JS Recon (jsluice is enough) ---
     jsReconEnabled: false,
 
+    aiSurfaceReconEnabled: false,
     // --- ffuf: deep recursion + many extensions ---
     ffufEnabled: true,
     ffufThreads: 60,

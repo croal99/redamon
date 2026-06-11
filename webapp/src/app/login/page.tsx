@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import { useVersionCheck } from '@/hooks/useVersionCheck'
 import styles from './page.module.css'
 import { Shield } from 'lucide-react'
 

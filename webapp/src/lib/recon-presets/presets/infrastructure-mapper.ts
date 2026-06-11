@@ -156,6 +156,7 @@ export const INFRASTRUCTURE_MAPPER: ReconPreset = {
     jsluiceEnabled: false,
     jsReconEnabled: false,
 
+    aiSurfaceReconEnabled: false,
     // --- DISABLE directory/API fuzzing ---
     ffufEnabled: false,
     kiterunnerEnabled: false,
