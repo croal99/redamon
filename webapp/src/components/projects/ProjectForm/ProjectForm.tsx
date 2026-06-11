@@ -788,17 +788,6 @@ export function ProjectForm({
               />
             )}
 
-            {/* Tab-based views */}
-            {activeTab === 'roe' && (
-          <RoeSection
-            data={formData}
-            updateField={updateField}
-            updateMultipleFields={updateMultipleFields}
-            mode={mode}
-            onFileSelected={setRoeFile}
-          />
-        )}
-
         {activeTab === 'target' && viewMode === 'tabs' && (
           <>
             <TargetSection data={formData} updateField={updateField} mode={mode} />
@@ -891,10 +880,6 @@ export function ProjectForm({
 
         {activeTab === 'attack' && (
           <AttackSkillsSection data={formData} updateField={updateField} />
-        )}
-
-        {activeTab === 'cypherfix' && (
-          <CypherFixSettingsSection data={formData} updateField={updateField} />
         )}
           </div>
         </>

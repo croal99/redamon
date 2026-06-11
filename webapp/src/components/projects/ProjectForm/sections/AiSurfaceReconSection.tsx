@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronDown, Radar, Play } from 'lucide-react'
-import { Toggle, WikiInfoButton } from '@/components/ui'
+import { Toggle } from '@/components/ui'
 import type { Project } from '@prisma/client'
 import styles from '../ProjectForm.module.css'
 import { NodeInfoTooltip } from '../NodeInfoTooltip'
@@ -26,7 +26,6 @@ export function AiSurfaceReconSection({ data, updateField, onRun }: AiSurfaceRec
           <Radar size={16} />
           AI Surface Recon
           <NodeInfoTooltip section="AiSurfaceRecon" />
-          <WikiInfoButton target="AiSurfaceRecon" />
           <span className={styles.badgeActive}>Active</span>
         </h2>
         <div className={styles.sectionHeaderRight}>
