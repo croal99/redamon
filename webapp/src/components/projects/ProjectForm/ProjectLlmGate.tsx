@@ -19,21 +19,21 @@ export function ProviderRequiredModal({ onCancel }: { onCancel: () => void }) {
         <div className={styles.gateIconWrapper}>
           <Cpu size={28} />
         </div>
-        <h2 className={styles.gateTitle}>Configure an LLM provider first</h2>
+        <h2 className={styles.gateTitle}>请先配置 LLM 提供商</h2>
         <p className={styles.gateMessage}>
-          RedAmon needs at least one LLM provider (DeepSeek, Anthropic, OpenAI, ...) before
-          you can create a project. The autonomous agent and the AI recon pipeline both rely on it.
+          在创建项目之前，星图至少需要配置一个 LLM 提供商（如 DeepSeek、Anthropic、OpenAI
+          等）。自主代理和 AI 侦察流水线都依赖它运行。
         </p>
         <div className={styles.gateActions}>
           <button type="button" className="secondaryButton" onClick={onCancel}>
-            Back to Projects
+            返回项目列表
           </button>
           <button
             type="button"
             className="primaryButton"
             onClick={() => router.push('/settings')}
           >
-            Configure Provider
+            去配置提供商
             <ArrowRight size={14} />
           </button>
         </div>
@@ -73,55 +73,53 @@ export function ModelSelectionModal({
         <div className={styles.gateIconWrapper}>
           <Sparkles size={28} />
         </div>
-        <h2 className={styles.gateTitle}>Select the AI models</h2>
+        <h2 className={styles.gateTitle}>选择 AI 模型</h2>
         <p className={styles.gateMessage}>
-          Choose the models RedAmon will use for this project. We&apos;ll remember them as the
-          default for your next project.
+          请选择 星图 在此项目中使用的模型。我们会记住你的选择，作为下一个项目的默认配置。
         </p>
 
         <div className={styles.gateField}>
           <label className={styles.gateLabel}>
-            <Bot size={14} /> Agent model
+            <Bot size={14} /> 代理模型
           </label>
           <span className={styles.gateHint}>
-            Used by the autonomous agent (chat, graph NL-to-Cypher queries).
+            用于自主代理功能（聊天、图谱自然语言转 Cypher 查询）。
           </span>
           <ModelPicker
             userId={userId}
             value={agentModel}
             onChange={onChangeAgent}
-            placeholder="Search agent models..."
+            placeholder="搜索代理模型..."
           />
         </div>
 
         <div className={styles.gateField}>
           <label className={styles.gateLabel}>
-            <Cpu size={14} /> AI recon pipeline model
+            <Cpu size={14} /> AI 侦察流水线模型
           </label>
           <span className={styles.gateHint}>
-            Used by recon AI hooks: Nuclei tag cascade, FP filter, WAF and takeover classifiers,
-            FFuf extensions.
+            用于侦察 AI Hook：Nuclei 标签级联、误报过滤、WAF 与接管分类器、FFuf 扩展。
           </span>
           <ModelPicker
             userId={userId}
             value={aiPipelineModel}
             onChange={onChangeAiPipeline}
-            placeholder="Search pipeline models..."
+            placeholder="搜索流水线模型..."
           />
         </div>
 
         <div className={styles.gateActions}>
           <button type="button" className="secondaryButton" onClick={onCancel}>
-            Cancel
+            取消
           </button>
           <button
             type="button"
             className="primaryButton"
             disabled={!ready}
             onClick={onConfirm}
-            title={ready ? 'Save the project with the selected models' : 'Select both models to continue'}
+            title={ready ? '使用所选模型保存项目' : '请选择两个模型后继续'}
           >
-            Save Project
+            保存项目
           </button>
         </div>
       </div>
