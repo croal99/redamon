@@ -1,0 +1,4 @@
+[submodule "anythingllm"]
+	path = anythingllm
+	url = https://github.com/croal99/anything-llm.git
+	branch = bluenet
