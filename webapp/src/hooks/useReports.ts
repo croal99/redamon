@@ -102,7 +102,7 @@ export function useReports(projectId: string, enabled = true) {
     generate: generateMutation.mutateAsync,
     isGenerating: generateMutation.isPending,
     generateError: generateMutation.error,
-    deleteReport: deleteMutation.mutate,
+    deleteReport: deleteMutation.mutateAsync,
     isDeleting: deleteMutation.isPending,
   }
 }
@@ -139,7 +139,7 @@ export function useAllReports() {
     generate: generateMutation.mutateAsync,
     isGenerating: generateMutation.isPending,
     generateError: generateMutation.error,
-    deleteReport: deleteMutation.mutate,
+    deleteReport: deleteMutation.mutateAsync,
     isDeleting: deleteMutation.isPending,
   }
 }

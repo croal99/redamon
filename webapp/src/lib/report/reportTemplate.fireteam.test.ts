@@ -49,6 +49,8 @@ function baseReportData(): any {
     secrets: { total: 0, bySeverity: [], bySource: [], byType: [], findings: [] },
     jsRecon: { totalFindings: 0, bySeverity: [], byType: [], findings: [] },
     graphqlScan: { totalFindings: 0, endpointsTested: 0, introspectionEnabled: 0, bySeverity: [], byType: [], endpoints: [], findings: [] },
+    vhostSni: { totalFindings: 0, ipsTested: 0, anomaliesL7: 0, anomaliesL4: 0, reverseProxiesDetected: 0, bySeverity: [], byLayer: [], byType: [], findings: [] },
+    aiSurface: { totalAiEndpoints: 0, ragIngestEndpoints: 0, promptInjectableParams: 0, mcpServers: 0, mcpPoisoningFindings: 0, vectorDbs: 0, modelFamilies: [], byInterfaceType: [], findings: [] },
     otx: { totalPulses: 0, totalMalware: 0, enrichedIps: 0, adversaries: [], pulses: [], malware: [] },
     attackChains: { chains: [], exploitSuccesses: [], topFindings: [], totalChainFindings: 0 },
     metrics: {
@@ -67,7 +69,7 @@ describe('reportTemplate Fireteam section', () => {
     const data = baseReportData()
     const html = generateReportHtml(data as any, null)
     expect(html).not.toContain('id="fireteams"')
-    expect(html).not.toContain('Multi-Agent Analysis')
+    expect(html).not.toContain('多智能体分析')
   })
 
   it('omits #fireteams when totalFireteams is 0', () => {
@@ -126,7 +128,7 @@ describe('reportTemplate Fireteam section', () => {
     }
     const html = generateReportHtml(data as any, null)
     expect(html).toContain('id="fireteams"')
-    expect(html).toContain('Multi-Agent Analysis')
+    expect(html).toContain('多智能体分析')
     expect(html).toContain('fteam-1-abc')
     expect(html).toContain('Web Tester')
     expect(html).toContain('SSH Analyst')

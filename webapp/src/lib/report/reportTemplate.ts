@@ -48,9 +48,21 @@ function sevBg(severity: string): string {
   }
 }
 
+function severityLabel(severity?: string): string {
+  switch (severity?.toLowerCase()) {
+    case 'critical': return '严重'
+    case 'high': return '高危'
+    case 'medium': return '中危'
+    case 'low': return '低危'
+    case 'info':
+    case 'informational': return '信息'
+    default: return '未知'
+  }
+}
+
 function sevBadge(severity: string): string {
   const s = severity?.toLowerCase() || 'unknown'
-  return `<span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;text-transform:uppercase;color:#fff;background:${sevColor(s)}">${esc(s)}</span>`
+  return `<span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;color:#fff;background:${sevColor(s)}">${esc(severityLabel(s))}</span>`
 }
 
 function riskScoreColor(score: number): string {
@@ -61,14 +73,27 @@ function riskScoreColor(score: number): string {
   return '#22c55e'
 }
 
+function riskLabelText(label?: string): string {
+  switch (label?.toLowerCase()) {
+    case 'minimal': return '低风险'
+    case 'info':
+    case 'informational': return '信息'
+    case 'critical': return '严重'
+    case 'high': return '高危'
+    case 'medium': return '中危'
+    case 'low': return '低危'
+    default: return label || '未知'
+  }
+}
+
 function riskScoreBadge(score: number, label: string): string {
   const bg = riskScoreColor(score)
-  return `<span style="display:inline-block;padding:4px 16px;border-radius:6px;font-size:14px;font-weight:700;text-transform:uppercase;color:#fff;background:${bg}">${score}/100 ${esc(label)}</span>`
+  return `<span style="display:inline-block;padding:4px 16px;border-radius:6px;font-size:14px;font-weight:700;color:#fff;background:${bg}">${score}/100 ${esc(riskLabelText(label))}</span>`
 }
 
 function formatDate(iso: string): string {
   try {
-    return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    return new Date(iso).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })
   } catch { return iso }
 }
 
@@ -153,12 +178,12 @@ function computePostureScores(data: ReportData): { metric: string; value: number
   }
 
   return [
-    { metric: 'Attack Surface', value: logNorm(attackSurfaceRaw, 13), raw: attackSurfaceRaw, detail: `${graphOverview.subdomainStats.total} subs, ${graphOverview.infrastructureStats.totalIps} IPs, ${openPorts} ports` },
-    { metric: 'Vuln Density', value: logNorm(vulnDensityRaw, 15), raw: vulnDensityRaw, detail: `${totalVulns} vulns, ${totalCves} CVEs` },
-    { metric: 'Exploitability', value: logNorm(exploitRaw, 25), raw: exploitRaw, detail: `${gvmExploits} GVM, ${attackChains.exploitSuccesses.length} chain, ${kevCount} KEV` },
-    { metric: 'Cert Health', value: certScore, raw: certHealthy, detail: `${certHealthy}/${certTotal} healthy` },
-    { metric: 'Injectable', value: injectableScore, raw: injectableParams, detail: `${injectableParams}/${totalParams} params` },
-    { metric: 'Sec Headers', value: secHeaderScore, raw: secHeaderScore, detail: `weighted coverage` },
+    { metric: '攻击面', value: logNorm(attackSurfaceRaw, 13), raw: attackSurfaceRaw, detail: `${graphOverview.subdomainStats.total} 个子域名，${graphOverview.infrastructureStats.totalIps} 个 IP，${openPorts} 个端口` },
+    { metric: '漏洞密度', value: logNorm(vulnDensityRaw, 15), raw: vulnDensityRaw, detail: `${totalVulns} 个漏洞，${totalCves} 个 CVE` },
+    { metric: '可利用性', value: logNorm(exploitRaw, 25), raw: exploitRaw, detail: `${gvmExploits} 个 GVM，${attackChains.exploitSuccesses.length} 条攻击链，${kevCount} 个 KEV` },
+    { metric: '证书健康度', value: certScore, raw: certHealthy, detail: `${certHealthy}/${certTotal} 状态健康` },
+    { metric: '可注入参数', value: injectableScore, raw: injectableParams, detail: `${injectableParams}/${totalParams} 个参数` },
+    { metric: '安全头覆盖', value: secHeaderScore, raw: secHeaderScore, detail: '按权重统计的覆盖率' },
   ]
 }
 
@@ -218,7 +243,7 @@ function renderSecurityPostureRadar(data: ReportData): string {
   const legendRows = axes.map(a => {
     const barColor = a.value >= 70 ? '#dc2626' : a.value >= 40 ? '#f59e0b' : a.value >= 20 ? '#3b82f6' : '#22c55e'
     // For Cert Health and Sec Headers, higher = better, so invert color
-    const isPositive = a.metric === 'Cert Health' || a.metric === 'Sec Headers'
+    const isPositive = a.metric === '证书健康度' || a.metric === '安全头覆盖'
     const color = isPositive
       ? (a.value >= 80 ? '#22c55e' : a.value >= 40 ? '#f59e0b' : '#dc2626')
       : barColor
@@ -239,7 +264,7 @@ function renderSecurityPostureRadar(data: ReportData): string {
       ${labels}
     </svg>
     <table class="data-table" style="flex:1;min-width:260px">
-      <thead><tr><th>Metric</th><th>Score</th><th>Detail</th></tr></thead>
+      <thead><tr><th>指标</th><th>评分</th><th>说明</th></tr></thead>
       <tbody>${legendRows}</tbody>
     </table>
   </div>`
@@ -268,7 +293,7 @@ function renderSecurityHeadersGap(data: ReportData): string {
     const count = headerMap.get(h.name) || 0
     const pct = Math.round(Math.min(count / totalBaseUrls, 1) * 100)
     weightedSum += h.weight * Math.min(count / totalBaseUrls, 1)
-    const priorityLabel = h.weight === 3 ? 'Critical' : h.weight === 2 ? 'High' : 'Low'
+    const priorityLabel = h.weight === 3 ? '高' : h.weight === 2 ? '中' : '低'
     const priorityColor = h.weight === 3 ? '#dc2626' : h.weight === 2 ? '#ea580c' : '#64748b'
     return `<tr>
       <td style="font-weight:600">${esc(h.label)}</td>
@@ -408,8 +433,8 @@ function renderAttackFlowChains(data: ReportData): string {
 export function generateReportHtml(data: ReportData, narratives: LLMNarratives | null): string {
   const { project, metrics } = data
   const n = narratives || {} as Partial<LLMNarratives>
-  const projectName = project.name || 'Security Assessment'
-  const targetDomain = project.targetDomain || 'N/A'
+  const projectName = project.name || '安全评估'
+  const targetDomain = project.targetDomain || '未指定'
   const generatedAt = formatDate(data.generatedAt)
 
   // RoE fields (optional)
@@ -417,11 +442,11 @@ export function generateReportHtml(data: ReportData, narratives: LLMNarratives |
   const engagementType = (project as any).roeEngagementType || ''
 
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${esc(projectName)} — Penetration Test Report</title>
+<title>${esc(projectName)} - 渗透测试报告</title>
 <style>
 ${CSS_STYLES}
 </style>
@@ -451,8 +476,8 @@ ${renderRecommendations(data, n.recommendationsNarrative)}
 ${renderAppendix(data)}
 
 <div class="footer">
-  <p>Generated by RedAmon on ${esc(generatedAt)}</p>
-  <p>This document contains confidential security assessment results. Handle according to classification.</p>
+  <p>由 RedAmon 生成于 ${esc(generatedAt)}</p>
+  <p>本文档包含机密安全评估结果，请按密级要求妥善处理。</p>
 </div>
 
 </body>
@@ -465,17 +490,17 @@ function renderCover(name: string, domain: string, date: string, client: string,
   return `
 <div class="cover">
   <div class="cover-header">
-    <h1 class="cover-title">Penetration Test Report</h1>
+    <h1 class="cover-title">渗透测试报告</h1>
     <h2 class="cover-subtitle">${esc(name)}</h2>
     <p class="cover-domain">${esc(domain)}</p>
   </div>
   <div class="cover-meta">
     <table class="cover-table">
-      <tr><td class="cover-label">Date</td><td>${esc(date)}</td></tr>
-      ${client ? `<tr><td class="cover-label">Client</td><td>${esc(client)}</td></tr>` : ''}
-      ${engType ? `<tr><td class="cover-label">Engagement Type</td><td>${esc(engType.replace(/_/g, ' '))}</td></tr>` : ''}
-      <tr><td class="cover-label">Risk Score</td><td>${riskScoreBadge(riskScore, riskLabel)}</td></tr>
-      <tr><td class="cover-label">Classification</td><td><strong>CONFIDENTIAL</strong></td></tr>
+      <tr><td class="cover-label">日期</td><td>${esc(date)}</td></tr>
+      ${client ? `<tr><td class="cover-label">客户</td><td>${esc(client)}</td></tr>` : ''}
+      ${engType ? `<tr><td class="cover-label">测试类型</td><td>${esc(engType.replace(/_/g, ' '))}</td></tr>` : ''}
+      <tr><td class="cover-label">风险评分</td><td>${riskScoreBadge(riskScore, riskLabel)}</td></tr>
+      <tr><td class="cover-label">密级</td><td><strong>机密</strong></td></tr>
     </table>
   </div>
 </div>`
@@ -483,52 +508,52 @@ function renderCover(name: string, domain: string, date: string, client: string,
 
 function renderTOC(data: ReportData): string {
   const dynamicSections: { id: string; label: string }[] = [
-    { id: 'executive-summary', label: 'Executive Summary' },
-    { id: 'scope', label: 'Scope & Methodology' },
-    { id: 'risk-summary', label: 'Risk Summary' },
-    { id: 'findings', label: 'Findings' },
-    { id: 'vulnerability-details', label: 'Other Vulnerability Details' },
-    { id: 'attack-surface', label: 'Attack Surface' },
-    { id: 'cve-intelligence', label: 'CVE Intelligence' },
+    { id: 'executive-summary', label: '执行摘要' },
+    { id: 'scope', label: '测试范围与方法' },
+    { id: 'risk-summary', label: '风险概览' },
+    { id: 'findings', label: '发现项' },
+    { id: 'vulnerability-details', label: '其他漏洞详情' },
+    { id: 'attack-surface', label: '攻击面' },
+    { id: 'cve-intelligence', label: 'CVE 情报' },
   ]
   if (data.cveIntelligence.githubSecrets.secrets > 0 || data.cveIntelligence.githubSecrets.sensitiveFiles > 0) {
-    dynamicSections.push({ id: 'github-secrets', label: 'GitHub Secrets' })
+    dynamicSections.push({ id: 'github-secrets', label: 'GitHub 密钥泄露' })
   }
   if (data.trufflehog.totalFindings > 0) {
-    dynamicSections.push({ id: 'trufflehog', label: 'TruffleHog Findings' })
+    dynamicSections.push({ id: 'trufflehog', label: 'TruffleHog 发现' })
   }
   if (data.secrets.total > 0) {
-    dynamicSections.push({ id: 'secrets', label: 'Secret Detection' })
+    dynamicSections.push({ id: 'secrets', label: '密钥检测' })
   }
   if (data.jsRecon.totalFindings > 0) {
-    dynamicSections.push({ id: 'js-recon', label: 'JavaScript Reconnaissance' })
+    dynamicSections.push({ id: 'js-recon', label: 'JavaScript 侦察' })
   }
   if (data.graphqlScan.endpointsTested > 0 || data.graphqlScan.totalFindings > 0) {
-    dynamicSections.push({ id: 'graphql-scan', label: 'GraphQL Security' })
+    dynamicSections.push({ id: 'graphql-scan', label: 'GraphQL 安全' })
   }
   if (data.vhostSni.totalFindings > 0 || data.vhostSni.ipsTested > 0) {
-    dynamicSections.push({ id: 'vhost-sni', label: 'VHost & SNI Enumeration' })
+    dynamicSections.push({ id: 'vhost-sni', label: 'VHost 与 SNI 枚举' })
   }
   if (data.aiSurface.totalAiEndpoints > 0 || data.aiSurface.ragIngestEndpoints > 0 || data.aiSurface.promptInjectableParams > 0
       || data.aiSurface.mcpServers > 0 || data.aiSurface.mcpPoisoningFindings > 0 || data.aiSurface.vectorDbs > 0) {
-    dynamicSections.push({ id: 'ai-surface', label: 'AI Surface' })
+    dynamicSections.push({ id: 'ai-surface', label: 'AI 攻击面' })
   }
   if (data.otx.totalPulses > 0 || data.otx.totalMalware > 0) {
-    dynamicSections.push({ id: 'otx', label: 'OTX Threat Intelligence' })
+    dynamicSections.push({ id: 'otx', label: 'OTX 威胁情报' })
   }
   if (data.attackChains.chains.length > 0) {
-    dynamicSections.push({ id: 'attack-chains', label: 'Attack Chains' })
+    dynamicSections.push({ id: 'attack-chains', label: '攻击链' })
   }
   dynamicSections.push(
-    { id: 'recommendations', label: 'Recommendations' },
-    { id: 'appendix', label: 'Appendix' },
+    { id: 'recommendations', label: '修复建议' },
+    { id: 'appendix', label: '附录' },
   )
   const sections = dynamicSections.map((s, i) => ({ id: s.id, title: `${i + 1}. ${s.label}` }))
 
   return `
 <div class="page-break"></div>
 <div class="section" id="toc">
-  <h2 class="section-title">Table of Contents</h2>
+  <h2 class="section-title">目录</h2>
   <ul class="toc-list">
     ${sections.map(s => `<li><a href="#${s.id}">${esc(s.title)}</a></li>`).join('\n    ')}
   </ul>
@@ -540,35 +565,35 @@ function renderExecutiveSummary(data: ReportData, narrative?: string): string {
   return `
 <div class="page-break"></div>
 <div class="section" id="executive-summary">
-  <h2 class="section-title">1. Executive Summary</h2>
+  <h2 class="section-title">1. 执行摘要</h2>
   ${narrative ? `<div class="narrative">${esc(narrative)}</div>` : ''}
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
-    <div class="metric-card-sm" style="border-left:3px solid #6366f1"><div class="metric-value-sm">${m.totalCves + m.totalVulnerabilities}</div><div class="metric-label-sm">Total Findings</div></div>
-    <div class="metric-card-sm" style="border-left:3px solid ${riskScoreColor(m.riskScore)}"><div class="metric-value-sm">${riskScoreBadge(m.riskScore, m.riskLabel)}</div><div class="metric-label-sm">Risk Score</div></div>
-    <div class="metric-card-sm"><div class="metric-value-sm">${m.exploitableCount}</div><div class="metric-label-sm">Confirmed Exploits</div></div>
-    <div class="metric-card-sm"><div class="metric-value-sm">${m.cvssAverage}</div><div class="metric-label-sm">Avg CVSS</div></div>
-    <div class="metric-card-sm"><div class="metric-value-sm">${m.attackSurfaceSize}</div><div class="metric-label-sm">Attack Surface</div></div>
-    <div class="metric-card-sm"><div class="metric-value-sm">${m.totalRemediations}</div><div class="metric-label-sm">Remediations</div></div>
-    ${m.secretsExposed > 0 ? `<div class="metric-card-sm" style="border-left:3px solid #dc2626"><div class="metric-value-sm">${m.secretsExposed}</div><div class="metric-label-sm">Secrets Exposed</div></div>` : ''}
+    <div class="metric-card-sm" style="border-left:3px solid #6366f1"><div class="metric-value-sm">${m.totalCves + m.totalVulnerabilities}</div><div class="metric-label-sm">发现总数</div></div>
+    <div class="metric-card-sm" style="border-left:3px solid ${riskScoreColor(m.riskScore)}"><div class="metric-value-sm">${riskScoreBadge(m.riskScore, m.riskLabel)}</div><div class="metric-label-sm">风险评分</div></div>
+    <div class="metric-card-sm"><div class="metric-value-sm">${m.exploitableCount}</div><div class="metric-label-sm">已确认利用</div></div>
+    <div class="metric-card-sm"><div class="metric-value-sm">${m.cvssAverage}</div><div class="metric-label-sm">平均 CVSS</div></div>
+    <div class="metric-card-sm"><div class="metric-value-sm">${m.attackSurfaceSize}</div><div class="metric-label-sm">攻击面</div></div>
+    <div class="metric-card-sm"><div class="metric-value-sm">${m.totalRemediations}</div><div class="metric-label-sm">修复项</div></div>
+    ${m.secretsExposed > 0 ? `<div class="metric-card-sm" style="border-left:3px solid #dc2626"><div class="metric-value-sm">${m.secretsExposed}</div><div class="metric-label-sm">泄露密钥</div></div>` : ''}
   </div>
 
   <div class="two-col" style="margin-bottom:20px">
     <div>
-      <h3 style="margin-top:8px">Known CVEs (${m.totalCves})</h3>
+      <h3 style="margin-top:8px">已知 CVE (${m.totalCves})</h3>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <div class="metric-card-sm" style="border-left:3px solid #dc2626"><div class="metric-value-sm">${m.cveCriticalCount}</div><div class="metric-label-sm">Critical</div></div>
-        <div class="metric-card-sm" style="border-left:3px solid #ea580c"><div class="metric-value-sm">${m.cveHighCount}</div><div class="metric-label-sm">High</div></div>
-        <div class="metric-card-sm" style="border-left:3px solid #d97706"><div class="metric-value-sm">${m.cveMediumCount}</div><div class="metric-label-sm">Medium</div></div>
-        <div class="metric-card-sm" style="border-left:3px solid #2563eb"><div class="metric-value-sm">${m.cveLowCount}</div><div class="metric-label-sm">Low</div></div>
+        <div class="metric-card-sm" style="border-left:3px solid #dc2626"><div class="metric-value-sm">${m.cveCriticalCount}</div><div class="metric-label-sm">严重</div></div>
+        <div class="metric-card-sm" style="border-left:3px solid #ea580c"><div class="metric-value-sm">${m.cveHighCount}</div><div class="metric-label-sm">高危</div></div>
+        <div class="metric-card-sm" style="border-left:3px solid #d97706"><div class="metric-value-sm">${m.cveMediumCount}</div><div class="metric-label-sm">中危</div></div>
+        <div class="metric-card-sm" style="border-left:3px solid #2563eb"><div class="metric-value-sm">${m.cveLowCount}</div><div class="metric-label-sm">低危</div></div>
       </div>
     </div>
     <div>
-      <h3 style="margin-top:8px">Other Vulnerabilities (${m.totalVulnerabilities})</h3>
+      <h3 style="margin-top:8px">其他漏洞 (${m.totalVulnerabilities})</h3>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <div class="metric-card-sm" style="border-left:3px solid #dc2626"><div class="metric-value-sm">${m.criticalCount}</div><div class="metric-label-sm">Critical</div></div>
-        <div class="metric-card-sm" style="border-left:3px solid #ea580c"><div class="metric-value-sm">${m.highCount}</div><div class="metric-label-sm">High</div></div>
-        <div class="metric-card-sm" style="border-left:3px solid #d97706"><div class="metric-value-sm">${m.mediumCount}</div><div class="metric-label-sm">Medium</div></div>
-        <div class="metric-card-sm" style="border-left:3px solid #2563eb"><div class="metric-value-sm">${m.lowCount}</div><div class="metric-label-sm">Low</div></div>
+        <div class="metric-card-sm" style="border-left:3px solid #dc2626"><div class="metric-value-sm">${m.criticalCount}</div><div class="metric-label-sm">严重</div></div>
+        <div class="metric-card-sm" style="border-left:3px solid #ea580c"><div class="metric-value-sm">${m.highCount}</div><div class="metric-label-sm">高危</div></div>
+        <div class="metric-card-sm" style="border-left:3px solid #d97706"><div class="metric-value-sm">${m.mediumCount}</div><div class="metric-label-sm">中危</div></div>
+        <div class="metric-card-sm" style="border-left:3px solid #2563eb"><div class="metric-value-sm">${m.lowCount}</div><div class="metric-label-sm">低危</div></div>
       </div>
     </div>
   </div>
@@ -654,7 +679,7 @@ function renderScope(data: ReportData, narrative?: string): string {
   return `
 <div class="page-break"></div>
 <div class="section" id="scope">
-  <h2 class="section-title">2. Scope & Methodology</h2>
+  <h2 class="section-title">2. 测试范围与方法</h2>
   ${narrative ? `<div class="narrative">${esc(narrative)}</div>` : ''}
 
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
@@ -711,7 +736,7 @@ function renderRiskSummary(data: ReportData, narrative?: string): string {
   return `
 <div class="page-break"></div>
 <div class="section" id="risk-summary">
-  <h2 class="section-title">3. Risk Summary</h2>
+  <h2 class="section-title">3. 风险概览</h2>
   ${narrative ? `<div class="narrative">${esc(narrative)}</div>` : ''}
   ${renderSecurityPostureRadar(data)}
   <div class="two-col">
@@ -745,7 +770,7 @@ function renderFindings(data: ReportData, narrative?: string): string {
     return `
 <div class="page-break"></div>
 <div class="section" id="findings">
-  <h2 class="section-title">4. Findings</h2>
+  <h2 class="section-title">4. 发现项</h2>
   <p class="muted">No remediation findings have been generated yet. Run CypherFix triage to generate prioritized findings.</p>
 </div>`
   }
@@ -788,9 +813,9 @@ function renderFindings(data: ReportData, narrative?: string): string {
         if (rx.stepsToReproduce) fields.push(`<tr><td>Steps to Reproduce</td><td><pre class="pre-wrap">${esc(String(rx.stepsToReproduce))}</pre></td></tr>`)
         if (rx.suggestedFix) fields.push(`<tr><td>Suggested Fix</td><td><pre class="pre-wrap">${esc(String(rx.suggestedFix))}</pre></td></tr>`)
         if (rx.references) fields.push(`<tr><td>References</td><td>${esc(String(rx.references))}</td></tr>`)
-        const statusBadge = r.status === 'completed' ? '<span class="status-done">Fixed</span>'
-          : r.status === 'in_progress' ? '<span class="status-progress">In Progress</span>'
-          : '<span class="status-open">Open</span>'
+        const statusBadge = r.status === 'completed' ? '<span class="status-done">已修复</span>'
+          : r.status === 'in_progress' ? '<span class="status-progress">修复中</span>'
+          : '<span class="status-open">待处理</span>'
 
         return `
         <div class="finding-card" style="border-left:4px solid ${sevColor(sev)}; background:${sevBg(sev)}">
@@ -805,15 +830,15 @@ function renderFindings(data: ReportData, narrative?: string): string {
         </div>`
       }).join('')
 
-      return `<h3>${sevBadge(sev)} ${sev.charAt(0).toUpperCase() + sev.slice(1)} (${items.length})</h3>${itemsHtml}`
+      return `<h3>${sevBadge(sev)} ${severityLabel(sev)} (${items.length})</h3>${itemsHtml}`
     }).join('')
 
   return `
 <div class="page-break"></div>
 <div class="section" id="findings">
-  <h2 class="section-title">4. Findings</h2>
+  <h2 class="section-title">4. 发现项</h2>
   ${narrative ? `<div class="narrative">${esc(narrative)}</div>` : ''}
-  <p>Total remediation items: <strong>${remediations.length}</strong></p>
+  <p>修复项总数：<strong>${remediations.length}</strong></p>
   ${sections}
 </div>`
 }
@@ -824,8 +849,8 @@ function renderVulnerabilityDetails(data: ReportData): string {
     return `
 <div class="page-break"></div>
 <div class="section" id="vulnerability-details">
-  <h2 class="section-title">5. Other Vulnerability Details</h2>
-  <p class="muted">No vulnerability nodes found in the graph.</p>
+  <h2 class="section-title">5. 其他漏洞详情</h2>
+  <p class="muted">图中未发现漏洞节点。</p>
 </div>`
   }
 
@@ -859,7 +884,7 @@ function renderVulnerabilityDetails(data: ReportData): string {
   return `
 <div class="page-break"></div>
 <div class="section" id="vulnerability-details">
-  <h2 class="section-title">5. Other Vulnerability Details</h2>
+  <h2 class="section-title">5. 其他漏洞详情</h2>
   <p>Total vulnerability nodes: <strong>${findings.length}</strong></p>
   ${sourceSections}
 </div>`
@@ -889,7 +914,7 @@ function renderAttackSurface(data: ReportData, narrative?: string): string {
   return `
 <div class="page-break"></div>
 <div class="section" id="attack-surface">
-  <h2 class="section-title">6. Attack Surface</h2>
+  <h2 class="section-title">6. 攻击面</h2>
   ${narrative ? `<div class="narrative">${esc(narrative)}</div>` : ''}
 
   <div class="two-col">
@@ -973,7 +998,7 @@ function renderCveIntelligence(data: ReportData): string {
     return `
 <div class="page-break"></div>
 <div class="section" id="cve-intelligence">
-  <h2 class="section-title">7. CVE Intelligence</h2>
+  <h2 class="section-title">7. CVE 情报</h2>
   <p class="muted">No CVE intelligence data available.</p>
 </div>`
   }
@@ -1016,14 +1041,14 @@ function renderCveIntelligence(data: ReportData): string {
       <td>${sevBadge(e.severity)}</td>
       <td>${e.cvssScore != null ? e.cvssScore.toFixed(1) : '—'}</td>
       <td>${esc(e.targetIp || '—')}${e.targetPort ? `:${e.targetPort}` : ''}</td>
-      <td>${e.cisaKev ? '<span style="color:#dc2626;font-weight:600">YES</span>' : 'No'}</td>
+      <td>${e.cisaKev ? '<span style="color:#dc2626;font-weight:600">是</span>' : '否'}</td>
       <td>${e.cveIds.length > 0 ? e.cveIds.map(id => esc(id)).join(', ') : '—'}</td>
     </tr>`).join('')
 
   return `
 <div class="page-break"></div>
 <div class="section" id="cve-intelligence">
-  <h2 class="section-title">7. CVE Intelligence</h2>
+  <h2 class="section-title">7. CVE 情报</h2>
 
   ${renderCisaKevCallout(data)}
 
@@ -1059,9 +1084,9 @@ function renderGithubSecrets(data: ReportData): string {
   return `
 <div class="page-break"></div>
 <div class="section" id="github-secrets">
-  <h2 class="section-title">GitHub Secrets</h2>
+  <h2 class="section-title">GitHub 密钥泄露</h2>
   <div class="alert alert-critical">
-    Exposed secrets and sensitive files were discovered in GitHub repositories associated with the target.
+    在与目标相关联的 GitHub 仓库中发现了泄露密钥和敏感文件。
   </div>
   <table class="data-table">
     <tbody>
@@ -1080,7 +1105,7 @@ function renderTrufflehog(data: ReportData): string {
   const findingRows = th.findings.map(f => `
     <tr${f.verified ? ' style="background:#fef2f2"' : ''}>
       <td>${esc(f.detectorName)}</td>
-      <td>${f.verified ? '<span style="color:#dc2626;font-weight:600">VERIFIED</span>' : '<span style="color:#d97706">Unverified</span>'}</td>
+      <td>${f.verified ? '<span style="color:#dc2626;font-weight:600">已验证</span>' : '<span style="color:#d97706">未验证</span>'}</td>
       <td style="font-family:monospace;font-size:11px">${esc(f.redacted || '')}</td>
       <td>${esc(f.repository || '')}</td>
       <td>${esc(f.file || '')}</td>
@@ -1089,9 +1114,9 @@ function renderTrufflehog(data: ReportData): string {
   return `
 <div class="page-break"></div>
 <div class="section" id="trufflehog">
-  <h2 class="section-title">TruffleHog Findings</h2>
+  <h2 class="section-title">TruffleHog 发现</h2>
   ${th.verifiedFindings > 0 ? `<div class="alert alert-critical">
-    ${th.verifiedFindings} verified credential(s) detected in git history. These credentials have been confirmed as active and represent immediate risk.
+    在 Git 历史中发现 ${th.verifiedFindings} 条已验证凭据，这些凭据已被确认仍然有效，存在即时风险。
   </div>` : ''}
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
     <div class="metric-card-sm" style="border-left:3px solid #6366f1"><div class="metric-value-sm">${th.totalFindings}</div><div class="metric-label-sm">Total Findings</div></div>
@@ -1127,7 +1152,7 @@ function renderSecrets(data: ReportData): string {
   return `
 <div class="page-break"></div>
 <div class="section" id="secrets">
-  <h2 class="section-title">Secret Detection</h2>
+  <h2 class="section-title">密钥检测</h2>
   <div class="alert alert-critical">
     ${sec.total} secret(s) detected across web resources and JavaScript files.
   </div>
@@ -1178,7 +1203,7 @@ function renderJsRecon(data: ReportData): string {
   return `
 <div class="page-break"></div>
 <div class="section" id="js-recon">
-  <h2 class="section-title">JavaScript Reconnaissance</h2>
+  <h2 class="section-title">JavaScript 侦察</h2>
   <p style="margin-bottom:12px">Deep analysis of JavaScript files revealed ${js.totalFindings} finding(s) across dependency confusion risks, source map exposure, DOM sinks, developer comments, framework detection, and AI/LLM SDK exposure (vendor SDK imports, hard-coded provider API keys, the dangerouslyAllowBrowser opt-in, AI-frontend product markers, and provider base URLs visible in shipped JS chunks).</p>
   <div class="two-col">
     <div>
@@ -1218,7 +1243,7 @@ function renderGraphqlScan(data: ReportData): string {
   const endpointRows = gql.endpoints.map(e => `
     <tr>
       <td style="font-family:monospace;font-size:11px;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(e.url)}</td>
-      <td>${e.introspectionEnabled ? '<span style="color:#dc2626;font-weight:600">YES</span>' : 'no'}</td>
+      <td>${e.introspectionEnabled ? '<span style="color:#dc2626;font-weight:600">是</span>' : '否'}</td>
       <td>${e.queriesCount}</td>
       <td>${e.mutationsCount}</td>
       <td>${e.subscriptionsCount}</td>
@@ -1244,8 +1269,8 @@ function renderGraphqlScan(data: ReportData): string {
   return `
 <div class="page-break"></div>
 <div class="section" id="graphql-scan">
-  <h2 class="section-title">GraphQL Security</h2>
-  <p style="margin-bottom:12px">Active GraphQL security scan tested <strong>${gql.endpointsTested}</strong> endpoint(s). <strong>${gql.introspectionEnabled}</strong> had introspection enabled, exposing schema details. ${gql.totalFindings} vulnerability finding(s) produced.</p>
+  <h2 class="section-title">GraphQL 安全</h2>
+  <p style="margin-bottom:12px">主动式 GraphQL 安全扫描共测试 <strong>${gql.endpointsTested}</strong> 个端点，其中 <strong>${gql.introspectionEnabled}</strong> 个启用了内省并暴露了 schema 细节，共产出 ${gql.totalFindings} 条漏洞发现。</p>
   ${gql.totalFindings > 0 ? `
   <div class="two-col">
     <div>
@@ -1318,7 +1343,7 @@ function renderVhostSni(data: ReportData): string {
   return `
 <div class="page-break"></div>
 <div class="section" id="vhost-sni">
-  <h2 class="section-title">VHost &amp; SNI Enumeration</h2>
+  <h2 class="section-title">VHost 与 SNI 枚举</h2>
   <p style="margin-bottom:12px">Probed <strong>${vs.ipsTested}</strong> IP(s) for hidden virtual hosts. Found <strong>${vs.totalFindings}</strong> anomalies (${vs.anomaliesL7} via HTTP Host header, ${vs.anomaliesL4} via TLS SNI). <strong>${vs.reverseProxiesDetected}</strong> IP(s) flagged as reverse proxies / ingress controllers.</p>
   ${vs.totalFindings > 0 ? `
   <div class="two-col">
@@ -1376,7 +1401,7 @@ function renderAiSurface(data: ReportData): string {
 
   return `<div class="page-break"></div>
 <section id="ai-surface">
-  <h2>AI Surface</h2>
+  <h2>AI 攻击面</h2>
   <p class="lead">
     Endpoints classified by the AI surface recon module as carrying a known LLM,
     embedding, tool-call, MCP, or RAG interface. Each finding indicates an attack
@@ -1434,7 +1459,7 @@ function renderOtx(data: ReportData): string {
   return `
 <div class="page-break"></div>
 <div class="section" id="otx">
-  <h2 class="section-title">OTX Threat Intelligence</h2>
+  <h2 class="section-title">OTX 威胁情报</h2>
   <p style="margin-bottom:12px">AlienVault OTX threat intelligence enrichment identified associations between discovered infrastructure and known threat activity.</p>
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
     <div class="metric-card-sm" style="border-left:3px solid #6366f1"><div class="metric-value-sm">${otx.totalPulses}</div><div class="metric-label-sm">Threat Pulses</div></div>
@@ -1496,7 +1521,7 @@ function renderAttackChains(data: ReportData): string {
   return `
 <div class="page-break"></div>
 <div class="section" id="attack-chains">
-  <h2 class="section-title">Attack Chains</h2>
+  <h2 class="section-title">攻击链</h2>
 
   <h3>Chain Summary (${chains.length})</h3>
   <table class="data-table">
@@ -1527,7 +1552,7 @@ function renderRecommendations(data: ReportData, narrative?: string): string {
   return `
 <div class="page-break"></div>
 <div class="section" id="recommendations">
-  <h2 class="section-title">Recommendations</h2>
+  <h2 class="section-title">修复建议</h2>
   ${narrative ? `<div class="narrative">${esc(narrative)}</div>` : ''}
   ${openItems.length > 0 ? `
   <h3>Priority Remediation Items (${openItems.length} open)</h3>
@@ -1597,11 +1622,11 @@ function renderFireteams(data: ReportData): string {
 
   return `
 <div class="section" id="fireteams">
-  <h2>Multi-Agent Analysis (Fireteam)</h2>
+  <h2>多智能体分析（Fireteam）</h2>
   <p class="intro">
-    This engagement used ${ft.totalFireteams} parallel fireteam${ft.totalFireteams > 1 ? 's' : ''}
-    across ${ft.totalMembers} specialist member${ft.totalMembers !== 1 ? 's' : ''}, producing
-    ${ft.totalFindings} attributed finding${ft.totalFindings !== 1 ? 's' : ''}.
+    本次测试共启用了 ${ft.totalFireteams} 个并行 Fireteam，
+    覆盖 ${ft.totalMembers} 名专业成员，共产出
+    ${ft.totalFindings} 条带归因的发现。
   </p>
   ${deployments}
 </div>`
@@ -1617,7 +1642,7 @@ function renderAppendix(data: ReportData): string {
   return `
 <div class="page-break"></div>
 <div class="section" id="appendix">
-  <h2 class="section-title">Appendix</h2>
+  <h2 class="section-title">附录</h2>
 
   <h3>A. Graph Node Distribution</h3>
   <table class="data-table">

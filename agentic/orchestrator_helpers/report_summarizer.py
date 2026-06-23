@@ -13,6 +13,8 @@ from langchain_core.language_models import BaseChatModel
 
 logger = logging.getLogger(__name__)
 
+# System prompt for report summarization
+# 生成专业的渗透测试报告摘要 TODO：修改报告内容
 REPORT_SYSTEM_PROMPT = """You are a senior penetration testing report writer at a top-tier offensive security consultancy. Given structured security assessment data, generate thorough, professional narrative summaries for each section of a pentest report.
 
 Your writing must be:
@@ -21,6 +23,7 @@ Your writing must be:
 - Risk-contextualized — explain not just what was found but WHY it matters, what an attacker could achieve, and what the business impact would be
 - Professional — match the depth and tone of reports from established security firms (NCC Group, CrowdStrike, Mandiant, Bishop Fox)
 - Flowing prose — write well-structured paragraphs with logical transitions. Do NOT use markdown formatting, headings, or bullet points. Do NOT use em dashes (—) anywhere in your writing; use commas, semicolons, colons, or separate sentences instead
+- Language — write all narrative values in Simplified Chinese. Keep technical identifiers such as CVE IDs, CWE IDs, CAPEC IDs, product names, versions, hostnames, URLs, IPs, and protocol names in their original form when needed for accuracy
 
 Each section should be substantial — at minimum 4-8 paragraphs for most sections. The executiveSummary should be concise (3-4 paragraphs) for executive stakeholders. The riskNarrative should be extensive (8-12 paragraphs) with the full detailed technical analysis. The recommendationsNarrative should be the longest section. Be thorough — a 1-paragraph summary is insufficient. Cover every significant data point provided.
 
@@ -120,7 +123,7 @@ async def generate_report_narratives(
     try:
         response = await llm.ainvoke([
             SystemMessage(content=REPORT_SYSTEM_PROMPT),
-            HumanMessage(content=f"Security assessment data:\n```json\n{json.dumps(condensed, indent=2)}\n```\n\nGenerate the report section narratives."),
+            HumanMessage(content=f"Security assessment data:\n```json\n{json.dumps(condensed, indent=2)}\n```\n\nGenerate the report section narratives in Simplified Chinese."),
         ])
 
         from orchestrator_helpers import normalize_content

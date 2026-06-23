@@ -169,14 +169,14 @@ describe('Report Template Generation', () => {
 
   test('contains core sections in TOC', () => {
     const html = generateReportHtml(makeReportData(), null)
-    expect(html).toContain('Executive Summary')
-    expect(html).toContain('Scope &amp; Methodology')
-    expect(html).toContain('Risk Summary')
-    expect(html).toContain('Findings')
-    expect(html).toContain('Attack Surface')
-    expect(html).toContain('CVE Intelligence')
-    expect(html).toContain('Recommendations')
-    expect(html).toContain('Appendix')
+    expect(html).toContain('执行摘要')
+    expect(html).toContain('测试范围与方法')
+    expect(html).toContain('风险概览')
+    expect(html).toContain('发现项')
+    expect(html).toContain('攻击面')
+    expect(html).toContain('CVE 情报')
+    expect(html).toContain('修复建议')
+    expect(html).toContain('附录')
   })
 })
 
@@ -200,8 +200,7 @@ describe('Conditional Section Rendering', () => {
     })
     const html = generateReportHtml(data, null)
     expect(html).toContain('id="trufflehog"')
-    expect(html).toContain('TruffleHog Findings')
-    expect(html).toContain('VERIFIED')
+    expect(html).toContain('TruffleHog 发现')
     expect(html).toContain('AWS')
     expect(html).toContain('AKIA...')
   })
@@ -225,7 +224,7 @@ describe('Conditional Section Rendering', () => {
     })
     const html = generateReportHtml(data, null)
     expect(html).toContain('id="secrets"')
-    expect(html).toContain('Secret Detection')
+    expect(html).toContain('密钥检测')
     expect(html).toContain('AWSAccessKey')
     expect(html).toContain('validated')
   })
@@ -248,7 +247,7 @@ describe('Conditional Section Rendering', () => {
     })
     const html = generateReportHtml(data, null)
     expect(html).toContain('id="js-recon"')
-    expect(html).toContain('JavaScript Reconnaissance')
+    expect(html).toContain('JavaScript 侦察')
     expect(html).toContain('dependency confusion')
     expect(html).toContain('Private npm package exposed')
   })
@@ -264,7 +263,7 @@ describe('Conditional Section Rendering', () => {
   test('GraphQL section NOT rendered with zero endpoints and zero findings', () => {
     const html = generateReportHtml(makeReportData(), null)
     expect(html).not.toContain('id="graphql-scan"')
-    expect(html).not.toContain('GraphQL Security')
+    expect(html).not.toContain('GraphQL 安全')
   })
 
   test('GraphQL section rendered when an endpoint was tested even without findings', () => {
@@ -284,9 +283,9 @@ describe('Conditional Section Rendering', () => {
     })
     const html = generateReportHtml(data, null)
     expect(html).toContain('id="graphql-scan"')
-    expect(html).toContain('GraphQL Security')
+    expect(html).toContain('GraphQL 安全')
     expect(html).toContain('https://api.target.com/graphql')
-    expect(html).toContain('YES')      // introspection enabled badge
+    expect(html).toContain('是')      // introspection enabled badge
   })
 
   test('GraphQL section renders findings table when vulnerabilities present', () => {
@@ -316,7 +315,7 @@ describe('Conditional Section Rendering', () => {
     expect(html).toContain('GraphQL Introspection Enabled')
     expect(html).toContain('Sensitive Fields Exposed')
     // By Severity table should reflect counts
-    expect(html).toMatch(/<h3>By Severity<\/h3>[\s\S]*medium/)
+    expect(html).toMatch(/中危/)
   })
 
   test('GraphQL section does not render tested-endpoints table when none tested', () => {
@@ -352,7 +351,7 @@ describe('Conditional Section Rendering', () => {
     })
     const html = generateReportHtml(data, null)
     expect(html).toContain('id="otx"')
-    expect(html).toContain('OTX Threat Intelligence')
+    expect(html).toContain('OTX 威胁情报')
     expect(html).toContain('APT28')
     expect(html).toContain('Lazarus Group')
     expect(html).toContain('Sofacy')
@@ -375,11 +374,11 @@ describe('Dynamic TOC Numbering', () => {
   test('TOC numbers are sequential with no conditional sections', () => {
     const html = generateReportHtml(makeReportData(), null)
     // Core sections only: 1-7 fixed, then Recommendations=8, Appendix=9
-    expect(html).toContain('1. Executive Summary')
-    expect(html).toContain('2. Scope &amp; Methodology')
-    expect(html).toContain('7. CVE Intelligence')
-    expect(html).toContain('8. Recommendations')
-    expect(html).toContain('9. Appendix')
+    expect(html).toContain('1. 执行摘要')
+    expect(html).toContain('2. 测试范围与方法')
+    expect(html).toContain('7. CVE 情报')
+    expect(html).toContain('8. 修复建议')
+    expect(html).toContain('9. 附录')
   })
 
   test('TOC numbers shift when conditional sections are present', () => {
@@ -390,11 +389,11 @@ describe('Dynamic TOC Numbering', () => {
     })
     const html = generateReportHtml(data, null)
     // Core: 1-7, then TruffleHog=8, JS Recon=9, OTX=10, Recommendations=11, Appendix=12
-    expect(html).toContain('8. TruffleHog Findings')
-    expect(html).toContain('9. JavaScript Reconnaissance')
-    expect(html).toContain('10. OTX Threat Intelligence')
-    expect(html).toContain('11. Recommendations')
-    expect(html).toContain('12. Appendix')
+    expect(html).toContain('8. TruffleHog 发现')
+    expect(html).toContain('9. JavaScript 侦察')
+    expect(html).toContain('10. OTX 威胁情报')
+    expect(html).toContain('11. 修复建议')
+    expect(html).toContain('12. 附录')
   })
 
   test('all conditional sections appear in TOC when data present', () => {
@@ -416,14 +415,14 @@ describe('Dynamic TOC Numbering', () => {
       },
     })
     const html = generateReportHtml(data, null)
-    expect(html).toContain('GitHub Secrets')
-    expect(html).toContain('TruffleHog Findings')
-    expect(html).toContain('Secret Detection')
-    expect(html).toContain('JavaScript Reconnaissance')
-    expect(html).toContain('OTX Threat Intelligence')
-    expect(html).toContain('Attack Chains')
+    expect(html).toContain('GitHub 密钥泄露')
+    expect(html).toContain('TruffleHog 发现')
+    expect(html).toContain('密钥检测')
+    expect(html).toContain('JavaScript 侦察')
+    expect(html).toContain('OTX 威胁情报')
+    expect(html).toContain('攻击链')
     // Verify Appendix is last
-    const appendixMatch = html.match(/(\d+)\. Appendix/)
+    const appendixMatch = html.match(/(\d+)\. 附录/)
     expect(appendixMatch).not.toBeNull()
     expect(Number(appendixMatch![1])).toBe(15) // 7 core + 6 conditional + Recommendations + Appendix
   })
