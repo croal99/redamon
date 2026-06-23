@@ -406,7 +406,11 @@ recon 容器通过挂载 `/var/run/docker.sock` 实现 Docker-in-Docker **兄弟
 
 ### 4.8 首次部署的正确步骤
 
+VPS配置： 4 核（vCPU）8 GiB  120GB SSD
+
 ```bash
+git clone -b v_4.14 --depth 1 https://github.com/croal99/redamon.git
+
 # 1. 配置 .env — 必须设置非 'changeme' 的 INTERNAL_API_KEY
 echo "INTERNAL_API_KEY=redamon_internal_$(openssl rand -hex 16)" >> .env
 echo "AUTH_SECRET=redamon_internal_$(openssl rand -hex 16)" >> .env
@@ -417,8 +421,8 @@ echo "AUTH_SECRET=redamon_internal_$(openssl rand -hex 16)" >> .env
 
 # 2. 构建 tools profile 镜像 (仅打包代码，不下载工具镜像)
 # docker compose --profile tools build
-docker compose build postgres neo4j recon-orchestrator kali-sandbox agent webapp
-docker compose up -d postgres neo4j recon-orchestrator kali-sandbox agent webapp
+docker compose build postgres neo4j recon recon-orchestrator kali-sandbox agent webapp nginx
+docker compose up -d postgres neo4j recon recon-orchestrator kali-sandbox agent webapp nginx
 
 # 3. 预拉取工具镜像，避免首次运行时等待
 for img in \
@@ -448,6 +452,12 @@ docker exec redamon-kali env | grep INTERNAL_API_KEY
 
 # 6. 创建管理员账号
 ADMIN_NAME=admin ADMIN_EMAIL=admin@mail.com ADMIN_PASSWORD=oracle node scripts/create-admin.mjs
+docker compose exec -T \
+  -e ADMIN_NAME=admin \
+  -e ADMIN_EMAIL=admin@mail.com \
+  -e ADMIN_PASSWORD=oracle \
+  webapp \
+  node scripts/create-admin.mjs
 ```
 
 ---

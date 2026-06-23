@@ -12,7 +12,7 @@ KBASE_DISABLED_FLAG_FILE="$SCRIPT_DIR/.kbase-disabled"
 LEGACY_SKIPKBASE_FLAG_FILE="$SCRIPT_DIR/.skipkbase"
 
 # Service lists
-CORE_SERVICES="postgres neo4j recon-orchestrator kali-sandbox agent webapp"
+CORE_SERVICES="postgres neo4j recon-orchestrator kali-sandbox agent webapp nginx"
 TOOL_IMAGES="redamon-recon:latest redamon-vuln-scanner:latest redamon-github-hunter:latest redamon-trufflehog:latest redamon-baddns:latest"
 DEV_COMPOSE="-f docker-compose.yml -f docker-compose.dev.yml"
 
@@ -143,19 +143,16 @@ ensure_admin() {
     has_admin=$(docker compose exec -T webapp node scripts/check-admin.mjs 2>/dev/null | tr -d '[:space:]')
 
     if [[ "$has_admin" == "0" || -z "$has_admin" ]]; then
+        local ADMIN_NAME="admin"
+        local ADMIN_EMAIL="admin@mail.com"
+        local ADMIN_PASS="oracle"
+
         echo ""
-        warn "No admin user found. Let's create one."
+        warn "No admin user found. Creating default admin user."
         echo ""
-        read -rp "  Admin name: " ADMIN_NAME </dev/tty
-        read -rp "  Admin email: " ADMIN_EMAIL </dev/tty
-        while true; do
-            read -srp "  Admin password: " ADMIN_PASS </dev/tty
-            echo ""
-            read -srp "  Confirm password: " ADMIN_PASS2 </dev/tty
-            echo ""
-            [[ "$ADMIN_PASS" == "$ADMIN_PASS2" ]] && break
-            warn "Passwords do not match. Try again."
-        done
+        echo "  Admin name: $ADMIN_NAME"
+        echo "  Admin email: $ADMIN_EMAIL"
+        echo "  Admin password: $ADMIN_PASS"
         docker compose exec -T \
             -e "ADMIN_NAME=$ADMIN_NAME" \
             -e "ADMIN_EMAIL=$ADMIN_EMAIL" \
@@ -592,6 +589,25 @@ cmd_install() {
     # Build all images (tools + core services)
     info "Building all images (this may take a while on first run)..."
     docker compose --profile tools build
+
+    # 3. 预拉取工具镜像，避免首次运行时等待
+    for img in \
+        projectdiscovery/naabu:latest \
+        projectdiscovery/httpx:latest \
+        projectdiscovery/katana:latest \
+        projectdiscovery/nuclei:latest \
+        projectdiscovery/subfinder:latest \
+        sxcurity/gau:latest \
+        caffix/amass:latest \
+        frost19k/puredns:latest \
+        jauderho/hakrawler:latest \
+        projectdiscovery/uncover:latest \
+        "dolevf/graphql-cop:1.14" \
+        ghcr.io/zaproxy/zaproxy:stable; do
+        if ! docker pull "$img"; then
+            warn "Failed to pre-pull optional tool image: $img -- continuing install"
+        fi
+    done
 
     # Pull GVM images with retry (large images, unreliable registry)
     if [[ "$gvm_mode" == "true" ]]; then
