@@ -33,7 +33,7 @@ export default function LoginPage() {
       }
 
       // Force full page reload to pick up the new cookie in middleware
-      window.location.href = '/graph'
+      window.location.href = '/home'
     } catch {
       setError('无法连接到服务器')
       setLoading(false)
