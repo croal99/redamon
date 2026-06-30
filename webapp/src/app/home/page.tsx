@@ -1,6 +1,6 @@
-import { cookies } from 'next/headers'
+'use client'
+
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 import type { CSSProperties, ReactNode } from 'react'
 import { ArrowRight, Crosshair, Shield, TrendingUp } from 'lucide-react'
 import styles from './page.module.css'
@@ -15,40 +15,51 @@ type Entry = {
   accent: string
 }
 
-const entries: Entry[] = [
-  {
-    title: '智核·星图',
-    subtitle: '资产扫描与测绘',
-    description: '',
-    href: '/graph',
-    icon: <Crosshair size={16} />,
-    img: '/logo-scan.png',
-    accent: '#00d4ff',
-  },
-  {
-    title: '智核·锋矢',
-    subtitle: '内网突破与渗透',
-    description: '',
-    href: '/c2',
-    icon: <Shield size={16} />,
-    img: '/logo-c2.png',
-    accent: '#0a84ff',
-  },
-  {
-    title: '智核·洞鉴',
-    subtitle: '情报挖掘与战术策略',
-    description: '',
-    href: 'http://kb.bluescan.com',
-    icon: <TrendingUp size={16} />,
-    img: '/logo-document.png',
-    accent: '#dc2626',
-  },
-]
+function getKbUrl(): string {
+  if (typeof window === 'undefined') {
+    return 'http://kb.bluescan.com'
+  }
 
-export default async function HomePage() {
+  const { protocol, port } = window.location
+  const portSuffix = port ? `:${port}` : ''
+
+  return `${protocol}//kb.bluescan.com${portSuffix}`
+}
+
+export default function HomePage() {
   // const cookieStore = await cookies()
   // const token = cookieStore.get('bluenet_token')?.value
   // if (!token) redirect('/login?next=/home')
+
+  const entries: Entry[] = [
+    {
+      title: '智核·星图',
+      subtitle: '资产扫描与测绘',
+      description: '',
+      href: '/graph',
+      icon: <Crosshair size={16} />,
+      img: '/logo-scan.png',
+      accent: '#00d4ff',
+    },
+    {
+      title: '智核·锋矢',
+      subtitle: '内网突破与渗透',
+      description: '',
+      href: '/c2',
+      icon: <Shield size={16} />,
+      img: '/logo-c2.png',
+      accent: '#0a84ff',
+    },
+    {
+      title: '智核·洞鉴',
+      subtitle: '情报挖掘与战术策略',
+      description: '',
+      href: getKbUrl(),
+      icon: <TrendingUp size={16} />,
+      img: '/logo-document.png',
+      accent: '#dc2626',
+    },
+  ]
 
   return (
     <div className={styles.page}>
