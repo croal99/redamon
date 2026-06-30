@@ -27,7 +27,7 @@ export function GlobalHeader() {
 
   return (
     <header className={styles.header}>
-      <Link href="/graph" className={styles.logo}>
+      <Link href="/home" className={styles.logo}>
         <Image src="/logo.png" alt="合盛智核" width={28} height={28} className={styles.logoImg} />
         <span className={styles.logoText}>
           <span className={styles.logoAccent}>智核·</span>星图
