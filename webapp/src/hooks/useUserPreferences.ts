@@ -208,8 +208,8 @@ export type PersistedTheme = 'light' | 'dark' | 'system'
 export function useThemePref() {
   const { prefs, isLoading, updatePref } = useUserPreferences()
   const stored = prefs[THEME_KEY]
-  const theme: PersistedTheme | null =
-    stored === 'light' || stored === 'dark' || stored === 'system' ? stored : null
+  const theme: PersistedTheme | null = 'dark'
+    // stored === 'light' || stored === 'dark' || stored === 'system' ? stored : null
 
   const setTheme = useCallback(
     (next: PersistedTheme) => {
