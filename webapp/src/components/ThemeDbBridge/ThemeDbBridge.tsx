@@ -44,10 +44,10 @@ export function ThemeDbBridge() {
       if (dbTheme && dbTheme !== resolvedTheme) {
         setTheme(dbTheme)
       }
-      lastSyncedToDb.current =
-        dbTheme === 'light' || dbTheme === 'dark'
-          ? dbTheme
-          : (resolvedTheme as 'light' | 'dark')
+      lastSyncedToDb.current = 'dark'
+        // dbTheme === 'light' || dbTheme === 'dark'
+        //   ? dbTheme
+        //   : (resolvedTheme as 'light' | 'dark')
       initialSyncDone.current = true
       return
     }
